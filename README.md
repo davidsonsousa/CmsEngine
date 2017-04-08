@@ -1,2 +1,2 @@
 # CMSEngine
-The codebase of davidsonsousa.net
+I am not following any particular pattern nor best practice. I mostly use this project to test and study things.
