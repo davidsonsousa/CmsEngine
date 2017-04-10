@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CMSEngine.Data.Models
 {
-    public class BaseModel
+    public class BaseModel : IModel
     {
         #region Not mapped
         [NotMapped]
@@ -17,6 +17,8 @@ namespace CMSEngine.Data.Models
         }
         #endregion
 
+        public bool IsDeleted { get; set; }
+
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
@@ -24,16 +26,12 @@ namespace CMSEngine.Data.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid VanityId { get; set; }
 
-        public bool IsDeleted { get; set; }
-
         #region For "quick log" purposes
 
         public DateTime DateCreated { get; set; }
-
         public DateTime DateModified { get; set; }
 
         public string UserCreated { get; set; }
-
         public string UserModified { get; set; }
 
         #endregion
