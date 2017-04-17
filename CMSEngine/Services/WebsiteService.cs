@@ -95,7 +95,13 @@ namespace CMSEngine.Services
 
         public override IViewModel SetupViewModel()
         {
-            throw new NotImplementedException();
+            var itemViewModel = new BaseViewModel<Website>
+            {
+                Item = new Website(),
+                Items = this.GetAllReadOnly()
+            };
+
+            return itemViewModel;
         }
 
         protected override ReturnValue Delete(Website item)
