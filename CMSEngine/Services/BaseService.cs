@@ -198,7 +198,7 @@ namespace CMSEngine.Services
 
         #endregion
 
-        public abstract ReturnValue Save(IViewModel websiteViewModel);
+        public abstract ReturnValue Save(IViewModel viewModel);
         public abstract ReturnValue Delete(Guid vanityId);
         public abstract ReturnValue BulkDelete(Guid[] vanityId);
         public abstract ReturnValue Delete(int id);
@@ -247,6 +247,10 @@ namespace CMSEngine.Services
 
             return propertyValue;
         }
+
+        protected abstract ReturnValue Delete(T item);
+
+        protected abstract void PrepareForSaving(IViewModel viewModel);
 
         #endregion
     }
