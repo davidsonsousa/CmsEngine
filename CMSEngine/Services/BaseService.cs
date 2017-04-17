@@ -120,10 +120,10 @@ namespace CMSEngine.Services
 
         #region Get
 
-            /// <summary>
-            /// Get all items
-            /// </summary>
-            /// <returns></returns>
+        /// <summary>
+        /// Get all items
+        /// </summary>
+        /// <returns></returns>
         public virtual IQueryable<T> GetAll()
         {
             IQueryable<T> listItems;
