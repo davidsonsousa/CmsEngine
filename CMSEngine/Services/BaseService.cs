@@ -9,7 +9,7 @@ using System.Linq;
 
 namespace CMSEngine.Services
 {
-    public abstract class BaseService<T> where T: BaseModel
+    public abstract class BaseService<T> where T : BaseModel
     {
         private readonly IRepository<T> _repository;
         private readonly IUnitOfWork _unitOfWork;
@@ -25,6 +25,22 @@ namespace CMSEngine.Services
         //    }
         //}
 
+        /// <summary>
+        /// Repository used by the Service
+        /// </summary>
+        protected IRepository<T> Repository
+        {
+            get { return _repository; }
+        }
+
+        /// <summary>
+        /// Unit of work used by the Service
+        /// </summary>
+        protected IUnitOfWork UnitOfWork
+        {
+            get { return _unitOfWork; }
+        }
+
         #endregion
 
         protected internal BaseService(IUnitOfWork uow/*, IHttpContextAccessor hca*/)
@@ -32,16 +48,6 @@ namespace CMSEngine.Services
             _repository = uow.GetRepository<T>();
             _unitOfWork = uow;
             //_httpContextAccessor = hca;
-        }
-
-        protected IRepository<T> Repository
-        {
-            get { return _repository; }
-        }
-
-        protected IUnitOfWork UnitOfWork
-        {
-            get { return _unitOfWork; }
         }
 
         //public IEnumerable<T> Filter(string searchTerm, IEnumerable<T> listItems)
@@ -114,6 +120,10 @@ namespace CMSEngine.Services
 
         #region Get
 
+            /// <summary>
+            /// Get all items
+            /// </summary>
+            /// <returns></returns>
         public virtual IQueryable<T> GetAll()
         {
             IQueryable<T> listItems;
@@ -130,6 +140,10 @@ namespace CMSEngine.Services
             return listItems;
         }
 
+        /// <summary>
+        /// Get all items for read-only purposes
+        /// </summary>
+        /// <returns></returns>
         public virtual IEnumerable<T> GetAllReadOnly()
         {
             IEnumerable<T> listItems;
@@ -146,6 +160,11 @@ namespace CMSEngine.Services
             return listItems;
         }
 
+        /// <summary>
+        /// Get item by numeric Id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public virtual T GetById(int id)
         {
             T item;
@@ -162,6 +181,11 @@ namespace CMSEngine.Services
             return item;
         }
 
+        /// <summary>
+        /// Get item by Guid
+        /// </summary>
+        /// <param name="vanitId"></param>
+        /// <returns></returns>
         public virtual T GetByVanityId(Guid vanitId)
         {
             T item;
@@ -198,9 +222,32 @@ namespace CMSEngine.Services
 
         #endregion
 
+        /// <summary>
+        /// Save item
+        /// </summary>
+        /// <param name="viewModel"></param>
+        /// <returns></returns>
         public abstract ReturnValue Save(IViewModel viewModel);
+
+        /// <summary>
+        /// Delete item by Guid
+        /// </summary>
+        /// <param name="vanityId"></param>
+        /// <returns></returns>
         public abstract ReturnValue Delete(Guid vanityId);
+
+        /// <summary>
+        /// Delete items by an array of Guids
+        /// </summary>
+        /// <param name="vanityId"></param>
+        /// <returns></returns>
         public abstract ReturnValue BulkDelete(Guid[] vanityId);
+
+        /// <summary>
+        /// Delete item by numeric Id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public abstract ReturnValue Delete(int id);
 
         #region Helpers
@@ -248,8 +295,17 @@ namespace CMSEngine.Services
             return propertyValue;
         }
 
+        /// <summary>
+        /// Delete item
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns></returns>
         protected abstract ReturnValue Delete(T item);
 
+        /// <summary>
+        /// Prepare item for saving
+        /// </summary>
+        /// <param name="viewModel"></param>
         protected abstract void PrepareForSaving(IViewModel viewModel);
 
         #endregion
