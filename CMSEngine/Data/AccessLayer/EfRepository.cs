@@ -20,12 +20,7 @@ namespace CmsEngine.Data.AccessLayer
 
         public EfRepository(IDbContext context)
         {
-            if (context == null)
-            {
-                throw new ArgumentNullException("Repository - Context");
-            }
-
-            _context = context;
+            _context = context ?? throw new ArgumentNullException("Repository - Context");
             _dbSet = context.Set<T>();
         }
 
