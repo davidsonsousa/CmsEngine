@@ -19,7 +19,7 @@ namespace CmsEngine.Test.Services
         public void Get_All_Websites()
         {
             // Arrange
-            var moqWebsiteService = SetupWebsiteService();
+            var moqWebsiteService = this.SetupWebsiteService();
 
             // Act
             var response = moqWebsiteService.GetAll();
@@ -41,6 +41,10 @@ namespace CmsEngine.Test.Services
             Assert.IsTrue(response.Name == "Website1");
         }
 
+        /// <summary>
+        /// Setup the WebsiteService
+        /// </summary>
+        /// <returns></returns>
         private WebsiteService SetupWebsiteService()
         {
             var listWebsites = new List<Website>
