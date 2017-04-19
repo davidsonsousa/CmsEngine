@@ -5,7 +5,7 @@ using System.Data.Entity;
 using System.Linq;
 using System.Linq.Expressions;
 
-namespace CMSEngine.Data.AccessLayer
+namespace CmsEngine.Data.AccessLayer
 {
     public class EfRepository<T> : IRepository<T> where T : class
     {

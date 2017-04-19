@@ -1,7 +1,7 @@
 ﻿using System.Data.Entity;
 using System.Data.Entity.SqlServer;
 
-namespace CMSEngine.Data
+namespace CmsEngine.Data
 {
     public class DbConfig : DbConfiguration
     {

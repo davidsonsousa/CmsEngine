@@ -4,7 +4,7 @@ using System.Data.Entity.Infrastructure;
 using System.Data.Entity.Validation;
 using System.Linq;
 
-namespace CMSEngine.Data.AccessLayer
+namespace CmsEngine.Data.AccessLayer
 {
     public class UnitOfWork : IUnitOfWork
     {

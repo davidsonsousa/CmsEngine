@@ -1,7 +1,7 @@
 ﻿using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 
-namespace CMSEngine.Data
+namespace CmsEngine.Data
 {
     public interface IDbContext
     {

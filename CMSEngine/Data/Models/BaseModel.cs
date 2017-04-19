@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace CMSEngine.Data.Models
+namespace CmsEngine.Data.Models
 {
     public class BaseModel : IModel
     {

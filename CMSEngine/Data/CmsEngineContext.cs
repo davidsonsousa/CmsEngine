@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CmsEngine.Services
+namespace CmsEngine.Data
 {
-    public class Facade
+    public class CmsEngineContext
     {
         
     }

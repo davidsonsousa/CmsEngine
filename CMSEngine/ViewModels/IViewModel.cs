@@ -1,4 +1,4 @@
-﻿namespace CMSEngine.ViewModels
+﻿namespace CmsEngine.ViewModels
 {
     public interface IViewModel
     {

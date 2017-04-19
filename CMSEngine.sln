@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26403.0
+VisualStudioVersion = 15.0.26403.3
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CMSEngine", "CMSEngine\CMSEngine.csproj", "{F558DF07-D0C6-485E-A5E0-3B3770D8A71C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CmsEngine", "CMSEngine\CmsEngine.csproj", "{F558DF07-D0C6-485E-A5E0-3B3770D8A71C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CmsEngine.Test", "CmsEngine.Test\CmsEngine.Test.csproj", "{4240E67A-0C9A-43D1-ABB9-842525CAF1B3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{F558DF07-D0C6-485E-A5E0-3B3770D8A71C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F558DF07-D0C6-485E-A5E0-3B3770D8A71C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F558DF07-D0C6-485E-A5E0-3B3770D8A71C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4240E67A-0C9A-43D1-ABB9-842525CAF1B3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4240E67A-0C9A-43D1-ABB9-842525CAF1B3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4240E67A-0C9A-43D1-ABB9-842525CAF1B3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4240E67A-0C9A-43D1-ABB9-842525CAF1B3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

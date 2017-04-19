@@ -1,13 +1,13 @@
-﻿using CMSEngine.Data.AccessLayer;
-using CMSEngine.Data.Models;
-using CMSEngine.Extensions;
-using CMSEngine.Utils;
-using CMSEngine.ViewModels;
+﻿using CmsEngine.Data.AccessLayer;
+using CmsEngine.Data.Models;
+using CmsEngine.Extensions;
+using CmsEngine.Utils;
+using CmsEngine.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace CMSEngine.Services
+namespace CmsEngine.Services
 {
     public abstract class BaseService<T> where T : BaseModel
     {

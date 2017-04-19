@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace CMSEngine.Utils
+namespace CmsEngine.Utils
 {
     public class ReturnValue
     {

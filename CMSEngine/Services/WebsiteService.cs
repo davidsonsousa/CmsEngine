@@ -1,11 +1,11 @@
-﻿using CMSEngine.Data.AccessLayer;
-using CMSEngine.Data.Models;
-using CMSEngine.Utils;
-using CMSEngine.ViewModels;
+﻿using CmsEngine.Data.AccessLayer;
+using CmsEngine.Data.Models;
+using CmsEngine.Utils;
+using CmsEngine.ViewModels;
 using System;
 using System.Linq;
 
-namespace CMSEngine.Services
+namespace CmsEngine.Services
 {
     public class WebsiteService : BaseService<Website>
     {

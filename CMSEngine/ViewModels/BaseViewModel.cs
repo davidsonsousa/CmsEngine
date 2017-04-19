@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace CMSEngine.ViewModels
+namespace CmsEngine.ViewModels
 {
     public class BaseViewModel<T> : IViewModel where T : class
     {

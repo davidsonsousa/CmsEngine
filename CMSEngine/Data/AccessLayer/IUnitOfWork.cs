@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace CMSEngine.Data.AccessLayer
+namespace CmsEngine.Data.AccessLayer
 {
     public interface IUnitOfWork : IDisposable
     {

@@ -2,7 +2,7 @@
 using System.ComponentModel;
 using System.Reflection;
 
-namespace CMSEngine.Extensions
+namespace CmsEngine.Extensions
 {
 	public static class EnumExtensions
 	{

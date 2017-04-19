@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 
-namespace CMSEngine.Data.AccessLayer
+namespace CmsEngine.Data.AccessLayer
 {
     public interface IRepository<T> : IDisposable where T : class
     {
