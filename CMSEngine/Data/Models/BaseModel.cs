@@ -8,13 +8,7 @@ namespace CmsEngine.Data.Models
     {
         #region Not mapped
         [NotMapped]
-        public bool IsNew
-        {
-            get
-            {
-                return (this.Id == 0);
-            }
-        }
+        public bool IsNew => (Id == 0);
         #endregion
 
         public bool IsDeleted { get; set; }

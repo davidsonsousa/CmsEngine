@@ -270,7 +270,7 @@ namespace CmsEngine.Services
 
         private string PrepareProperty(T item, System.Reflection.PropertyInfo property)
         {
-            string propertyValue = item.GetType().GetProperty(property.Name).GetValue(item)?.ToString() ?? "";
+            var propertyValue = item.GetType().GetProperty(property.Name).GetValue(item)?.ToString() ?? "";
 
             if (property.PropertyType.Name == "DocumentStatus")
             {

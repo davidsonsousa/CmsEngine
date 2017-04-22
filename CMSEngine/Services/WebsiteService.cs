@@ -15,7 +15,7 @@ namespace CmsEngine.Services
 
         public override ReturnValue BulkDelete(Guid[] vanityId)
         {
-            ReturnValue returnValue = new ReturnValue();
+            var returnValue = new ReturnValue();
             try
             {
                 Repository.BulkUpdate(q => vanityId.Contains(q.VanityId), u => new Website { IsDeleted = true });
@@ -35,7 +35,7 @@ namespace CmsEngine.Services
 
         public override ReturnValue Delete(Guid vanityId)
         {
-            ReturnValue returnValue = new ReturnValue();
+            var returnValue = new ReturnValue();
             try
             {
                 var website = this.GetAll().Where(q => q.VanityId == vanityId).FirstOrDefault();
@@ -53,7 +53,7 @@ namespace CmsEngine.Services
 
         public override ReturnValue Delete(int id)
         {
-            ReturnValue returnValue = new ReturnValue();
+            var returnValue = new ReturnValue();
             try
             {
                 var website = this.GetAll().Where(q => q.Id == id).FirstOrDefault();
@@ -106,7 +106,7 @@ namespace CmsEngine.Services
 
         protected override ReturnValue Delete(Website item)
         {
-            ReturnValue returnValue = new ReturnValue();
+            var returnValue = new ReturnValue();
             try
             {
                 if (item != null)

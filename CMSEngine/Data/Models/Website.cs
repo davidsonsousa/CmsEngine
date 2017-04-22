@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace CmsEngine.Data.Models
+﻿namespace CmsEngine.Data.Models
 {
     public class Website : BaseModel
     {
