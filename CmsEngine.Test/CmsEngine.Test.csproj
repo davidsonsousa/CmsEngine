@@ -54,6 +54,7 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Services\CategoryServiceTest.cs" />
     <Compile Include="Services\WebsiteServiceTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
