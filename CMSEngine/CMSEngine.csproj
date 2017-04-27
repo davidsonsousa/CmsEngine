@@ -67,6 +67,12 @@
     <Compile Include="Data\DbConfig.cs" />
     <Compile Include="Data\IDbContext.cs" />
     <Compile Include="Data\Models\Category.cs" />
+    <Compile Include="Data\Models\Configuration\BaseConfiguration.cs" />
+    <Compile Include="Data\Models\Configuration\CategoryConfiguration.cs" />
+    <Compile Include="Data\Models\Configuration\PageConfiguration.cs" />
+    <Compile Include="Data\Models\Configuration\PostConfiguration.cs" />
+    <Compile Include="Data\Models\Configuration\TagConfiguration.cs" />
+    <Compile Include="Data\Models\Configuration\WebsiteConfiguration.cs" />
     <Compile Include="Data\Models\Document.cs" />
     <Compile Include="Data\Models\IModel.cs" />
     <Compile Include="Data\Models\Page.cs" />
