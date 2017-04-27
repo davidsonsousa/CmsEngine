@@ -63,6 +63,7 @@
     <Compile Include="Data\AccessLayer\IRepository.cs" />
     <Compile Include="Data\AccessLayer\IUnitOfWork.cs" />
     <Compile Include="Data\AccessLayer\UnitOfWork.cs" />
+    <Compile Include="Data\CmsEngineInitializer.cs" />
     <Compile Include="Data\CmsEngineContext.cs" />
     <Compile Include="Data\DbConfig.cs" />
     <Compile Include="Data\IDbContext.cs" />
