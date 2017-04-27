@@ -64,12 +64,17 @@
     <Compile Include="Data\DbConfig.cs" />
     <Compile Include="Data\IDbContext.cs" />
     <Compile Include="Data\Models\Category.cs" />
+    <Compile Include="Data\Models\Document.cs" />
     <Compile Include="Data\Models\IModel.cs" />
+    <Compile Include="Data\Models\Page.cs" />
+    <Compile Include="Data\Models\Post.cs" />
+    <Compile Include="Data\Models\Tag.cs" />
     <Compile Include="Extensions\EnumExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Services\BaseService.cs" />
     <Compile Include="Services\Facade.cs" />
     <Compile Include="Services\CategoryService.cs" />
+    <Compile Include="Services\TagService.cs" />
     <Compile Include="Services\WebsiteService.cs" />
     <Compile Include="Utils\Constants.cs" />
     <Compile Include="Data\Models\BaseModel.cs" />

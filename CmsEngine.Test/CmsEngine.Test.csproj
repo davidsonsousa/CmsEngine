@@ -55,6 +55,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Services\CategoryServiceTest.cs" />
+    <Compile Include="Services\TagServiceTest.cs" />
     <Compile Include="Services\WebsiteServiceTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -4,7 +4,7 @@ using CmsEngine.Attributes;
 
 namespace CmsEngine.Data.Models
 {
-    public class Category : BaseModel
+    public class Tag : BaseModel
     {
         #region Navigation
 
@@ -22,8 +22,5 @@ namespace CmsEngine.Data.Models
 
         [Searchable, Orderable, ShowOnDataTable(1)]
         public string Slug { get; set; }
-
-        [Searchable, Orderable, ShowOnDataTable(2)]
-        public string Description { get; set; }
     }
 }
