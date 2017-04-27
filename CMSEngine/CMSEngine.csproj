@@ -74,7 +74,9 @@
     <Compile Include="Services\BaseService.cs" />
     <Compile Include="Services\Facade.cs" />
     <Compile Include="Services\CategoryService.cs" />
+    <Compile Include="Services\PostService.cs" />
     <Compile Include="Services\TagService.cs" />
+    <Compile Include="Services\PageService.cs" />
     <Compile Include="Services\WebsiteService.cs" />
     <Compile Include="Utils\Constants.cs" />
     <Compile Include="Data\Models\BaseModel.cs" />
