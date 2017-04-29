@@ -17,7 +17,7 @@ namespace CmsEngine.Test.Core.Services
         #region Get
 
         [TestMethod]
-        public void Get_All_Posts_Queryable()
+        public void GetAll_ShouldReturnAllPostsAsQueryable()
         {
             // Arrange
             var moqPostService = this.SetupPostService();
@@ -32,7 +32,7 @@ namespace CmsEngine.Test.Core.Services
         }
 
         [TestMethod]
-        public void Get_All_Posts_ReadOnly()
+        public void GetAllReadOnly_ShouldReturnAllPostsAsEnumerable()
         {
             // Arrange
             var moqPostService = this.SetupPostService();
@@ -47,7 +47,7 @@ namespace CmsEngine.Test.Core.Services
         }
 
         [TestMethod]
-        public void Get_Post_By_Id()
+        public void GetById_ShouldReturnCorrectPost()
         {
             // Arrange
             var moqPostService = this.SetupPostService();
@@ -61,7 +61,7 @@ namespace CmsEngine.Test.Core.Services
         }
 
         [TestMethod]
-        public void Get_Post_By_VanityId()
+        public void GetByVanityId_ShouldReturnCorrectPost()
         {
             // Arrange
             var moqPostService = this.SetupPostService();
@@ -79,7 +79,7 @@ namespace CmsEngine.Test.Core.Services
         #region Setup
 
         [TestMethod]
-        public void Setup_Post_ViewModel_Return_New_Item()
+        public void SetupViewModel_ShouldReturnNewPost()
         {
             // Arrange
             var moqWebService = this.SetupPostService();
@@ -93,7 +93,7 @@ namespace CmsEngine.Test.Core.Services
         }
 
         [TestMethod]
-        public void Setup_Post_ViewModel_Return_Multiple_Items()
+        public void SetupViewModel_ShouldReturnAllPosts()
         {
             // Arrange
             var moqWebService = this.SetupPostService();
@@ -107,7 +107,7 @@ namespace CmsEngine.Test.Core.Services
         }
 
         [TestMethod]
-        public void Setup_Post_ViewModel_Get_Item_By_Id()
+        public void SetupViewModel_ById_ShouldReturnCorrectPost()
         {
             // Arrange
             var moqWebService = this.SetupPostService();
@@ -121,7 +121,7 @@ namespace CmsEngine.Test.Core.Services
         }
 
         [TestMethod]
-        public void Setup_Post_ViewModel_Get_Item_By_VanityId()
+        public void SetupViewModel_ByVanityId_ShouldReturnCorrectPost()
         {
             // Arrange
             var moqWebService = this.SetupPostService();

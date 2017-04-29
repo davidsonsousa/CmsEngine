@@ -17,7 +17,7 @@ namespace CmsEngine.Test.Core.Services
         #region Get
 
         [TestMethod]
-        public void Get_All_Categories_Queryable()
+        public void GetAll_ShouldReturnAllCategoriesAsQueryable()
         {
             // Arrange
             var moqCategoryService = this.SetupCategoryService();
@@ -32,7 +32,7 @@ namespace CmsEngine.Test.Core.Services
         }
 
         [TestMethod]
-        public void Get_All_Categories_ReadOnly()
+        public void GetAllReadOnly_ShouldReturnAllCategoriesAsEnumerable()
         {
             // Arrange
             var moqCategoryService = this.SetupCategoryService();
@@ -47,7 +47,7 @@ namespace CmsEngine.Test.Core.Services
         }
 
         [TestMethod]
-        public void Get_Category_By_Id()
+        public void GetById_ShouldReturnCorrectCategory()
         {
             // Arrange
             var moqCategoryService = this.SetupCategoryService();
@@ -61,7 +61,7 @@ namespace CmsEngine.Test.Core.Services
         }
 
         [TestMethod]
-        public void Get_Category_By_VanityId()
+        public void GetByVanityId_ShouldReturnCorrectCategory()
         {
             // Arrange
             var moqCategoryService = this.SetupCategoryService();
@@ -79,7 +79,7 @@ namespace CmsEngine.Test.Core.Services
         #region Setup
 
         [TestMethod]
-        public void Setup_Category_ViewModel_Return_New_Item()
+        public void SetupViewModel_ShouldReturnNewCategory()
         {
             // Arrange
             var moqWebService = this.SetupCategoryService();
@@ -93,7 +93,7 @@ namespace CmsEngine.Test.Core.Services
         }
 
         [TestMethod]
-        public void Setup_Category_ViewModel_Return_Multiple_Items()
+        public void SetupViewModel_ShouldReturnAllCategories()
         {
             // Arrange
             var moqWebService = this.SetupCategoryService();
@@ -107,7 +107,7 @@ namespace CmsEngine.Test.Core.Services
         }
 
         [TestMethod]
-        public void Setup_Category_ViewModel_Get_Item_By_Id()
+        public void SetupViewModel_ById_ShouldReturnCorrectCategory()
         {
             // Arrange
             var moqWebService = this.SetupCategoryService();
@@ -121,7 +121,7 @@ namespace CmsEngine.Test.Core.Services
         }
 
         [TestMethod]
-        public void Setup_Category_ViewModel_Get_Item_By_VanityId()
+        public void SetupViewModel_ByVanityId_ShouldReturnCorrectCategory()
         {
             // Arrange
             var moqWebService = this.SetupCategoryService();
@@ -139,7 +139,7 @@ namespace CmsEngine.Test.Core.Services
         #region DB Changes
 
         [TestMethod]
-        public void Save_Category()
+        public void Save()
         {
             // Arrange
             var moqWebService = this.SetupCategoryService();
@@ -163,7 +163,7 @@ namespace CmsEngine.Test.Core.Services
         }
 
         [TestMethod]
-        public void Delete_Category_By_Id()
+        public void Delete_By_Id()
         {
             // Arrange
             var moqWebService = this.SetupCategoryService();
@@ -176,7 +176,7 @@ namespace CmsEngine.Test.Core.Services
         }
 
         [TestMethod]
-        public void Delete_Category_By_VanityId()
+        public void Delete_By_VanityId()
         {
             // Arrange
             var moqWebService = this.SetupCategoryService();

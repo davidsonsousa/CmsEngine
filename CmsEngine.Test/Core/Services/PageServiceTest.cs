@@ -17,7 +17,7 @@ namespace CmsEngine.Test.Core.Services
         #region Get
 
         [TestMethod]
-        public void Get_All_Pages_Queryable()
+        public void GetAll_ShouldReturnAllPagesAsQueryable()
         {
             // Arrange
             var moqPageService = this.SetupPageService();
@@ -32,7 +32,7 @@ namespace CmsEngine.Test.Core.Services
         }
 
         [TestMethod]
-        public void Get_All_Pages_ReadOnly()
+        public void GetAllReadOnly_ShouldReturnAllPagesAsEnumerable()
         {
             // Arrange
             var moqPageService = this.SetupPageService();
@@ -47,7 +47,7 @@ namespace CmsEngine.Test.Core.Services
         }
 
         [TestMethod]
-        public void Get_Page_By_Id()
+        public void GetById_ShouldReturnCorrectPage()
         {
             // Arrange
             var moqPageService = this.SetupPageService();
@@ -61,7 +61,7 @@ namespace CmsEngine.Test.Core.Services
         }
 
         [TestMethod]
-        public void Get_Page_By_VanityId()
+        public void GetByVanityId_ShouldReturnCorrectPage()
         {
             // Arrange
             var moqPageService = this.SetupPageService();
@@ -79,7 +79,7 @@ namespace CmsEngine.Test.Core.Services
         #region Setup
 
         [TestMethod]
-        public void Setup_Page_ViewModel_Return_New_Item()
+        public void SetupViewModel_ShouldReturnNewPage()
         {
             // Arrange
             var moqWebService = this.SetupPageService();
@@ -93,7 +93,7 @@ namespace CmsEngine.Test.Core.Services
         }
 
         [TestMethod]
-        public void Setup_Page_ViewModel_Return_Multiple_Items()
+        public void SetupViewModel_ShouldReturnAllPages()
         {
             // Arrange
             var moqWebService = this.SetupPageService();
@@ -107,7 +107,7 @@ namespace CmsEngine.Test.Core.Services
         }
 
         [TestMethod]
-        public void Setup_Page_ViewModel_Get_Item_By_Id()
+        public void SetupViewModel_ById_ShouldReturnCorrectPage()
         {
             // Arrange
             var moqWebService = this.SetupPageService();
@@ -121,7 +121,7 @@ namespace CmsEngine.Test.Core.Services
         }
 
         [TestMethod]
-        public void Setup_Page_ViewModel_Get_Item_By_VanityId()
+        public void SetupViewModel_ByVanityId_ShouldReturnCorrectPage()
         {
             // Arrange
             var moqWebService = this.SetupPageService();

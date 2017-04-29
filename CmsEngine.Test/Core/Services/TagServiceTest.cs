@@ -17,7 +17,7 @@ namespace CmsEngine.Test.Core.Services
         #region Get
 
         [TestMethod]
-        public void Get_All_Tags_Queryable()
+        public void GetAll_ShouldReturnAllTagsAsQueryable()
         {
             // Arrange
             var moqTagService = this.SetupTagService();
@@ -32,7 +32,7 @@ namespace CmsEngine.Test.Core.Services
         }
 
         [TestMethod]
-        public void Get_All_Tags_ReadOnly()
+        public void GetAllReadOnly_ShouldReturnAllTagsAsEnumerable()
         {
             // Arrange
             var moqTagService = this.SetupTagService();
@@ -47,7 +47,7 @@ namespace CmsEngine.Test.Core.Services
         }
 
         [TestMethod]
-        public void Get_Tag_By_Id()
+        public void GetById_ShouldReturnCorrectTag()
         {
             // Arrange
             var moqTagService = this.SetupTagService();
@@ -61,7 +61,7 @@ namespace CmsEngine.Test.Core.Services
         }
 
         [TestMethod]
-        public void Get_Tag_By_VanityId()
+        public void GetByVanityId_ShouldReturnCorrectTag()
         {
             // Arrange
             var moqTagService = this.SetupTagService();
@@ -79,7 +79,7 @@ namespace CmsEngine.Test.Core.Services
         #region Setup
 
         [TestMethod]
-        public void Setup_Tag_ViewModel_Return_New_Item()
+        public void SetupViewModel_ShouldReturnNewTag()
         {
             // Arrange
             var moqWebService = this.SetupTagService();
@@ -93,7 +93,7 @@ namespace CmsEngine.Test.Core.Services
         }
 
         [TestMethod]
-        public void Setup_Tag_ViewModel_Return_Multiple_Items()
+        public void SetupViewModel_ShouldReturnAllTags()
         {
             // Arrange
             var moqWebService = this.SetupTagService();
@@ -107,7 +107,7 @@ namespace CmsEngine.Test.Core.Services
         }
 
         [TestMethod]
-        public void Setup_Tag_ViewModel_Get_Item_By_Id()
+        public void SetupViewModel_ById_ShouldReturnCorrectTag()
         {
             // Arrange
             var moqWebService = this.SetupTagService();
@@ -121,7 +121,7 @@ namespace CmsEngine.Test.Core.Services
         }
 
         [TestMethod]
-        public void Setup_Tag_ViewModel_Get_Item_By_VanityId()
+        public void SetupViewModel_ByVanityId_ShouldReturnCorrectTag()
         {
             // Arrange
             var moqWebService = this.SetupTagService();
