@@ -20,7 +20,7 @@ namespace CMSEngine.Api.Controllers
         [HttpGet("{id}")]
         public string Get(int id)
         {
-            return "value";
+            return "value changed";
         }
 
         // POST api/values
