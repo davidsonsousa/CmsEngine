@@ -55,11 +55,11 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Services\CategoryServiceTest.cs" />
-    <Compile Include="Services\PostServiceTest.cs" />
-    <Compile Include="Services\PageServiceTest.cs" />
-    <Compile Include="Services\TagServiceTest.cs" />
-    <Compile Include="Services\WebsiteServiceTest.cs" />
+    <Compile Include="Core\Services\CategoryServiceTest.cs" />
+    <Compile Include="Core\Services\PostServiceTest.cs" />
+    <Compile Include="Core\Services\PageServiceTest.cs" />
+    <Compile Include="Core\Services\TagServiceTest.cs" />
+    <Compile Include="Core\Services\WebsiteServiceTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -9,7 +9,7 @@ using CmsEngine.ViewModels;
 using System;
 using System.Linq.Expressions;
 
-namespace CmsEngine.Test.Services
+namespace CmsEngine.Test.Core.Services
 {
     [TestClass]
     public class WebsiteServiceTest
