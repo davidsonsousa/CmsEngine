@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CmsEngine", "CMSEngine\CmsE
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CmsEngine.Test", "CmsEngine.Test\CmsEngine.Test.csproj", "{4240E67A-0C9A-43D1-ABB9-842525CAF1B3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CMSEngine.Api", "CMSEngine.Api\CMSEngine.Api.csproj", "{C3704EDF-92A7-43DA-8DCE-454E0E3F3849}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CmsEngine.Api", "CMSEngine.Api\CmsEngine.Api.csproj", "{C3704EDF-92A7-43DA-8DCE-454E0E3F3849}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
