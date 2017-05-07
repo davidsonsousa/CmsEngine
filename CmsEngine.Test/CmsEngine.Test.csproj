@@ -263,6 +263,10 @@
     <Compile Include="Core\Services\TagServiceTest.cs" />
     <Compile Include="Core\Services\WebsiteServiceTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Setup\CategorySetup.cs" />
+    <Compile Include="Setup\TagSetup.cs" />
+    <Compile Include="Setup\PostSetup.cs" />
+    <Compile Include="Setup\PageSetup.cs" />
     <Compile Include="Setup\WebsiteSetup.cs" />
   </ItemGroup>
   <ItemGroup>

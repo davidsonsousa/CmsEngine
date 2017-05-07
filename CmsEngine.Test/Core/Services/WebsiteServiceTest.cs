@@ -1,27 +1,31 @@
-﻿using CmsEngine.Data.AccessLayer;
-using CmsEngine.Data.Models;
+﻿using CmsEngine.Data.Models;
 using CmsEngine.Services;
+using CmsEngine.Test.Setup;
+using CmsEngine.ViewModels;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Moq;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using CmsEngine.ViewModels;
-using System;
-using System.Linq.Expressions;
-using CmsEngine.Test.Setup;
 
 namespace CmsEngine.Test.Core.Services
 {
     [TestClass]
     public class WebsiteServiceTest
     {
+        private WebsiteService moqWebsiteService;
+
+        [TestInitialize]
+        public void InitializeTest()
+        {
+            moqWebsiteService = WebsiteSetup.SetupService();
+        }
+
         #region Get
 
         [TestMethod]
         public void GetAll_ShouldReturnAllWebsitesAsQueryable()
         {
             // Arrange
-            var moqWebsiteService = WebsiteSetup.SetupService();
             var expectedResult = WebsiteSetup.GetTestWebsites().Count;
 
             // Act
@@ -36,7 +40,6 @@ namespace CmsEngine.Test.Core.Services
         public void GetAllReadOnly_ShouldReturnAllWebsitesAsEnumerable()
         {
             // Arrange
-            var moqWebsiteService = WebsiteSetup.SetupService();
             var expectedResult = WebsiteSetup.GetTestWebsites().Count;
 
             // Act
@@ -51,7 +54,6 @@ namespace CmsEngine.Test.Core.Services
         public void GetById_ShouldReturnCorrectWebsite()
         {
             // Arrange
-            var moqWebsiteService = WebsiteSetup.SetupService();
             var expectedResult = WebsiteSetup.GetTestWebsites().FirstOrDefault(q => q.Id == 1).Name;
 
             // Act
@@ -65,7 +67,6 @@ namespace CmsEngine.Test.Core.Services
         public void GetByVanityId_ShouldReturnCorrectWebsite()
         {
             // Arrange
-            var moqWebsiteService = WebsiteSetup.SetupService();
             var expectedResult = WebsiteSetup.GetTestWebsites().FirstOrDefault(q => q.VanityId == new Guid("8633a850-128f-4425-a2ec-30e23826b7ff")).Name;
 
             // Act
@@ -83,10 +84,9 @@ namespace CmsEngine.Test.Core.Services
         public void SetupViewModel_ShouldReturnNewWebsite()
         {
             // Arrange
-            var moqWebService = WebsiteSetup.SetupService();
 
             // Act
-            var response = moqWebService.SetupViewModel();
+            var response = moqWebsiteService.SetupViewModel();
 
             // Assert
             Assert.AreNotEqual(((BaseViewModel<Website>)response).Item, null, "Item doesn't exist");
@@ -97,11 +97,10 @@ namespace CmsEngine.Test.Core.Services
         public void SetupViewModel_ShouldReturnAllWebsites()
         {
             // Arrange
-            var moqWebService = WebsiteSetup.SetupService();
             var expectedResult = WebsiteSetup.GetTestWebsites().Count;
 
             // Act
-            var response = moqWebService.SetupViewModel();
+            var response = moqWebsiteService.SetupViewModel();
 
             // Assert
             Assert.AreEqual(((BaseViewModel<Website>)response).Items.Count(), expectedResult);
@@ -111,11 +110,10 @@ namespace CmsEngine.Test.Core.Services
         public void SetupViewModel_ById_ShouldReturnCorrectWebsite()
         {
             // Arrange
-            var moqWebService = WebsiteSetup.SetupService();
             var expectedResult = WebsiteSetup.GetTestWebsites().FirstOrDefault(q => q.Id == 2).Name;
 
             // Act
-            var response = moqWebService.SetupViewModel(2);
+            var response = moqWebsiteService.SetupViewModel(2);
 
             // Assert
             Assert.AreEqual(((BaseViewModel<Website>)response).Item.Name, expectedResult);
@@ -125,11 +123,10 @@ namespace CmsEngine.Test.Core.Services
         public void SetupViewModel_ByVanityId_ShouldReturnCorrectWebsite()
         {
             // Arrange
-            var moqWebService = WebsiteSetup.SetupService();
             var expectedResult = WebsiteSetup.GetTestWebsites().FirstOrDefault(q => q.VanityId == new Guid("8633a850-128f-4425-a2ec-30e23826b7ff")).Name;
 
             // Act
-            var response = moqWebService.SetupViewModel(new Guid("8633a850-128f-4425-a2ec-30e23826b7ff"));
+            var response = moqWebsiteService.SetupViewModel(new Guid("8633a850-128f-4425-a2ec-30e23826b7ff"));
 
             // Assert
             Assert.AreEqual(((BaseViewModel<Website>)response).Item.Name, expectedResult);
@@ -143,7 +140,6 @@ namespace CmsEngine.Test.Core.Services
         public void Save_Website()
         {
             // Arrange
-            var moqWebService = WebsiteSetup.SetupService();
 
             // Act
             var website = new Website
@@ -158,7 +154,7 @@ namespace CmsEngine.Test.Core.Services
                 Item = website
             };
 
-            var response = moqWebService.Save(websiteViewModel);
+            var response = moqWebsiteService.Save(websiteViewModel);
 
             // Assert
             Assert.IsFalse(response.IsError, "Exception thrown");
@@ -168,10 +164,9 @@ namespace CmsEngine.Test.Core.Services
         public void Delete_Website_By_Id()
         {
             // Arrange
-            var moqWebService = WebsiteSetup.SetupService();
 
             // Act
-            var response = moqWebService.Delete(1);
+            var response = moqWebsiteService.Delete(1);
 
             // Assert
             Assert.IsFalse(response.IsError, "Exception thrown");
@@ -181,10 +176,9 @@ namespace CmsEngine.Test.Core.Services
         public void Delete_Website_By_VanityId()
         {
             // Arrange
-            var moqWebService = WebsiteSetup.SetupService();
 
             // Act
-            var response = moqWebService.Delete(new Guid("8633a850-128f-4425-a2ec-30e23826b7ff"));
+            var response = moqWebsiteService.Delete(new Guid("8633a850-128f-4425-a2ec-30e23826b7ff"));
 
             // Assert
             Assert.IsFalse(response.IsError, "Exception thrown");
