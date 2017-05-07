@@ -1,14 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using CmsEngine.Data;
+using CmsEngine.Data.AccessLayer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
-namespace CMSEngine.Api
+namespace CmsEngine.Api
 {
     public class Startup
     {
@@ -27,8 +25,17 @@ namespace CMSEngine.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            // Add EF6 DbContext
+            services.AddScoped<IDbContext>(provider =>
+            {
+                return new CmsEngineContext(Configuration.GetConnectionString("DefaultConnection"));
+            });
+
             // Add framework services.
             services.AddMvc();
+
+            // Add Unit of Work
+            services.AddTransient<IUnitOfWork, UnitOfWork>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

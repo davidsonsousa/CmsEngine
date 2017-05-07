@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 
-namespace CMSEngine.Api
+namespace CmsEngine.Api
 {
     public class Program
     {
