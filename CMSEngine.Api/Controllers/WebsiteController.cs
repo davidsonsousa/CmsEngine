@@ -19,25 +19,75 @@ namespace CmsEngine.Api.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<string> Get()
+        public IActionResult Get()
         {
-            var websites = websiteService.GetAllReadOnly();
-
-            return websites.Select(x => x.Name);
+            try
+            {
+                var websites = websiteService.GetAllReadOnly();
+                return Ok(websites.Select(x => x.Name));
+            }
+            catch
+            {
+                return BadRequest();
+            }
         }
 
         [HttpGet("{id}")]
-        public string Get(Guid id)
+        public IActionResult Get(int id)
         {
-            var website = websiteService.GetByVanityId(id);
-            return website.Name;
+            try
+            {
+                var website = websiteService.GetById(id);
+
+                if (website == null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(website.Name);
+            }
+            catch
+            {
+                return BadRequest();
+            }
         }
 
         [HttpGet("{id}")]
-        public string Get(int id)
+        public IActionResult Get(Guid id)
         {
-            var website = websiteService.GetById(id);
-            return website.Name;
+            try
+            {
+                var website = websiteService.GetByVanityId(id);
+
+                if (website == null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(website.Name);
+            }
+            catch
+            {
+                return BadRequest();
+            }
+        }
+
+        [HttpPost]
+        public IActionResult Post([FromBody]string value)
+        {
+            return Ok();
+        }
+
+        [HttpPut("{id}")]
+        public IActionResult Put(int id, [FromBody]string value)
+        {
+            return Ok();
+        }
+
+        [HttpDelete("{id}")]
+        public IActionResult Delete(int id)
+        {
+            return Ok();
         }
     }
 }
