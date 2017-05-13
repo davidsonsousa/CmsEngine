@@ -6,6 +6,8 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System;
 using System.Linq;
+using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 
 namespace CmsEngine.Test.Api.Controllers
 {
@@ -31,10 +33,15 @@ namespace CmsEngine.Test.Api.Controllers
             var expectedResult = WebsiteSetup.GetTestWebsites().Select(x => x.Name);
 
             // Act
-            var response = controller.Get();
+            var actionResult = controller.Get();
+            var contentResult = actionResult as OkObjectResult;
+            var testResult = contentResult.Value as IEnumerable<string>;
 
             // Assert
-            Assert.IsTrue(response.SequenceEqual(expectedResult), "Response doesn't match expected result");
+            Assert.IsNotNull(contentResult);
+            Assert.IsNotNull(contentResult.Value);
+            Assert.AreEqual(200, contentResult.StatusCode);
+            Assert.IsTrue(testResult.SequenceEqual(expectedResult));
         }
 
         [TestMethod]
@@ -44,10 +51,29 @@ namespace CmsEngine.Test.Api.Controllers
             var expectedResult = WebsiteSetup.GetTestWebsites().FirstOrDefault(q => q.Id == 1).Name;
 
             // Act
-            var response = controller.Get(1);
+            var actionResult = controller.Get(1);
+            var contentResult = actionResult as OkObjectResult;
+            var testResult = contentResult.Value as string;
 
             // Assert
-            Assert.AreEqual(response, expectedResult);
+            Assert.IsNotNull(contentResult);
+            Assert.IsNotNull(contentResult.Value);
+            Assert.AreEqual(200, contentResult.StatusCode);
+            Assert.AreEqual(testResult, expectedResult);
+        }
+
+        [TestMethod]
+        public void GetWebsiteById_ShouldReturnNotFound()
+        {
+            // Arrange
+
+            // Act
+            var actionResult = controller.Get(10);
+            var contentResult = actionResult as NotFoundResult;
+
+            // Assert
+            Assert.IsNotNull(contentResult);
+            Assert.AreEqual(404, contentResult.StatusCode);
         }
 
         [TestMethod]
@@ -58,10 +84,30 @@ namespace CmsEngine.Test.Api.Controllers
             var expectedResult = WebsiteSetup.GetTestWebsites().FirstOrDefault(q => q.VanityId == vanityId).Name;
 
             // Act
-            var response = controller.Get(vanityId);
+            var actionResult = controller.Get(vanityId);
+            var contentResult = actionResult as OkObjectResult;
+            var testResult = contentResult.Value as string;
 
             // Assert
-            Assert.AreEqual(response, expectedResult);
+            Assert.IsNotNull(contentResult);
+            Assert.IsNotNull(contentResult.Value);
+            Assert.AreEqual(200, contentResult.StatusCode);
+            Assert.AreEqual(testResult, expectedResult);
+        }
+
+        [TestMethod]
+        public void GetWebsiteByVanityId_ShouldReturnNotFound()
+        {
+            // Arrange
+            var vanityId = new Guid("41ec584b-6d8f-4110-aef4-f9a5036b9bff");
+
+            // Act
+            var actionResult = controller.Get(vanityId);
+            var contentResult = actionResult as NotFoundResult;
+
+            // Assert
+            Assert.IsNotNull(contentResult);
+            Assert.AreEqual(404, contentResult.StatusCode);
         }
     }
 }
