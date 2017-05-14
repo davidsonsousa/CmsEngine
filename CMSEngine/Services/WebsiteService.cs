@@ -1,7 +1,9 @@
 ﻿using CmsEngine.Data.AccessLayer;
+using CmsEngine.Data.EditModels;
 using CmsEngine.Data.Models;
+using CmsEngine.Data.ViewModels;
+using CmsEngine.Extensions;
 using CmsEngine.Utils;
-using CmsEngine.ViewModels;
 using System;
 using System.Linq;
 
@@ -13,12 +15,12 @@ namespace CmsEngine.Services
         {
         }
 
-        public override ReturnValue BulkDelete(Guid[] vanityId)
+        public override ReturnValue BulkDelete(Guid[] id)
         {
             var returnValue = new ReturnValue();
             try
             {
-                Repository.BulkUpdate(q => vanityId.Contains(q.VanityId), u => new Website { IsDeleted = true });
+                Repository.BulkUpdate(q => id.Contains(q.VanityId), u => new Website { IsDeleted = true });
 
                 returnValue.IsError = false;
                 returnValue.Message = string.Format("Selected items deleted at {0}.", DateTime.Now.ToShortTimeString());
@@ -33,12 +35,12 @@ namespace CmsEngine.Services
             return returnValue;
         }
 
-        public override ReturnValue Delete(Guid vanityId)
+        public override ReturnValue Delete(Guid id)
         {
             var returnValue = new ReturnValue();
             try
             {
-                var website = this.GetAll().Where(q => q.VanityId == vanityId).FirstOrDefault();
+                var website = this.GetAll().Where(q => q.VanityId == id).FirstOrDefault();
                 returnValue = this.Delete(website);
             }
             catch
@@ -69,17 +71,17 @@ namespace CmsEngine.Services
             return returnValue;
         }
 
-        public override ReturnValue Save(IViewModel viewModel)
+        public override ReturnValue Save(IEditModel editModel)
         {
             var returnValue = new ReturnValue
             {
                 IsError = false,
-                Message = string.Format("Website <strong>'{0}'</strong> saved at {1}.", ((BaseViewModel<Website>)viewModel).Item.Name, DateTime.Now.ToShortTimeString())
+                Message = $"Website '{((WebsiteEditModel)editModel).Name}' saved."
             };
 
             try
             {
-                PrepareForSaving(viewModel);
+                PrepareForSaving(editModel);
 
                 UnitOfWork.Save();
             }
@@ -93,15 +95,25 @@ namespace CmsEngine.Services
             return returnValue;
         }
 
-        public override IViewModel SetupViewModel()
+        public override IEditModel SetupEditModel()
         {
-            var itemViewModel = new BaseViewModel<Website>
-            {
-                Item = new Website(),
-                Items = this.GetAllReadOnly()
-            };
+            return new WebsiteEditModel();
+        }
 
-            return itemViewModel;
+        protected override IEditModel SetupEditModel(Website item)
+        {
+            var editModel = new WebsiteEditModel();
+            item.MapTo(editModel);
+
+            return editModel;
+        }
+
+        protected override IViewModel SetupViewModel(Website item)
+        {
+            var viewModel = new WebsiteViewModel();
+            item.MapTo(viewModel);
+
+            return viewModel;
         }
 
         protected override ReturnValue Delete(Website item)
@@ -129,9 +141,10 @@ namespace CmsEngine.Services
             return returnValue;
         }
 
-        protected override void PrepareForSaving(IViewModel viewModel)
+        protected override void PrepareForSaving(IEditModel editModel)
         {
-            var website = ((BaseViewModel<Website>)viewModel).Item;
+            var website = new Website();
+            editModel.MapTo(website);
 
             if (website.IsNew)
             {
