@@ -257,10 +257,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Api\Controllers\WebsiteControllerTest.cs" />
-    <Compile Include="Core\Services\CategoryServiceTest.cs" />
     <Compile Include="Core\Services\PostServiceTest.cs" />
-    <Compile Include="Core\Services\PageServiceTest.cs" />
     <Compile Include="Core\Services\TagServiceTest.cs" />
+    <Compile Include="Core\Services\CategoryServiceTest.cs" />
+    <Compile Include="Core\Services\PageServiceTest.cs" />
     <Compile Include="Core\Services\WebsiteServiceTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Setup\CategorySetup.cs" />

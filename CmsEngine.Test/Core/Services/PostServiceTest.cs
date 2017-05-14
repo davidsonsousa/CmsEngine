@@ -1,7 +1,8 @@
-﻿using CmsEngine.Data.Models;
+﻿using CmsEngine.Data.EditModels;
+using CmsEngine.Data.Models;
+using CmsEngine.Data.ViewModels;
 using CmsEngine.Services;
 using CmsEngine.Test.Setup;
-using CmsEngine.ViewModels;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
@@ -70,7 +71,7 @@ namespace CmsEngine.Test.Core.Services
             var expectedResult = PostSetup.GetTestPosts().FirstOrDefault(q => q.VanityId == new Guid("8633a850-128f-4425-a2ec-30e23826b7ff")).Title;
 
             // Act
-            var response = moqPostService.GetByVanityId(new Guid("8633a850-128f-4425-a2ec-30e23826b7ff"));
+            var response = moqPostService.GetById(new Guid("8633a850-128f-4425-a2ec-30e23826b7ff"));
 
             // Assert
             Assert.AreEqual(response.Title, expectedResult);
@@ -81,29 +82,44 @@ namespace CmsEngine.Test.Core.Services
         #region Setup
 
         [TestMethod]
-        public void SetupViewModel_ShouldReturnNewPost()
+        public void SetupEditModel_ShouldReturnNewPost()
         {
             // Arrange
 
             // Act
-            var response = moqPostService.SetupViewModel();
+            var response = moqPostService.SetupEditModel();
 
             // Assert
-            Assert.AreNotEqual(((BaseViewModel<Post>)response).Item, null, "Item doesn't exist");
-            Assert.IsTrue(((BaseViewModel<Post>)response).Item.IsNew, "Item is not new");
+            Assert.IsNotNull(response, "Item doesn't exist");
+            Assert.IsTrue(((PostEditModel)response).IsNew, "Item is not new");
         }
 
         [TestMethod]
-        public void SetupViewModel_ShouldReturnAllPosts()
+        public void SetupEditModel_ById_ShouldReturnCorrectPost()
         {
             // Arrange
-            var expectedResult = PostSetup.GetTestPosts().Count;
+            var expectedResult = PostSetup.GetTestPosts().FirstOrDefault(q => q.Id == 2).Title;
 
             // Act
-            var response = moqPostService.SetupViewModel();
+            var response = moqPostService.SetupEditModel(2);
 
             // Assert
-            Assert.AreEqual(((BaseViewModel<Post>)response).Items.Count(), expectedResult);
+            Assert.IsInstanceOfType(response, typeof(PostEditModel));
+            Assert.AreEqual(((PostEditModel)response).Title, expectedResult);
+        }
+
+        [TestMethod]
+        public void SetupEditModel_ByVanityId_ShouldReturnCorrectPost()
+        {
+            // Arrange
+            var expectedResult = PostSetup.GetTestPosts().FirstOrDefault(q => q.VanityId == new Guid("8633a850-128f-4425-a2ec-30e23826b7ff")).Title;
+
+            // Act
+            var response = moqPostService.SetupEditModel(new Guid("8633a850-128f-4425-a2ec-30e23826b7ff"));
+
+            // Assert
+            Assert.IsInstanceOfType(response, typeof(PostEditModel));
+            Assert.AreEqual(((PostEditModel)response).Title, expectedResult);
         }
 
         [TestMethod]
@@ -116,7 +132,8 @@ namespace CmsEngine.Test.Core.Services
             var response = moqPostService.SetupViewModel(2);
 
             // Assert
-            Assert.AreEqual(((BaseViewModel<Post>)response).Item.Title, expectedResult);
+            Assert.IsInstanceOfType(response, typeof(PostViewModel));
+            Assert.AreEqual(((PostViewModel)response).Title, expectedResult);
         }
 
         [TestMethod]
@@ -129,7 +146,8 @@ namespace CmsEngine.Test.Core.Services
             var response = moqPostService.SetupViewModel(new Guid("8633a850-128f-4425-a2ec-30e23826b7ff"));
 
             // Assert
-            Assert.AreEqual(((BaseViewModel<Post>)response).Item.Title, expectedResult);
+            Assert.IsInstanceOfType(response, typeof(PostViewModel));
+            Assert.AreEqual(((PostViewModel)response).Title, expectedResult);
         }
 
         #endregion
@@ -142,18 +160,12 @@ namespace CmsEngine.Test.Core.Services
             // Arrange
 
             // Act
-            var post = new Post
+            var postEditModel = new PostEditModel
             {
-                Title = "Post3",
-                IsDeleted = false
+                Title = "Post3"
             };
 
-            var postViewModel = new BaseViewModel<Post>
-            {
-                Item = post
-            };
-
-            var response = moqPostService.Save(postViewModel);
+            var response = moqPostService.Save(postEditModel);
 
             // Assert
             Assert.IsFalse(response.IsError, "Exception thrown");

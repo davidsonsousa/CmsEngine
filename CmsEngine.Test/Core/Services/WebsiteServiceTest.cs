@@ -1,7 +1,8 @@
-﻿using CmsEngine.Data.Models;
+﻿using CmsEngine.Data.EditModels;
+using CmsEngine.Data.Models;
+using CmsEngine.Data.ViewModels;
 using CmsEngine.Services;
 using CmsEngine.Test.Setup;
-using CmsEngine.ViewModels;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
@@ -70,7 +71,7 @@ namespace CmsEngine.Test.Core.Services
             var expectedResult = WebsiteSetup.GetTestWebsites().FirstOrDefault(q => q.VanityId == new Guid("8633a850-128f-4425-a2ec-30e23826b7ff")).Name;
 
             // Act
-            var response = moqWebsiteService.GetByVanityId(new Guid("8633a850-128f-4425-a2ec-30e23826b7ff"));
+            var response = moqWebsiteService.GetById(new Guid("8633a850-128f-4425-a2ec-30e23826b7ff"));
 
             // Assert
             Assert.AreEqual(response.Name, expectedResult);
@@ -81,29 +82,44 @@ namespace CmsEngine.Test.Core.Services
         #region Setup
 
         [TestMethod]
-        public void SetupViewModel_ShouldReturnNewWebsite()
+        public void SetupEditModel_ShouldReturnNewWebsite()
         {
             // Arrange
 
             // Act
-            var response = moqWebsiteService.SetupViewModel();
+            var response = moqWebsiteService.SetupEditModel();
 
             // Assert
-            Assert.AreNotEqual(((BaseViewModel<Website>)response).Item, null, "Item doesn't exist");
-            Assert.IsTrue(((BaseViewModel<Website>)response).Item.IsNew, "Item is not new");
+            Assert.IsNotNull(response, "Item doesn't exist");
+            Assert.IsTrue(((WebsiteEditModel)response).IsNew, "Item is not new");
         }
 
         [TestMethod]
-        public void SetupViewModel_ShouldReturnAllWebsites()
+        public void SetupEditModel_ById_ShouldReturnCorrectWebsite()
         {
             // Arrange
-            var expectedResult = WebsiteSetup.GetTestWebsites().Count;
+            var expectedResult = WebsiteSetup.GetTestWebsites().FirstOrDefault(q => q.Id == 2).Name;
 
             // Act
-            var response = moqWebsiteService.SetupViewModel();
+            var response = moqWebsiteService.SetupEditModel(2);
 
             // Assert
-            Assert.AreEqual(((BaseViewModel<Website>)response).Items.Count(), expectedResult);
+            Assert.IsInstanceOfType(response, typeof(WebsiteEditModel));
+            Assert.AreEqual(((WebsiteEditModel)response).Name, expectedResult);
+        }
+
+        [TestMethod]
+        public void SetupEditModel_ByVanityId_ShouldReturnCorrectWebsite()
+        {
+            // Arrange
+            var expectedResult = WebsiteSetup.GetTestWebsites().FirstOrDefault(q => q.VanityId == new Guid("8633a850-128f-4425-a2ec-30e23826b7ff")).Name;
+
+            // Act
+            var response = moqWebsiteService.SetupEditModel(new Guid("8633a850-128f-4425-a2ec-30e23826b7ff"));
+
+            // Assert
+            Assert.IsInstanceOfType(response, typeof(WebsiteEditModel));
+            Assert.AreEqual(((WebsiteEditModel)response).Name, expectedResult);
         }
 
         [TestMethod]
@@ -116,7 +132,8 @@ namespace CmsEngine.Test.Core.Services
             var response = moqWebsiteService.SetupViewModel(2);
 
             // Assert
-            Assert.AreEqual(((BaseViewModel<Website>)response).Item.Name, expectedResult);
+            Assert.IsInstanceOfType(response, typeof(WebsiteViewModel));
+            Assert.AreEqual(((WebsiteViewModel)response).Name, expectedResult);
         }
 
         [TestMethod]
@@ -129,7 +146,8 @@ namespace CmsEngine.Test.Core.Services
             var response = moqWebsiteService.SetupViewModel(new Guid("8633a850-128f-4425-a2ec-30e23826b7ff"));
 
             // Assert
-            Assert.AreEqual(((BaseViewModel<Website>)response).Item.Name, expectedResult);
+            Assert.IsInstanceOfType(response, typeof(WebsiteViewModel));
+            Assert.AreEqual(((WebsiteViewModel)response).Name, expectedResult);
         }
 
         #endregion
@@ -142,19 +160,13 @@ namespace CmsEngine.Test.Core.Services
             // Arrange
 
             // Act
-            var website = new Website
+            var websiteEditModel = new WebsiteEditModel
             {
                 Name = "Website3",
-                Culture = "cs-cz",
-                IsDeleted = false
+                Culture = "cs-cz"
             };
 
-            var websiteViewModel = new BaseViewModel<Website>
-            {
-                Item = website
-            };
-
-            var response = moqWebsiteService.Save(websiteViewModel);
+            var response = moqWebsiteService.Save(websiteEditModel);
 
             // Assert
             Assert.IsFalse(response.IsError, "Exception thrown");

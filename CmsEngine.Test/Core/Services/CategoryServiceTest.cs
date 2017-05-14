@@ -1,7 +1,8 @@
-﻿using CmsEngine.Data.Models;
+﻿using CmsEngine.Data.EditModels;
+using CmsEngine.Data.Models;
+using CmsEngine.Data.ViewModels;
 using CmsEngine.Services;
 using CmsEngine.Test.Setup;
-using CmsEngine.ViewModels;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
@@ -67,10 +68,10 @@ namespace CmsEngine.Test.Core.Services
         public void GetByVanityId_ShouldReturnCorrectCategory()
         {
             // Arrange
-            var expectedResult = CategorySetup.GetTestCategories().FirstOrDefault(q => q.VanityId == new Guid("aa2a8fea-cace-482f-b8f5-58a41b9a03f8")).Name;
+            var expectedResult = CategorySetup.GetTestCategories().FirstOrDefault(q => q.VanityId == new Guid("7a46d993-bde0-4c80-8b30-b06828c0680c")).Name;
 
             // Act
-            var response = moqCategoryService.GetByVanityId(new Guid("aa2a8fea-cace-482f-b8f5-58a41b9a03f8"));
+            var response = moqCategoryService.GetById(new Guid("7a46d993-bde0-4c80-8b30-b06828c0680c"));
 
             // Assert
             Assert.AreEqual(response.Name, expectedResult);
@@ -81,29 +82,44 @@ namespace CmsEngine.Test.Core.Services
         #region Setup
 
         [TestMethod]
-        public void SetupViewModel_ShouldReturnNewCategory()
+        public void SetupEditModel_ShouldReturnNewCategory()
         {
             // Arrange
 
             // Act
-            var response = moqCategoryService.SetupViewModel();
+            var response = moqCategoryService.SetupEditModel();
 
             // Assert
-            Assert.AreNotEqual(((BaseViewModel<Category>)response).Item, null, "Item doesn't exist");
-            Assert.IsTrue(((BaseViewModel<Category>)response).Item.IsNew, "Item is not new");
+            Assert.IsNotNull(response, "Item doesn't exist");
+            Assert.IsTrue(((CategoryEditModel)response).IsNew, "Item is not new");
         }
 
         [TestMethod]
-        public void SetupViewModel_ShouldReturnAllCategories()
+        public void SetupEditModel_ById_ShouldReturnCorrectCategory()
         {
             // Arrange
-            var expectedResult = CategorySetup.GetTestCategories().Count;
+            var expectedResult = CategorySetup.GetTestCategories().FirstOrDefault(q => q.Id == 2).Name;
 
             // Act
-            var response = moqCategoryService.SetupViewModel();
+            var response = moqCategoryService.SetupEditModel(2);
 
             // Assert
-            Assert.AreEqual(((BaseViewModel<Category>)response).Items.Count(), expectedResult);
+            Assert.IsInstanceOfType(response, typeof(CategoryEditModel));
+            Assert.AreEqual(((CategoryEditModel)response).Name, expectedResult);
+        }
+
+        [TestMethod]
+        public void SetupEditModel_ByVanityId_ShouldReturnCorrectCategory()
+        {
+            // Arrange
+            var expectedResult = CategorySetup.GetTestCategories().FirstOrDefault(q => q.VanityId == new Guid("7a46d993-bde0-4c80-8b30-b06828c0680c")).Name;
+
+            // Act
+            var response = moqCategoryService.SetupEditModel(new Guid("7a46d993-bde0-4c80-8b30-b06828c0680c"));
+
+            // Assert
+            Assert.IsInstanceOfType(response, typeof(CategoryEditModel));
+            Assert.AreEqual(((CategoryEditModel)response).Name, expectedResult);
         }
 
         [TestMethod]
@@ -116,20 +132,22 @@ namespace CmsEngine.Test.Core.Services
             var response = moqCategoryService.SetupViewModel(2);
 
             // Assert
-            Assert.AreEqual(((BaseViewModel<Category>)response).Item.Name, expectedResult);
+            Assert.IsInstanceOfType(response, typeof(CategoryViewModel));
+            Assert.AreEqual(((CategoryViewModel)response).Name, expectedResult);
         }
 
         [TestMethod]
         public void SetupViewModel_ByVanityId_ShouldReturnCorrectCategory()
         {
             // Arrange
-            var expectedResult = CategorySetup.GetTestCategories().FirstOrDefault(q => q.VanityId == new Guid("aa2a8fea-cace-482f-b8f5-58a41b9a03f8")).Name;
+            var expectedResult = CategorySetup.GetTestCategories().FirstOrDefault(q => q.VanityId == new Guid("7a46d993-bde0-4c80-8b30-b06828c0680c")).Name;
 
             // Act
-            var response = moqCategoryService.SetupViewModel(new Guid("aa2a8fea-cace-482f-b8f5-58a41b9a03f8"));
+            var response = moqCategoryService.SetupViewModel(new Guid("7a46d993-bde0-4c80-8b30-b06828c0680c"));
 
             // Assert
-            Assert.AreEqual(((BaseViewModel<Category>)response).Item.Name, expectedResult);
+            Assert.IsInstanceOfType(response, typeof(CategoryViewModel));
+            Assert.AreEqual(((CategoryViewModel)response).Name, expectedResult);
         }
 
         #endregion
@@ -137,30 +155,24 @@ namespace CmsEngine.Test.Core.Services
         #region DB Changes
 
         [TestMethod]
-        public void Save()
+        public void Save_Category()
         {
             // Arrange
 
             // Act
-            var category = new Category
+            var categoryEditModel = new CategoryEditModel
             {
-                Name = "Category3",
-                IsDeleted = false
+                Name = "Category3"
             };
 
-            var categoryViewModel = new BaseViewModel<Category>
-            {
-                Item = category
-            };
-
-            var response = moqCategoryService.Save(categoryViewModel);
+            var response = moqCategoryService.Save(categoryEditModel);
 
             // Assert
             Assert.IsFalse(response.IsError, "Exception thrown");
         }
 
         [TestMethod]
-        public void Delete_By_Id()
+        public void Delete_Category_By_Id()
         {
             // Arrange
 
@@ -172,12 +184,12 @@ namespace CmsEngine.Test.Core.Services
         }
 
         [TestMethod]
-        public void Delete_By_VanityId()
+        public void Delete_Category_By_VanityId()
         {
             // Arrange
 
             // Act
-            var response = moqCategoryService.Delete(new Guid("aa2a8fea-cace-482f-b8f5-58a41b9a03f8"));
+            var response = moqCategoryService.Delete(new Guid("7a46d993-bde0-4c80-8b30-b06828c0680c"));
 
             // Assert
             Assert.IsFalse(response.IsError, "Exception thrown");

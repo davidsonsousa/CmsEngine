@@ -1,7 +1,8 @@
-﻿using CmsEngine.Data.Models;
+﻿using CmsEngine.Data.EditModels;
+using CmsEngine.Data.Models;
+using CmsEngine.Data.ViewModels;
 using CmsEngine.Services;
 using CmsEngine.Test.Setup;
-using CmsEngine.ViewModels;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
@@ -70,7 +71,7 @@ namespace CmsEngine.Test.Core.Services
             var expectedResult = TagSetup.GetTestTags().FirstOrDefault(q => q.VanityId == new Guid("8633a850-128f-4425-a2ec-30e23826b7ff")).Name;
 
             // Act
-            var response = moqTagService.GetByVanityId(new Guid("8633a850-128f-4425-a2ec-30e23826b7ff"));
+            var response = moqTagService.GetById(new Guid("8633a850-128f-4425-a2ec-30e23826b7ff"));
 
             // Assert
             Assert.AreEqual(response.Name, expectedResult);
@@ -81,29 +82,44 @@ namespace CmsEngine.Test.Core.Services
         #region Setup
 
         [TestMethod]
-        public void SetupViewModel_ShouldReturnNewTag()
+        public void SetupEditModel_ShouldReturnNewTag()
         {
             // Arrange
 
             // Act
-            var response = moqTagService.SetupViewModel();
+            var response = moqTagService.SetupEditModel();
 
             // Assert
-            Assert.AreNotEqual(((BaseViewModel<Tag>)response).Item, null, "Item doesn't exist");
-            Assert.IsTrue(((BaseViewModel<Tag>)response).Item.IsNew, "Item is not new");
+            Assert.IsNotNull(response, "Item doesn't exist");
+            Assert.IsTrue(((TagEditModel)response).IsNew, "Item is not new");
         }
 
         [TestMethod]
-        public void SetupViewModel_ShouldReturnAllTags()
+        public void SetupEditModel_ById_ShouldReturnCorrectTag()
         {
             // Arrange
-            var expectedResult = TagSetup.GetTestTags().Count;
+            var expectedResult = TagSetup.GetTestTags().FirstOrDefault(q => q.Id == 2).Name;
 
             // Act
-            var response = moqTagService.SetupViewModel();
+            var response = moqTagService.SetupEditModel(2);
 
             // Assert
-            Assert.AreEqual(((BaseViewModel<Tag>)response).Items.Count(), expectedResult);
+            Assert.IsInstanceOfType(response, typeof(TagEditModel));
+            Assert.AreEqual(((TagEditModel)response).Name, expectedResult);
+        }
+
+        [TestMethod]
+        public void SetupEditModel_ByVanityId_ShouldReturnCorrectTag()
+        {
+            // Arrange
+            var expectedResult = TagSetup.GetTestTags().FirstOrDefault(q => q.VanityId == new Guid("8633a850-128f-4425-a2ec-30e23826b7ff")).Name;
+
+            // Act
+            var response = moqTagService.SetupEditModel(new Guid("8633a850-128f-4425-a2ec-30e23826b7ff"));
+
+            // Assert
+            Assert.IsInstanceOfType(response, typeof(TagEditModel));
+            Assert.AreEqual(((TagEditModel)response).Name, expectedResult);
         }
 
         [TestMethod]
@@ -116,7 +132,8 @@ namespace CmsEngine.Test.Core.Services
             var response = moqTagService.SetupViewModel(2);
 
             // Assert
-            Assert.AreEqual(((BaseViewModel<Tag>)response).Item.Name, expectedResult);
+            Assert.IsInstanceOfType(response, typeof(TagViewModel));
+            Assert.AreEqual(((TagViewModel)response).Name, expectedResult);
         }
 
         [TestMethod]
@@ -129,7 +146,8 @@ namespace CmsEngine.Test.Core.Services
             var response = moqTagService.SetupViewModel(new Guid("8633a850-128f-4425-a2ec-30e23826b7ff"));
 
             // Assert
-            Assert.AreEqual(((BaseViewModel<Tag>)response).Item.Name, expectedResult);
+            Assert.IsInstanceOfType(response, typeof(TagViewModel));
+            Assert.AreEqual(((TagViewModel)response).Name, expectedResult);
         }
 
         #endregion
@@ -142,18 +160,12 @@ namespace CmsEngine.Test.Core.Services
             // Arrange
 
             // Act
-            var tag = new Tag
+            var tagEditModel = new TagEditModel
             {
-                Name = "Tag3",
-                IsDeleted = false
+                Name = "Tag3"
             };
 
-            var tagViewModel = new BaseViewModel<Tag>
-            {
-                Item = tag
-            };
-
-            var response = moqTagService.Save(tagViewModel);
+            var response = moqTagService.Save(tagEditModel);
 
             // Assert
             Assert.IsFalse(response.IsError, "Exception thrown");

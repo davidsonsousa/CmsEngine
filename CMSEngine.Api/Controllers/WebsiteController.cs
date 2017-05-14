@@ -1,8 +1,8 @@
 using CmsEngine.Data.AccessLayer;
+using CmsEngine.Data.EditModels;
 using CmsEngine.Services;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace CmsEngine.Api.Controllers
@@ -57,7 +57,7 @@ namespace CmsEngine.Api.Controllers
         {
             try
             {
-                var website = websiteService.GetByVanityId(id);
+                var website = websiteService.GetById(id);
 
                 if (website == null)
                 {
@@ -73,21 +73,46 @@ namespace CmsEngine.Api.Controllers
         }
 
         [HttpPost]
-        public IActionResult Post([FromBody]string value)
+        public IActionResult Post([FromBody]WebsiteEditModel websiteViewModel)
         {
-            return Ok();
+            try
+            {
+                var returnValue = websiteService.Save(websiteViewModel);
+                return CreatedAtRoute("DefaultApi", new { returnValue = returnValue }, websiteViewModel);
+            }
+            catch
+            {
+                return BadRequest();
+            }
+
         }
 
         [HttpPut("{id}")]
-        public IActionResult Put(int id, [FromBody]string value)
+        public IActionResult Put(int id, [FromBody]WebsiteEditModel websiteViewModel)
         {
-            return Ok();
+            try
+            {
+                websiteService.Save(websiteViewModel);
+                return Ok();
+            }
+            catch
+            {
+                return BadRequest();
+            }
         }
 
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
-            return Ok();
+            try
+            {
+                websiteService.Delete(id);
+                return Ok();
+            }
+            catch
+            {
+                return BadRequest();
+            }
         }
     }
 }

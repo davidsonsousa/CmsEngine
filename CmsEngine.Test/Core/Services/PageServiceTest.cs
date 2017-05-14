@@ -1,7 +1,8 @@
-﻿using CmsEngine.Data.Models;
+﻿using CmsEngine.Data.EditModels;
+using CmsEngine.Data.Models;
+using CmsEngine.Data.ViewModels;
 using CmsEngine.Services;
 using CmsEngine.Test.Setup;
-using CmsEngine.ViewModels;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
@@ -70,7 +71,7 @@ namespace CmsEngine.Test.Core.Services
             var expectedResult = PageSetup.GetTestPages().FirstOrDefault(q => q.VanityId == new Guid("8633a850-128f-4425-a2ec-30e23826b7ff")).Title;
 
             // Act
-            var response = moqPageService.GetByVanityId(new Guid("8633a850-128f-4425-a2ec-30e23826b7ff"));
+            var response = moqPageService.GetById(new Guid("8633a850-128f-4425-a2ec-30e23826b7ff"));
 
             // Assert
             Assert.AreEqual(response.Title, expectedResult);
@@ -81,29 +82,44 @@ namespace CmsEngine.Test.Core.Services
         #region Setup
 
         [TestMethod]
-        public void SetupViewModel_ShouldReturnNewPage()
+        public void SetupEditModel_ShouldReturnNewPage()
         {
             // Arrange
 
             // Act
-            var response = moqPageService.SetupViewModel();
+            var response = moqPageService.SetupEditModel();
 
             // Assert
-            Assert.AreNotEqual(((BaseViewModel<Page>)response).Item, null, "Item doesn't exist");
-            Assert.IsTrue(((BaseViewModel<Page>)response).Item.IsNew, "Item is not new");
+            Assert.IsNotNull(response, "Item doesn't exist");
+            Assert.IsTrue(((PageEditModel)response).IsNew, "Item is not new");
         }
 
         [TestMethod]
-        public void SetupViewModel_ShouldReturnAllPages()
+        public void SetupEditModel_ById_ShouldReturnCorrectPage()
         {
             // Arrange
-            var expectedResult = PageSetup.GetTestPages().Count;
+            var expectedResult = PageSetup.GetTestPages().FirstOrDefault(q => q.Id == 2).Title;
 
             // Act
-            var response = moqPageService.SetupViewModel();
+            var response = moqPageService.SetupEditModel(2);
 
             // Assert
-            Assert.AreEqual(((BaseViewModel<Page>)response).Items.Count(), expectedResult);
+            Assert.IsInstanceOfType(response, typeof(PageEditModel));
+            Assert.AreEqual(((PageEditModel)response).Title, expectedResult);
+        }
+
+        [TestMethod]
+        public void SetupEditModel_ByVanityId_ShouldReturnCorrectPage()
+        {
+            // Arrange
+            var expectedResult = PageSetup.GetTestPages().FirstOrDefault(q => q.VanityId == new Guid("8633a850-128f-4425-a2ec-30e23826b7ff")).Title;
+
+            // Act
+            var response = moqPageService.SetupEditModel(new Guid("8633a850-128f-4425-a2ec-30e23826b7ff"));
+
+            // Assert
+            Assert.IsInstanceOfType(response, typeof(PageEditModel));
+            Assert.AreEqual(((PageEditModel)response).Title, expectedResult);
         }
 
         [TestMethod]
@@ -116,7 +132,8 @@ namespace CmsEngine.Test.Core.Services
             var response = moqPageService.SetupViewModel(2);
 
             // Assert
-            Assert.AreEqual(((BaseViewModel<Page>)response).Item.Title, expectedResult);
+            Assert.IsInstanceOfType(response, typeof(PageViewModel));
+            Assert.AreEqual(((PageViewModel)response).Title, expectedResult);
         }
 
         [TestMethod]
@@ -129,7 +146,8 @@ namespace CmsEngine.Test.Core.Services
             var response = moqPageService.SetupViewModel(new Guid("8633a850-128f-4425-a2ec-30e23826b7ff"));
 
             // Assert
-            Assert.AreEqual(((BaseViewModel<Page>)response).Item.Title, expectedResult);
+            Assert.IsInstanceOfType(response, typeof(PageViewModel));
+            Assert.AreEqual(((PageViewModel)response).Title, expectedResult);
         }
 
         #endregion
@@ -142,18 +160,12 @@ namespace CmsEngine.Test.Core.Services
             // Arrange
 
             // Act
-            var page = new Page
+            var pageEditModel = new PageEditModel
             {
-                Title = "Page3",
-                IsDeleted = false
+                Title = "Page3"
             };
 
-            var pageViewModel = new BaseViewModel<Page>
-            {
-                Item = page
-            };
-
-            var response = moqPageService.Save(pageViewModel);
+            var response = moqPageService.Save(pageEditModel);
 
             // Assert
             Assert.IsFalse(response.IsError, "Exception thrown");
