@@ -89,7 +89,6 @@
     <Compile Include="Data\Models\Tag.cs" />
     <Compile Include="Data\ViewModels\BaseViewModel.cs" />
     <Compile Include="Data\ViewModels\CategoryViewModel.cs" />
-    <Compile Include="Data\ViewModels\DataTableViewModel.cs" />
     <Compile Include="Data\ViewModels\IViewModel.cs" />
     <Compile Include="Data\ViewModels\PostViewModel.cs" />
     <Compile Include="Data\ViewModels\PageViewModel.cs" />
