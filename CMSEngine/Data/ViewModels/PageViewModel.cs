@@ -3,7 +3,7 @@ using System;
 
 namespace CmsEngine.Data.ViewModels
 {
-    public class PageViewModel: IViewModel
+    public class PageViewModel : BaseViewModel, IViewModel
     {
         [Searchable, Orderable, ShowOnDataTable(0)]
         public string Title { get; set; }

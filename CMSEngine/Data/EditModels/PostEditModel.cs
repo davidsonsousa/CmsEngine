@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace CmsEngine.Data.EditModels
 {
-    public class PostEditModel: IEditModel
+    public class PostEditModel : BaseEditModel, IEditModel
     {
         public PostEditModel()
         {

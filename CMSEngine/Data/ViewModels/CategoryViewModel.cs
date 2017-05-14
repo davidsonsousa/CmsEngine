@@ -2,7 +2,7 @@
 
 namespace CmsEngine.Data.ViewModels
 {
-    public class CategoryViewModel: IViewModel
+    public class CategoryViewModel : BaseViewModel, IViewModel
     {
         [Searchable, Orderable, ShowOnDataTable(0)]
         public string Name { get; set; }

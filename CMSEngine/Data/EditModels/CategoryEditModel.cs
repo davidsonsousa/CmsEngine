@@ -2,7 +2,7 @@
 
 namespace CmsEngine.Data.EditModels
 {
-    public class CategoryEditModel: IEditModel
+    public class CategoryEditModel : BaseEditModel, IEditModel
     {
         [Required]
         [MaxLength(15, ErrorMessage = "The name must have less than 15 characters")]
