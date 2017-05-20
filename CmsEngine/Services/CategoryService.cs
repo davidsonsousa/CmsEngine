@@ -151,6 +151,10 @@ namespace CmsEngine.Services
             {
                 Repository.Insert(category);
             }
+            else
+            {
+                Repository.Update(category);
+            }
         }
     }
 }

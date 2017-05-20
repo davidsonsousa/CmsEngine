@@ -150,6 +150,10 @@ namespace CmsEngine.Services
             {
                 Repository.Insert(page);
             }
+            else
+            {
+                Repository.Update(page);
+            }
         }
     }
 }
