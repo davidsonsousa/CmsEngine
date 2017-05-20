@@ -1,5 +1,6 @@
 ﻿using CmsEngine.Api.Controllers;
 using CmsEngine.Data.AccessLayer;
+using CmsEngine.Data.EditModels;
 using CmsEngine.Data.Models;
 using CmsEngine.Test.Setup;
 using CmsEngine.Utils;
@@ -10,7 +11,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using CmsEngine.Data.EditModels;
 
 namespace CmsEngine.Test.Api.Controllers
 {
@@ -117,38 +117,108 @@ namespace CmsEngine.Test.Api.Controllers
         public void PostWebsite_ShouldReturnCreated()
         {
             // Arrange
-            var websiteViewModel = new WebsiteEditModel
+            var websiteEditModel = new WebsiteEditModel
             {
                 Name = "Post Website",
                 Culture = "en-US",
                 Description = "Welcome to the post test website"
             };
 
+            moqRepository.Setup(x => x.Insert(It.IsAny<Website>())).Verifiable();
+
             // Act
-            var actionResult = controller.Post(websiteViewModel);
+            var actionResult = controller.Post(websiteEditModel);
             var createdResult = actionResult as CreatedAtRouteResult;
 
             // Assert
+            moqRepository.Verify();
             Assert.IsNotNull(createdResult);
-            Assert.AreEqual("DefaultApi", createdResult.RouteName);
-            Assert.AreEqual($"Website '{websiteViewModel.Name}' saved.", ((ReturnValue)createdResult.RouteValues["returnValue"]).Message);
+            Assert.AreEqual(nameof(controller.Post), createdResult.RouteName);
         }
 
         [TestMethod]
         public void PostWebsite_ShouldReturnBadRequest()
         {
             // Arrange
-            var websiteViewModel = new WebsiteEditModel
+            var websiteEditModel = new WebsiteEditModel
             {
                 Culture = "en-US",
                 Description = "Welcome to the post test website"
             };
 
+            controller.ModelState.AddModelError("Name", "Required");
+
             // Act
-            var actionResult = controller.Post(websiteViewModel);
+            var actionResult = controller.Post(websiteEditModel);
 
             // Assert
             Assert.IsInstanceOfType(actionResult, typeof(BadRequestResult));
+        }
+
+        [TestMethod]
+        public void PutWebsite_ShouldReturnOk()
+        {
+            // Arrange
+            var websiteId = new Guid("278c0380-bdd2-45bb-869b-b94659bc2b89");
+            var websiteEditModel = new WebsiteEditModel
+            {
+                Id = 1,
+                VanityId = websiteId,
+                Name = "Put Website",
+                Culture = "en-US",
+                Description = "Welcome to the put test website"
+            };
+
+            moqRepository.Setup(x => x.Update(It.IsAny<Website>())).Verifiable();
+
+            // Act
+            var actionResult = controller.Put(websiteId, websiteEditModel);
+            var okResult = actionResult as OkObjectResult;
+
+            // Assert
+            moqRepository.Verify();
+            Assert.IsNotNull(okResult);
+            Assert.AreEqual(200, okResult.StatusCode);
+        }
+
+        [TestMethod]
+        public void PutWebsite_ShouldReturnBadRequest()
+        {
+            // Arrange
+            var websiteId = new Guid("278c0380-bdd2-45bb-869b-b94659bc2b89");
+            var websiteEditModel = new WebsiteEditModel
+            {
+                Id = 1,
+                VanityId = websiteId,
+                Culture = "en-US",
+                Description = "Welcome to the put test website"
+            };
+
+            controller.ModelState.AddModelError("Name", "Required");
+
+            // Act
+            var actionResult = controller.Put(websiteId, websiteEditModel);
+
+            // Assert
+            Assert.IsInstanceOfType(actionResult, typeof(BadRequestResult));
+        }
+
+        [TestMethod]
+        public void DeleteWebsite_ShouldReturnOk()
+        {
+            // Arrange
+            var websiteId = new Guid("278c0380-bdd2-45bb-869b-b94659bc2b89");
+
+            moqRepository.Setup(x => x.Update(It.IsAny<Website>())).Verifiable();
+
+            // Act
+            var actionResult = controller.Delete(websiteId);
+            var okResult = actionResult as OkObjectResult;
+
+            // Assert
+            moqRepository.Verify();
+            Assert.IsNotNull(okResult);
+            Assert.AreEqual(200, okResult.StatusCode);
         }
     }
 }
