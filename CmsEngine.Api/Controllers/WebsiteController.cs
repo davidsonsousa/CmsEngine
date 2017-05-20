@@ -19,6 +19,10 @@ namespace CmsEngine.Api.Controllers
             websiteService = new WebsiteService(uow);
         }
 
+        /// <summary>
+        /// Get all websites
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         public IActionResult Get()
         {
@@ -33,7 +37,12 @@ namespace CmsEngine.Api.Controllers
             }
         }
 
-        [HttpGet("{id}")]
+        /// <summary>
+        /// Get website by its numeric Id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet("id/{id}")]
         public IActionResult Get(int id)
         {
             try
@@ -53,6 +62,11 @@ namespace CmsEngine.Api.Controllers
             }
         }
 
+        /// <summary>
+        /// Gets website by its Vanity Id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpGet("{id}")]
         public IActionResult Get(Guid id)
         {
@@ -73,6 +87,11 @@ namespace CmsEngine.Api.Controllers
             }
         }
 
+        /// <summary>
+        /// Inserts a new website
+        /// </summary>
+        /// <param name="websiteEditModel"></param>
+        /// <returns></returns>
         [HttpPost]
         public IActionResult Post([FromBody]WebsiteEditModel websiteEditModel)
         {
@@ -93,6 +112,12 @@ namespace CmsEngine.Api.Controllers
 
         }
 
+        /// <summary>
+        /// Update a website
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="websiteEditModel"></param>
+        /// <returns></returns>
         [HttpPut("{id}")]
         public IActionResult Put(Guid id, [FromBody]WebsiteEditModel websiteEditModel)
         {
@@ -116,6 +141,11 @@ namespace CmsEngine.Api.Controllers
             }
         }
 
+        /// <summary>
+        /// Delete a website
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpDelete("{id}")]
         public IActionResult Delete(Guid id)
         {
