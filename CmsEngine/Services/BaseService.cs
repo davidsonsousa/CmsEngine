@@ -2,10 +2,11 @@
 using CmsEngine.Data.Models;
 using CmsEngine.Extensions;
 using CmsEngine.Utils;
-using CmsEngine.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using CmsEngine.Data.ViewModels;
+using CmsEngine.Data.EditModels;
 
 namespace CmsEngine.Services
 {
@@ -184,15 +185,15 @@ namespace CmsEngine.Services
         /// <summary>
         /// Get item by Guid
         /// </summary>
-        /// <param name="vanitId"></param>
+        /// <param name="id"></param>
         /// <returns></returns>
-        public virtual T GetByVanityId(Guid vanitId)
+        public virtual T GetById(Guid id)
         {
             T item;
 
             try
             {
-                item = this.GetAll().Where(q => q.VanityId == vanitId).FirstOrDefault();
+                item = this.GetAll().Where(q => q.VanityId == id).FirstOrDefault();
             }
             catch
             {
@@ -204,9 +205,23 @@ namespace CmsEngine.Services
 
         #endregion
 
-        #region Setup
+        #region Setup View and Edit models
 
-        public abstract IViewModel SetupViewModel();
+        /// <summary>
+        /// Prepare EditModel for a new item
+        /// </summary>
+        /// <returns></returns>
+        public abstract IEditModel SetupEditModel();
+
+        public virtual IEditModel SetupEditModel(int id)
+        {
+            return SetupEditModel(this.GetById(id));
+        }
+
+        public virtual IEditModel SetupEditModel(Guid id)
+        {
+            return SetupEditModel(this.GetById(id));
+        }
 
         public virtual IViewModel SetupViewModel(int id)
         {
@@ -214,9 +229,9 @@ namespace CmsEngine.Services
             return this.SetupViewModel(item);
         }
 
-        public virtual IViewModel SetupViewModel(Guid vanityId)
+        public virtual IViewModel SetupViewModel(Guid id)
         {
-            var item = this.GetByVanityId(vanityId);
+            var item = this.GetById(id);
             return this.SetupViewModel(item);
         }
 
@@ -227,21 +242,21 @@ namespace CmsEngine.Services
         /// </summary>
         /// <param name="viewModel"></param>
         /// <returns></returns>
-        public abstract ReturnValue Save(IViewModel viewModel);
+        public abstract ReturnValue Save(IEditModel editModel);
 
         /// <summary>
         /// Delete item by Guid
         /// </summary>
-        /// <param name="vanityId"></param>
+        /// <param name="id"></param>
         /// <returns></returns>
-        public abstract ReturnValue Delete(Guid vanityId);
+        public abstract ReturnValue Delete(Guid id);
 
         /// <summary>
         /// Delete items by an array of Guids
         /// </summary>
-        /// <param name="vanityId"></param>
+        /// <param name="id"></param>
         /// <returns></returns>
-        public abstract ReturnValue BulkDelete(Guid[] vanityId);
+        public abstract ReturnValue BulkDelete(Guid[] id);
 
         /// <summary>
         /// Delete item by numeric Id
@@ -251,22 +266,6 @@ namespace CmsEngine.Services
         public abstract ReturnValue Delete(int id);
 
         #region Helpers
-
-        private IViewModel SetupViewModel(T item)
-        {
-            var itemViewModel = this.SetupViewModel() as BaseViewModel<T>;
-
-            try
-            {
-                itemViewModel.Item = item;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-
-            return itemViewModel;
-        }
 
         private string PrepareProperty(T item, System.Reflection.PropertyInfo property)
         {
@@ -295,6 +294,10 @@ namespace CmsEngine.Services
             return propertyValue;
         }
 
+        protected abstract IEditModel SetupEditModel(T item);
+
+        protected abstract IViewModel SetupViewModel(T item);
+
         /// <summary>
         /// Delete item
         /// </summary>
@@ -306,7 +309,7 @@ namespace CmsEngine.Services
         /// Prepare item for saving
         /// </summary>
         /// <param name="viewModel"></param>
-        protected abstract void PrepareForSaving(IViewModel viewModel);
+        protected abstract void PrepareForSaving(IEditModel editModel);
 
         #endregion
     }

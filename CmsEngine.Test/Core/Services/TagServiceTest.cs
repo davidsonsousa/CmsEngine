@@ -1,27 +1,33 @@
-﻿using CmsEngine.Data.AccessLayer;
+﻿using CmsEngine.Data.EditModels;
 using CmsEngine.Data.Models;
+using CmsEngine.Data.ViewModels;
 using CmsEngine.Services;
+using CmsEngine.Test.Setup;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Moq;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using CmsEngine.ViewModels;
-using System;
-using System.Linq.Expressions;
 
 namespace CmsEngine.Test.Core.Services
 {
     [TestClass]
     public class TagServiceTest
     {
+        private TagService moqTagService;
+
+        [TestInitialize]
+        public void InitializeTest()
+        {
+            moqTagService = TagSetup.SetupService();
+        }
+
         #region Get
 
         [TestMethod]
         public void GetAll_ShouldReturnAllTagsAsQueryable()
         {
             // Arrange
-            var moqTagService = this.SetupTagService();
-            var expectedResult = ListOfTags.Count;
+            var expectedResult = TagSetup.GetTestTags().Count;
 
             // Act
             var response = moqTagService.GetAll();
@@ -35,8 +41,7 @@ namespace CmsEngine.Test.Core.Services
         public void GetAllReadOnly_ShouldReturnAllTagsAsEnumerable()
         {
             // Arrange
-            var moqTagService = this.SetupTagService();
-            var expectedResult = ListOfTags.Count;
+            var expectedResult = TagSetup.GetTestTags().Count;
 
             // Act
             var response = moqTagService.GetAllReadOnly();
@@ -50,8 +55,7 @@ namespace CmsEngine.Test.Core.Services
         public void GetById_ShouldReturnCorrectTag()
         {
             // Arrange
-            var moqTagService = this.SetupTagService();
-            var expectedResult = ListOfTags.FirstOrDefault(q => q.Id == 1).Name;
+            var expectedResult = TagSetup.GetTestTags().FirstOrDefault(q => q.Id == 1).Name;
 
             // Act
             var response = moqTagService.GetById(1);
@@ -64,11 +68,10 @@ namespace CmsEngine.Test.Core.Services
         public void GetByVanityId_ShouldReturnCorrectTag()
         {
             // Arrange
-            var moqTagService = this.SetupTagService();
-            var expectedResult = ListOfTags.FirstOrDefault(q => q.VanityId == new Guid("8633a850-128f-4425-a2ec-30e23826b7ff")).Name;
+            var expectedResult = TagSetup.GetTestTags().FirstOrDefault(q => q.VanityId == new Guid("8633a850-128f-4425-a2ec-30e23826b7ff")).Name;
 
             // Act
-            var response = moqTagService.GetByVanityId(new Guid("8633a850-128f-4425-a2ec-30e23826b7ff"));
+            var response = moqTagService.GetById(new Guid("8633a850-128f-4425-a2ec-30e23826b7ff"));
 
             // Assert
             Assert.AreEqual(response.Name, expectedResult);
@@ -79,59 +82,72 @@ namespace CmsEngine.Test.Core.Services
         #region Setup
 
         [TestMethod]
-        public void SetupViewModel_ShouldReturnNewTag()
+        public void SetupEditModel_ShouldReturnNewTag()
         {
             // Arrange
-            var moqWebService = this.SetupTagService();
 
             // Act
-            var response = moqWebService.SetupViewModel();
+            var response = moqTagService.SetupEditModel();
 
             // Assert
-            Assert.AreNotEqual(((BaseViewModel<Tag>)response).Item, null, "Item doesn't exist");
-            Assert.IsTrue(((BaseViewModel<Tag>)response).Item.IsNew, "Item is not new");
+            Assert.IsNotNull(response, "Item doesn't exist");
+            Assert.IsTrue(((TagEditModel)response).IsNew, "Item is not new");
         }
 
         [TestMethod]
-        public void SetupViewModel_ShouldReturnAllTags()
+        public void SetupEditModel_ById_ShouldReturnCorrectTag()
         {
             // Arrange
-            var moqWebService = this.SetupTagService();
-            var expectedResult = ListOfTags.Count;
+            var expectedResult = TagSetup.GetTestTags().FirstOrDefault(q => q.Id == 2).Name;
 
             // Act
-            var response = moqWebService.SetupViewModel();
+            var response = moqTagService.SetupEditModel(2);
 
             // Assert
-            Assert.AreEqual(((BaseViewModel<Tag>)response).Items.Count(), expectedResult);
+            Assert.IsInstanceOfType(response, typeof(TagEditModel));
+            Assert.AreEqual(((TagEditModel)response).Name, expectedResult);
+        }
+
+        [TestMethod]
+        public void SetupEditModel_ByVanityId_ShouldReturnCorrectTag()
+        {
+            // Arrange
+            var expectedResult = TagSetup.GetTestTags().FirstOrDefault(q => q.VanityId == new Guid("8633a850-128f-4425-a2ec-30e23826b7ff")).Name;
+
+            // Act
+            var response = moqTagService.SetupEditModel(new Guid("8633a850-128f-4425-a2ec-30e23826b7ff"));
+
+            // Assert
+            Assert.IsInstanceOfType(response, typeof(TagEditModel));
+            Assert.AreEqual(((TagEditModel)response).Name, expectedResult);
         }
 
         [TestMethod]
         public void SetupViewModel_ById_ShouldReturnCorrectTag()
         {
             // Arrange
-            var moqWebService = this.SetupTagService();
-            var expectedResult = ListOfTags.FirstOrDefault(q => q.Id == 2).Name;
+            var expectedResult = TagSetup.GetTestTags().FirstOrDefault(q => q.Id == 2).Name;
 
             // Act
-            var response = moqWebService.SetupViewModel(2);
+            var response = moqTagService.SetupViewModel(2);
 
             // Assert
-            Assert.AreEqual(((BaseViewModel<Tag>)response).Item.Name, expectedResult);
+            Assert.IsInstanceOfType(response, typeof(TagViewModel));
+            Assert.AreEqual(((TagViewModel)response).Name, expectedResult);
         }
 
         [TestMethod]
         public void SetupViewModel_ByVanityId_ShouldReturnCorrectTag()
         {
             // Arrange
-            var moqWebService = this.SetupTagService();
-            var expectedResult = ListOfTags.FirstOrDefault(q => q.VanityId == new Guid("8633a850-128f-4425-a2ec-30e23826b7ff")).Name;
+            var expectedResult = TagSetup.GetTestTags().FirstOrDefault(q => q.VanityId == new Guid("8633a850-128f-4425-a2ec-30e23826b7ff")).Name;
 
             // Act
-            var response = moqWebService.SetupViewModel(new Guid("8633a850-128f-4425-a2ec-30e23826b7ff"));
+            var response = moqTagService.SetupViewModel(new Guid("8633a850-128f-4425-a2ec-30e23826b7ff"));
 
             // Assert
-            Assert.AreEqual(((BaseViewModel<Tag>)response).Item.Name, expectedResult);
+            Assert.IsInstanceOfType(response, typeof(TagViewModel));
+            Assert.AreEqual(((TagViewModel)response).Name, expectedResult);
         }
 
         #endregion
@@ -142,21 +158,14 @@ namespace CmsEngine.Test.Core.Services
         public void Save_Tag()
         {
             // Arrange
-            var moqWebService = this.SetupTagService();
 
             // Act
-            var tag = new Tag
+            var tagEditModel = new TagEditModel
             {
-                Name = "Tag3",
-                IsDeleted = false
+                Name = "Tag3"
             };
 
-            var tagViewModel = new BaseViewModel<Tag>
-            {
-                Item = tag
-            };
-
-            var response = moqWebService.Save(tagViewModel);
+            var response = moqTagService.Save(tagEditModel);
 
             // Assert
             Assert.IsFalse(response.IsError, "Exception thrown");
@@ -166,10 +175,9 @@ namespace CmsEngine.Test.Core.Services
         public void Delete_Tag_By_Id()
         {
             // Arrange
-            var moqWebService = this.SetupTagService();
 
             // Act
-            var response = moqWebService.Delete(1);
+            var response = moqTagService.Delete(1);
 
             // Assert
             Assert.IsFalse(response.IsError, "Exception thrown");
@@ -179,46 +187,12 @@ namespace CmsEngine.Test.Core.Services
         public void Delete_Tag_By_VanityId()
         {
             // Arrange
-            var moqWebService = this.SetupTagService();
 
             // Act
-            var response = moqWebService.Delete(new Guid("8633a850-128f-4425-a2ec-30e23826b7ff"));
+            var response = moqTagService.Delete(new Guid("8633a850-128f-4425-a2ec-30e23826b7ff"));
 
             // Assert
             Assert.IsFalse(response.IsError, "Exception thrown");
-        }
-
-        #endregion
-
-        #region Test configuration
-
-        /// <summary>
-        /// Returns a list of tags
-        /// </summary>
-        public List<Tag> ListOfTags
-        {
-            get
-            {
-                return new List<Tag>
-                {
-                    new Tag { Id = 1, VanityId = new Guid("278c0380-bdd2-45bb-869b-b94659bc2b89"), Name = "Tag1", IsDeleted = false },
-                    new Tag { Id = 2, VanityId = new Guid("8633a850-128f-4425-a2ec-30e23826b7ff"), Name = "Tag2", IsDeleted = false }
-                };
-            }
-        }
-
-        private TagService SetupTagService()
-        {
-            // Setup the values the repository should return
-            var moqRepository = new Mock<IRepository<Tag>>();
-            moqRepository.Setup(x => x.Get(It.IsAny<Expression<Func<Tag, bool>>>())).Returns(ListOfTags.AsQueryable());
-            moqRepository.Setup(x => x.GetReadOnly(It.IsAny<Expression<Func<Tag, bool>>>())).Returns(ListOfTags);
-
-            // Setup our unit of work
-            var moqUnitOfWork = new Mock<IUnitOfWork>();
-            moqUnitOfWork.Setup(x => x.GetRepository<Tag>()).Returns(moqRepository.Object);
-
-            return new TagService(moqUnitOfWork.Object);
         }
 
         #endregion

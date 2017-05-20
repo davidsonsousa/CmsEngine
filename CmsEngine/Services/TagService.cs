@@ -1,7 +1,9 @@
 ﻿using CmsEngine.Data.AccessLayer;
+using CmsEngine.Data.EditModels;
 using CmsEngine.Data.Models;
+using CmsEngine.Data.ViewModels;
+using CmsEngine.Extensions;
 using CmsEngine.Utils;
-using CmsEngine.ViewModels;
 using System;
 using System.Linq;
 
@@ -13,12 +15,12 @@ namespace CmsEngine.Services
         {
         }
 
-        public override ReturnValue BulkDelete(Guid[] vanityId)
+        public override ReturnValue BulkDelete(Guid[] id)
         {
             var returnValue = new ReturnValue();
             try
             {
-                Repository.BulkUpdate(q => vanityId.Contains(q.VanityId), u => new Tag { IsDeleted = true });
+                Repository.BulkUpdate(q => id.Contains(q.VanityId), u => new Tag { IsDeleted = true });
 
                 returnValue.IsError = false;
                 returnValue.Message = string.Format("Selected items deleted at {0}.", DateTime.Now.ToShortTimeString());
@@ -33,12 +35,12 @@ namespace CmsEngine.Services
             return returnValue;
         }
 
-        public override ReturnValue Delete(Guid vanityId)
+        public override ReturnValue Delete(Guid id)
         {
             var returnValue = new ReturnValue();
             try
             {
-                var tag = this.GetAll().Where(q => q.VanityId == vanityId).FirstOrDefault();
+                var tag = this.GetAll().Where(q => q.VanityId == id).FirstOrDefault();
                 returnValue = this.Delete(tag);
             }
             catch
@@ -69,17 +71,17 @@ namespace CmsEngine.Services
             return returnValue;
         }
 
-        public override ReturnValue Save(IViewModel viewModel)
+        public override ReturnValue Save(IEditModel editModel)
         {
             var returnValue = new ReturnValue
             {
                 IsError = false,
-                Message = string.Format("Tag <strong>'{0}'</strong> saved at {1}.", ((BaseViewModel<Tag>)viewModel).Item.Name, DateTime.Now.ToShortTimeString())
+                Message = $"Tag '{((TagEditModel)editModel).Name}' saved."
             };
 
             try
             {
-                PrepareForSaving(viewModel);
+                PrepareForSaving(editModel);
 
                 UnitOfWork.Save();
             }
@@ -93,15 +95,25 @@ namespace CmsEngine.Services
             return returnValue;
         }
 
-        public override IViewModel SetupViewModel()
+        public override IEditModel SetupEditModel()
         {
-            var itemViewModel = new BaseViewModel<Tag>
-            {
-                Item = new Tag(),
-                Items = this.GetAllReadOnly()
-            };
+            return new TagEditModel();
+        }
 
-            return itemViewModel;
+        protected override IEditModel SetupEditModel(Tag item)
+        {
+            var editModel = new TagEditModel();
+            item.MapTo(editModel);
+
+            return editModel;
+        }
+
+        protected override IViewModel SetupViewModel(Tag item)
+        {
+            var viewModel = new TagViewModel();
+            item.MapTo(viewModel);
+
+            return viewModel;
         }
 
         protected override ReturnValue Delete(Tag item)
@@ -129,13 +141,18 @@ namespace CmsEngine.Services
             return returnValue;
         }
 
-        protected override void PrepareForSaving(IViewModel viewModel)
+        protected override void PrepareForSaving(IEditModel editModel)
         {
-            var tag = ((BaseViewModel<Tag>)viewModel).Item;
+            var tag = new Tag();
+            editModel.MapTo(tag);
 
             if (tag.IsNew)
             {
                 Repository.Insert(tag);
+            }
+            else
+            {
+                Repository.Update(tag);
             }
         }
     }

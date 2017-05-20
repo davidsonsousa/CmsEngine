@@ -1,7 +1,9 @@
 ﻿using CmsEngine.Data.AccessLayer;
+using CmsEngine.Data.EditModels;
 using CmsEngine.Data.Models;
+using CmsEngine.Data.ViewModels;
+using CmsEngine.Extensions;
 using CmsEngine.Utils;
-using CmsEngine.ViewModels;
 using System;
 using System.Linq;
 
@@ -13,12 +15,12 @@ namespace CmsEngine.Services
         {
         }
 
-        public override ReturnValue BulkDelete(Guid[] vanityId)
+        public override ReturnValue BulkDelete(Guid[] id)
         {
             var returnValue = new ReturnValue();
             try
             {
-                Repository.BulkUpdate(q => vanityId.Contains(q.VanityId), u => new Category { IsDeleted = true });
+                Repository.BulkUpdate(q => id.Contains(q.VanityId), u => new Category { IsDeleted = true });
 
                 returnValue.IsError = false;
                 returnValue.Message = string.Format("Selected items deleted at {0}.", DateTime.Now.ToShortTimeString());
@@ -33,12 +35,12 @@ namespace CmsEngine.Services
             return returnValue;
         }
 
-        public override ReturnValue Delete(Guid vanityId)
+        public override ReturnValue Delete(Guid id)
         {
             var returnValue = new ReturnValue();
             try
             {
-                var category = this.GetAll().Where(q => q.VanityId == vanityId).FirstOrDefault();
+                var category = this.GetAll().Where(q => q.VanityId == id).FirstOrDefault();
                 returnValue = this.Delete(category);
             }
             catch
@@ -69,17 +71,17 @@ namespace CmsEngine.Services
             return returnValue;
         }
 
-        public override ReturnValue Save(IViewModel viewModel)
+        public override ReturnValue Save(IEditModel editModel)
         {
             var returnValue = new ReturnValue
             {
                 IsError = false,
-                Message = string.Format("Category <strong>'{0}'</strong> saved at {1}.", ((BaseViewModel<Category>)viewModel).Item.Name, DateTime.Now.ToShortTimeString())
+                Message = $"Category '{((CategoryEditModel)editModel).Name}' saved."
             };
 
             try
             {
-                PrepareForSaving(viewModel);
+                PrepareForSaving(editModel);
 
                 UnitOfWork.Save();
             }
@@ -93,16 +95,27 @@ namespace CmsEngine.Services
             return returnValue;
         }
 
-        public override IViewModel SetupViewModel()
+        public override IEditModel SetupEditModel()
         {
-            var itemViewModel = new BaseViewModel<Category>
-            {
-                Item = new Category(),
-                Items = this.GetAllReadOnly()
-            };
-
-            return itemViewModel;
+            return new CategoryEditModel();
         }
+
+        protected override IEditModel SetupEditModel(Category item)
+        {
+            var editModel = new CategoryEditModel();
+            item.MapTo(editModel);
+
+            return editModel;
+        }
+
+        protected override IViewModel SetupViewModel(Category item)
+        {
+            var viewModel = new CategoryViewModel();
+            item.MapTo(viewModel);
+
+            return viewModel;
+        }
+
 
         protected override ReturnValue Delete(Category item)
         {
@@ -129,13 +142,18 @@ namespace CmsEngine.Services
             return returnValue;
         }
 
-        protected override void PrepareForSaving(IViewModel viewModel)
+        protected override void PrepareForSaving(IEditModel editModel)
         {
-            var category = ((BaseViewModel<Category>)viewModel).Item;
+            var category = new Category();
+            editModel.MapTo(category);
 
             if (category.IsNew)
             {
                 Repository.Insert(category);
+            }
+            else
+            {
+                Repository.Update(category);
             }
         }
     }

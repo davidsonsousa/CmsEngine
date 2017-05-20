@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26403.7
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CmsEngine", "CMSEngine\CmsEngine.csproj", "{F558DF07-D0C6-485E-A5E0-3B3770D8A71C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CmsEngine", "CmsEngine\CmsEngine.csproj", "{F558DF07-D0C6-485E-A5E0-3B3770D8A71C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CmsEngine.Test", "CmsEngine.Test\CmsEngine.Test.csproj", "{4240E67A-0C9A-43D1-ABB9-842525CAF1B3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CmsEngine.Api", "CMSEngine.Api\CmsEngine.Api.csproj", "{C3704EDF-92A7-43DA-8DCE-454E0E3F3849}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CmsEngine.Api", "CmsEngine.Api\CmsEngine.Api.csproj", "{C3704EDF-92A7-43DA-8DCE-454E0E3F3849}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
