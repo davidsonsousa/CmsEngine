@@ -29,7 +29,7 @@ namespace CmsEngine.Api.Controllers
             try
             {
                 var websites = websiteService.GetAllReadOnly();
-                return Ok(websites.Select(x => x.Name));
+                return Ok(websites);
             }
             catch
             {
