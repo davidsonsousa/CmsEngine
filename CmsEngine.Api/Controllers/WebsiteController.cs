@@ -1,5 +1,6 @@
 using CmsEngine.Data.AccessLayer;
 using CmsEngine.Data.EditModels;
+using CmsEngine.Extensions;
 using CmsEngine.Services;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -73,12 +74,17 @@ namespace CmsEngine.Api.Controllers
         }
 
         [HttpPost]
-        public IActionResult Post([FromBody]WebsiteEditModel websiteViewModel)
+        public IActionResult Post([FromBody]WebsiteEditModel websiteEditModel)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
             try
             {
-                var returnValue = websiteService.Save(websiteViewModel);
-                return CreatedAtRoute("DefaultApi", new { returnValue = returnValue }, websiteViewModel);
+                var returnValue = websiteService.Save(websiteEditModel);
+                return CreatedAtRoute(nameof(Post), new { returnValue = returnValue }, websiteEditModel);
             }
             catch
             {
@@ -88,12 +94,21 @@ namespace CmsEngine.Api.Controllers
         }
 
         [HttpPut("{id}")]
-        public IActionResult Put(int id, [FromBody]WebsiteEditModel websiteViewModel)
+        public IActionResult Put(Guid id, [FromBody]WebsiteEditModel websiteEditModel)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
             try
             {
-                websiteService.Save(websiteViewModel);
-                return Ok();
+                var editModelToUpdate = websiteService.SetupEditModel(websiteEditModel.VanityId);
+
+                websiteEditModel.MapTo(editModelToUpdate);
+
+                var returnValue = websiteService.Save(editModelToUpdate);
+                return Ok(returnValue);
             }
             catch
             {
@@ -102,12 +117,12 @@ namespace CmsEngine.Api.Controllers
         }
 
         [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        public IActionResult Delete(Guid id)
         {
             try
             {
-                websiteService.Delete(id);
-                return Ok();
+                var returnValue = websiteService.Delete(id);
+                return Ok(returnValue);
             }
             catch
             {
