@@ -5,6 +5,9 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.PlatformAbstractions;
+using Swashbuckle.AspNetCore.Swagger;
+using System.IO;
 
 namespace CmsEngine.Api
 {
@@ -34,6 +37,24 @@ namespace CmsEngine.Api
             // Add framework services.
             services.AddMvc();
 
+            services.AddLogging();
+
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new Info
+                {
+                    Version = "v1",
+                    Title = "CMSEngine API",
+                    Description = "CMSEngine API endpoints",
+                    Contact = new Contact { Name = "Davidson Sousa", Email = "", Url = "http://davidsonsousa.net" }
+                });
+
+                //Set the comments path for the swagger json and ui.
+                var basePath = PlatformServices.Default.Application.ApplicationBasePath;
+                var xmlPath = Path.Combine(basePath, "CmsEngine.Api.xml");
+                c.IncludeXmlComments(xmlPath);
+            });
+
             // Add Unit of Work
             services.AddTransient<IUnitOfWork, UnitOfWork>();
         }
@@ -43,6 +64,12 @@ namespace CmsEngine.Api
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
+
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "CMSEngine API v1");
+            });
 
             app.UseMvc();
         }
