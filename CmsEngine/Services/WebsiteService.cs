@@ -144,16 +144,20 @@ namespace CmsEngine.Services
 
         protected override void PrepareForSaving(IEditModel editModel)
         {
-            var website = GetById(editModel.VanityId);
+            Website website;
 
-            editModel.MapTo(website, true);
-
-            if (website.IsNew)
+            if (editModel.IsNew)
             {
+                website = new Website();
+                editModel.MapTo(website, true);
+
                 Repository.Insert(website);
             }
             else
             {
+                website = GetById(editModel.VanityId);
+                editModel.MapTo(website, true);
+
                 Repository.Update(website);
             }
         }
