@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Linq.Expressions;
 
@@ -70,6 +71,7 @@ namespace CmsEngine.Data.AccessLayer
 
         public void Update(T entity)
         {
+            Attach(entity);
             _context.Entry(entity).State = EntityState.Modified;
         }
 
@@ -83,6 +85,17 @@ namespace CmsEngine.Data.AccessLayer
             var entry = _context.Entry(entity);
             entry.State = EntityState.Deleted;
         }
+
+        private void Attach(T entity)
+        {
+            DbEntityEntry dbEntityEntry = _context.Entry(entity);
+            if (dbEntityEntry.State == EntityState.Detached)
+            {
+                _dbSet.Attach(entity);
+            }
+        }
+
+        #region Dispose
 
         protected virtual void Dispose(bool disposing)
         {
@@ -101,5 +114,7 @@ namespace CmsEngine.Data.AccessLayer
             Dispose(true);
             GC.SuppressFinalize(this);
         }
+
+        #endregion
     }
 }
