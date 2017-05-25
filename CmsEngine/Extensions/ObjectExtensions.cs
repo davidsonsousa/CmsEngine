@@ -1,13 +1,22 @@
-﻿using System.Linq;
+﻿using CmsEngine.Attributes;
+using System;
+using System.Linq;
 
 namespace CmsEngine.Extensions
 {
     public static class ObjectExtensions
     {
-        public static object MapTo(this object source, object target)
+        public static object MapTo(this object source, object target, bool ignoreId = false)
         {
-            foreach (var sourceProp in source.GetType().GetProperties())
+            var sourceProperties = source.GetType().GetProperties();
+
+            foreach (var sourceProp in sourceProperties)
             {
+                if (ignoreId == true && (sourceProp.Name == "Id" || sourceProp.Name == "VanityId"))
+                {
+                    continue;
+                }
+                
                 var targetProp = target.GetType().GetProperties().Where(p => p.Name == sourceProp.Name).FirstOrDefault();
                 if (targetProp != null && targetProp.CanWrite && targetProp.GetSetMethod() != null && targetProp.GetType().Name == sourceProp.GetType().Name)
                 {
