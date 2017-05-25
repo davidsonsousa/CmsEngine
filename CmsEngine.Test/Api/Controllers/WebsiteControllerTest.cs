@@ -33,18 +33,18 @@ namespace CmsEngine.Test.Api.Controllers
         public void GetAllWebsites_ShouldReturnAllWebsites()
         {
             // Arrange
-            var expectedResult = WebsiteSetup.GetTestWebsites().Select(x => x.Name);
+            var expectedResult = WebsiteSetup.GetTestWebsites();
 
             // Act
             var actionResult = controller.Get();
             var okResult = actionResult as OkObjectResult;
-            var testResult = okResult.Value as IEnumerable<string>;
+            var testResult = okResult.Value as IEnumerable<Website>;
 
             // Assert
             Assert.IsNotNull(okResult);
             Assert.IsNotNull(okResult.Value);
             Assert.AreEqual((int)HttpStatusCode.OK, okResult.StatusCode);
-            Assert.IsTrue(testResult.SequenceEqual(expectedResult));
+            Assert.AreEqual(testResult.Count(), expectedResult.Count());
         }
 
         [TestMethod]
@@ -133,7 +133,6 @@ namespace CmsEngine.Test.Api.Controllers
             // Assert
             moqRepository.Verify();
             Assert.IsNotNull(createdResult);
-            Assert.AreEqual(nameof(controller.Post), createdResult.RouteName);
         }
 
         [TestMethod]
