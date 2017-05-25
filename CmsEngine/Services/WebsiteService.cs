@@ -85,10 +85,11 @@ namespace CmsEngine.Services
 
                 UnitOfWork.Save();
             }
-            catch
+            catch (Exception ex)
             {
                 returnValue.IsError = true;
                 returnValue.Message = "An error has occurred while saving the website";
+                returnValue.Exception = ex.Message;
                 throw;
             }
 
@@ -143,8 +144,9 @@ namespace CmsEngine.Services
 
         protected override void PrepareForSaving(IEditModel editModel)
         {
-            var website = new Website();
-            editModel.MapTo(website);
+            var website = GetById(editModel.VanityId);
+
+            editModel.MapTo(website, true);
 
             if (website.IsNew)
             {
