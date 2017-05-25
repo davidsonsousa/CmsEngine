@@ -103,7 +103,7 @@ namespace CmsEngine.Api.Controllers
             try
             {
                 var returnValue = websiteService.Save(websiteEditModel);
-                return CreatedAtRoute(nameof(Post), new { returnValue = returnValue }, websiteEditModel);
+                return CreatedAtRoute(null, returnValue);
             }
             catch
             {
@@ -126,13 +126,11 @@ namespace CmsEngine.Api.Controllers
                 return BadRequest();
             }
 
+            websiteEditModel.VanityId = id;
+
             try
             {
-                var editModelToUpdate = websiteService.SetupEditModel(websiteEditModel.VanityId);
-
-                websiteEditModel.MapTo(editModelToUpdate);
-
-                var returnValue = websiteService.Save(editModelToUpdate);
+                var returnValue = websiteService.Save(websiteEditModel);
                 return Ok(returnValue);
             }
             catch
