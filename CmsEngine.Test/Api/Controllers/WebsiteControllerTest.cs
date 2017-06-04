@@ -51,18 +51,18 @@ namespace CmsEngine.Test.Api.Controllers
         public void GetWebsiteById_ShouldReturnSelectedWebsite()
         {
             // Arrange
-            var expectedResult = WebsiteSetup.GetTestWebsites().FirstOrDefault(q => q.Id == 1).Name;
+            var expectedResult = WebsiteSetup.GetTestWebsites().FirstOrDefault(q => q.Id == 1);
 
             // Act
             var actionResult = controller.Get(1);
             var okResult = actionResult as OkObjectResult;
-            var testResult = okResult.Value as string;
+            var testResult = okResult.Value as Website;
 
             // Assert
             Assert.IsNotNull(okResult);
             Assert.IsNotNull(okResult.Value);
             Assert.AreEqual((int)HttpStatusCode.OK, okResult.StatusCode);
-            Assert.AreEqual(testResult, expectedResult);
+            Assert.AreEqual(testResult.Name, expectedResult.Name);
         }
 
         [TestMethod]
@@ -84,18 +84,18 @@ namespace CmsEngine.Test.Api.Controllers
         {
             // Arrange
             var id = new Guid("8633a850-128f-4425-a2ec-30e23826b7ff");
-            var expectedResult = WebsiteSetup.GetTestWebsites().FirstOrDefault(q => q.VanityId == id).Name;
+            var expectedResult = WebsiteSetup.GetTestWebsites().FirstOrDefault(q => q.VanityId == id);
 
             // Act
             var actionResult = controller.Get(id);
             var okResult = actionResult as OkObjectResult;
-            var testResult = okResult.Value as string;
+            var testResult = okResult.Value as Website;
 
             // Assert
             Assert.IsNotNull(okResult);
             Assert.IsNotNull(okResult.Value);
             Assert.AreEqual(200, okResult.StatusCode);
-            Assert.AreEqual(testResult, expectedResult);
+            Assert.AreEqual(testResult.Name, expectedResult.Name);
         }
 
         [TestMethod]
