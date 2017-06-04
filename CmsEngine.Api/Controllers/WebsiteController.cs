@@ -1,10 +1,8 @@
 using CmsEngine.Data.AccessLayer;
 using CmsEngine.Data.EditModels;
-using CmsEngine.Extensions;
 using CmsEngine.Services;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Linq;
 
 namespace CmsEngine.Api.Controllers
 {
@@ -54,7 +52,7 @@ namespace CmsEngine.Api.Controllers
                     return NotFound();
                 }
 
-                return Ok(website.Name);
+                return Ok(website);
             }
             catch
             {
@@ -79,7 +77,7 @@ namespace CmsEngine.Api.Controllers
                     return NotFound();
                 }
 
-                return Ok(website.Name);
+                return Ok(website);
             }
             catch
             {
