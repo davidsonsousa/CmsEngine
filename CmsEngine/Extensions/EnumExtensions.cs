@@ -1,29 +1,29 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Linq;
 using System.Reflection;
 
 namespace CmsEngine.Extensions
 {
-	public static class EnumExtensions
-	{
-		public static string GetDescription(this Enum value)
-		{
-			var type = value.GetType();
-			var name = Enum.GetName(type, value);
-			if (name != null)
-			{
-				var field = type.GetField(name);
-				if (field != null)
-				{
-					var attr = Attribute.GetCustomAttribute(field, typeof(DescriptionAttribute)) as DescriptionAttribute;
-					if (attr != null)
-					{
-						return attr.Description;
-					}
-				}
-			}
+    public static class EnumExtensions
+    {
+        public static string GetDescription(this Enum value)
+        {
+            // Get attributes  
+            var field = value.GetType().GetField(value.ToString());
+            var attributes = field.GetCustomAttributes(false);
 
-			return null;
-		}
-	}
+            // Description is in a hidden Attribute class called DisplayAttribute
+            // Not to be confused with DisplayNameAttribute
+            dynamic displayAttribute = null;
+
+            if (attributes.Any())
+            {
+                displayAttribute = attributes.ElementAt(0);
+            }
+
+            // Return description
+            return displayAttribute?.Description ?? "Description Not Found";
+        }
+    }
 }

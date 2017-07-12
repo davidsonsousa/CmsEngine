@@ -1,36 +1,36 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.Entity;
-using System.Data.Entity.ModelConfiguration.Conventions;
+﻿using CmsEngine.Data.Models;
+using Microsoft.EntityFrameworkCore;
+using System;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CmsEngine.Data.Models;
-using CmsEngine.Data.Models.Configuration;
 
 namespace CmsEngine.Data
 {
-    [DbConfigurationType(typeof(DbConfig))]
     public class CmsEngineContext : DbContext, IDbContext
     {
-        public CmsEngineContext(string connectionString) : base(connectionString)
+        public DbSet<Website> Websites { get; set; }
+        public DbSet<Page> Pages { get; set; }
+        public DbSet<Post> Posts { get; set; }
+        public DbSet<Tag> Tags { get; set; }
+        public DbSet<Category> Categories { get; set; }
+
+        public CmsEngineContext(DbContextOptions<CmsEngineContext> options) : base(options)
         {
-            Database.SetInitializer(new CmsEngineInitializer());
+            //Database.SetInitializer(new CmsEngineInitializer());
         }
 
-        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Conventions.Remove<OneToManyCascadeDeleteConvention>();
+            //modelBuilder.Conventions.Remove<OneToManyCascadeDeleteConvention>();
 
             // Forces the database to use the type datetime2
-            modelBuilder.Properties<DateTime>().Configure(c => c.HasColumnType("datetime2").HasPrecision(0));
+            //modelBuilder.Properties<DateTime>().Configure(c => c.HasColumnType("datetime2").HasPrecision(0));
 
             // Model configuration
-            modelBuilder.Configurations.Add(new WebsiteConfiguration());
-            modelBuilder.Configurations.Add(new PageConfiguration());
-            modelBuilder.Configurations.Add(new PostConfiguration());
-            modelBuilder.Configurations.Add(new TagConfiguration());
-            modelBuilder.Configurations.Add(new CategoryConfiguration());
+            modelBuilder.Entity<Website>(ModelConfiguration.ConfigureWebsite);
+            modelBuilder.Entity<Page>(ModelConfiguration.ConfigurePage);
+            modelBuilder.Entity<Post>(ModelConfiguration.ConfigurePost);
+            modelBuilder.Entity<Tag>(ModelConfiguration.ConfigureTag);
+            modelBuilder.Entity<Category>(ModelConfiguration.ConfigureCategory);
 
             base.OnModelCreating(modelBuilder);
         }
@@ -57,11 +57,5 @@ namespace CmsEngine.Data
 
             return base.SaveChanges();
         }
-
-        public DbSet<Website> Websites { get; set; }
-        public DbSet<Page> Pages { get; set; }
-        public DbSet<Post> Posts { get; set; }
-        public DbSet<Tag> Tags { get; set; }
-        public DbSet<Category> Categories { get; set; }
     }
 }
