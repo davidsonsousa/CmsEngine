@@ -3,10 +3,13 @@ using CmsEngine.Data.AccessLayer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.SpaServices.Webpack;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.PlatformAbstractions;
+using Swashbuckle.AspNetCore.Swagger;
+using System.IO;
 
 namespace WebApplicationBasic
 {
@@ -29,10 +32,27 @@ namespace WebApplicationBasic
         {
             // Add CmsEngineContext
             services.AddDbContext<CmsEngineContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
-
             
             // Add framework services.
             services.AddMvc();
+
+            // Add Swagger
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new Info
+                {
+                    Version = "v1",
+                    Title = "CMSEngine API",
+                    Description = "CMSEngine API endpoints",
+                    Contact = new Contact { Name = "Davidson Sousa", Email = "", Url = "http://davidsonsousa.net" }
+                });
+
+                //Set the comments path for the swagger json and ui.
+                var basePath = PlatformServices.Default.Application.ApplicationBasePath;
+                var xmlPath = Path.Combine(basePath, "CmsEngine.Ui.xml");
+                c.IncludeXmlComments(xmlPath);
+            });
+
 
             // Add Unit of Work
             services.AddScoped<IUnitOfWork, UnitOfWork>();
@@ -57,6 +77,12 @@ namespace WebApplicationBasic
             }
 
             app.UseStaticFiles();
+
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "CMSEngine API v1");
+            });
 
             app.UseMvc(routes =>
             {
