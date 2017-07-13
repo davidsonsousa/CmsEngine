@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace CmsEngine.Data
 {
-    public class CmsEngineContext : DbContext, IDbContext
+    public class CmsEngineContext : DbContext
     {
         public DbSet<Website> Websites { get; set; }
         public DbSet<Page> Pages { get; set; }
@@ -31,6 +31,8 @@ namespace CmsEngine.Data
             modelBuilder.Entity<Post>(ModelConfiguration.ConfigurePost);
             modelBuilder.Entity<Tag>(ModelConfiguration.ConfigureTag);
             modelBuilder.Entity<Category>(ModelConfiguration.ConfigureCategory);
+            modelBuilder.Entity<PostCategory>(ModelConfiguration.ConfigurePostCategory);
+            modelBuilder.Entity<PostTag>(ModelConfiguration.ConfigurePostTag);
 
             base.OnModelCreating(modelBuilder);
         }

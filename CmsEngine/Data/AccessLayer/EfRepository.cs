@@ -9,7 +9,7 @@ namespace CmsEngine.Data.AccessLayer
 {
     public class EfRepository<T> : IRepository<T> where T : class
     {
-        private readonly IDbContext _context;
+        private readonly CmsEngineContext _context;
         private readonly DbSet<T> _dbSet;
         private bool _disposed;
 
@@ -18,7 +18,7 @@ namespace CmsEngine.Data.AccessLayer
 
         }
 
-        public EfRepository(IDbContext context)
+        public EfRepository(CmsEngineContext context)
         {
             _context = context ?? throw new ArgumentNullException("Repository - Context");
             _dbSet = context.Set<T>();

@@ -31,7 +31,8 @@ namespace WebApplicationBasic
         public void ConfigureServices(IServiceCollection services)
         {
             // Add CmsEngineContext
-            services.AddDbContext<CmsEngineContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            string connection = Configuration.GetConnectionString("DefaultConnection");
+            services.AddDbContext<CmsEngineContext>(options => options.UseSqlServer(connection));
             
             // Add framework services.
             services.AddMvc();
@@ -52,7 +53,6 @@ namespace WebApplicationBasic
                 //var xmlPath = Path.Combine(basePath, "CmsEngine.Ui.xml");
                 //c.IncludeXmlComments(xmlPath);
             });
-
 
             // Add Unit of Work
             services.AddScoped<IUnitOfWork, UnitOfWork>();

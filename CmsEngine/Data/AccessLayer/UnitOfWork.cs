@@ -7,11 +7,11 @@ namespace CmsEngine.Data.AccessLayer
 {
     public class UnitOfWork : IUnitOfWork
     {
-        private readonly IDbContext _ctx;
+        private readonly CmsEngineContext _ctx;
         private Dictionary<Type, object> _repositories;
         private bool _disposed;
 
-        public UnitOfWork(IDbContext context)
+        public UnitOfWork(CmsEngineContext context)
         {
             _ctx = context;
 
