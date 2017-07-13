@@ -47,10 +47,10 @@ namespace WebApplicationBasic
                     Contact = new Contact { Name = "Davidson Sousa", Email = "", Url = "http://davidsonsousa.net" }
                 });
 
-                //Set the comments path for the swagger json and ui.
-                var basePath = PlatformServices.Default.Application.ApplicationBasePath;
-                var xmlPath = Path.Combine(basePath, "CmsEngine.Ui.xml");
-                c.IncludeXmlComments(xmlPath);
+                ////Set the comments path for the swagger json and ui.
+                //var basePath = PlatformServices.Default.Application.ApplicationBasePath;
+                //var xmlPath = Path.Combine(basePath, "CmsEngine.Ui.xml");
+                //c.IncludeXmlComments(xmlPath);
             });
 
 
