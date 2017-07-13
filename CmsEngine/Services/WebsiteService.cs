@@ -23,7 +23,7 @@ namespace CmsEngine.Services
                 Repository.BulkUpdate(q => id.Contains(q.VanityId), u => new Website { IsDeleted = true });
 
                 returnValue.IsError = false;
-                returnValue.Message = string.Format("Selected items deleted at {0}.", DateTime.Now.ToShortTimeString());
+                returnValue.Message = string.Format("Selected items deleted at {0}.", DateTime.Now.ToString("d"));
             }
             catch
             {
@@ -85,10 +85,11 @@ namespace CmsEngine.Services
 
                 UnitOfWork.Save();
             }
-            catch
+            catch (Exception ex)
             {
                 returnValue.IsError = true;
                 returnValue.Message = "An error has occurred while saving the website";
+                returnValue.Exception = ex.Message;
                 throw;
             }
 
@@ -129,7 +130,7 @@ namespace CmsEngine.Services
 
                 UnitOfWork.Save();
                 returnValue.IsError = false;
-                returnValue.Message = string.Format("Website '{0}' deleted at {1}.", item.Name, DateTime.Now.ToShortTimeString());
+                returnValue.Message = string.Format("Website '{0}' deleted at {1}.", item.Name, DateTime.Now.ToString("d"));
             }
             catch
             {
@@ -143,15 +144,20 @@ namespace CmsEngine.Services
 
         protected override void PrepareForSaving(IEditModel editModel)
         {
-            var website = new Website();
-            editModel.MapTo(website);
+            Website website;
 
-            if (website.IsNew)
+            if (editModel.IsNew)
             {
+                website = new Website();
+                editModel.MapTo(website, true);
+
                 Repository.Insert(website);
             }
             else
             {
+                website = GetById(editModel.VanityId);
+                editModel.MapTo(website, true);
+
                 Repository.Update(website);
             }
         }

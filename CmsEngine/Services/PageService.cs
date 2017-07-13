@@ -5,7 +5,9 @@ using CmsEngine.Data.ViewModels;
 using CmsEngine.Extensions;
 using CmsEngine.Utils;
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 
 namespace CmsEngine.Services
 {
@@ -23,7 +25,7 @@ namespace CmsEngine.Services
                 Repository.BulkUpdate(q => id.Contains(q.VanityId), u => new Page { IsDeleted = true });
 
                 returnValue.IsError = false;
-                returnValue.Message = string.Format("Selected items deleted at {0}.", DateTime.Now.ToShortTimeString());
+                returnValue.Message = string.Format("Selected items deleted at {0}.", DateTime.Now.ToString("d"));
             }
             catch
             {
@@ -129,7 +131,7 @@ namespace CmsEngine.Services
 
                 UnitOfWork.Save();
                 returnValue.IsError = false;
-                returnValue.Message = string.Format("Page '{0}' deleted at {1}.", item.Title, DateTime.Now.ToShortTimeString());
+                returnValue.Message = string.Format("Page '{0}' deleted at {1}.", item.Title, DateTime.Now.ToString("d"));
             }
             catch
             {

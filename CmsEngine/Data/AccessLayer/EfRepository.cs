@@ -1,15 +1,15 @@
-﻿using EntityFramework.Extensions;
+﻿using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Linq;
 using System.Linq.Expressions;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace CmsEngine.Data.AccessLayer
 {
     public class EfRepository<T> : IRepository<T> where T : class
     {
-        private readonly IDbContext _context;
+        private readonly CmsEngineContext _context;
         private readonly DbSet<T> _dbSet;
         private bool _disposed;
 
@@ -18,7 +18,7 @@ namespace CmsEngine.Data.AccessLayer
 
         }
 
-        public EfRepository(IDbContext context)
+        public EfRepository(CmsEngineContext context)
         {
             _context = context ?? throw new ArgumentNullException("Repository - Context");
             _dbSet = context.Set<T>();
@@ -70,12 +70,14 @@ namespace CmsEngine.Data.AccessLayer
 
         public void Update(T entity)
         {
+            Attach(entity);
             _context.Entry(entity).State = EntityState.Modified;
         }
 
         public void BulkUpdate(Expression<Func<T, bool>> where, Expression<Func<T, T>> update)
         {
-            _dbSet.Where(where).Update(update);
+            throw new Exception("BulkUpdate to be implemented");
+            // _dbSet.Where(where).Update(update);
         }
 
         public void Delete(T entity)
@@ -83,6 +85,17 @@ namespace CmsEngine.Data.AccessLayer
             var entry = _context.Entry(entity);
             entry.State = EntityState.Deleted;
         }
+
+        private void Attach(T entity)
+        {
+            EntityEntry dbEntityEntry = _context.Entry(entity);
+            if (dbEntityEntry.State == EntityState.Detached)
+            {
+                _dbSet.Attach(entity);
+            }
+        }
+
+        #region Dispose
 
         protected virtual void Dispose(bool disposing)
         {
@@ -101,5 +114,7 @@ namespace CmsEngine.Data.AccessLayer
             Dispose(true);
             GC.SuppressFinalize(this);
         }
+
+        #endregion
     }
 }

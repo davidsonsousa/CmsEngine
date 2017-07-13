@@ -11,7 +11,7 @@ namespace CmsEngine.Data.Models
         public int WebsiteId { get; set; }
         public Website Website { get; set; }
 
-        public virtual ICollection<Post> Posts { get; set; }
+        public virtual ICollection<PostCategory> PostCategories { get; set; }
 
         #endregion
 
