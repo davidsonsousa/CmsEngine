@@ -22,7 +22,7 @@ Since this is a .NET Core project you can run in 2 ways:
 - Run the project (on _CmsEngine.Ui_)
   - `dotnet watch run`
 - Run migrations (on _CmsEngine_)
-  - `dotnet ef --startup-project ..\CmsEngine.Ui\  database update`
+  - `dotnet ef --startup-project ..\CmsEngine.Ui\ migrations add MIGRATION_NAME` (Replace _MIGRATION_NAME_ with a name which makes sense)
 
 ### IIS Express
 - Just run with <kbd>Ctrl</kbd> + <kbd>F5</kbd> (or <kbd>F5</kbd> for debugging) and let everything happens
