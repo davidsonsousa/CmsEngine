@@ -1,4 +1,5 @@
-﻿using CmsEngine.Data.AccessLayer;
+﻿using AutoMapper;
+using CmsEngine.Data.AccessLayer;
 using CmsEngine.Data.EditModels;
 using CmsEngine.Data.Models;
 using CmsEngine.Data.ViewModels;
@@ -11,7 +12,7 @@ namespace CmsEngine.Services
 {
     public class PostService : BaseService<Post>
     {
-        public PostService(IUnitOfWork uow) : base(uow)
+        public PostService(IUnitOfWork uow, IMapper mapper) : base(uow, mapper)
         {
         }
 

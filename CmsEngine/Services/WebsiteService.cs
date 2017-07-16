@@ -1,8 +1,8 @@
-﻿using CmsEngine.Data.AccessLayer;
+﻿using AutoMapper;
+using CmsEngine.Data.AccessLayer;
 using CmsEngine.Data.EditModels;
 using CmsEngine.Data.Models;
 using CmsEngine.Data.ViewModels;
-using CmsEngine.Extensions;
 using CmsEngine.Utils;
 using System;
 using System.Linq;
@@ -11,7 +11,7 @@ namespace CmsEngine.Services
 {
     public class WebsiteService : BaseService<Website>
     {
-        public WebsiteService(IUnitOfWork uow) : base(uow)
+        public WebsiteService(IUnitOfWork uow, IMapper mapper) : base(uow, mapper)
         {
         }
 
@@ -103,18 +103,12 @@ namespace CmsEngine.Services
 
         protected override IEditModel SetupEditModel(Website item)
         {
-            var editModel = new WebsiteEditModel();
-            item.MapTo(editModel);
-
-            return editModel;
+            return Mapper.Map<Website, WebsiteEditModel>(item);
         }
 
         protected override IViewModel SetupViewModel(Website item)
         {
-            var viewModel = new WebsiteViewModel();
-            item.MapTo(viewModel);
-
-            return viewModel;
+            return Mapper.Map<Website, WebsiteViewModel>(item);
         }
 
         protected override ReturnValue Delete(Website item)
@@ -148,15 +142,13 @@ namespace CmsEngine.Services
 
             if (editModel.IsNew)
             {
-                website = new Website();
-                editModel.MapTo(website, true);
-
+                website = Mapper.Map<WebsiteEditModel, Website>((WebsiteEditModel)editModel);
                 Repository.Insert(website);
             }
             else
             {
                 website = GetById(editModel.VanityId);
-                editModel.MapTo(website, true);
+                Mapper.Map((WebsiteEditModel)editModel, website);
 
                 Repository.Update(website);
             }
