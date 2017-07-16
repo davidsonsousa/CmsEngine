@@ -46,7 +46,8 @@ namespace CmsEngine.Migrations
                         .HasMaxLength(20);
 
                     b.Property<Guid>("VanityId")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValueSql("newid()");
 
                     b.Property<int>("WebsiteId");
 
@@ -98,7 +99,8 @@ namespace CmsEngine.Migrations
                         .HasMaxLength(20);
 
                     b.Property<Guid>("VanityId")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValueSql("newid()");
 
                     b.Property<int>("WebsiteId");
 
@@ -150,7 +152,8 @@ namespace CmsEngine.Migrations
                         .HasMaxLength(20);
 
                     b.Property<Guid>("VanityId")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValueSql("newid()");
 
                     b.Property<int>("WebsiteId");
 
@@ -213,7 +216,8 @@ namespace CmsEngine.Migrations
                         .HasMaxLength(20);
 
                     b.Property<Guid>("VanityId")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValueSql("newid()");
 
                     b.Property<int>("WebsiteId");
 
@@ -265,7 +269,8 @@ namespace CmsEngine.Migrations
                         .HasMaxLength(20);
 
                     b.Property<Guid>("VanityId")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValueSql("newid()");
 
                     b.HasKey("Id");
 
