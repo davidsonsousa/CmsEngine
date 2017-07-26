@@ -5,24 +5,29 @@ This the new code-base of my website. The old version can be seen at [http://dav
 ## Why?
 Because I need a pet project to study a couple of things. And do it with my own website seems to be the right choice.
 
-## What I intend to study and practice with this project
-* C#
-* ASP.NET Core
-* Entity Framework Core
-* xUnit
-* Angular 4
-* SASS
+## What is this project using? (or: _What I intend to study and practice with this project?_)
+* [ASP.NET Core](https://docs.microsoft.com/en-us/aspnet/core/)
+* [C#](https://www.microsoft.com/net/tutorials/csharp/getting-started)
+* [Entity Framework Core](https://docs.microsoft.com/en-us/ef/core/)
+* [AutoMapper](http://automapper.org/)
+* [xUnit](https://xunit.github.io/)
+* [Angular 4](https://angular.io/)
+* [TypeScript](http://www.typescriptlang.org/)
 
 ## Running the project
 Since this is a .NET Core project you can run in 2 ways:
 
 ### .NET Core CLI
-- Set the development environment (using _PowerShell_)
-  - `$Env:ASPNETCORE_ENVIRONMENT = "Development"`
-- Run the project (on _CmsEngine.Ui_)
+- Set the development environment (must be set for every session)
+  - PowerShell: `$Env:ASPNETCORE_ENVIRONMENT = "Development"`
+- Run the project
+  - `cd ..\CmsEngine.Ui`
   - `dotnet watch run`
-- Run migrations (on _CmsEngine_)
-  - `dotnet ef --startup-project ..\CmsEngine.Ui\ migrations add MIGRATION_NAME` (Replace _MIGRATION_NAME_ with a name which makes sense)
+- Create and run migrations
+  - `cd ..\CmsEngine`
+  - `dotnet ef --startup-project ..\CmsEngine.Ui\ migrations add MIGRATION_NAME`
+  - `cd ..\CmsEngine.Ui`
+  - `dotnet ed database update`
 
 ### IIS Express
 - Just run with <kbd>Ctrl</kbd> + <kbd>F5</kbd> (or <kbd>F5</kbd> for debugging) and let everything happens

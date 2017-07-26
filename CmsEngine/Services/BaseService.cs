@@ -1,4 +1,5 @@
-﻿using CmsEngine.Data.AccessLayer;
+﻿using AutoMapper;
+using CmsEngine.Data.AccessLayer;
 using CmsEngine.Data.EditModels;
 using CmsEngine.Data.Models;
 using CmsEngine.Data.ViewModels;
@@ -15,6 +16,7 @@ namespace CmsEngine.Services
     {
         private readonly IRepository<T> _repository;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IMapper _mapper;
         //private readonly IHttpContextAccessor _httpContextAccessor;
 
         #region Properties
@@ -35,6 +37,11 @@ namespace CmsEngine.Services
             get { return _repository; }
         }
 
+        protected IMapper Mapper
+        {
+            get { return _mapper; }
+        }
+
         /// <summary>
         /// Unit of work used by the Service
         /// </summary>
@@ -45,10 +52,11 @@ namespace CmsEngine.Services
 
         #endregion
 
-        protected internal BaseService(IUnitOfWork uow/*, IHttpContextAccessor hca*/)
+        protected internal BaseService(IUnitOfWork uow, IMapper mapper/*, IHttpContextAccessor hca*/)
         {
             _repository = uow.GetRepository<T>();
             _unitOfWork = uow;
+            _mapper = mapper;
             //_httpContextAccessor = hca;
         }
 

@@ -1,4 +1,5 @@
-﻿using CmsEngine.Data.AccessLayer;
+﻿using AutoMapper;
+using CmsEngine.Data.AccessLayer;
 using CmsEngine.Data.EditModels;
 using CmsEngine.Data.Models;
 using CmsEngine.Data.ViewModels;
@@ -11,7 +12,7 @@ namespace CmsEngine.Services
 {
     public class CategoryService : BaseService<Category>
     {
-        public CategoryService(IUnitOfWork uow) : base(uow)
+        public CategoryService(IUnitOfWork uow, IMapper mapper) : base(uow, mapper)
         {
         }
 

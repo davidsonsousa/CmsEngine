@@ -26,7 +26,7 @@ namespace CmsEngine.Migrations
                     UrlFormat = table.Column<string>(maxLength: 100, nullable: false),
                     UserCreated = table.Column<string>(maxLength: 20, nullable: true),
                     UserModified = table.Column<string>(maxLength: 20, nullable: true),
-                    VanityId = table.Column<Guid>(nullable: false)
+                    VanityId = table.Column<Guid>(nullable: false, defaultValueSql: "newid()")
                 },
                 constraints: table =>
                 {
@@ -47,7 +47,7 @@ namespace CmsEngine.Migrations
                     Slug = table.Column<string>(maxLength: 25, nullable: false),
                     UserCreated = table.Column<string>(maxLength: 20, nullable: true),
                     UserModified = table.Column<string>(maxLength: 20, nullable: true),
-                    VanityId = table.Column<Guid>(nullable: false),
+                    VanityId = table.Column<Guid>(nullable: false, defaultValueSql: "newid()"),
                     WebsiteId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
@@ -79,7 +79,7 @@ namespace CmsEngine.Migrations
                     Title = table.Column<string>(maxLength: 100, nullable: false),
                     UserCreated = table.Column<string>(maxLength: 20, nullable: true),
                     UserModified = table.Column<string>(maxLength: 20, nullable: true),
-                    VanityId = table.Column<Guid>(nullable: false),
+                    VanityId = table.Column<Guid>(nullable: false, defaultValueSql: "newid()"),
                     WebsiteId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
@@ -111,7 +111,7 @@ namespace CmsEngine.Migrations
                     Title = table.Column<string>(maxLength: 100, nullable: false),
                     UserCreated = table.Column<string>(maxLength: 20, nullable: true),
                     UserModified = table.Column<string>(maxLength: 20, nullable: true),
-                    VanityId = table.Column<Guid>(nullable: false),
+                    VanityId = table.Column<Guid>(nullable: false, defaultValueSql: "newid()"),
                     WebsiteId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
@@ -138,7 +138,7 @@ namespace CmsEngine.Migrations
                     Slug = table.Column<string>(maxLength: 25, nullable: false),
                     UserCreated = table.Column<string>(maxLength: 20, nullable: true),
                     UserModified = table.Column<string>(maxLength: 20, nullable: true),
-                    VanityId = table.Column<Guid>(nullable: false),
+                    VanityId = table.Column<Guid>(nullable: false, defaultValueSql: "newid()"),
                     WebsiteId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>

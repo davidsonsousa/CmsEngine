@@ -9,7 +9,7 @@ using CmsEngine;
 namespace CmsEngine.Migrations
 {
     [DbContext(typeof(CmsEngineContext))]
-    [Migration("20170713205415_InitialCreate")]
+    [Migration("20170716184539_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -47,7 +47,8 @@ namespace CmsEngine.Migrations
                         .HasMaxLength(20);
 
                     b.Property<Guid>("VanityId")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValueSql("newid()");
 
                     b.Property<int>("WebsiteId");
 
@@ -99,7 +100,8 @@ namespace CmsEngine.Migrations
                         .HasMaxLength(20);
 
                     b.Property<Guid>("VanityId")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValueSql("newid()");
 
                     b.Property<int>("WebsiteId");
 
@@ -151,7 +153,8 @@ namespace CmsEngine.Migrations
                         .HasMaxLength(20);
 
                     b.Property<Guid>("VanityId")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValueSql("newid()");
 
                     b.Property<int>("WebsiteId");
 
@@ -214,7 +217,8 @@ namespace CmsEngine.Migrations
                         .HasMaxLength(20);
 
                     b.Property<Guid>("VanityId")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValueSql("newid()");
 
                     b.Property<int>("WebsiteId");
 
@@ -266,7 +270,8 @@ namespace CmsEngine.Migrations
                         .HasMaxLength(20);
 
                     b.Property<Guid>("VanityId")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValueSql("newid()");
 
                     b.HasKey("Id");
 

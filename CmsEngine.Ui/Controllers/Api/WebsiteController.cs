@@ -1,4 +1,5 @@
-﻿using CmsEngine.Data.AccessLayer;
+﻿using AutoMapper;
+using CmsEngine.Data.AccessLayer;
 using CmsEngine.Data.EditModels;
 using CmsEngine.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -12,9 +13,9 @@ namespace CmsEngine.Ui.Controllers.Api
     {
         private readonly WebsiteService websiteService;
 
-        public WebsiteController(IUnitOfWork uow)
+        public WebsiteController(IUnitOfWork uow, IMapper mapper)
         {
-            websiteService = new WebsiteService(uow);
+            websiteService = new WebsiteService(uow, mapper);
         }
 
         /// <summary>

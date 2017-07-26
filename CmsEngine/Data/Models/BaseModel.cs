@@ -14,10 +14,8 @@ namespace CmsEngine.Data.Models
         public bool IsDeleted { get; set; }
 
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid VanityId { get; set; }
 
         #region For "quick log" purposes

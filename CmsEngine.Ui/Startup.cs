@@ -1,3 +1,4 @@
+using AutoMapper;
 using CmsEngine.Data;
 using CmsEngine.Data.AccessLayer;
 using Microsoft.AspNetCore.Builder;
@@ -30,6 +31,9 @@ namespace WebApplicationBasic
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            // Add AutoMapper
+            services.AddAutoMapper();
+
             // Add CmsEngineContext
             string connection = Configuration.GetConnectionString("DefaultConnection");
             services.AddDbContext<CmsEngineContext>(options => options.UseSqlServer(connection));

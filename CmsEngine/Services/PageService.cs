@@ -1,19 +1,18 @@
-﻿using CmsEngine.Data.AccessLayer;
+﻿using AutoMapper;
+using CmsEngine.Data.AccessLayer;
 using CmsEngine.Data.EditModels;
 using CmsEngine.Data.Models;
 using CmsEngine.Data.ViewModels;
 using CmsEngine.Extensions;
 using CmsEngine.Utils;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 
 namespace CmsEngine.Services
 {
     public class PageService : BaseService<Page>
     {
-        public PageService(IUnitOfWork uow) : base(uow)
+        public PageService(IUnitOfWork uow, IMapper mapper) : base(uow, mapper)
         {
         }
 

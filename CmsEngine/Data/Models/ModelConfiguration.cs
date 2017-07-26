@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace CmsEngine.Data.Models
 {
@@ -7,164 +8,221 @@ namespace CmsEngine.Data.Models
         public static void ConfigureWebsite(EntityTypeBuilder<Website> b)
         {
             // Fields
-            b.HasKey(website => website.Id);
-            b.Property(website => website.Name)
+            b.HasKey(model => model.Id);
+
+            b.Property(model => model.Name)
                 .HasMaxLength(200)
                 .IsRequired();
-            b.Property(website => website.Description)
+
+            b.Property(model => model.Description)
                 .HasMaxLength(200);
-            b.Property(website => website.Culture)
+
+            b.Property(model => model.Culture)
                 .HasMaxLength(5)
                 .IsRequired();
-            b.Property(website => website.UrlFormat)
+
+            b.Property(model => model.UrlFormat)
                 .HasMaxLength(100)
                 .IsRequired();
-            b.Property(website => website.DateFormat)
+
+            b.Property(model => model.DateFormat)
                 .HasMaxLength(10)
                 .IsRequired();
-            b.Property(website => website.SiteUrl)
+
+            b.Property(model => model.SiteUrl)
                 .HasMaxLength(250)
                 .IsRequired();
-            b.Property(website => website.UserCreated)
-                .HasMaxLength(20);
-            b.Property(website => website.UserModified)
+
+            b.Property(model => model.UserCreated)
                 .HasMaxLength(20);
 
+            b.Property(model => model.UserModified)
+                .HasMaxLength(20);
+
+            b.Property(model => model.VanityId)
+                .ValueGeneratedOnAdd()
+                .HasDefaultValueSql("newid()");
+
             // Relationships
-            b.HasMany(website => website.Posts);
-            b.HasMany(website => website.Pages);
-            b.HasMany(website => website.Tags);
-            b.HasMany(website => website.Categories);
+            b.HasMany(model => model.Posts);
+            b.HasMany(model => model.Pages);
+            b.HasMany(model => model.Tags);
+            b.HasMany(model => model.Categories);
         }
 
         public static void ConfigurePage(EntityTypeBuilder<Page> b)
         {
             // Fields
-            b.HasKey(page => page.Id);
-            b.Property(page => page.Title)
+            b.HasKey(model => model.Id);
+
+            b.Property(model => model.Title)
                 .HasMaxLength(100)
                 .IsRequired();
-            b.Property(page => page.Slug)
+
+            b.Property(model => model.Slug)
                 .HasMaxLength(25)
                 .IsRequired();
-            b.Property(page => page.Description)
+
+            b.Property(model => model.Description)
                 .HasMaxLength(150)
                 .IsRequired();
-            b.Property(page => page.DocumentContent)
+
+            b.Property(model => model.DocumentContent)
                 .IsRequired();
-            b.Property(page => page.Author)
+
+            b.Property(model => model.Author)
                 .HasMaxLength(20)
                 .IsRequired();
-            b.Property(page => page.PublishedOn)
+
+            b.Property(model => model.PublishedOn)
                 .IsRequired();
-            b.Property(page => page.UserCreated)
-                .HasMaxLength(20);
-            b.Property(page => page.UserModified)
-                .HasMaxLength(20);
-            b.Property(page => page.UserCreated)
-                .HasMaxLength(20);
-            b.Property(page => page.UserModified)
+
+            b.Property(model => model.UserCreated)
                 .HasMaxLength(20);
 
+            b.Property(model => model.UserModified)
+                .HasMaxLength(20);
+
+            b.Property(model => model.UserCreated)
+                .HasMaxLength(20);
+
+            b.Property(model => model.UserModified)
+                .HasMaxLength(20);
+
+            b.Property(model => model.VanityId)
+                .ValueGeneratedOnAdd()
+                .HasDefaultValueSql("newid()");
+
             // Relationships
-            b.HasOne(page => page.Website)
-                .WithMany(website => website.Pages);
+            b.HasOne(model => model.Website)
+                .WithMany(model => model.Pages);
         }
 
         public static void ConfigurePost(EntityTypeBuilder<Post> b)
         {
             // Fields
-            b.HasKey(post => post.Id);
-            b.Property(post => post.Title)
+            b.HasKey(model => model.Id);
+
+            b.Property(model => model.Title)
                 .HasMaxLength(100)
                 .IsRequired();
-            b.Property(post => post.Slug)
+
+            b.Property(model => model.Slug)
                 .HasMaxLength(25)
                 .IsRequired();
-            b.Property(post => post.Description)
+
+            b.Property(model => model.Description)
                 .HasMaxLength(150)
                 .IsRequired();
-            b.Property(post => post.DocumentContent)
+
+            b.Property(model => model.DocumentContent)
                 .IsRequired();
-            b.Property(post => post.Author)
+
+            b.Property(model => model.Author)
                 .HasMaxLength(20)
                 .IsRequired();
-            b.Property(post => post.PublishedOn)
+
+            b.Property(model => model.PublishedOn)
                 .IsRequired();
-            b.Property(post => post.UserCreated)
-                .HasMaxLength(20);
-            b.Property(post => post.UserModified)
-                .HasMaxLength(20);
-            b.Property(post => post.UserCreated)
-                .HasMaxLength(20);
-            b.Property(post => post.UserModified)
+
+            b.Property(model => model.UserCreated)
                 .HasMaxLength(20);
 
+            b.Property(model => model.UserModified)
+                .HasMaxLength(20);
+
+            b.Property(model => model.UserCreated)
+                .HasMaxLength(20);
+
+            b.Property(model => model.UserModified)
+                .HasMaxLength(20);
+
+            b.Property(model => model.VanityId)
+                .ValueGeneratedOnAdd()
+                .HasDefaultValueSql("newid()");
+
             // Relationships
-            b.HasOne(post => post.Website)
-                .WithMany(website => website.Posts);
+            b.HasOne(model => model.Website)
+                .WithMany(model => model.Posts);
         }
 
         public static void ConfigureCategory(EntityTypeBuilder<Category> b)
         {
             // Fields
-            b.HasKey(category => category.Id);
-            b.Property(category => category.Name)
+            b.HasKey(model => model.Id);
+
+            b.Property(model => model.Name)
                 .HasMaxLength(25)
                 .IsRequired();
-            b.Property(category => category.Slug)
+
+            b.Property(model => model.Slug)
                 .HasMaxLength(25)
                 .IsRequired();
-            b.Property(category => category.Description)
+
+            b.Property(model => model.Description)
                 .HasMaxLength(200);
-            b.Property(category => category.UserCreated)
+
+            b.Property(model => model.UserCreated)
                 .HasMaxLength(20);
-            b.Property(category => category.UserModified)
+
+            b.Property(model => model.UserModified)
                 .HasMaxLength(20);
+
+            b.Property(model => model.VanityId)
+                .ValueGeneratedOnAdd()
+                .HasDefaultValueSql("newid()");
         }
 
         public static void ConfigureTag(EntityTypeBuilder<Tag> b)
         {
             // Fields
-            b.HasKey(tag => tag.Id);
-            b.Property(tag => tag.Name)
+            b.HasKey(model => model.Id);
+
+            b.Property(model => model.Name)
                 .HasMaxLength(25)
                 .IsRequired();
-            b.Property(tag => tag.Slug)
+
+            b.Property(model => model.Slug)
                 .HasMaxLength(25)
                 .IsRequired();
-            b.Property(tag => tag.UserCreated)
+
+            b.Property(model => model.UserCreated)
                 .HasMaxLength(20);
-            b.Property(tag => tag.UserModified)
+
+            b.Property(model => model.UserModified)
                 .HasMaxLength(20);
+
+            b.Property(model => model.VanityId)
+                .ValueGeneratedOnAdd()
+                .HasDefaultValueSql("newid()");
         }
 
         // Many to many
 
         public static void ConfigurePostCategory(EntityTypeBuilder<PostCategory> b)
         {
-            b.HasKey(pc => new { pc.PostId, pc.CategoryId });
+            b.HasKey(model => new { model.PostId, model.CategoryId });
 
-            b.HasOne(pc => pc.Post)
+            b.HasOne(model => model.Post)
                 .WithMany(p => p.PostCategories)
-                .HasForeignKey(pc => pc.PostId);
+                .HasForeignKey(model => model.PostId);
 
-            b.HasOne(pc => pc.Category)
+            b.HasOne(model => model.Category)
                 .WithMany(c => c.PostCategories)
-                .HasForeignKey(pc => pc.CategoryId);
+                .HasForeignKey(model => model.CategoryId);
         }
 
         public static void ConfigurePostTag(EntityTypeBuilder<PostTag> b)
         {
-            b.HasKey(pt => new { pt.PostId, pt.TagId });
+            b.HasKey(model => new { model.PostId, model.TagId });
 
-            b.HasOne(pt => pt.Post)
+            b.HasOne(model => model.Post)
                 .WithMany(p => p.PostTags)
-                .HasForeignKey(pt => pt.PostId);
+                .HasForeignKey(model => model.PostId);
 
-            b.HasOne(pt => pt.Tag)
+            b.HasOne(model => model.Tag)
                 .WithMany(c => c.PostTags)
-                .HasForeignKey(pt => pt.TagId);
+                .HasForeignKey(model => model.TagId);
         }
     }
 }
