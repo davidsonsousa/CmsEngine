@@ -2,7 +2,7 @@
 using CmsEngine.Data.Models;
 using CmsEngine.Data.ViewModels;
 using CmsEngine.Services;
-using CmsEngine.Tests.Core.Fixtures;
+using CmsEngine.Tests.Fixtures;
 using System;
 using System.Collections.Generic;
 using System.Linq;

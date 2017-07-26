@@ -10,26 +10,39 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 
-namespace CmsEngine.Tests.Core.Fixtures
+namespace CmsEngine.Tests.Fixtures
 {
     public class WebsiteFixture
     {
+        private Mock<IRepository<Website>> moqRepository;
+        public Mock<IRepository<Website>> MoqRepository
+        {
+            get { return moqRepository; }
+        }
+
+        private Mock<IUnitOfWork> moqUnitOfWork;
+        public Mock<IUnitOfWork> MoqUnitOfWork
+        {
+            get { return moqUnitOfWork; }
+        }
+
         private WebsiteService service;
         public WebsiteService Service
         {
-            get
-            {
-                return service;
-            }
+            get { return service; }
+        }
+
+        private Mock<IMapper> moqMapper;
+        public Mock<IMapper> MoqMapper
+        {
+            get { return moqMapper; }
         }
 
         public WebsiteFixture()
         {
-            var moqRepository = SetupWebsiteRepository();
-            var moqUnitOfWork = SetupUnitOfWork(moqRepository);
-            var moqMapper = new Mock<IMapper>();
-            moqMapper.Setup(x => x.Map<Website, WebsiteEditModel>(It.IsAny<Website>())).Returns(GetEditModel());
-            moqMapper.Setup(x => x.Map<Website, WebsiteViewModel>(It.IsAny<Website>())).Returns(GetViewModel());
+            SetupWebsiteRepository();
+            SetupUnitOfWork();
+            SetupMapper();
 
             service = new WebsiteService(moqUnitOfWork.Object, moqMapper.Object);
         }
@@ -65,29 +78,35 @@ namespace CmsEngine.Tests.Core.Fixtures
         }
 
         /// <summary>
-        /// Setup the Repository and its returning values
+        /// Setup the Repository instance and its returning values
         /// </summary>
         /// <returns></returns>
-        public Mock<IRepository<Website>> SetupWebsiteRepository()
+        private void SetupWebsiteRepository()
         {
-            var moqRepository = new Mock<IRepository<Website>>();
+            moqRepository = new Mock<IRepository<Website>>();
             moqRepository.Setup(x => x.Get(It.IsAny<Expression<Func<Website, bool>>>())).Returns(GetTestWebsites().AsQueryable());
             moqRepository.Setup(x => x.GetReadOnly(It.IsAny<Expression<Func<Website, bool>>>())).Returns(GetTestWebsites());
-
-            return moqRepository;
         }
 
         /// <summary>
-        /// Setup the Unit Of Work
+        /// Setup the UnitOfWork instance
         /// </summary>
         /// <param name="moqRepository"></param>
         /// <returns></returns>
-        public Mock<IUnitOfWork> SetupUnitOfWork(IMock<IRepository<Website>> moqRepository)
+        private void SetupUnitOfWork()
         {
-            var moqUnitOfWork = new Mock<IUnitOfWork>();
-            moqUnitOfWork.Setup(x => x.GetRepository<Website>()).Returns(moqRepository.Object);
+            moqUnitOfWork = new Mock<IUnitOfWork>();
+            moqUnitOfWork.Setup(x => x.GetRepository<Website>()).Returns(MoqRepository.Object);
+        }
 
-            return moqUnitOfWork;
+        /// <summary>
+        /// Setup Mapper instance
+        /// </summary>
+        private void SetupMapper()
+        {
+            moqMapper = new Mock<IMapper>();
+            moqMapper.Setup(x => x.Map<Website, WebsiteEditModel>(It.IsAny<Website>())).Returns(GetEditModel());
+            moqMapper.Setup(x => x.Map<Website, WebsiteViewModel>(It.IsAny<Website>())).Returns(GetViewModel());
         }
     }
 }
