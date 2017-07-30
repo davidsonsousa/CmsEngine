@@ -40,7 +40,7 @@ namespace CmsEngine.Tests.Fixtures
 
         public WebsiteFixture()
         {
-            SetupWebsiteRepository();
+            SetupRepository();
             SetupUnitOfWork();
             SetupMapper();
 
@@ -81,7 +81,7 @@ namespace CmsEngine.Tests.Fixtures
         /// Setup the Repository instance and its returning values
         /// </summary>
         /// <returns></returns>
-        private void SetupWebsiteRepository()
+        private void SetupRepository()
         {
             moqRepository = new Mock<IRepository<Website>>();
             moqRepository.Setup(x => x.Get(It.IsAny<Expression<Func<Website, bool>>>())).Returns(GetTestWebsites().AsQueryable());
