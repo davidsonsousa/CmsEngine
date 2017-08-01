@@ -34,7 +34,7 @@ namespace CmsEngine.Tests.Core.Services
 
             // Assert
             Assert.True(response is IQueryable<Page>, "Response is not IQueryable<Page>");
-            Assert.Equal(response.Count(), expectedResult);
+            Assert.Equal(expectedResult, response.Count());
         }
 
         [Fact]
@@ -48,7 +48,7 @@ namespace CmsEngine.Tests.Core.Services
 
             // Assert
             Assert.True(response is IEnumerable<Page>, "Response is not IEnumerable<Page>");
-            Assert.Equal(response.Count(), expectedResult);
+            Assert.Equal(expectedResult, response.Count());
         }
 
         [Fact]
@@ -61,7 +61,7 @@ namespace CmsEngine.Tests.Core.Services
             var response = moqPageService.GetById(1);
 
             // Assert
-            Assert.Equal(response.Title, expectedResult);
+            Assert.Equal(expectedResult, response.Title);
         }
 
         [Fact]
@@ -74,7 +74,7 @@ namespace CmsEngine.Tests.Core.Services
             var response = moqPageService.GetById(new Guid("8633a850-128f-4425-a2ec-30e23826b7ff"));
 
             // Assert
-            Assert.Equal(response.Title, expectedResult);
+            Assert.Equal(expectedResult, response.Title);
         }
 
         #endregion
@@ -105,7 +105,7 @@ namespace CmsEngine.Tests.Core.Services
 
             // Assert
             Assert.IsType(typeof(PageEditModel), response);
-            Assert.Equal(((PageEditModel)response).Title, expectedResult);
+            Assert.Equal(expectedResult, ((PageEditModel)response).Title);
         }
 
         [Fact]
@@ -119,7 +119,7 @@ namespace CmsEngine.Tests.Core.Services
 
             // Assert
             Assert.IsType(typeof(PageEditModel), response);
-            Assert.Equal(((PageEditModel)response).Title, expectedResult);
+            Assert.Equal(expectedResult, ((PageEditModel)response).Title);
         }
 
         [Fact]
@@ -133,7 +133,7 @@ namespace CmsEngine.Tests.Core.Services
 
             // Assert
             Assert.IsType(typeof(PageViewModel), response);
-            Assert.Equal(((PageViewModel)response).Title, expectedResult);
+            Assert.Equal(expectedResult, ((PageViewModel)response).Title);
         }
 
         [Fact]
@@ -147,7 +147,7 @@ namespace CmsEngine.Tests.Core.Services
 
             // Assert
             Assert.IsType(typeof(PageViewModel), response);
-            Assert.Equal(((PageViewModel)response).Title, expectedResult);
+            Assert.Equal(expectedResult, ((PageViewModel)response).Title);
         }
 
         #endregion
