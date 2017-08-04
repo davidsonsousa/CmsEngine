@@ -1,10 +1,14 @@
-﻿import { Http } from '@angular/http';
+﻿import { Injectable } from '@angular/core';
+import { Http } from '@angular/http';
 import 'rxjs/add/operator/map';
 
-export class WebsiteService {
-  private readonly endpoint = 'api/wesbite';
+import { Service } from './service';
 
-  constructor(private http: Http) { }
+@Injectable()
+export class WebsiteService extends Service {
+  private readonly endpoint = 'api/website';
+
+  constructor(private http: Http) { super(); }
 
   public getWebsites() {
     return this.http.get(this.endpoint)
