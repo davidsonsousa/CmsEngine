@@ -1,7 +1,7 @@
 ﻿import { Component } from '@angular/core';
 
 @Component({
-  selector: 'post',
+  selector: 'cms-post',
   templateUrl: './post.component.html'
 })
 export class PostComponent {
