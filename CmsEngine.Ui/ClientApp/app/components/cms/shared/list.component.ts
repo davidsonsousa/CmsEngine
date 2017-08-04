@@ -5,17 +5,15 @@
   templateUrl: './list.component.html'
 })
 export class ListComponent {
-  @Input() columns = [];
-  @Input() items = [];
-  public itemKeys = [];
+  @Input() tableColumns = [];
+  @Input() tableItems = [];
 
-  ngOnInit() {
-    let p = this.items[0];
+  get keys() {
+    console.log(this.tableColumns);
+    return this.tableColumns;
+  }
 
-    for (var key in p) {
-      if (p.hasOwnProperty(key)) {
-        this.itemKeys.push(key);
-      }
-    }
+  get items() {
+    return this.tableItems;
   }
 }

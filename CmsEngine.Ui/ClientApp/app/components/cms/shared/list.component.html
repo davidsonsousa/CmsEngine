@@ -1,14 +1,14 @@
 ﻿<table>
   <thead>
     <tr>
-      <th *ngFor="let col of columns">
-        {{ col.title }}
+      <th *ngFor="let key of keys">
+        {{ key }}
       </th>
     </tr>
   </thead>
   <tbody>
     <tr *ngFor="let item of items">
-      <td *ngFor="let key of itemKeys">
+      <td *ngFor="let key of keys ">
         {{ item[key] }}
       </td>
     </tr>
