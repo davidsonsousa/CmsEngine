@@ -7,9 +7,11 @@ import { HomeComponent } from './components/home/home.component';
 import { FetchDataComponent } from './components/fetchdata/fetchdata.component';
 import { CounterComponent } from './components/counter/counter.component';
 
-// Core
 import {
-  CategoryComponent, PageComponent, PostComponent, TagComponent, WebsiteComponent
+  // Core
+  CategoryComponent, PageComponent, PostComponent, TagComponent, WebsiteComponent,
+  // Shared
+  ListComponent
 } from './components/cms/index';
 
 export const sharedConfig: NgModule = {
@@ -20,11 +22,14 @@ export const sharedConfig: NgModule = {
     CounterComponent,
     FetchDataComponent,
     HomeComponent,
+    // Core
     CategoryComponent,
     PageComponent,
     PostComponent,
     TagComponent,
-    WebsiteComponent
+    WebsiteComponent,
+    // Shared
+    ListComponent
   ],
   imports: [
     RouterModule.forRoot([

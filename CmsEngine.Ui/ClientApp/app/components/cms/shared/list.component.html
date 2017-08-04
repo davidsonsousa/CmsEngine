@@ -1,0 +1,21 @@
+﻿<table>
+  <thead>
+    <tr>
+      <th *ngFor="let col of columns">
+        {{ col.title }}
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let item of items">
+      <td *ngFor="let key of itemKeys">
+        {{ item[key] }}
+      </td>
+    </tr>
+  </tbody>
+  <tfoot>
+    <tr>
+      <td>footer</td>
+    </tr>
+  </tfoot>
+</table>
