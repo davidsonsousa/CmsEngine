@@ -9,7 +9,6 @@ export class ListComponent {
   @Input() tableItems = [];
 
   get keys() {
-    console.log(this.tableColumns);
     return this.tableColumns;
   }
 
