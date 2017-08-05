@@ -1,4 +1,4 @@
-﻿import { Component, Input } from '@angular/core';
+﻿import { Component, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'cms-list',
@@ -7,6 +7,7 @@
 export class ListComponent {
   @Input() tableColumns = [];
   @Input() tableItems = [];
+  @Output() vanityIdToInteract = new EventEmitter<string>();
 
   get keys() {
     return this.tableColumns;
@@ -14,5 +15,11 @@ export class ListComponent {
 
   get items() {
     return this.tableItems;
+  }
+
+  public deleteItem(vanityId: string): void {
+    if (confirm('Are you sure you want to delete this item?')) {
+      this.vanityIdToInteract.emit(vanityId);
+    }
   }
 }

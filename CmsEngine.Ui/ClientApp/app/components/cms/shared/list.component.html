@@ -1,15 +1,20 @@
-﻿<table>
+﻿<table class="table table-striped">
   <thead>
     <tr>
       <th *ngFor="let key of keys">
         {{ key }}
       </th>
+      <th></th>
     </tr>
   </thead>
   <tbody>
     <tr *ngFor="let item of items">
       <td *ngFor="let key of keys ">
         {{ item[key] }}
+      </td>
+      <td>
+        <a [routerLink]="['/websites/edit/' + item['vanityId']]" class="btn btn-default"><i class="glyphicon glyphicon-pencil" aria-hidden="true"></i></a>
+        <a (click)="deleteItem(item['vanityId'])" class="btn btn-danger"><i class="glyphicon glyphicon-remove" aria-hidden="true"></i></a>
       </td>
     </tr>
   </tbody>
