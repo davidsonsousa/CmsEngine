@@ -28,16 +28,25 @@ export class WebsiteFormComponent implements OnInit {
   }
 
   public ngOnInit(): void {
-    this.websiteService.get(this.websiteEditModel.vanityId)
-      .subscribe(website => {
-        this.websiteEditModel = website;
-      });
+    if (this.websiteEditModel.vanityId) {
+      this.websiteService.get(this.websiteEditModel.vanityId)
+        .subscribe(website => {
+          this.websiteEditModel = website;
+        });
+    }
   }
 
   public onSubmit() {
-    this.websiteService.update(this.websiteEditModel)
-      .subscribe(response => {
-        alert(this.websiteEditModel.name + ' saved!');
-      });
+    if (this.websiteEditModel.id || this.websiteEditModel.vanityId) {
+      this.websiteService.update(this.websiteEditModel)
+        .subscribe(response => {
+          alert(this.websiteEditModel.name + ' saved!');
+        });
+    } else {
+      this.websiteService.create(this.websiteEditModel)
+        .subscribe(response => {
+          alert(this.websiteEditModel.name + ' saved!');
+        });
+    }
   }
 }
