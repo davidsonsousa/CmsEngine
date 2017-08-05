@@ -1,17 +1,16 @@
 ﻿import { Injectable } from '@angular/core';
 import { Http } from '@angular/http';
-import 'rxjs/add/operator/map';
 
 import { Service } from './service';
+import { WebsiteEditModel } from '../models/website-editmodel';
 
 @Injectable()
 export class WebsiteService extends Service {
-  private readonly endpoint = 'api/website';
+  constructor(private protocol: Http) {
+    super(protocol, 'api/website');
+  }
 
-  constructor(private http: Http) { super(); }
-
-  public getWebsites() {
-    return this.http.get(this.endpoint)
-      .map(res => res.json());
+  public update(websiteEditModel: WebsiteEditModel): any {
+    return this.put(websiteEditModel.vanityId, websiteEditModel);
   }
 }
