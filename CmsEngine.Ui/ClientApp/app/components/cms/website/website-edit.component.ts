@@ -1,43 +1,9 @@
-﻿import { Component, AfterViewInit, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-
-import { WebsiteService } from '../../../services/website.service';
-import { WebsiteEditModel } from '../../../models/website-editmodel';
+﻿import { Component } from '@angular/core';
 
 @Component({
   selector: 'cms-website-edit',
-  templateUrl: './website-edit.component.html',
-  providers: [WebsiteService]
+  templateUrl: './website-edit.component.html'
 })
-export class WebsiteEditComponent implements OnInit {
-  public websiteEditModel: WebsiteEditModel = {
-    id: 0,
-    vanityId: '',
-    name: '',
-    description: '',
-    culture: '',
-    urlFormat: '',
-    dateFormat: '',
-    siteUrl: ''
-  };
+export class WebsiteEditComponent{
 
-  constructor(private websiteService: WebsiteService, private route: ActivatedRoute) {
-    route.params.subscribe(p => {
-      this.websiteEditModel.vanityId = p["id"];
-    });
-  }
-
-  public ngOnInit(): void {
-    this.websiteService.get(this.websiteEditModel.vanityId)
-      .subscribe(website => {
-        this.websiteEditModel = website;
-      });
-  }
-
-  public onSubmit() {
-    this.websiteService.update(this.websiteEditModel)
-      .subscribe(response => {
-        alert(this.websiteEditModel.name + ' saved!');
-      });
-  }
 }
