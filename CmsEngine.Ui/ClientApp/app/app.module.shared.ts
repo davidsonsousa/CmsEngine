@@ -1,5 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
+import { FormsModule } from '@angular/forms';
+import { HttpModule } from '@angular/http';
 
 import { AppComponent } from './components/app/app.component'
 import { NavMenuComponent } from './components/navmenu/navmenu.component';
@@ -9,7 +11,7 @@ import { CounterComponent } from './components/counter/counter.component';
 
 import {
   // Core
-  CategoryComponent, PageComponent, PostComponent, TagComponent, WebsiteComponent,
+  CategoryComponent, PageComponent, PostComponent, TagComponent, WebsiteComponent, WebsiteEditComponent,
   // Shared
   ListComponent
 } from './components/cms/index';
@@ -28,10 +30,13 @@ export const sharedConfig: NgModule = {
     PostComponent,
     TagComponent,
     WebsiteComponent,
+    WebsiteEditComponent,
     // Shared
     ListComponent
   ],
   imports: [
+    FormsModule,
+    HttpModule,
     RouterModule.forRoot([
       { path: '', redirectTo: 'home', pathMatch: 'full' },
       { path: 'home', component: HomeComponent },
@@ -42,6 +47,7 @@ export const sharedConfig: NgModule = {
       { path: 'posts', component: PostComponent },
       { path: 'tags', component: TagComponent },
       { path: 'websites', component: WebsiteComponent },
+      { path: 'websites/edit/:id', component: WebsiteEditComponent },
       { path: '**', redirectTo: 'home' }
     ])
   ]
