@@ -34,9 +34,6 @@
     <ItemGroup>
         <ProjectReference Include="..\CmsEngine\CmsEngine.csproj" />
     </ItemGroup>
-    <ItemGroup>
-      <Folder Include="ClientApp\app\models\" />
-    </ItemGroup>
     <Target Name="RunWebpack" AfterTargets="ComputeFilesToPublish">
         <!-- As part of publishing, ensure the JS resources are freshly built in production mode -->
         <Exec Command="npm install" />
