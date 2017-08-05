@@ -29,6 +29,13 @@ export class Service {
     }
   }
 
+  protected post(item: any) {
+    if (item) {
+      return this.http.post(this.endpoint, item)
+        .map(res => res.json());
+    }
+  }
+
   protected put(vanityId: string, item: any): any {
     if (item) {
       return this.http.put(this.endpoint + '/' + vanityId, item)
