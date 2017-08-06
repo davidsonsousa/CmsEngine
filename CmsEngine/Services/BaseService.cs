@@ -150,133 +150,35 @@ namespace CmsEngine.Services
             return listItems;
         }
 
-        /// <summary>
-        /// Get all items for read-only purposes
-        /// </summary>
-        /// <returns></returns>
-        public virtual IEnumerable<T> GetAllReadOnly()
-        {
-            IEnumerable<T> listItems;
+        public abstract IEnumerable<IViewModel> GetAllReadOnly();
 
-            try
-            {
-                listItems = Repository.GetReadOnly(q => q.IsDeleted == false);
-            }
-            catch
-            {
-                throw;
-            }
+        public abstract IViewModel GetById(int id);
 
-            return listItems;
-        }
-
-        /// <summary>
-        /// Get item by numeric Id
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        public virtual T GetById(int id)
-        {
-            T item;
-
-            try
-            {
-                item = this.GetAll().Where(q => q.Id == id).FirstOrDefault();
-            }
-            catch
-            {
-                throw;
-            }
-
-            return item;
-        }
-
-        /// <summary>
-        /// Get item by Guid
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        public virtual T GetById(Guid id)
-        {
-            T item;
-
-            try
-            {
-                item = this.GetAll().Where(q => q.VanityId == id).FirstOrDefault();
-            }
-            catch
-            {
-                throw;
-            }
-
-            return item;
-        }
+        public abstract IViewModel GetById(Guid id);
 
         #endregion
 
         #region Setup View and Edit models
 
-        /// <summary>
-        /// Prepare EditModel for a new item
-        /// </summary>
-        /// <returns></returns>
         public abstract IEditModel SetupEditModel();
 
-        public virtual IEditModel SetupEditModel(int id)
-        {
-            return SetupEditModel(this.GetById(id));
-        }
+        public abstract IEditModel SetupEditModel(int id);
 
-        public virtual IEditModel SetupEditModel(Guid id)
-        {
-            return SetupEditModel(this.GetById(id));
-        }
-
-        public virtual IViewModel SetupViewModel(int id)
-        {
-            var item = this.GetById(id);
-            return this.SetupViewModel(item);
-        }
-
-        public virtual IViewModel SetupViewModel(Guid id)
-        {
-            var item = this.GetById(id);
-            return this.SetupViewModel(item);
-        }
+        public abstract IEditModel SetupEditModel(Guid id);
 
         #endregion
 
-        /// <summary>
-        /// Save item
-        /// </summary>
-        /// <param name="viewModel"></param>
-        /// <returns></returns>
         public abstract ReturnValue Save(IEditModel editModel);
 
-        /// <summary>
-        /// Delete item by Guid
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
         public abstract ReturnValue Delete(Guid id);
 
-        /// <summary>
-        /// Delete items by an array of Guids
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
         public abstract ReturnValue BulkDelete(Guid[] id);
 
-        /// <summary>
-        /// Delete item by numeric Id
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
         public abstract ReturnValue Delete(int id);
 
         #region Helpers
 
-        private string PrepareProperty(T item, System.Reflection.PropertyInfo property)
+        private string PrepareProperty(T item, PropertyInfo property)
         {
             var propertyValue = item.GetType().GetProperty(property.Name).GetValue(item)?.ToString() ?? "";
 
@@ -303,21 +205,40 @@ namespace CmsEngine.Services
             return propertyValue;
         }
 
-        protected abstract IEditModel SetupEditModel(T item);
+        protected virtual T GetItemById(int id)
+        {
+            T item;
 
-        protected abstract IViewModel SetupViewModel(T item);
+            try
+            {
+                item = this.GetAll().Where(q => q.Id == id).FirstOrDefault();
+            }
+            catch
+            {
+                throw;
+            }
 
-        /// <summary>
-        /// Delete item
-        /// </summary>
-        /// <param name="item"></param>
-        /// <returns></returns>
+            return item;
+        }
+
+        protected virtual T GetItemById(Guid id)
+        {
+            T item;
+
+            try
+            {
+                item = this.GetAll().Where(q => q.VanityId == id).FirstOrDefault();
+            }
+            catch
+            {
+                throw;
+            }
+
+            return item;
+        }
+
         protected abstract ReturnValue Delete(T item);
 
-        /// <summary>
-        /// Prepare item for saving
-        /// </summary>
-        /// <param name="viewModel"></param>
         protected abstract void PrepareForSaving(IEditModel editModel);
 
         #endregion

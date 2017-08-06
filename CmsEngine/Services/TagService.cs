@@ -7,6 +7,7 @@ using CmsEngine.Extensions;
 using CmsEngine.Utils;
 using System;
 using System.Linq;
+using System.Collections.Generic;
 
 namespace CmsEngine.Services
 {
@@ -14,6 +15,34 @@ namespace CmsEngine.Services
     {
         public TagService(IUnitOfWork uow, IMapper mapper) : base(uow, mapper)
         {
+        }
+
+        public override IEnumerable<IViewModel> GetAllReadOnly()
+        {
+            IEnumerable<Tag> listItems;
+
+            try
+            {
+                listItems = Repository.GetReadOnly(q => q.IsDeleted == false);
+            }
+            catch
+            {
+                throw;
+            }
+
+            return Mapper.Map<IEnumerable<Tag>, IEnumerable<TagViewModel>>(listItems);
+        }
+
+        public override IViewModel GetById(int id)
+        {
+            var item = this.GetItemById(id);
+            return Mapper.Map<Tag, TagViewModel>(item);
+        }
+
+        public override IViewModel GetById(Guid id)
+        {
+            var item = this.GetItemById(id);
+            return Mapper.Map<Tag, TagViewModel>(item);
         }
 
         public override ReturnValue BulkDelete(Guid[] id)
@@ -101,20 +130,16 @@ namespace CmsEngine.Services
             return new TagEditModel();
         }
 
-        protected override IEditModel SetupEditModel(Tag item)
+        public override IEditModel SetupEditModel(int id)
         {
-            var editModel = new TagEditModel();
-            item.MapTo(editModel);
-
-            return editModel;
+            var item = this.GetItemById(id);
+            return Mapper.Map<Tag, TagEditModel>(item);
         }
 
-        protected override IViewModel SetupViewModel(Tag item)
+        public override IEditModel SetupEditModel(Guid id)
         {
-            var viewModel = new TagViewModel();
-            item.MapTo(viewModel);
-
-            return viewModel;
+            var item = this.GetItemById(id);
+            return Mapper.Map<Tag, TagEditModel>(item);
         }
 
         protected override ReturnValue Delete(Tag item)
