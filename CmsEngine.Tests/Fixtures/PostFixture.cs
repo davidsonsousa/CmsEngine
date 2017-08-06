@@ -61,6 +61,18 @@ namespace CmsEngine.Tests.Fixtures
         }
 
         /// <summary>
+        /// Returns a list of ViewModels
+        /// </summary>
+        public List<PostViewModel> GetViewModels()
+        {
+            return new List<PostViewModel>
+                {
+                    new PostViewModel { Id = 1, VanityId = new Guid("278c0380-bdd2-45bb-869b-b94659bc2b89"), Title = "Post1" },
+                    new PostViewModel { Id = 2, VanityId = new Guid("8633a850-128f-4425-a2ec-30e23826b7ff"), Title = "Post2" }
+                };
+        }
+
+        /// <summary>
         /// Returns the EditModel of Id 2
         /// </summary>
         /// <returns></returns>
@@ -108,6 +120,7 @@ namespace CmsEngine.Tests.Fixtures
             moqMapper = new Mock<IMapper>();
             moqMapper.Setup(x => x.Map<Post, PostEditModel>(It.IsAny<Post>())).Returns(GetEditModel());
             moqMapper.Setup(x => x.Map<Post, PostViewModel>(It.IsAny<Post>())).Returns(GetViewModel());
+            moqMapper.Setup(x => x.Map<IEnumerable<Post>, IEnumerable<PostViewModel>>(It.IsAny<IEnumerable<Post>>())).Returns(GetViewModels());
         }
     }
 }

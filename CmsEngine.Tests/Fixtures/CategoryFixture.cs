@@ -48,7 +48,7 @@ namespace CmsEngine.Tests.Fixtures
         }
 
         /// <summary>
-        /// Returns a list of categorys
+        /// Returns a list of categories
         /// </summary>
         public List<Category> GetTestCategories()
         {
@@ -56,6 +56,18 @@ namespace CmsEngine.Tests.Fixtures
                 {
                     new Category { Id = 1, VanityId = new Guid("278c0380-bdd2-45bb-869b-b94659bc2b89"), Name = "Category1", Description="Welcome to category 1", IsDeleted = false },
                     new Category { Id = 2, VanityId = new Guid("8633a850-128f-4425-a2ec-30e23826b7ff"), Name = "Category2", Description="Welcome to category 2", IsDeleted = false }
+                };
+        }
+
+        /// <summary>
+        /// Returns a list of ViewModels
+        /// </summary>
+        public List<CategoryViewModel> GetViewModels()
+        {
+            return new List<CategoryViewModel>
+                {
+                    new CategoryViewModel { Id = 1, VanityId = new Guid("278c0380-bdd2-45bb-869b-b94659bc2b89"), Name = "Category1", Description="Welcome to category 1" },
+                    new CategoryViewModel { Id = 2, VanityId = new Guid("8633a850-128f-4425-a2ec-30e23826b7ff"), Name = "Category2", Description="Welcome to category 2" }
                 };
         }
 
@@ -107,6 +119,7 @@ namespace CmsEngine.Tests.Fixtures
             moqMapper = new Mock<IMapper>();
             moqMapper.Setup(x => x.Map<Category, CategoryEditModel>(It.IsAny<Category>())).Returns(GetEditModel());
             moqMapper.Setup(x => x.Map<Category, CategoryViewModel>(It.IsAny<Category>())).Returns(GetViewModel());
+            moqMapper.Setup(x => x.Map<IEnumerable<Category>, IEnumerable<CategoryViewModel>>(It.IsAny<IEnumerable<Category>>())).Returns(GetViewModels());
         }
     }
 }

@@ -60,6 +60,18 @@ namespace CmsEngine.Tests.Fixtures
         }
 
         /// <summary>
+        /// Returns a list of ViewModels
+        /// </summary>
+        public List<TagViewModel> GetViewModels()
+        {
+            return new List<TagViewModel>
+                {
+                    new TagViewModel { Id = 1, VanityId = new Guid("278c0380-bdd2-45bb-869b-b94659bc2b89"), Name = "Tag1" },
+                    new TagViewModel { Id = 2, VanityId = new Guid("8633a850-128f-4425-a2ec-30e23826b7ff"), Name = "Tag2" }
+                };
+        }
+
+        /// <summary>
         /// Returns the EditModel of Id 2
         /// </summary>
         /// <returns></returns>
@@ -107,6 +119,7 @@ namespace CmsEngine.Tests.Fixtures
             moqMapper = new Mock<IMapper>();
             moqMapper.Setup(x => x.Map<Tag, TagEditModel>(It.IsAny<Tag>())).Returns(GetEditModel());
             moqMapper.Setup(x => x.Map<Tag, TagViewModel>(It.IsAny<Tag>())).Returns(GetViewModel());
+            moqMapper.Setup(x => x.Map<IEnumerable<Tag>, IEnumerable<TagViewModel>>(It.IsAny<IEnumerable<Tag>>())).Returns(GetViewModels());
         }
     }
 }

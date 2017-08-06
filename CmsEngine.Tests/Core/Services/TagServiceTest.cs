@@ -44,10 +44,10 @@ namespace CmsEngine.Test.Core.Services
             var expectedResult = tagFixture.GetTestTags().Count;
 
             // Act
-            var response = moqTagService.GetAllReadOnly();
+            var response = (IEnumerable<TagViewModel>)moqTagService.GetAllReadOnly();
 
             // Assert
-            Assert.True(response is IEnumerable<Tag>, "Response is not IEnumerable<Tag>");
+            Assert.True(response is IEnumerable<TagViewModel>, "Response is not IEnumerable<TagViewModel>");
             Assert.Equal(expectedResult, response.Count());
         }
 
@@ -55,10 +55,10 @@ namespace CmsEngine.Test.Core.Services
         public void GetById_ShouldReturnCorrectTag()
         {
             // Arrange
-            var expectedResult = tagFixture.GetTestTags().FirstOrDefault(q => q.Id == 1).Name;
+            var expectedResult = tagFixture.GetTestTags().FirstOrDefault(q => q.Id == 2).Name;
 
             // Act
-            var response = moqTagService.GetById(1);
+            var response = (TagViewModel)moqTagService.GetById(2);
 
             // Assert
             Assert.Equal(expectedResult, response.Name);
@@ -68,10 +68,10 @@ namespace CmsEngine.Test.Core.Services
         public void GetByVanityId_ShouldReturnCorrectTag()
         {
             // Arrange
-            var expectedResult = tagFixture.GetTestTags().FirstOrDefault(q => q.VanityId == new Guid("278c0380-bdd2-45bb-869b-b94659bc2b89")).Name;
+            var expectedResult = tagFixture.GetTestTags().FirstOrDefault(q => q.VanityId == new Guid("8633a850-128f-4425-a2ec-30e23826b7ff")).Name;
 
             // Act
-            var response = moqTagService.GetById(new Guid("278c0380-bdd2-45bb-869b-b94659bc2b89"));
+            var response = (TagViewModel)moqTagService.GetById(new Guid("8633a850-128f-4425-a2ec-30e23826b7ff"));
 
             // Assert
             Assert.Equal(expectedResult, response.Name);
@@ -87,11 +87,11 @@ namespace CmsEngine.Test.Core.Services
             // Arrange
 
             // Act
-            var response = moqTagService.SetupEditModel();
+            var response = (TagEditModel)moqTagService.SetupEditModel();
 
             // Assert
             Assert.NotNull(response);
-            Assert.True(((TagEditModel)response).IsNew, "Item is not new");
+            Assert.True(response.IsNew, "Item is not new");
         }
 
         [Fact]
@@ -101,53 +101,25 @@ namespace CmsEngine.Test.Core.Services
             var expectedResult = tagFixture.GetTestTags().FirstOrDefault(q => q.Id == 2).Name;
 
             // Act
-            var response = moqTagService.SetupEditModel(2);
+            var response = (TagEditModel)moqTagService.SetupEditModel(2);
 
             // Assert
             Assert.IsType(typeof(TagEditModel), response);
-            Assert.Equal(expectedResult, ((TagEditModel)response).Name);
+            Assert.Equal(expectedResult, response.Name);
         }
 
         [Fact]
         public void SetupEditModel_ByVanityId_ShouldReturnCorrectTag()
         {
             // Arrange
-            var expectedResult = tagFixture.GetTestTags().FirstOrDefault(q => q.VanityId == new Guid("278c0380-bdd2-45bb-869b-b94659bc2b89")).Name;
+            var expectedResult = tagFixture.GetTestTags().FirstOrDefault(q => q.VanityId == new Guid("8633a850-128f-4425-a2ec-30e23826b7ff")).Name;
 
             // Act
-            var response = moqTagService.SetupEditModel(new Guid("278c0380-bdd2-45bb-869b-b94659bc2b89"));
+            var response = (TagEditModel)moqTagService.SetupEditModel(new Guid("8633a850-128f-4425-a2ec-30e23826b7ff"));
 
             // Assert
             Assert.IsType(typeof(TagEditModel), response);
-            Assert.Equal(expectedResult, ((TagEditModel)response).Name);
-        }
-
-        [Fact]
-        public void SetupViewModel_ById_ShouldReturnCorrectTag()
-        {
-            // Arrange
-            var expectedResult = tagFixture.GetTestTags().FirstOrDefault(q => q.Id == 2).Name;
-
-            // Act
-            var response = moqTagService.SetupViewModel(2);
-
-            // Assert
-            Assert.IsType(typeof(TagViewModel), response);
-            Assert.Equal(expectedResult, ((TagViewModel)response).Name);
-        }
-
-        [Fact]
-        public void SetupViewModel_ByVanityId_ShouldReturnCorrectTag()
-        {
-            // Arrange
-            var expectedResult = tagFixture.GetTestTags().FirstOrDefault(q => q.VanityId == new Guid("278c0380-bdd2-45bb-869b-b94659bc2b89")).Name;
-
-            // Act
-            var response = moqTagService.SetupViewModel(new Guid("278c0380-bdd2-45bb-869b-b94659bc2b89"));
-
-            // Assert
-            Assert.IsType(typeof(TagViewModel), response);
-            Assert.Equal(expectedResult, ((TagViewModel)response).Name);
+            Assert.Equal(expectedResult, response.Name);
         }
 
         #endregion
@@ -189,7 +161,7 @@ namespace CmsEngine.Test.Core.Services
             // Arrange
 
             // Act
-            var response = moqTagService.Delete(new Guid("278c0380-bdd2-45bb-869b-b94659bc2b89"));
+            var response = moqTagService.Delete(new Guid("8633a850-128f-4425-a2ec-30e23826b7ff"));
 
             // Assert
             Assert.False(response.IsError, "Exception thrown");

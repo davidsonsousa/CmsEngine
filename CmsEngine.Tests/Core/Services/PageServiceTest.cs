@@ -44,10 +44,10 @@ namespace CmsEngine.Tests.Core.Services
             var expectedResult = pageFixture.GetTestPages().Count;
 
             // Act
-            var response = moqPageService.GetAllReadOnly();
+            var response = (IEnumerable<PageViewModel>)moqPageService.GetAllReadOnly();
 
             // Assert
-            Assert.True(response is IEnumerable<Page>, "Response is not IEnumerable<Page>");
+            Assert.True(response is IEnumerable<PageViewModel>, "Response is not IEnumerable<PageViewModel>");
             Assert.Equal(expectedResult, response.Count());
         }
 
@@ -55,10 +55,10 @@ namespace CmsEngine.Tests.Core.Services
         public void GetById_ShouldReturnCorrectPage()
         {
             // Arrange
-            var expectedResult = pageFixture.GetTestPages().FirstOrDefault(q => q.Id == 1).Title;
+            var expectedResult = pageFixture.GetTestPages().FirstOrDefault(q => q.Id == 2).Title;
 
             // Act
-            var response = moqPageService.GetById(1);
+            var response = (PageViewModel)moqPageService.GetById(2);
 
             // Assert
             Assert.Equal(expectedResult, response.Title);
@@ -71,7 +71,7 @@ namespace CmsEngine.Tests.Core.Services
             var expectedResult = pageFixture.GetTestPages().FirstOrDefault(q => q.VanityId == new Guid("8633a850-128f-4425-a2ec-30e23826b7ff")).Title;
 
             // Act
-            var response = moqPageService.GetById(new Guid("8633a850-128f-4425-a2ec-30e23826b7ff"));
+            var response = (PageViewModel)moqPageService.GetById(new Guid("8633a850-128f-4425-a2ec-30e23826b7ff"));
 
             // Assert
             Assert.Equal(expectedResult, response.Title);
@@ -87,11 +87,11 @@ namespace CmsEngine.Tests.Core.Services
             // Arrange
 
             // Act
-            var response = moqPageService.SetupEditModel();
+            var response = (PageEditModel)moqPageService.SetupEditModel();
 
             // Assert
             Assert.NotNull(response);
-            Assert.True(((PageEditModel)response).IsNew, "Item is not new");
+            Assert.True(response.IsNew, "Item is not new");
         }
 
         [Fact]
@@ -101,11 +101,11 @@ namespace CmsEngine.Tests.Core.Services
             var expectedResult = pageFixture.GetTestPages().FirstOrDefault(q => q.Id == 2).Title;
 
             // Act
-            var response = moqPageService.SetupEditModel(2);
+            var response = (PageEditModel)moqPageService.SetupEditModel(2);
 
             // Assert
             Assert.IsType(typeof(PageEditModel), response);
-            Assert.Equal(expectedResult, ((PageEditModel)response).Title);
+            Assert.Equal(expectedResult,response.Title);
         }
 
         [Fact]
@@ -115,39 +115,11 @@ namespace CmsEngine.Tests.Core.Services
             var expectedResult = pageFixture.GetTestPages().FirstOrDefault(q => q.VanityId == new Guid("8633a850-128f-4425-a2ec-30e23826b7ff")).Title;
 
             // Act
-            var response = moqPageService.SetupEditModel(new Guid("8633a850-128f-4425-a2ec-30e23826b7ff"));
+            var response = (PageEditModel)moqPageService.SetupEditModel(new Guid("8633a850-128f-4425-a2ec-30e23826b7ff"));
 
             // Assert
             Assert.IsType(typeof(PageEditModel), response);
-            Assert.Equal(expectedResult, ((PageEditModel)response).Title);
-        }
-
-        [Fact]
-        public void SetupViewModel_ById_ShouldReturnCorrectPage()
-        {
-            // Arrange
-            var expectedResult = pageFixture.GetTestPages().FirstOrDefault(q => q.Id == 2).Title;
-
-            // Act
-            var response = moqPageService.SetupViewModel(2);
-
-            // Assert
-            Assert.IsType(typeof(PageViewModel), response);
-            Assert.Equal(expectedResult, ((PageViewModel)response).Title);
-        }
-
-        [Fact]
-        public void SetupViewModel_ByVanityId_ShouldReturnCorrectPage()
-        {
-            // Arrange
-            var expectedResult = pageFixture.GetTestPages().FirstOrDefault(q => q.VanityId == new Guid("8633a850-128f-4425-a2ec-30e23826b7ff")).Title;
-
-            // Act
-            var response = moqPageService.SetupViewModel(new Guid("8633a850-128f-4425-a2ec-30e23826b7ff"));
-
-            // Assert
-            Assert.IsType(typeof(PageViewModel), response);
-            Assert.Equal(expectedResult, ((PageViewModel)response).Title);
+            Assert.Equal(expectedResult, response.Title);
         }
 
         #endregion

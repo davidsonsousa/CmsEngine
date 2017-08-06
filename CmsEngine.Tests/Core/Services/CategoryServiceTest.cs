@@ -44,10 +44,10 @@ namespace CmsEngine.Test.Core.Services
             var expectedResult = categoryFixture.GetTestCategories().Count;
 
             // Act
-            var response = moqCategoryService.GetAllReadOnly();
+            var response = (IEnumerable<CategoryViewModel>)moqCategoryService.GetAllReadOnly();
 
             // Assert
-            Assert.True(response is IEnumerable<Category>, "Response is not IEnumerable<Category>");
+            Assert.True(response is IEnumerable<CategoryViewModel>, "Response is not IEnumerable<CategoryViewModel>");
             Assert.Equal(expectedResult, response.Count());
         }
 
@@ -55,10 +55,10 @@ namespace CmsEngine.Test.Core.Services
         public void GetById_ShouldReturnCorrectCategory()
         {
             // Arrange
-            var expectedResult = categoryFixture.GetTestCategories().FirstOrDefault(q => q.Id == 1).Name;
+            var expectedResult = categoryFixture.GetTestCategories().FirstOrDefault(q => q.Id == 2).Name;
 
             // Act
-            var response = moqCategoryService.GetById(1);
+            var response = (CategoryViewModel)moqCategoryService.GetById(2);
 
             // Assert
             Assert.Equal(expectedResult, response.Name);
@@ -68,10 +68,10 @@ namespace CmsEngine.Test.Core.Services
         public void GetByVanityId_ShouldReturnCorrectCategory()
         {
             // Arrange
-            var expectedResult = categoryFixture.GetTestCategories().FirstOrDefault(q => q.VanityId == new Guid("278c0380-bdd2-45bb-869b-b94659bc2b89")).Name;
+            var expectedResult = categoryFixture.GetTestCategories().FirstOrDefault(q => q.VanityId == new Guid("8633a850-128f-4425-a2ec-30e23826b7ff")).Name;
 
             // Act
-            var response = moqCategoryService.GetById(new Guid("278c0380-bdd2-45bb-869b-b94659bc2b89"));
+            var response = (CategoryViewModel)moqCategoryService.GetById(new Guid("8633a850-128f-4425-a2ec-30e23826b7ff"));
 
             // Assert
             Assert.Equal(expectedResult, response.Name);
@@ -87,11 +87,11 @@ namespace CmsEngine.Test.Core.Services
             // Arrange
 
             // Act
-            var response = moqCategoryService.SetupEditModel();
+            var response = (CategoryEditModel)moqCategoryService.SetupEditModel();
 
             // Assert
             Assert.NotNull(response);
-            Assert.True(((CategoryEditModel)response).IsNew, "Item is not new");
+            Assert.True(response.IsNew, "Item is not new");
         }
 
         [Fact]
@@ -101,53 +101,25 @@ namespace CmsEngine.Test.Core.Services
             var expectedResult = categoryFixture.GetTestCategories().FirstOrDefault(q => q.Id == 2).Name;
 
             // Act
-            var response = moqCategoryService.SetupEditModel(2);
+            var response = (CategoryEditModel)moqCategoryService.SetupEditModel(2);
 
             // Assert
             Assert.IsType(typeof(CategoryEditModel), response);
-            Assert.Equal(expectedResult, ((CategoryEditModel)response).Name);
+            Assert.Equal(expectedResult, response.Name);
         }
 
         [Fact]
         public void SetupEditModel_ByVanityId_ShouldReturnCorrectCategory()
         {
             // Arrange
-            var expectedResult = categoryFixture.GetTestCategories().FirstOrDefault(q => q.VanityId == new Guid("278c0380-bdd2-45bb-869b-b94659bc2b89")).Name;
+            var expectedResult = categoryFixture.GetTestCategories().FirstOrDefault(q => q.VanityId == new Guid("8633a850-128f-4425-a2ec-30e23826b7ff")).Name;
 
             // Act
-            var response = moqCategoryService.SetupEditModel(new Guid("278c0380-bdd2-45bb-869b-b94659bc2b89"));
+            var response = (CategoryEditModel)moqCategoryService.SetupEditModel(new Guid("8633a850-128f-4425-a2ec-30e23826b7ff"));
 
             // Assert
             Assert.IsType(typeof(CategoryEditModel), response);
-            Assert.Equal(expectedResult, ((CategoryEditModel)response).Name);
-        }
-
-        [Fact]
-        public void SetupViewModel_ById_ShouldReturnCorrectCategory()
-        {
-            // Arrange
-            var expectedResult = categoryFixture.GetTestCategories().FirstOrDefault(q => q.Id == 2).Name;
-
-            // Act
-            var response = moqCategoryService.SetupViewModel(2);
-
-            // Assert
-            Assert.IsType(typeof(CategoryViewModel), response);
-            Assert.Equal(expectedResult, ((CategoryViewModel)response).Name);
-        }
-
-        [Fact]
-        public void SetupViewModel_ByVanityId_ShouldReturnCorrectCategory()
-        {
-            // Arrange
-            var expectedResult = categoryFixture.GetTestCategories().FirstOrDefault(q => q.VanityId == new Guid("278c0380-bdd2-45bb-869b-b94659bc2b89")).Name;
-
-            // Act
-            var response = moqCategoryService.SetupViewModel(new Guid("278c0380-bdd2-45bb-869b-b94659bc2b89"));
-
-            // Assert
-            Assert.IsType(typeof(CategoryViewModel), response);
-            Assert.Equal(expectedResult, ((CategoryViewModel)response).Name);
+            Assert.Equal(expectedResult, response.Name);
         }
 
         #endregion
@@ -189,7 +161,7 @@ namespace CmsEngine.Test.Core.Services
             // Arrange
 
             // Act
-            var response = moqCategoryService.Delete(new Guid("278c0380-bdd2-45bb-869b-b94659bc2b89"));
+            var response = moqCategoryService.Delete(new Guid("8633a850-128f-4425-a2ec-30e23826b7ff"));
 
             // Assert
             Assert.False(response.IsError, "Exception thrown");

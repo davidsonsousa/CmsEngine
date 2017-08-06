@@ -44,10 +44,10 @@ namespace CmsEngine.Test.Core.Services
             var expectedResult = postFixture.GetTestPosts().Count;
 
             // Act
-            var response = moqPostService.GetAllReadOnly();
+            var response = (IEnumerable<PostViewModel>)moqPostService.GetAllReadOnly();
 
             // Assert
-            Assert.True(response is IEnumerable<Post>, "Response is not IEnumerable<Post>");
+            Assert.True(response is IEnumerable<PostViewModel>, "Response is not IEnumerable<PostViewModel>");
             Assert.Equal(expectedResult, response.Count());
         }
 
@@ -55,10 +55,10 @@ namespace CmsEngine.Test.Core.Services
         public void GetById_ShouldReturnCorrectPost()
         {
             // Arrange
-            var expectedResult = postFixture.GetTestPosts().FirstOrDefault(q => q.Id == 1).Title;
+            var expectedResult = postFixture.GetTestPosts().FirstOrDefault(q => q.Id == 2).Title;
 
             // Act
-            var response = moqPostService.GetById(1);
+            var response = (PostViewModel)moqPostService.GetById(2);
 
             // Assert
             Assert.Equal(expectedResult, response.Title);
@@ -71,7 +71,7 @@ namespace CmsEngine.Test.Core.Services
             var expectedResult = postFixture.GetTestPosts().FirstOrDefault(q => q.VanityId == new Guid("8633a850-128f-4425-a2ec-30e23826b7ff")).Title;
 
             // Act
-            var response = moqPostService.GetById(new Guid("8633a850-128f-4425-a2ec-30e23826b7ff"));
+            var response = (PostViewModel)moqPostService.GetById(new Guid("8633a850-128f-4425-a2ec-30e23826b7ff"));
 
             // Assert
             Assert.Equal(expectedResult, response.Title);
@@ -87,11 +87,11 @@ namespace CmsEngine.Test.Core.Services
             // Arrange
 
             // Act
-            var response = moqPostService.SetupEditModel();
+            var response = (PostEditModel)moqPostService.SetupEditModel();
 
             // Assert
             Assert.NotNull(response);
-            Assert.True(((PostEditModel)response).IsNew, "Item is not new");
+            Assert.True(response.IsNew, "Item is not new");
         }
 
         [Fact]
@@ -101,11 +101,11 @@ namespace CmsEngine.Test.Core.Services
             var expectedResult = postFixture.GetTestPosts().FirstOrDefault(q => q.Id == 2).Title;
 
             // Act
-            var response = moqPostService.SetupEditModel(2);
+            var response = (PostEditModel)moqPostService.SetupEditModel(2);
 
             // Assert
             Assert.IsType(typeof(PostEditModel), response);
-            Assert.Equal(expectedResult, ((PostEditModel)response).Title);
+            Assert.Equal(expectedResult, response.Title);
         }
 
         [Fact]
@@ -115,39 +115,11 @@ namespace CmsEngine.Test.Core.Services
             var expectedResult = postFixture.GetTestPosts().FirstOrDefault(q => q.VanityId == new Guid("8633a850-128f-4425-a2ec-30e23826b7ff")).Title;
 
             // Act
-            var response = moqPostService.SetupEditModel(new Guid("8633a850-128f-4425-a2ec-30e23826b7ff"));
+            var response = (PostEditModel)moqPostService.SetupEditModel(new Guid("8633a850-128f-4425-a2ec-30e23826b7ff"));
 
             // Assert
             Assert.IsType(typeof(PostEditModel), response);
-            Assert.Equal(expectedResult, ((PostEditModel)response).Title);
-        }
-
-        [Fact]
-        public void SetupViewModel_ById_ShouldReturnCorrectPost()
-        {
-            // Arrange
-            var expectedResult = postFixture.GetTestPosts().FirstOrDefault(q => q.Id == 2).Title;
-
-            // Act
-            var response = moqPostService.SetupViewModel(2);
-
-            // Assert
-            Assert.IsType(typeof(PostViewModel), response);
-            Assert.Equal(expectedResult, ((PostViewModel)response).Title);
-        }
-
-        [Fact]
-        public void SetupViewModel_ByVanityId_ShouldReturnCorrectPost()
-        {
-            // Arrange
-            var expectedResult = postFixture.GetTestPosts().FirstOrDefault(q => q.VanityId == new Guid("8633a850-128f-4425-a2ec-30e23826b7ff")).Title;
-
-            // Act
-            var response = moqPostService.SetupViewModel(new Guid("8633a850-128f-4425-a2ec-30e23826b7ff"));
-
-            // Assert
-            Assert.IsType(typeof(PostViewModel), response);
-            Assert.Equal(expectedResult, ((PostViewModel)response).Title);
+            Assert.Equal(expectedResult, response.Title);
         }
 
         #endregion
