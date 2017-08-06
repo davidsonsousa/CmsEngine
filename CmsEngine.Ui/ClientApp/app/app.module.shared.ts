@@ -2,6 +2,7 @@
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
+import { ToastyModule } from 'ng2-toasty';
 
 import { AppComponent } from './components/app/app.component'
 import { NavMenuComponent } from './components/navmenu/navmenu.component';
@@ -37,6 +38,7 @@ export const sharedConfig: NgModule = {
   imports: [
     FormsModule,
     HttpModule,
+    ToastyModule.forRoot(),
     RouterModule.forRoot([
       { path: '', redirectTo: 'home', pathMatch: 'full' },
       { path: 'home', component: HomeComponent },
