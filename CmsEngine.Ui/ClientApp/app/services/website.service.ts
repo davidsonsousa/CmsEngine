@@ -10,10 +10,18 @@ export class WebsiteService extends Service {
     super(protocol, 'api/website');
   }
 
+  /**
+   * Create a new website
+   * @param websiteEditModel
+   */
   public create(websiteEditModel: WebsiteEditModel): any {
     return this.post(websiteEditModel);
   }
 
+  /**
+   * Update a specific website
+   * @param websiteEditModel
+   */
   public update(websiteEditModel: WebsiteEditModel): any {
     return this.put(websiteEditModel.vanityId, websiteEditModel);
   }
