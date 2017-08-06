@@ -1,4 +1,6 @@
 ﻿import { Component, AfterViewInit } from '@angular/core';
+import { ToastyService } from 'ng2-toasty';
+
 import { WebsiteService } from '../../../services/website.service';
 
 @Component({
@@ -11,7 +13,8 @@ export class WebsiteComponent implements AfterViewInit {
   public columns = [];
   public vanityId: string;
 
-  constructor(private websiteService: WebsiteService) { }
+  constructor(private websiteService: WebsiteService, private toastyService: ToastyService
+  ) { }
 
   public ngAfterViewInit(): void {
     this.websiteService.get()
@@ -24,7 +27,13 @@ export class WebsiteComponent implements AfterViewInit {
   public onDeleteWebsite(vanityId: string) {
     this.websiteService.delete(vanityId)
       .subscribe(response => {
-        console.log(response);
+        this.toastyService.success({
+          title: 'Success',
+          msg: response.message,
+          theme: 'bootstrap',
+          showClose: true,
+          timeout: 10000
+        });
       });
   }
 }
