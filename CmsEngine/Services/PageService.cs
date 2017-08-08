@@ -53,7 +53,7 @@ namespace CmsEngine.Services
                 Repository.BulkUpdate(q => id.Contains(q.VanityId), u => new Page { IsDeleted = true });
 
                 returnValue.IsError = false;
-                returnValue.Message = string.Format("Selected items deleted at {0}.", DateTime.Now.ToString("d"));
+                returnValue.Message = $"Selected items deleted at {DateTime.Now.ToString("T")}.";
             }
             catch
             {
@@ -106,7 +106,7 @@ namespace CmsEngine.Services
             var returnValue = new ReturnValue
             {
                 IsError = false,
-                Message = $"Page '{((PageEditModel)editModel).Title}' saved."
+                Message = $"Page '{((PageEditModel)editModel).Title}' saved at ${DateTime.Now.ToString("T")}."
             };
 
             try
@@ -155,7 +155,7 @@ namespace CmsEngine.Services
 
                 UnitOfWork.Save();
                 returnValue.IsError = false;
-                returnValue.Message = string.Format("Page '{0}' deleted at {1}.", item.Title, DateTime.Now.ToString("d"));
+                returnValue.Message = $"Page '{item.Title}' deleted at {DateTime.Now.ToString("T")}.";
             }
             catch
             {

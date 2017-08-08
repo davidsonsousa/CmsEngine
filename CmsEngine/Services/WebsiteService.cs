@@ -52,7 +52,7 @@ namespace CmsEngine.Services
                 Repository.BulkUpdate(q => id.Contains(q.VanityId), u => new Website { IsDeleted = true });
 
                 returnValue.IsError = false;
-                returnValue.Message = string.Format("Selected items deleted at {0}.", DateTime.Now.ToString("d"));
+                returnValue.Message = $"Selected items deleted at {DateTime.Now.ToString("T")}.";
             }
             catch
             {
@@ -105,7 +105,7 @@ namespace CmsEngine.Services
             var returnValue = new ReturnValue
             {
                 IsError = false,
-                Message = $"Website '{((WebsiteEditModel)editModel).Name}' saved."
+                Message = $"Website '{((WebsiteEditModel)editModel).Name}' saved at ${DateTime.Now.ToString("T")}"
             };
 
             try
@@ -155,7 +155,7 @@ namespace CmsEngine.Services
 
                 UnitOfWork.Save();
                 returnValue.IsError = false;
-                returnValue.Message = string.Format("Website '{0}' deleted at {1}.", item.Name, DateTime.Now.ToString("d"));
+                returnValue.Message = $"Website '{item.Name}' deleted at {DateTime.Now.ToString("T")}.";
             }
             catch
             {
