@@ -1,4 +1,5 @@
 ﻿import { Component, AfterViewInit } from '@angular/core';
+import { Router } from "@angular/router";
 import { ToastyService } from 'ng2-toasty';
 
 import { WebsiteService } from '../../../services/website.service';
@@ -13,10 +14,17 @@ export class WebsiteComponent implements AfterViewInit {
   public columns = [];
   public vanityId: string;
 
-  constructor(private websiteService: WebsiteService, private toastyService: ToastyService
+  constructor(
+    private websiteService: WebsiteService,
+    private toastyService: ToastyService,
+    private router: Router
   ) { }
 
   public ngAfterViewInit(): void {
+    this.loadData();
+  }
+
+  public loadData() {
     this.websiteService.get()
       .subscribe(websites => {
         this.websites = websites;
@@ -34,6 +42,8 @@ export class WebsiteComponent implements AfterViewInit {
           showClose: true,
           timeout: 10000
         });
+
+        this.loadData();
       });
   }
 }
