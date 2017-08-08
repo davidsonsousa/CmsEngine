@@ -106,7 +106,7 @@ namespace CmsEngine.Services
             var returnValue = new ReturnValue
             {
                 IsError = false,
-                Message = $"Category '{((CategoryEditModel)editModel).Name}' saved at ${DateTime.Now.ToString("T")}."
+                Message = $"Category '{((CategoryEditModel)editModel).Name}' saved at {DateTime.Now.ToString("T")}."
             };
 
             try

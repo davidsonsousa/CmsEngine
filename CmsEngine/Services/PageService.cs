@@ -106,7 +106,7 @@ namespace CmsEngine.Services
             var returnValue = new ReturnValue
             {
                 IsError = false,
-                Message = $"Page '{((PageEditModel)editModel).Title}' saved at ${DateTime.Now.ToString("T")}."
+                Message = $"Page '{((PageEditModel)editModel).Title}' saved at {DateTime.Now.ToString("T")}."
             };
 
             try

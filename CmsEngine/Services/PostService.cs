@@ -106,7 +106,7 @@ namespace CmsEngine.Services
             var returnValue = new ReturnValue
             {
                 IsError = false,
-                Message = $"Post '{((PostEditModel)editModel).Title}' saved at ${DateTime.Now.ToString("T")}."
+                Message = $"Post '{((PostEditModel)editModel).Title}' saved at {DateTime.Now.ToString("T")}."
             };
 
             try

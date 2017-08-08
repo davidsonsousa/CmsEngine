@@ -106,7 +106,7 @@ namespace CmsEngine.Services
             var returnValue = new ReturnValue
             {
                 IsError = false,
-                Message = $"Tag '{((TagEditModel)editModel).Name}' saved at ${DateTime.Now.ToString("T")}."
+                Message = $"Tag '{((TagEditModel)editModel).Name}' saved at {DateTime.Now.ToString("T")}."
             };
 
             try
