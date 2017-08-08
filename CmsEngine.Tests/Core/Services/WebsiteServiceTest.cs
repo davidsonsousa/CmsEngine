@@ -47,7 +47,7 @@ namespace CmsEngine.Tests.Core.Services
             var response = moqWebsiteService.GetAllReadOnly();
 
             // Assert
-            Assert.True(response is IEnumerable<Website>, "Response is not IEnumerable<Website>");
+            Assert.True(response is IEnumerable<WebsiteViewModel>, "Response is not IEnumerable<WebsiteViewModel>");
             Assert.Equal(expectedResult, response.Count());
         }
 
@@ -55,10 +55,10 @@ namespace CmsEngine.Tests.Core.Services
         public void GetById_ShouldReturnCorrectWebsite()
         {
             // Arrange
-            var expectedResult = websiteFixture.GetTestWebsites().FirstOrDefault(q => q.Id == 1).Name;
+            var expectedResult = websiteFixture.GetTestWebsites().FirstOrDefault(q => q.Id == 2).Name;
 
             // Act
-            var response = moqWebsiteService.GetById(1);
+            var response = (WebsiteViewModel)moqWebsiteService.GetById(2);
 
             // Assert
             Assert.Equal(expectedResult, response.Name);
@@ -71,7 +71,7 @@ namespace CmsEngine.Tests.Core.Services
             var expectedResult = websiteFixture.GetTestWebsites().FirstOrDefault(q => q.VanityId == new Guid("8633a850-128f-4425-a2ec-30e23826b7ff")).Name;
 
             // Act
-            var response = moqWebsiteService.GetById(new Guid("8633a850-128f-4425-a2ec-30e23826b7ff"));
+            var response = (WebsiteViewModel)moqWebsiteService.GetById(new Guid("8633a850-128f-4425-a2ec-30e23826b7ff"));
 
             // Assert
             Assert.Equal(expectedResult, response.Name);
@@ -87,11 +87,11 @@ namespace CmsEngine.Tests.Core.Services
             // Arrange
 
             // Act
-            var response = moqWebsiteService.SetupEditModel();
+            var response = (WebsiteEditModel)moqWebsiteService.SetupEditModel();
 
             // Assert
             Assert.NotNull(response);
-            Assert.True(((WebsiteEditModel)response).IsNew, "Item is not new");
+            Assert.True(response.IsNew, "Item is not new");
         }
 
         [Fact]
@@ -101,11 +101,11 @@ namespace CmsEngine.Tests.Core.Services
             var expectedResult = websiteFixture.GetTestWebsites().FirstOrDefault(q => q.Id == 2).Name;
 
             // Act
-            var response = moqWebsiteService.SetupEditModel(2);
+            var response = (WebsiteEditModel)moqWebsiteService.SetupEditModel(2);
 
             // Assert
             Assert.IsType(typeof(WebsiteEditModel), response);
-            Assert.Equal(expectedResult, ((WebsiteEditModel)response).Name);
+            Assert.Equal(expectedResult, response.Name);
         }
 
         [Fact]
@@ -115,39 +115,11 @@ namespace CmsEngine.Tests.Core.Services
             var expectedResult = websiteFixture.GetTestWebsites().FirstOrDefault(q => q.VanityId == new Guid("8633a850-128f-4425-a2ec-30e23826b7ff")).Name;
 
             // Act
-            var response = moqWebsiteService.SetupEditModel(new Guid("8633a850-128f-4425-a2ec-30e23826b7ff"));
+            var response = (WebsiteEditModel)moqWebsiteService.SetupEditModel(new Guid("8633a850-128f-4425-a2ec-30e23826b7ff"));
 
             // Assert
             Assert.IsType(typeof(WebsiteEditModel), response);
-            Assert.Equal(expectedResult, ((WebsiteEditModel)response).Name);
-        }
-
-        [Fact]
-        public void SetupViewModel_ById_ShouldReturnCorrectWebsite()
-        {
-            // Arrange
-            var expectedResult = websiteFixture.GetTestWebsites().FirstOrDefault(q => q.Id == 2).Name;
-
-            // Act
-            var response = moqWebsiteService.SetupViewModel(2);
-
-            // Assert
-            Assert.IsType(typeof(WebsiteViewModel), response);
-            Assert.Equal(expectedResult, ((WebsiteViewModel)response).Name);
-        }
-
-        [Fact]
-        public void SetupViewModel_ByVanityId_ShouldReturnCorrectWebsite()
-        {
-            // Arrange
-            var expectedResult = websiteFixture.GetTestWebsites().FirstOrDefault(q => q.VanityId == new Guid("8633a850-128f-4425-a2ec-30e23826b7ff")).Name;
-
-            // Act
-            var response = moqWebsiteService.SetupViewModel(new Guid("8633a850-128f-4425-a2ec-30e23826b7ff"));
-
-            // Assert
-            Assert.IsType(typeof(WebsiteViewModel), response);
-            Assert.Equal(expectedResult, ((WebsiteViewModel)response).Name);
+            Assert.Equal(expectedResult, response.Name);
         }
 
         #endregion

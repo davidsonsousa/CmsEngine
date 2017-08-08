@@ -7,6 +7,7 @@ using CmsEngine.Extensions;
 using CmsEngine.Utils;
 using System;
 using System.Linq;
+using System.Collections.Generic;
 
 namespace CmsEngine.Services
 {
@@ -14,6 +15,34 @@ namespace CmsEngine.Services
     {
         public PostService(IUnitOfWork uow, IMapper mapper) : base(uow, mapper)
         {
+        }
+
+        public override IEnumerable<IViewModel> GetAllReadOnly()
+        {
+            IEnumerable<Post> listItems;
+
+            try
+            {
+                listItems = Repository.GetReadOnly(q => q.IsDeleted == false);
+            }
+            catch
+            {
+                throw;
+            }
+
+            return Mapper.Map<IEnumerable<Post>, IEnumerable<PostViewModel>>(listItems);
+        }
+
+        public override IViewModel GetById(int id)
+        {
+            var item = this.GetItemById(id);
+            return Mapper.Map<Post, PostViewModel>(item);
+        }
+
+        public override IViewModel GetById(Guid id)
+        {
+            var item = this.GetItemById(id);
+            return Mapper.Map<Post, PostViewModel>(item);
         }
 
         public override ReturnValue BulkDelete(Guid[] id)
@@ -24,7 +53,7 @@ namespace CmsEngine.Services
                 Repository.BulkUpdate(q => id.Contains(q.VanityId), u => new Post { IsDeleted = true });
 
                 returnValue.IsError = false;
-                returnValue.Message = string.Format("Selected items deleted at {0}.", DateTime.Now.ToString("d"));
+                returnValue.Message = $"Selected items deleted at {DateTime.Now.ToString("T")}.";
             }
             catch
             {
@@ -77,7 +106,7 @@ namespace CmsEngine.Services
             var returnValue = new ReturnValue
             {
                 IsError = false,
-                Message = $"Post '{((PostEditModel)editModel).Title}' saved."
+                Message = $"Post '{((PostEditModel)editModel).Title}' saved at {DateTime.Now.ToString("T")}."
             };
 
             try
@@ -101,20 +130,16 @@ namespace CmsEngine.Services
             return new PostEditModel();
         }
 
-        protected override IEditModel SetupEditModel(Post item)
+        public override IEditModel SetupEditModel(int id)
         {
-            var editModel = new PostEditModel();
-            item.MapTo(editModel);
-
-            return editModel;
+            var item = this.GetItemById(id);
+            return Mapper.Map<Post, PostEditModel>(item);
         }
 
-        protected override IViewModel SetupViewModel(Post item)
+        public override IEditModel SetupEditModel(Guid id)
         {
-            var viewModel = new PostViewModel();
-            item.MapTo(viewModel);
-
-            return viewModel;
+            var item = this.GetItemById(id);
+            return Mapper.Map<Post, PostEditModel>(item);
         }
 
         protected override ReturnValue Delete(Post item)
@@ -130,7 +155,7 @@ namespace CmsEngine.Services
 
                 UnitOfWork.Save();
                 returnValue.IsError = false;
-                returnValue.Message = string.Format("Post '{0}' deleted at {1}.", item.Title, DateTime.Now.ToString("d"));
+                returnValue.Message = $"Post '{item.Title}' deleted at {DateTime.Now.ToString("T")}.";
             }
             catch
             {

@@ -7,6 +7,7 @@ using CmsEngine.Extensions;
 using CmsEngine.Utils;
 using System;
 using System.Linq;
+using System.Collections.Generic;
 
 namespace CmsEngine.Services
 {
@@ -14,6 +15,34 @@ namespace CmsEngine.Services
     {
         public CategoryService(IUnitOfWork uow, IMapper mapper) : base(uow, mapper)
         {
+        }
+
+        public override IEnumerable<IViewModel> GetAllReadOnly()
+        {
+            IEnumerable<Category> listItems;
+
+            try
+            {
+                listItems = Repository.GetReadOnly(q => q.IsDeleted == false);
+            }
+            catch
+            {
+                throw;
+            }
+
+            return Mapper.Map<IEnumerable<Category>, IEnumerable<CategoryViewModel>>(listItems);
+        }
+
+        public override IViewModel GetById(int id)
+        {
+            var item = this.GetItemById(id);
+            return Mapper.Map<Category, CategoryViewModel>(item);
+        }
+
+        public override IViewModel GetById(Guid id)
+        {
+            var item = this.GetItemById(id);
+            return Mapper.Map<Category, CategoryViewModel>(item);
         }
 
         public override ReturnValue BulkDelete(Guid[] id)
@@ -24,7 +53,7 @@ namespace CmsEngine.Services
                 Repository.BulkUpdate(q => id.Contains(q.VanityId), u => new Category { IsDeleted = true });
 
                 returnValue.IsError = false;
-                returnValue.Message = string.Format("Selected items deleted at {0}.", DateTime.Now.ToString("d"));
+                returnValue.Message = $"Selected items deleted at {DateTime.Now.ToString("T")}.";
             }
             catch
             {
@@ -77,7 +106,7 @@ namespace CmsEngine.Services
             var returnValue = new ReturnValue
             {
                 IsError = false,
-                Message = $"Category '{((CategoryEditModel)editModel).Name}' saved."
+                Message = $"Category '{((CategoryEditModel)editModel).Name}' saved at {DateTime.Now.ToString("T")}."
             };
 
             try
@@ -101,22 +130,17 @@ namespace CmsEngine.Services
             return new CategoryEditModel();
         }
 
-        protected override IEditModel SetupEditModel(Category item)
+        public override IEditModel SetupEditModel(int id)
         {
-            var editModel = new CategoryEditModel();
-            item.MapTo(editModel);
-
-            return editModel;
+            var item = this.GetItemById(id);
+            return Mapper.Map<Category, CategoryEditModel>(item);
         }
 
-        protected override IViewModel SetupViewModel(Category item)
+        public override IEditModel SetupEditModel(Guid id)
         {
-            var viewModel = new CategoryViewModel();
-            item.MapTo(viewModel);
-
-            return viewModel;
+            var item = this.GetItemById(id);
+            return Mapper.Map<Category, CategoryEditModel>(item);
         }
-
 
         protected override ReturnValue Delete(Category item)
         {
@@ -131,7 +155,7 @@ namespace CmsEngine.Services
 
                 UnitOfWork.Save();
                 returnValue.IsError = false;
-                returnValue.Message = string.Format("Category '{0}' deleted at {1}.", item.Name, DateTime.Now.ToString("d"));
+                returnValue.Message = string.Format("Category '{0}' deleted at {1}.", item.Name, DateTime.Now.ToString("T"));
             }
             catch
             {

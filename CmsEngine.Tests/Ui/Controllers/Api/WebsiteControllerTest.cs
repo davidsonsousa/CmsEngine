@@ -2,6 +2,7 @@
 using CmsEngine.Data.AccessLayer;
 using CmsEngine.Data.EditModels;
 using CmsEngine.Data.Models;
+using CmsEngine.Data.ViewModels;
 using CmsEngine.Tests.Fixtures;
 using CmsEngine.Ui.Controllers.Api;
 using Microsoft.AspNetCore.Mvc;
@@ -42,7 +43,7 @@ namespace CmsEngine.Tests.Ui.Controllers.Api
             // Act
             var actionResult = controller.Get();
             var okResult = actionResult as OkObjectResult;
-            var testResult = okResult.Value as IEnumerable<Website>;
+            var testResult = okResult.Value as IEnumerable<WebsiteViewModel>;
 
             // Assert
             Assert.NotNull(okResult);
@@ -55,12 +56,12 @@ namespace CmsEngine.Tests.Ui.Controllers.Api
         public void GetWebsiteById_ShouldReturnSelectedWebsite()
         {
             // Arrange
-            var expectedResult = websiteFixture.GetTestWebsites().FirstOrDefault(q => q.Id == 1);
+            var expectedResult = websiteFixture.GetTestWebsites().FirstOrDefault(q => q.Id == 2);
 
             // Act
             var actionResult = controller.Get(1);
             var okResult = actionResult as OkObjectResult;
-            var testResult = okResult.Value as Website;
+            var testResult = okResult.Value as WebsiteViewModel;
 
             // Assert
             Assert.NotNull(okResult);
@@ -93,7 +94,7 @@ namespace CmsEngine.Tests.Ui.Controllers.Api
             // Act
             var actionResult = controller.Get(id);
             var okResult = actionResult as OkObjectResult;
-            var testResult = okResult.Value as Website;
+            var testResult = okResult.Value as WebsiteViewModel;
 
             // Assert
             Assert.NotNull(okResult);

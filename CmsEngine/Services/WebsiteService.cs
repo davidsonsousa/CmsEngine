@@ -6,6 +6,7 @@ using CmsEngine.Data.ViewModels;
 using CmsEngine.Utils;
 using System;
 using System.Linq;
+using System.Collections.Generic;
 
 namespace CmsEngine.Services
 {
@@ -13,6 +14,34 @@ namespace CmsEngine.Services
     {
         public WebsiteService(IUnitOfWork uow, IMapper mapper) : base(uow, mapper)
         {
+        }
+
+        public override IEnumerable<IViewModel> GetAllReadOnly()
+        {
+            IEnumerable<Website> listItems;
+
+            try
+            {
+                listItems = Repository.GetReadOnly(q => q.IsDeleted == false);
+            }
+            catch
+            {
+                throw;
+            }
+
+            return Mapper.Map<IEnumerable<Website>, IEnumerable<WebsiteViewModel>>(listItems);
+        }
+
+        public override IViewModel GetById(int id)
+        {
+            var item = this.GetItemById(id);
+            return Mapper.Map<Website, WebsiteViewModel>(item);
+        }
+
+        public override IViewModel GetById(Guid id)
+        {
+            var item = this.GetItemById(id);
+            return Mapper.Map<Website, WebsiteViewModel>(item);
         }
 
         public override ReturnValue BulkDelete(Guid[] id)
@@ -23,7 +52,7 @@ namespace CmsEngine.Services
                 Repository.BulkUpdate(q => id.Contains(q.VanityId), u => new Website { IsDeleted = true });
 
                 returnValue.IsError = false;
-                returnValue.Message = string.Format("Selected items deleted at {0}.", DateTime.Now.ToString("d"));
+                returnValue.Message = $"Selected items deleted at {DateTime.Now.ToString("T")}.";
             }
             catch
             {
@@ -76,7 +105,7 @@ namespace CmsEngine.Services
             var returnValue = new ReturnValue
             {
                 IsError = false,
-                Message = $"Website '{((WebsiteEditModel)editModel).Name}' saved."
+                Message = $"Website '{((WebsiteEditModel)editModel).Name}' saved at {DateTime.Now.ToString("T")}"
             };
 
             try
@@ -101,14 +130,16 @@ namespace CmsEngine.Services
             return new WebsiteEditModel();
         }
 
-        protected override IEditModel SetupEditModel(Website item)
+        public override IEditModel SetupEditModel(int id)
         {
+            var item = this.GetItemById(id);
             return Mapper.Map<Website, WebsiteEditModel>(item);
         }
 
-        protected override IViewModel SetupViewModel(Website item)
+        public override IEditModel SetupEditModel(Guid id)
         {
-            return Mapper.Map<Website, WebsiteViewModel>(item);
+            var item = this.GetItemById(id);
+            return Mapper.Map<Website, WebsiteEditModel>(item);
         }
 
         protected override ReturnValue Delete(Website item)
@@ -124,7 +155,7 @@ namespace CmsEngine.Services
 
                 UnitOfWork.Save();
                 returnValue.IsError = false;
-                returnValue.Message = string.Format("Website '{0}' deleted at {1}.", item.Name, DateTime.Now.ToString("d"));
+                returnValue.Message = $"Website '{item.Name}' deleted at {DateTime.Now.ToString("T")}.";
             }
             catch
             {
@@ -147,7 +178,7 @@ namespace CmsEngine.Services
             }
             else
             {
-                website = GetById(editModel.VanityId);
+                website = GetItemById(editModel.VanityId);
                 Mapper.Map((WebsiteEditModel)editModel, website);
 
                 Repository.Update(website);

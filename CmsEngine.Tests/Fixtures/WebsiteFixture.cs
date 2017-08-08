@@ -40,7 +40,7 @@ namespace CmsEngine.Tests.Fixtures
 
         public WebsiteFixture()
         {
-            SetupWebsiteRepository();
+            SetupRepository();
             SetupUnitOfWork();
             SetupMapper();
 
@@ -56,6 +56,18 @@ namespace CmsEngine.Tests.Fixtures
                 {
                     new Website { Id = 1, VanityId = new Guid("278c0380-bdd2-45bb-869b-b94659bc2b89"), Name = "Website1", Culture="en-US", Description="Welcome to website 1", IsDeleted = false },
                     new Website { Id = 2, VanityId = new Guid("8633a850-128f-4425-a2ec-30e23826b7ff"), Name = "Website2", Culture="pt-BR", Description="Welcome to website 2", IsDeleted = false }
+                };
+        }
+
+        /// <summary>
+        /// Returns a list of ViewModels
+        /// </summary>
+        public List<WebsiteViewModel> GetViewModels()
+        {
+            return new List<WebsiteViewModel>
+                {
+                    new WebsiteViewModel { Id = 1, VanityId = new Guid("278c0380-bdd2-45bb-869b-b94659bc2b89"), Name = "Website1", Culture="en-US", Description="Welcome to website 1" },
+                    new WebsiteViewModel { Id = 2, VanityId = new Guid("8633a850-128f-4425-a2ec-30e23826b7ff"), Name = "Website2", Culture="pt-BR", Description="Welcome to website 2" }
                 };
         }
 
@@ -81,7 +93,7 @@ namespace CmsEngine.Tests.Fixtures
         /// Setup the Repository instance and its returning values
         /// </summary>
         /// <returns></returns>
-        private void SetupWebsiteRepository()
+        private void SetupRepository()
         {
             moqRepository = new Mock<IRepository<Website>>();
             moqRepository.Setup(x => x.Get(It.IsAny<Expression<Func<Website, bool>>>())).Returns(GetTestWebsites().AsQueryable());
@@ -107,6 +119,8 @@ namespace CmsEngine.Tests.Fixtures
             moqMapper = new Mock<IMapper>();
             moqMapper.Setup(x => x.Map<Website, WebsiteEditModel>(It.IsAny<Website>())).Returns(GetEditModel());
             moqMapper.Setup(x => x.Map<Website, WebsiteViewModel>(It.IsAny<Website>())).Returns(GetViewModel());
+            moqMapper.Setup(x => x.Map<Website, WebsiteViewModel>(null)).Returns<WebsiteViewModel>(null);
+            moqMapper.Setup(x => x.Map<IEnumerable<Website>, IEnumerable<WebsiteViewModel>>(It.IsAny<IEnumerable<Website>>())).Returns(GetViewModels());
         }
     }
 }

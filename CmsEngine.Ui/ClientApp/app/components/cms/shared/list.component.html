@@ -1,0 +1,21 @@
+﻿<table class="table table-striped">
+  <thead>
+    <tr>
+      <th *ngFor="let key of keys">
+        {{ key }}
+      </th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let item of items">
+      <td *ngFor="let key of keys ">
+        {{ item[key] }}
+      </td>
+      <td>
+        <a [routerLink]="['edit/' + item['vanityId']]" class="btn btn-default"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+        <a (click)="deleteItem(item['vanityId'])" class="btn btn-danger"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
+      </td>
+    </tr>
+  </tbody>
+</table>
