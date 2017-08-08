@@ -1,9 +1,18 @@
 ﻿import { Http } from '@angular/http';
+import { Router } from '@angular/router';
+import { ToastyService, ToastOptions } from 'ng2-toasty';
 import 'rxjs/add/operator/map';
+
+import { ToastType } from '../models/index';
 
 export class Service {
 
-  constructor(private http: Http, private endpoint: string) { }
+  constructor(
+    private http: Http,
+    private endpoint: string,
+    private toastyService: ToastyService,
+    private router: Router
+  ) { }
 
   /**
    * Extract the property names from an item
@@ -73,5 +82,46 @@ export class Service {
     else {
       console.error('No vanityId');
     }
+  }
+
+  public showToast(toastType: ToastType, message: string) {
+    let toastOptions: ToastOptions = {
+      title: 'Default',
+      msg: message,
+      theme: 'bootstrap',
+      showClose: true,
+      timeout: 10000
+    };
+
+    switch (toastType) {
+      case ToastType.Success:
+        toastOptions.title = 'Success';
+        this.toastyService.success(toastOptions);
+        break;
+      case ToastType.Info:
+        toastOptions.title = 'Info';
+        this.toastyService.success(toastOptions);
+        break;
+      case ToastType.Wait:
+        toastOptions.title = 'Wait';
+        this.toastyService.success(toastOptions);
+        break;
+      case ToastType.Warning:
+        toastOptions.title = 'Warning';
+        this.toastyService.success(toastOptions);
+        break;
+      case ToastType.Error:
+        toastOptions.title = 'Error';
+        this.toastyService.success(toastOptions);
+        break;
+      default:
+        this.toastyService.default(toastOptions);
+        break;
+    }
+  }
+
+  public showToastAndRedirect(route: string, toastType: ToastType, message: string) {
+    this.showToast(toastType, message);
+    this.router.navigate([route]);
   }
 }
