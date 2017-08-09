@@ -10,13 +10,16 @@ import { HomeComponent } from './components/home/home.component';
 import { FetchDataComponent } from './components/fetchdata/fetchdata.component';
 import { CounterComponent } from './components/counter/counter.component';
 
+// Core
 import {
-  // Core
   CategoryComponent, PageComponent, PostComponent, TagComponent,
   WebsiteComponent, WebsiteNewComponent, WebsiteEditComponent, WebsiteFormComponent,
-  // Shared
-  ListComponent
 } from './components/cms/index';
+
+// Shared
+import {
+  ListComponent, LoadComponent
+} from './components/cms/shared/index'
 
 export const sharedConfig: NgModule = {
   bootstrap: [AppComponent],
@@ -33,7 +36,7 @@ export const sharedConfig: NgModule = {
     TagComponent,
     WebsiteComponent, WebsiteNewComponent, WebsiteEditComponent, WebsiteFormComponent,
     // Shared
-    ListComponent
+    ListComponent, LoadComponent
   ],
   imports: [
     FormsModule,
