@@ -12,7 +12,8 @@ import { CounterComponent } from './components/counter/counter.component';
 
 // Core
 import {
-  CategoryComponent, PageComponent, PostComponent, TagComponent,
+  CategoryComponent, PageComponent, PostComponent,
+  TagComponent, TagNewComponent, TagEditComponent, TagFormComponent,
   WebsiteComponent, WebsiteNewComponent, WebsiteEditComponent, WebsiteFormComponent,
 } from './components/cms/index';
 
@@ -33,7 +34,7 @@ export const sharedConfig: NgModule = {
     CategoryComponent,
     PageComponent,
     PostComponent,
-    TagComponent,
+    TagComponent, TagNewComponent, TagEditComponent, TagFormComponent,
     WebsiteComponent, WebsiteNewComponent, WebsiteEditComponent, WebsiteFormComponent,
     // Shared
     ListComponent, LoadComponent
@@ -51,6 +52,8 @@ export const sharedConfig: NgModule = {
       { path: 'pages', component: PageComponent },
       { path: 'posts', component: PostComponent },
       { path: 'tags', component: TagComponent },
+      { path: 'tags/new', component: TagNewComponent },
+      { path: 'tags/edit/:id', component: TagEditComponent },
       { path: 'websites', component: WebsiteComponent },
       { path: 'websites/new', component: WebsiteNewComponent },
       { path: 'websites/edit/:id', component: WebsiteEditComponent },
