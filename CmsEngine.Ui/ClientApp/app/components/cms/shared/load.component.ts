@@ -1,14 +1,4 @@
-﻿import {
-  Router,
-  // import as RouterEvent to avoid confusion with the DOM Event
-  Event as RouterEvent,
-  NavigationStart,
-  NavigationEnd,
-  NavigationCancel,
-  NavigationError
-} from '@angular/router'
-import { Component, Input } from '@angular/core';
-
+﻿import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'cms-load',
