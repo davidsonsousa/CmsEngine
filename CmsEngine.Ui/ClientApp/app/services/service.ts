@@ -100,19 +100,19 @@ export class Service {
         break;
       case ToastType.Info:
         toastOptions.title = 'Info';
-        this.toastyService.success(toastOptions);
+        this.toastyService.info(toastOptions);
         break;
       case ToastType.Wait:
         toastOptions.title = 'Wait';
-        this.toastyService.success(toastOptions);
+        this.toastyService.wait(toastOptions);
         break;
       case ToastType.Warning:
         toastOptions.title = 'Warning';
-        this.toastyService.success(toastOptions);
+        this.toastyService.warning(toastOptions);
         break;
       case ToastType.Error:
         toastOptions.title = 'Error';
-        this.toastyService.success(toastOptions);
+        this.toastyService.error(toastOptions);
         break;
       default:
         this.toastyService.default(toastOptions);
