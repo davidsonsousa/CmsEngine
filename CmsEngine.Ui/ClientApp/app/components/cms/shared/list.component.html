@@ -1,4 +1,6 @@
-﻿<table class="table table-striped">
+﻿<cms-load [loading]="items <= 0"></cms-load>
+
+<table class="table table-striped">
   <thead>
     <tr>
       <th *ngFor="let key of keys">
