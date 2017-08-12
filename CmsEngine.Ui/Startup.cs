@@ -1,16 +1,16 @@
-using AutoMapper;
+﻿using AutoMapper;
 using CmsEngine.Data;
 using CmsEngine.Data.AccessLayer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.SpaServices.Webpack;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.PlatformAbstractions;
 using Swashbuckle.AspNetCore.Swagger;
-using System.IO;
 
 namespace WebApplicationBasic
 {
@@ -31,13 +31,16 @@ namespace WebApplicationBasic
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            // Add HttpContextAccessor as .NET Core doesn't have HttpContext.Current anymore
+            services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
             // Add AutoMapper
             services.AddAutoMapper();
 
             // Add CmsEngineContext
-            string connection = Configuration.GetConnectionString("DefaultConnection");
+            var connection = Configuration.GetConnectionString("DefaultConnection");
             services.AddDbContext<CmsEngineContext>(options => options.UseSqlServer(connection));
-            
+
             // Add framework services.
             services.AddMvc();
 
@@ -71,7 +74,8 @@ namespace WebApplicationBasic
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseWebpackDevMiddleware(new WebpackDevMiddlewareOptions {
+                app.UseWebpackDevMiddleware(new WebpackDevMiddlewareOptions
+                {
                     HotModuleReplacement = true
                 });
             }
