@@ -5,15 +5,16 @@ using CmsEngine.Data.Models;
 using CmsEngine.Data.ViewModels;
 using CmsEngine.Extensions;
 using CmsEngine.Utils;
+using Microsoft.AspNetCore.Http;
 using System;
-using System.Linq;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace CmsEngine.Services
 {
     public class CategoryService : BaseService<Category>
     {
-        public CategoryService(IUnitOfWork uow, IMapper mapper) : base(uow, mapper)
+        public CategoryService(IUnitOfWork uow, IMapper mapper, IHttpContextAccessor hca) : base(uow, mapper, hca)
         {
         }
 
@@ -171,6 +172,8 @@ namespace CmsEngine.Services
         {
             var category = new Category();
             editModel.MapTo(category);
+
+            category.Website = WebsiteInstance;
 
             if (category.IsNew)
             {

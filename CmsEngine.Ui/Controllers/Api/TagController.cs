@@ -4,6 +4,7 @@ using CmsEngine.Data.EditModels;
 using CmsEngine.Services;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using Microsoft.AspNetCore.Http;
 
 namespace CmsEngine.Ui.Controllers.Api
 {
@@ -13,9 +14,9 @@ namespace CmsEngine.Ui.Controllers.Api
     {
         private readonly TagService tagService;
 
-        public TagController(IUnitOfWork uow, IMapper mapper)
+        public TagController(IUnitOfWork uow, IMapper mapper, IHttpContextAccessor hca)
         {
-            tagService = new TagService(uow, mapper);
+            tagService = new TagService(uow, mapper, hca);
         }
 
         /// <summary>
