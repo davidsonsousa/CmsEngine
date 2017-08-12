@@ -12,7 +12,8 @@ import { CounterComponent } from './components/counter/counter.component';
 
 // Core
 import {
-  CategoryComponent, PageComponent, PostComponent,
+  CategoryComponent, CategoryNewComponent, CategoryEditComponent, CategoryFormComponent,
+  PageComponent, PostComponent,
   TagComponent, TagNewComponent, TagEditComponent, TagFormComponent,
   WebsiteComponent, WebsiteNewComponent, WebsiteEditComponent, WebsiteFormComponent,
 } from './components/cms/index';
@@ -31,7 +32,7 @@ export const sharedConfig: NgModule = {
     FetchDataComponent,
     HomeComponent,
     // Core
-    CategoryComponent,
+    CategoryComponent, CategoryNewComponent, CategoryEditComponent, CategoryFormComponent,
     PageComponent,
     PostComponent,
     TagComponent, TagNewComponent, TagEditComponent, TagFormComponent,
@@ -49,6 +50,8 @@ export const sharedConfig: NgModule = {
       { path: 'counter', component: CounterComponent },
       { path: 'fetch-data', component: FetchDataComponent },
       { path: 'categories', component: CategoryComponent },
+      { path: 'categories/new', component: CategoryNewComponent },
+      { path: 'categories/edit/:id', component: CategoryEditComponent },
       { path: 'pages', component: PageComponent },
       { path: 'posts', component: PostComponent },
       { path: 'tags', component: TagComponent },
