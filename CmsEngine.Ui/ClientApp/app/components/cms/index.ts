@@ -2,6 +2,11 @@
 export * from './page/page.component';
 export * from './post/post.component';
 
+export * from './category/category.component';
+export * from './category/category-new.component';
+export * from './category/category-edit.component';
+export * from './category/category-form.component';
+
 export * from './tag/tag.component';
 export * from './tag/tag-new.component';
 export * from './tag/tag-edit.component';
