@@ -12,7 +12,7 @@ using System.Linq.Expressions;
 
 namespace CmsEngine.Tests.Fixtures
 {
-    public class PostFixture
+    public class PostFixture : BaseFixture
     {
         private Mock<IRepository<Post>> moqRepository;
         public Mock<IRepository<Post>> MoqRepository
@@ -38,13 +38,13 @@ namespace CmsEngine.Tests.Fixtures
             get { return moqMapper; }
         }
 
-        public PostFixture()
+        public PostFixture(): base()
         {
             SetupRepository();
             SetupUnitOfWork();
             SetupMapper();
 
-            service = new PostService(moqUnitOfWork.Object, moqMapper.Object);
+            service = new PostService(moqUnitOfWork.Object, moqMapper.Object, MoqHttpContextAccessor.Object);
         }
 
 
@@ -110,6 +110,9 @@ namespace CmsEngine.Tests.Fixtures
         {
             moqUnitOfWork = new Mock<IUnitOfWork>();
             moqUnitOfWork.Setup(x => x.GetRepository<Post>()).Returns(MoqRepository.Object);
+
+            // Website instance
+            moqUnitOfWork.Setup(x => x.GetRepository<Website>()).Returns(MoqInstance.Object);
         }
 
         /// <summary>
