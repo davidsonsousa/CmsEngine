@@ -1,5 +1,8 @@
-﻿export * from './category/category.component';
-export * from './page/page.component';
+﻿export * from './page/page.component';
+export * from './page/page-new.component';
+export * from './page/page-edit.component';
+export * from './page/page-form.component';
+
 export * from './post/post.component';
 
 export * from './category/category.component';

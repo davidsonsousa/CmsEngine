@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { ToastyModule } from 'ng2-toasty';
 
-import { AppComponent } from './components/app/app.component'
+import { AppComponent } from './components/app/app.component';
 import { NavMenuComponent } from './components/navmenu/navmenu.component';
 import { HomeComponent } from './components/home/home.component';
 import { FetchDataComponent } from './components/fetchdata/fetchdata.component';
@@ -13,7 +13,8 @@ import { CounterComponent } from './components/counter/counter.component';
 // Core
 import {
   CategoryComponent, CategoryNewComponent, CategoryEditComponent, CategoryFormComponent,
-  PageComponent, PostComponent,
+  PageComponent, PageNewComponent, PageEditComponent, PageFormComponent,
+  PostComponent,
   TagComponent, TagNewComponent, TagEditComponent, TagFormComponent,
   WebsiteComponent, WebsiteNewComponent, WebsiteEditComponent, WebsiteFormComponent,
 } from './components/cms/index';
@@ -21,7 +22,7 @@ import {
 // Shared
 import {
   ListComponent, LoadComponent
-} from './components/cms/shared/index'
+} from './components/cms/shared/index';
 
 export const sharedConfig: NgModule = {
   bootstrap: [AppComponent],
@@ -33,7 +34,7 @@ export const sharedConfig: NgModule = {
     HomeComponent,
     // Core
     CategoryComponent, CategoryNewComponent, CategoryEditComponent, CategoryFormComponent,
-    PageComponent,
+    PageComponent, PageNewComponent, PageEditComponent, PageFormComponent,
     PostComponent,
     TagComponent, TagNewComponent, TagEditComponent, TagFormComponent,
     WebsiteComponent, WebsiteNewComponent, WebsiteEditComponent, WebsiteFormComponent,
@@ -53,6 +54,8 @@ export const sharedConfig: NgModule = {
       { path: 'categories/new', component: CategoryNewComponent },
       { path: 'categories/edit/:id', component: CategoryEditComponent },
       { path: 'pages', component: PageComponent },
+      { path: 'pages/new', component: PageNewComponent },
+      { path: 'pages/edit/:id', component: PageEditComponent },
       { path: 'posts', component: PostComponent },
       { path: 'tags', component: TagComponent },
       { path: 'tags/new', component: TagNewComponent },
