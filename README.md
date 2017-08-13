@@ -17,17 +17,21 @@ Because I need a pet project to study a couple of things. And do it with my own 
 ## Running the project
 Since this is a .NET Core project you can run in 2 ways:
 
-### .NET Core CLI
-- Set the development environment (must be set for every session)
-  - PowerShell: `$Env:ASPNETCORE_ENVIRONMENT = "Development"`
+### .NET Core CLI (using PowerShell)
+- Set the development environment
+  - Go to the solution folder
+  - Execute the file `ConfigDevEnv.ps1` (must be set every time you open an instance of PowerShell)
 - Run the project
   - `cd ..\CmsEngine.Ui`
-  - `dotnet watch run`
+  - `dotnet -d watch run`
+    - `-d` shows the PID for debugging purposes
+  - Open your favorite browser and load `http://cmsengine.dev:5000`.
+    - Remember to map this url in your hosts file.
 - Create and run migrations
   - `cd ..\CmsEngine`
   - `dotnet ef --startup-project ..\CmsEngine.Ui\ migrations add MIGRATION_NAME`
   - `cd ..\CmsEngine.Ui`
-  - `dotnet ed database update`
+  - `dotnet ef database update`
 
 ### IIS Express
 - Just run with <kbd>Ctrl</kbd> + <kbd>F5</kbd> (or <kbd>F5</kbd> for debugging) and let everything happens
