@@ -1,6 +1,6 @@
 # CMSEngine
 ## What is it?
-This the new code-base of my website. The old version can be seen at [http://davidsonsousa.net](http://davidsonsousa.net "My website")
+This the new code-base of the CMS I am using on my website [http://davidsonsousa.net](http://davidsonsousa.net "my website")
 
 ## Why?
 Because I need a pet project to study a couple of things. And do it with my own website seems to be the right choice.
