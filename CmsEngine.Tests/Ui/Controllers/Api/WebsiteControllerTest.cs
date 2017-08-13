@@ -18,8 +18,6 @@ namespace CmsEngine.Tests.Ui.Controllers.Api
     public class WebsiteControllerTest : IClassFixture<WebsiteFixture>
     {
         private Mock<IRepository<Website>> moqRepository;
-        private Mock<IUnitOfWork> moqUnitOfWork;
-        private Mock<IMapper> moqMapper;
 
         private WebsiteFixture websiteFixture;
         private WebsiteController controller;
@@ -28,10 +26,8 @@ namespace CmsEngine.Tests.Ui.Controllers.Api
         {
             websiteFixture = fixture;
             moqRepository = websiteFixture.MoqRepository;
-            moqUnitOfWork = websiteFixture.MoqUnitOfWork;
-            moqMapper = websiteFixture.MoqMapper;
 
-            controller = new WebsiteController(moqUnitOfWork.Object, moqMapper.Object);
+            controller = new WebsiteController(websiteFixture.MoqUnitOfWork.Object, websiteFixture.MoqMapper.Object, websiteFixture.MoqHttpContextAccessor.Object);
         }
 
         [Fact]
