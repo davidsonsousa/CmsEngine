@@ -122,6 +122,7 @@ namespace CmsEngine.Tests.Fixtures
             moqMapper = new Mock<IMapper>();
             moqMapper.Setup(x => x.Map<Tag, TagEditModel>(It.IsAny<Tag>())).Returns(GetEditModel());
             moqMapper.Setup(x => x.Map<Tag, TagViewModel>(It.IsAny<Tag>())).Returns(GetViewModel());
+            moqMapper.Setup(x => x.Map<Tag, TagViewModel>(null)).Returns<TagViewModel>(null);
             moqMapper.Setup(x => x.Map<IEnumerable<Tag>, IEnumerable<TagViewModel>>(It.IsAny<IEnumerable<Tag>>())).Returns(GetViewModels());
         }
     }
