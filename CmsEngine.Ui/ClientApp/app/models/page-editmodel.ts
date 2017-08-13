@@ -9,5 +9,4 @@ export class PageEditModel {
   public documentContent: string;
   public author: string;
   public status: DocumentStatus;
-  public publishedOn: Date
 }
