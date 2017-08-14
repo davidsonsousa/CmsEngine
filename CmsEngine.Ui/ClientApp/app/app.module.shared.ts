@@ -1,4 +1,4 @@
-﻿import { NgModule } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
@@ -14,7 +14,7 @@ import { CounterComponent } from './components/counter/counter.component';
 import {
   CategoryComponent, CategoryNewComponent, CategoryEditComponent, CategoryFormComponent,
   PageComponent, PageNewComponent, PageEditComponent, PageFormComponent,
-  PostComponent,
+  PostComponent, PostNewComponent, PostEditComponent, PostFormComponent,
   TagComponent, TagNewComponent, TagEditComponent, TagFormComponent,
   WebsiteComponent, WebsiteNewComponent, WebsiteEditComponent, WebsiteFormComponent,
 } from './components/cms/index';
@@ -35,7 +35,7 @@ export const sharedConfig: NgModule = {
     // Core
     CategoryComponent, CategoryNewComponent, CategoryEditComponent, CategoryFormComponent,
     PageComponent, PageNewComponent, PageEditComponent, PageFormComponent,
-    PostComponent,
+    PostComponent, PostNewComponent, PostEditComponent, PostFormComponent,
     TagComponent, TagNewComponent, TagEditComponent, TagFormComponent,
     WebsiteComponent, WebsiteNewComponent, WebsiteEditComponent, WebsiteFormComponent,
     // Shared
@@ -57,6 +57,8 @@ export const sharedConfig: NgModule = {
       { path: 'pages/new', component: PageNewComponent },
       { path: 'pages/edit/:id', component: PageEditComponent },
       { path: 'posts', component: PostComponent },
+      { path: 'posts/new', component: PostNewComponent },
+      { path: 'posts/edit/:id', component: PostEditComponent },
       { path: 'tags', component: TagComponent },
       { path: 'tags/new', component: TagNewComponent },
       { path: 'tags/edit/:id', component: TagEditComponent },

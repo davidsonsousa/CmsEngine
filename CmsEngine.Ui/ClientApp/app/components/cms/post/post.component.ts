@@ -1,8 +1,46 @@
-﻿import { Component } from '@angular/core';
+import { Component, AfterViewInit } from '@angular/core';
+import { Router } from "@angular/router";
+import { ToastyService } from 'ng2-toasty';
+
+import { PostService } from '../../../services/post.service';
+import { ToastType } from '../../../models/index';
 
 @Component({
   selector: 'cms-post',
-  templateUrl: './post.component.html'
+  templateUrl: './post.component.html',
+  providers: [PostService]
 })
-export class PostComponent {
+export class PostComponent implements AfterViewInit {
+  public posts = [];
+  public columns = [];
+  public vanityId: string;
+
+  constructor(
+    private postService: PostService,
+    private toastyService: ToastyService
+  ) { }
+
+  public ngAfterViewInit(): void {
+    this.loadData();
+  }
+
+  public onDeletePost(vanityId: string) {
+    this.postService.delete(vanityId)
+      .subscribe(response => {
+        this.postService.showToast(ToastType.Success, response.message);
+        this.loadData();
+      }, err => {
+        this.postService.showToast(ToastType.Error, err.message);
+      });
+  }
+
+  private loadData() {
+    this.postService.get()
+      .subscribe(posts => {
+        this.posts = posts;
+        this.columns = this.postService.extractProperties(this.posts[0]);
+      }, err => {
+        this.postService.showToast(ToastType.Error, err.message);
+      });
+  }
 }
