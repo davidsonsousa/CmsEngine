@@ -1,4 +1,4 @@
-﻿import { Component, AfterViewInit } from '@angular/core';
+import { Component, AfterViewInit } from '@angular/core';
 import { Router } from "@angular/router";
 import { ToastyService } from 'ng2-toasty';
 
@@ -11,8 +11,8 @@ import { ToastType } from '../../../models/index';
   providers: [TagService]
 })
 export class TagComponent implements AfterViewInit {
-  public tags = [];
-  public columns = [];
+  public tags: string[] = [];
+  public columns: string[] = [];
   public vanityId: string;
 
   constructor(
@@ -26,20 +26,20 @@ export class TagComponent implements AfterViewInit {
 
   public onDeleteTag(vanityId: string) {
     this.tagService.delete(vanityId)
-      .subscribe(response => {
+      .subscribe((response: any) => {
         this.tagService.showToast(ToastType.Success, response.message);
         this.loadData();
-      }, err => {
+      }, (err: any) => {
         this.tagService.showToast(ToastType.Error, err.message);
       });
   }
 
   private loadData() {
     this.tagService.get()
-      .subscribe(tags => {
+      .subscribe((tags: any) => {
         this.tags = tags;
         this.columns = this.tagService.extractProperties(this.tags[0]);
-      }, err => {
+      }, (err: any) => {
         this.tagService.showToast(ToastType.Error, err.message);
       });
   }

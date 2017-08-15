@@ -1,5 +1,5 @@
-﻿import { Component, AfterViewInit } from '@angular/core';
-import { Router } from "@angular/router";
+import { Component, AfterViewInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { ToastyService } from 'ng2-toasty';
 
 import { PageService } from '../../../services/page.service';
@@ -11,8 +11,8 @@ import { ToastType } from '../../../models/index';
   providers: [PageService]
 })
 export class PageComponent implements AfterViewInit {
-  public pages = [];
-  public columns = [];
+  public pages: string[] = [];
+  public columns: string[] = [];
   public vanityId: string;
 
   constructor(
@@ -26,20 +26,20 @@ export class PageComponent implements AfterViewInit {
 
   public onDeletePage(vanityId: string) {
     this.pageService.delete(vanityId)
-      .subscribe(response => {
+      .subscribe((response: any) => {
         this.pageService.showToast(ToastType.Success, response.message);
         this.loadData();
-      }, err => {
+      }, (err: any) => {
         this.pageService.showToast(ToastType.Error, err.message);
       });
   }
 
   private loadData() {
     this.pageService.get()
-      .subscribe(pages => {
+      .subscribe((pages: any) => {
         this.pages = pages;
         this.columns = this.pageService.extractProperties(this.pages[0]);
-      }, err => {
+      }, (err: any) => {
         this.pageService.showToast(ToastType.Error, err.message);
       });
   }

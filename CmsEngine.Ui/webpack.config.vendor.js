@@ -1,7 +1,31 @@
-﻿const path = require('path');
+const path = require('path');
 const webpack = require('webpack');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const merge = require('webpack-merge');
+const treeShakableModules = [
+  '@angular/animations',
+  '@angular/common',
+  '@angular/compiler',
+  '@angular/core',
+  '@angular/forms',
+  '@angular/http',
+  '@angular/platform-browser',
+  '@angular/platform-browser-dynamic',
+  '@angular/router',
+  'zone.js',
+];
+const nonTreeShakableModules = [
+  'bootstrap',
+  'bootstrap/dist/css/bootstrap.css',
+  'es6-promise',
+  'es6-shim',
+  'event-source-polyfill',
+  'font-awesome/css/font-awesome.css',
+  'ng2-toasty',
+  'ng2-toasty/bundles/style-bootstrap.css',
+  'jquery',
+];
+const allModules = treeShakableModules.concat(nonTreeShakableModules);
 
 module.exports = (env) => {
   const extractCSS = new ExtractTextPlugin('vendor.css');
@@ -14,31 +38,8 @@ module.exports = (env) => {
         { test: /\.(png|woff|woff2|eot|ttf|svg)(\?|$)/, use: 'url-loader?limit=100000' }
       ]
     },
-    entry: {
-      vendor: [
-        '@angular/animations',
-        '@angular/common',
-        '@angular/compiler',
-        '@angular/core',
-        '@angular/forms',
-        '@angular/http',
-        '@angular/platform-browser',
-        '@angular/platform-browser-dynamic',
-        '@angular/router',
-        'bootstrap',
-        'bootstrap/dist/css/bootstrap.css',
-        'es6-shim',
-        'es6-promise',
-        'event-source-polyfill',
-        'font-awesome/css/font-awesome.css',
-        'ng2-toasty',
-        'ng2-toasty/bundles/style-bootstrap.css',
-        'jquery',
-        'zone.js',
-      ]
-    },
     output: {
-      publicPath: '/dist/',
+      publicPath: 'dist/',
       filename: '[name].js',
       library: '[name]_[hash]'
     },
@@ -51,6 +52,11 @@ module.exports = (env) => {
   };
 
   const clientBundleConfig = merge(sharedConfig, {
+    entry: {
+      // To keep development builds fast, include all vendor dependencies in the vendor bundle.
+      // But for production builds, leave the tree-shakable ones out so the AOT compiler can produce a smaller bundle.
+      vendor: isDevBuild ? allModules : nonTreeShakableModules
+    },
     output: { path: path.join(__dirname, 'wwwroot', 'dist') },
     module: {
       rules: [
@@ -71,6 +77,7 @@ module.exports = (env) => {
   const serverBundleConfig = merge(sharedConfig, {
     target: 'node',
     resolve: { mainFields: ['main'] },
+    entry: { vendor: allModules.concat(['aspnet-prerendering']) },
     output: {
       path: path.join(__dirname, 'ClientApp', 'dist'),
       libraryTarget: 'commonjs2',
@@ -78,7 +85,6 @@ module.exports = (env) => {
     module: {
       rules: [{ test: /\.css(\?|$)/, use: ['to-string-loader', isDevBuild ? 'css-loader' : 'css-loader?minimize'] }]
     },
-    entry: { vendor: ['aspnet-prerendering'] },
     plugins: [
       new webpack.DllPlugin({
         path: path.join(__dirname, 'ClientApp', 'dist', '[name]-manifest.json'),

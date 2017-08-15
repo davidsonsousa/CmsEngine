@@ -1,4 +1,4 @@
-﻿import { Http } from '@angular/http';
+import { Http } from '@angular/http';
 import { Router } from '@angular/router';
 import { ToastyService, ToastOptions } from 'ng2-toasty';
 import 'rxjs/add/operator/map';
@@ -18,11 +18,11 @@ export class Service {
    * Extract the property names from an item
    * @param item
    */
-  public extractProperties(item: any): any[] {
-    let propList = [];
+  public extractProperties(item: any): string[] {
+    let propList: string[] = [];
 
     if (item) {
-      for (var prop in item) {
+      for (let prop in item) {
         if (item.hasOwnProperty(prop)) {
           propList.push(prop);
         }

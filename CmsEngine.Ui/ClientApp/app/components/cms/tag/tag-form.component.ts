@@ -1,4 +1,4 @@
-﻿import { Component, AfterViewInit, OnInit } from '@angular/core';
+import { Component, AfterViewInit, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastyService } from 'ng2-toasty';
 
@@ -32,7 +32,7 @@ export class TagFormComponent implements OnInit {
   public ngOnInit(): void {
     if (this.tagEditModel.vanityId) {
       this.tagService.get(this.tagEditModel.vanityId)
-        .subscribe(tag => {
+        .subscribe((tag: any) => {
           this.tagEditModel = tag;
         });
     }
@@ -41,16 +41,16 @@ export class TagFormComponent implements OnInit {
   public onSubmit() {
     if (this.tagEditModel.id || this.tagEditModel.vanityId) {
       this.tagService.update(this.tagEditModel)
-        .subscribe(response => {
+        .subscribe((response: any) => {
           this.tagService.showToastAndRedirect('/tags', ToastType.Success, response.message);
-        }, err => {
+        }, (err: any) => {
           this.tagService.showToast(ToastType.Error, err.message);
         });
     } else {
       this.tagService.create(this.tagEditModel)
-        .subscribe(response => {
+        .subscribe((response: any) => {
           this.tagService.showToastAndRedirect('/tags', ToastType.Success, response.message);
-        }, err => {
+        }, (err: any) => {
           this.tagService.showToast(ToastType.Error, err.message);
         });
     }

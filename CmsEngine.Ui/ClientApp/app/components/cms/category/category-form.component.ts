@@ -1,4 +1,4 @@
-﻿import { Component, AfterViewInit, OnInit } from '@angular/core';
+import { Component, AfterViewInit, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastyService } from 'ng2-toasty';
 
@@ -33,7 +33,7 @@ export class CategoryFormComponent implements OnInit {
   public ngOnInit(): void {
     if (this.categoryEditModel.vanityId) {
       this.categoryService.get(this.categoryEditModel.vanityId)
-        .subscribe(category => {
+        .subscribe((category: any) => {
           this.categoryEditModel = category;
         });
     }
@@ -42,16 +42,16 @@ export class CategoryFormComponent implements OnInit {
   public onSubmit() {
     if (this.categoryEditModel.id || this.categoryEditModel.vanityId) {
       this.categoryService.update(this.categoryEditModel)
-        .subscribe(response => {
+        .subscribe((response: any) => {
           this.categoryService.showToastAndRedirect('/categories', ToastType.Success, response.message);
-        }, err => {
+        }, (err: any) => {
           this.categoryService.showToast(ToastType.Error, err.message);
         });
     } else {
       this.categoryService.create(this.categoryEditModel)
-        .subscribe(response => {
+        .subscribe((response: any) => {
           this.categoryService.showToastAndRedirect('/categories', ToastType.Success, response.message);
-        }, err => {
+        }, (err: any) => {
           this.categoryService.showToast(ToastType.Error, err.message);
         });
     }

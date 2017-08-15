@@ -1,5 +1,5 @@
-﻿import { Component, AfterViewInit } from '@angular/core';
-import { Router } from "@angular/router";
+import { Component, AfterViewInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { ToastyService } from 'ng2-toasty';
 
 import { WebsiteService } from '../../../services/website.service';
@@ -11,8 +11,8 @@ import { ToastType } from '../../../models/index';
   providers: [WebsiteService]
 })
 export class WebsiteComponent implements AfterViewInit {
-  public websites = [];
-  public columns = [];
+  public websites: string[] = [];
+  public columns: string[] = [];
   public vanityId: string;
 
   constructor(
@@ -24,22 +24,22 @@ export class WebsiteComponent implements AfterViewInit {
     this.loadData();
   }
 
-  public onDeleteWebsite(vanityId: string) {
+  public onDeleteWebsite(vanityId: string): void {
     this.websiteService.delete(vanityId)
-      .subscribe(response => {
+      .subscribe((response: any) => {
         this.websiteService.showToast(ToastType.Success, response.message);
         this.loadData();
-      }, err => {
+      }, (err: any) => {
         this.websiteService.showToast(ToastType.Error, err.message);
       });
   }
 
-  private loadData() {
+  private loadData(): void {
     this.websiteService.get()
-      .subscribe(websites => {
+      .subscribe((websites: any) => {
         this.websites = websites;
         this.columns = this.websiteService.extractProperties(this.websites[0]);
-      }, err => {
+      }, (err: any) => {
         this.websiteService.showToast(ToastType.Error, err.message);
       });
   }

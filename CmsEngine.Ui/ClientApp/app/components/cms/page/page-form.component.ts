@@ -1,4 +1,4 @@
-﻿import { Component, AfterViewInit, OnInit } from '@angular/core';
+import { Component, AfterViewInit, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastyService } from 'ng2-toasty';
 
@@ -37,7 +37,7 @@ export class PageFormComponent implements OnInit {
   public ngOnInit(): void {
     if (this.pageEditModel.vanityId) {
       this.pageService.get(this.pageEditModel.vanityId)
-        .subscribe(page => {
+        .subscribe((page: any) => {
           this.pageEditModel = page;
         });
     }
@@ -46,16 +46,16 @@ export class PageFormComponent implements OnInit {
   public onSubmit() {
     if (this.pageEditModel.id || this.pageEditModel.vanityId) {
       this.pageService.update(this.pageEditModel)
-        .subscribe(response => {
+        .subscribe((response: any) => {
           this.pageService.showToastAndRedirect('/pages', ToastType.Success, response.message);
-        }, err => {
+        }, (err: any) => {
           this.pageService.showToast(ToastType.Error, err.message);
         });
     } else {
       this.pageService.create(this.pageEditModel)
-        .subscribe(response => {
+        .subscribe((response: any) => {
           this.pageService.showToastAndRedirect('/pages', ToastType.Success, response.message);
-        }, err => {
+        }, (err: any) => {
           this.pageService.showToast(ToastType.Error, err.message);
         });
     }

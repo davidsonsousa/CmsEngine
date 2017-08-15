@@ -37,7 +37,7 @@ export class PostFormComponent implements OnInit {
   public ngOnInit(): void {
     if (this.postEditModel.vanityId) {
       this.postService.get(this.postEditModel.vanityId)
-        .subscribe(post => {
+        .subscribe((post: any) => {
           this.postEditModel = post;
         });
     }
@@ -46,16 +46,16 @@ export class PostFormComponent implements OnInit {
   public onSubmit() {
     if (this.postEditModel.id || this.postEditModel.vanityId) {
       this.postService.update(this.postEditModel)
-        .subscribe(response => {
+        .subscribe((response: any) => {
           this.postService.showToastAndRedirect('/posts', ToastType.Success, response.message);
-        }, err => {
+        }, (err: any) => {
           this.postService.showToast(ToastType.Error, err.message);
         });
     } else {
       this.postService.create(this.postEditModel)
-        .subscribe(response => {
+        .subscribe((response: any) => {
           this.postService.showToastAndRedirect('/posts', ToastType.Success, response.message);
-        }, err => {
+        }, (err: any) => {
           this.postService.showToast(ToastType.Error, err.message);
         });
     }

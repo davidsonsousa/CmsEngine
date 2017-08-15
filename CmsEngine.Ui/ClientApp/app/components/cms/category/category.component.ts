@@ -1,5 +1,5 @@
-﻿import { Component, AfterViewInit } from '@angular/core';
-import { Router } from "@angular/router";
+import { Component, AfterViewInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { ToastyService } from 'ng2-toasty';
 
 import { CategoryService } from '../../../services/category.service';
@@ -11,8 +11,8 @@ import { ToastType } from '../../../models/index';
   providers: [CategoryService]
 })
 export class CategoryComponent implements AfterViewInit {
-  public categories = [];
-  public columns = [];
+  public categories: string[] = [];
+  public columns: string[] = [];
   public vanityId: string;
 
   constructor(
@@ -26,20 +26,20 @@ export class CategoryComponent implements AfterViewInit {
 
   public onDeleteCategory(vanityId: string) {
     this.categoryService.delete(vanityId)
-      .subscribe(response => {
+      .subscribe((response: any) => {
         this.categoryService.showToast(ToastType.Success, response.message);
         this.loadData();
-      }, err => {
+      }, (err: any) => {
         this.categoryService.showToast(ToastType.Error, err.message);
       });
   }
 
   private loadData() {
     this.categoryService.get()
-      .subscribe(categories => {
+      .subscribe((categories: any) => {
         this.categories = categories;
         this.columns = this.categoryService.extractProperties(this.categories[0]);
-      }, err => {
+      }, (err: any) => {
         this.categoryService.showToast(ToastType.Error, err.message);
       });
   }

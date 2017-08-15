@@ -1,5 +1,5 @@
 import { Component, AfterViewInit } from '@angular/core';
-import { Router } from "@angular/router";
+import { Router } from '@angular/router';
 import { ToastyService } from 'ng2-toasty';
 
 import { PostService } from '../../../services/post.service';
@@ -11,8 +11,8 @@ import { ToastType } from '../../../models/index';
   providers: [PostService]
 })
 export class PostComponent implements AfterViewInit {
-  public posts = [];
-  public columns = [];
+  public posts: string[] = [];
+  public columns: string[] = [];
   public vanityId: string;
 
   constructor(
@@ -26,20 +26,20 @@ export class PostComponent implements AfterViewInit {
 
   public onDeletePost(vanityId: string) {
     this.postService.delete(vanityId)
-      .subscribe(response => {
+      .subscribe((response: any) => {
         this.postService.showToast(ToastType.Success, response.message);
         this.loadData();
-      }, err => {
+      }, (err: any) => {
         this.postService.showToast(ToastType.Error, err.message);
       });
   }
 
   private loadData() {
     this.postService.get()
-      .subscribe(posts => {
+      .subscribe((posts: any) => {
         this.posts = posts;
         this.columns = this.postService.extractProperties(this.posts[0]);
-      }, err => {
+      }, (err: any) => {
         this.postService.showToast(ToastType.Error, err.message);
       });
   }

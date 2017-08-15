@@ -1,4 +1,4 @@
-﻿import { Component, AfterViewInit, OnInit } from '@angular/core';
+import { Component, AfterViewInit, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastyService } from 'ng2-toasty';
 
@@ -36,7 +36,7 @@ export class WebsiteFormComponent implements OnInit {
   public ngOnInit(): void {
     if (this.websiteEditModel.vanityId) {
       this.websiteService.get(this.websiteEditModel.vanityId)
-        .subscribe(website => {
+        .subscribe((website: any) => {
           this.websiteEditModel = website;
         });
     }
@@ -45,16 +45,16 @@ export class WebsiteFormComponent implements OnInit {
   public onSubmit() {
     if (this.websiteEditModel.id || this.websiteEditModel.vanityId) {
       this.websiteService.update(this.websiteEditModel)
-        .subscribe(response => {
+        .subscribe((response: any) => {
           this.websiteService.showToastAndRedirect('/websites', ToastType.Success, response.message);
-        }, err => {
+        }, (err: any) => {
           this.websiteService.showToast(ToastType.Error, err.message);
         });
     } else {
       this.websiteService.create(this.websiteEditModel)
-        .subscribe(response => {
+        .subscribe((response: any) => {
           this.websiteService.showToastAndRedirect('/websites', ToastType.Success, response.message);
-        }, err => {
+        }, (err: any) => {
           this.websiteService.showToast(ToastType.Error, err.message);
         });
     }

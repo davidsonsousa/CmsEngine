@@ -1,7 +1,8 @@
 import { NgModule } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
+import { RouterModule } from '@angular/router';
 import { ToastyModule } from 'ng2-toasty';
 
 import { AppComponent } from './components/app/app.component';
@@ -24,8 +25,8 @@ import {
   ListComponent, LoadComponent
 } from './components/cms/shared/index';
 
-export const sharedConfig: NgModule = {
-  bootstrap: [AppComponent],
+
+@NgModule({
   declarations: [
     AppComponent,
     NavMenuComponent,
@@ -42,8 +43,9 @@ export const sharedConfig: NgModule = {
     ListComponent, LoadComponent
   ],
   imports: [
-    FormsModule,
+    CommonModule,
     HttpModule,
+    FormsModule,
     ToastyModule.forRoot(),
     RouterModule.forRoot([
       { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -68,4 +70,6 @@ export const sharedConfig: NgModule = {
       { path: '**', redirectTo: 'home' }
     ])
   ]
-};
+})
+export class AppModuleShared {
+}

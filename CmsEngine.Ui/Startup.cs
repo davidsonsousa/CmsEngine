@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using CmsEngine.Data;
 using CmsEngine.Data.AccessLayer;
 using Microsoft.AspNetCore.Builder;
@@ -9,24 +9,17 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Microsoft.Extensions.Logging;
 using Swashbuckle.AspNetCore.Swagger;
 
-namespace WebApplicationBasic
-{
+namespace CmsEngine.Ui {
     public class Startup
     {
-        public Startup(IHostingEnvironment env)
+        public Startup(IConfiguration configuration)
         {
-            var builder = new ConfigurationBuilder()
-                .SetBasePath(env.ContentRootPath)
-                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
-                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
-                .AddEnvironmentVariables();
-            Configuration = builder.Build();
+            Configuration = configuration;
         }
 
-        public IConfigurationRoot Configuration { get; }
+        public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -39,16 +32,13 @@ namespace WebApplicationBasic
 
             // Add CmsEngineContext
             var connection = Configuration.GetConnectionString("DefaultConnection");
-            services.AddDbContext<CmsEngineContext>(options => options.UseSqlServer(connection));
+            services.AddDbContextPool<CmsEngineContext>(options => options.UseSqlServer(connection));
 
-            // Add framework services.
             services.AddMvc();
 
             // Add Swagger
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new Info
-                {
+            services.AddSwaggerGen(c => {
+                c.SwaggerDoc("v1", new Info {
                     Version = "v1",
                     Title = "CMSEngine API",
                     Description = "CMSEngine API endpoints",
@@ -66,11 +56,8 @@ namespace WebApplicationBasic
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-            loggerFactory.AddConsole(Configuration.GetSection("Logging"));
-            loggerFactory.AddDebug();
-
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -87,8 +74,7 @@ namespace WebApplicationBasic
             app.UseStaticFiles();
 
             app.UseSwagger();
-            app.UseSwaggerUI(c =>
-            {
+            app.UseSwaggerUI(c => {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "CMSEngine API v1");
             });
 
