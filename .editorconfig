@@ -1,4 +1,4 @@
-﻿# EditorConfig is awesome:http://EditorConfig.org
+# Shamelesly copied (and modified) from here: https://github.com/dotnet/roslyn/blob/master/.editorconfig
 
 # top-most EditorConfig file
 root = true
@@ -14,7 +14,7 @@ indent_style             = space
 
 # Code files
 [*.{cs,csx,vb,vbx}]
-indent_size = 4
+indent_size = 4 : suggestion
 
 # Xml project files
 [*.{csproj,vbproj,vcxproj,vcxproj.filters,proj,projitems,shproj}]
@@ -28,6 +28,7 @@ indent_size = 2
 [*.{cs,vb}]
 # Sort using and Import directives with System.* appearing first
 dotnet_sort_system_directives_first                        = true
+
 # Avoid "this." and "Me." if not necessary
 dotnet_style_qualification_for_field                       = false : error
 dotnet_style_qualification_for_property                    = false : error
@@ -70,13 +71,9 @@ csharp_style_throw_expression                         = true : error
 csharp_style_conditional_delegate_call                = true : error
 
 # Newline settings
-csharp_new_line_before_open_brace                     = all : error
-csharp_new_line_before_else                           = true : error
-csharp_new_line_before_catch                          = true : error
-csharp_new_line_before_finally                        = true : error
-csharp_new_line_before_members_in_object_initializers = true : error
-csharp_new_line_before_members_in_anonymous_types     = true : error
-
-# Script files
-[*.{ts,json,js}]
-indent_size = 4
+csharp_new_line_before_open_brace                     = all
+csharp_new_line_before_else                           = true
+csharp_new_line_before_catch                          = true
+csharp_new_line_before_finally                        = true
+csharp_new_line_before_members_in_object_initializers = true
+csharp_new_line_before_members_in_anonymous_types     = true
