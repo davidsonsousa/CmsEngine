@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { RouterModule } from '@angular/router';
+
 import { ToastyModule } from 'ng2-toasty';
 
 import { AppComponent } from './components/app/app.component';
@@ -24,7 +25,6 @@ import {
 import {
   ListComponent, LoadComponent
 } from './components/cms/shared/index';
-
 
 @NgModule({
   declarations: [

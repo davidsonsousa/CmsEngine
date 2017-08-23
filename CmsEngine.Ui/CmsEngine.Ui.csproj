@@ -31,7 +31,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\CmsEngine\CmsEngine.csproj" />
+        <ProjectReference Include="..\CmsEngine\CmsEngine.csproj" />
     </ItemGroup>
 
     <Target Name="DebugRunWebpack" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('wwwroot\dist') ">

@@ -8,16 +8,20 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
-namespace CmsEngine.Ui {
-    public class Program {
-        public static void Main(string[] args) {
+namespace CmsEngine.Ui
+{
+    public class Program
+    {
+        public static void Main(string[] args)
+        {
             BuildWebHost(args).Run();
         }
 
-        public static IWebHost BuildWebHost(string[] args) {
+        public static IWebHost BuildWebHost(string[] args)
+        {
             return WebHost.CreateDefaultBuilder(args)
-                .UseStartup<Startup>()
-                .Build();
+                          .UseStartup<Startup>()
+                          .Build();
         }
     }
 }

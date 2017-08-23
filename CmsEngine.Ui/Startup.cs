@@ -11,7 +11,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Swashbuckle.AspNetCore.Swagger;
 
-namespace CmsEngine.Ui {
+namespace CmsEngine.Ui
+{
     public class Startup
     {
         public Startup(IConfiguration configuration)
@@ -38,7 +39,8 @@ namespace CmsEngine.Ui {
 
             // Add Swagger
             services.AddSwaggerGen(c => {
-                c.SwaggerDoc("v1", new Info {
+                c.SwaggerDoc("v1", new Info
+                {
                     Version = "v1",
                     Title = "CMSEngine API",
                     Description = "CMSEngine API endpoints",
