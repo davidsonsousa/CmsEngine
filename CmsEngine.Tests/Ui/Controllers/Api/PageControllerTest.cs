@@ -1,4 +1,7 @@
-﻿using AutoMapper;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
 using CmsEngine.Data.AccessLayer;
 using CmsEngine.Data.EditModels;
 using CmsEngine.Data.Models;
@@ -7,10 +10,6 @@ using CmsEngine.Tests.Fixtures;
 using CmsEngine.Ui.Controllers.Api;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
 using Xunit;
 
 namespace CmsEngine.Tests.Ui.Controllers.Api
