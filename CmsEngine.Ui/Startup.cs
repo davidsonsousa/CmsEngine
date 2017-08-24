@@ -88,7 +88,8 @@ namespace CmsEngine.Ui
 
                 routes.MapSpaFallbackRoute(
                     name: "spa-fallback",
-                    defaults: new { controller = "Home", action = "Index" });
+                    templatePrefix: "cms",
+                    defaults: new { controller = "Home", action = "Angular" });
             });
         }
     }
