@@ -1,0 +1,6 @@
+<h1>Tags</h1>
+<a [routerLink]="['../new']" class="btn btn-primary">New tag</a>
+<cms-list [tableColumns]="columns"
+          [tableItems]="tags"
+          (vanityIdToInteract)="onDeleteTag($event)">
+</cms-list>
