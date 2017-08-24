@@ -1,4 +1,4 @@
-﻿<cms-load [loading]="items <= 0"></cms-load>
+<cms-load [loading]="items <= 0"></cms-load>
 
 <table class="table table-striped">
   <thead>
@@ -15,7 +15,7 @@
         {{ item[key] }}
       </td>
       <td>
-        <a [routerLink]="['edit/' + item['vanityId']]" class="btn btn-default"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+        <a [routerLink]="['../edit/' + item['vanityId']]" class="btn btn-default"><i class="fa fa-pencil" aria-hidden="true"></i></a>
         <a (click)="deleteItem(item['vanityId'])" class="btn btn-danger"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
       </td>
     </tr>
