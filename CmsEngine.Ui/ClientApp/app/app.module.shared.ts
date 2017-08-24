@@ -9,8 +9,6 @@ import { ToastyModule } from 'ng2-toasty';
 import { AppComponent } from './components/app/app.component';
 import { NavMenuComponent } from './components/navmenu/navmenu.component';
 import { HomeComponent } from './components/home/home.component';
-import { FetchDataComponent } from './components/fetchdata/fetchdata.component';
-import { CounterComponent } from './components/counter/counter.component';
 
 // Core
 import {
@@ -30,8 +28,6 @@ import {
   declarations: [
     AppComponent,
     NavMenuComponent,
-    CounterComponent,
-    FetchDataComponent,
     HomeComponent,
     // Core
     CategoryComponent, CategoryNewComponent, CategoryEditComponent, CategoryFormComponent,
@@ -50,8 +46,6 @@ import {
     RouterModule.forRoot([
       { path: '', redirectTo: 'home', pathMatch: 'full' },
       { path: 'home', component: HomeComponent },
-      { path: 'counter', component: CounterComponent },
-      { path: 'fetch-data', component: FetchDataComponent },
       { path: 'categories', component: CategoryComponent },
       { path: 'categories/new', component: CategoryNewComponent },
       { path: 'categories/edit/:id', component: CategoryEditComponent },
