@@ -12,11 +12,11 @@ import { HomeComponent } from './components/home/home.component';
 
 // Core
 import {
-  CategoryComponent, CategoryNewComponent, CategoryEditComponent, CategoryFormComponent,
-  PageComponent, PageNewComponent, PageEditComponent, PageFormComponent,
-  PostComponent, PostNewComponent, PostEditComponent, PostFormComponent,
-  TagComponent, TagNewComponent, TagEditComponent, TagFormComponent,
-  WebsiteComponent, WebsiteNewComponent, WebsiteEditComponent, WebsiteFormComponent,
+  CategoryComponent, CategoryListComponent, CategoryNewComponent, CategoryEditComponent, CategoryFormComponent,
+  PageComponent, PageListComponent, PageNewComponent, PageEditComponent, PageFormComponent,
+  PostComponent, PostListComponent, PostNewComponent, PostEditComponent, PostFormComponent,
+  TagComponent, TagListComponent, TagNewComponent, TagEditComponent, TagFormComponent,
+  WebsiteComponent, WebsiteNewComponent, WebsiteEditComponent, WebsiteFormComponent, WebsiteListComponent,
 } from './components/cms/index';
 
 // Shared
@@ -24,17 +24,20 @@ import {
   ListComponent, LoadComponent
 } from './components/cms/shared/index';
 
+// Routing module
+import { AppRoutingModule } from './app-routing.module';
+
 @NgModule({
   declarations: [
     AppComponent,
     NavMenuComponent,
     HomeComponent,
     // Core
-    CategoryComponent, CategoryNewComponent, CategoryEditComponent, CategoryFormComponent,
-    PageComponent, PageNewComponent, PageEditComponent, PageFormComponent,
-    PostComponent, PostNewComponent, PostEditComponent, PostFormComponent,
-    TagComponent, TagNewComponent, TagEditComponent, TagFormComponent,
-    WebsiteComponent, WebsiteNewComponent, WebsiteEditComponent, WebsiteFormComponent,
+    CategoryComponent, CategoryListComponent, CategoryNewComponent, CategoryEditComponent, CategoryFormComponent,
+    PageComponent, PageListComponent, PageNewComponent, PageEditComponent, PageFormComponent,
+    PostComponent, PostListComponent, PostNewComponent, PostEditComponent, PostFormComponent,
+    TagComponent, TagListComponent, TagNewComponent, TagEditComponent, TagFormComponent,
+    WebsiteComponent, WebsiteNewComponent, WebsiteEditComponent, WebsiteFormComponent, WebsiteListComponent,
     // Shared
     ListComponent, LoadComponent
   ],
@@ -43,26 +46,7 @@ import {
     HttpModule,
     FormsModule,
     ToastyModule.forRoot(),
-    RouterModule.forRoot([
-      { path: '', redirectTo: 'home', pathMatch: 'full' },
-      { path: 'home', component: HomeComponent },
-      { path: 'categories', component: CategoryComponent },
-      { path: 'categories/new', component: CategoryNewComponent },
-      { path: 'categories/edit/:id', component: CategoryEditComponent },
-      { path: 'pages', component: PageComponent },
-      { path: 'pages/new', component: PageNewComponent },
-      { path: 'pages/edit/:id', component: PageEditComponent },
-      { path: 'posts', component: PostComponent },
-      { path: 'posts/new', component: PostNewComponent },
-      { path: 'posts/edit/:id', component: PostEditComponent },
-      { path: 'tags', component: TagComponent },
-      { path: 'tags/new', component: TagNewComponent },
-      { path: 'tags/edit/:id', component: TagEditComponent },
-      { path: 'websites', component: WebsiteComponent },
-      { path: 'websites/new', component: WebsiteNewComponent },
-      { path: 'websites/edit/:id', component: WebsiteEditComponent },
-      { path: '**', redirectTo: 'home' }
-    ])
+    AppRoutingModule
   ]
 })
 export class AppModuleShared {
