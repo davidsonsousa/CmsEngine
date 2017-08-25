@@ -2,9 +2,9 @@ import { Component, AfterViewInit, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastyService } from 'ng2-toasty';
 
-import { PostService } from '../../../services/post.service';
-import { PostEditModel, ToastType } from '../../../models/index';
-import { DocumentStatus } from '../../../models/enums';
+import { PostService } from '../../services/post.service';
+import { PostEditModel, ToastType } from '../../models/index';
+import { DocumentStatus } from '../../models/enums';
 
 @Component({
   selector: 'cms-post-form',
@@ -30,7 +30,7 @@ export class PostFormComponent implements OnInit {
     private router: Router
   ) {
     activatedRoute.params.subscribe(p => {
-      this.postEditModel.vanityId = p["id"];
+      this.postEditModel.vanityId = p['id'];
     });
   }
 

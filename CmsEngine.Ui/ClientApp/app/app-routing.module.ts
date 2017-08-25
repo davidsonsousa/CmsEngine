@@ -9,7 +9,7 @@ import {
   PostComponent, PostListComponent, PostNewComponent, PostEditComponent, PostFormComponent,
   TagComponent, TagListComponent, TagNewComponent, TagEditComponent, TagFormComponent,
   WebsiteComponent, WebsiteNewComponent, WebsiteEditComponent, WebsiteFormComponent, WebsiteListComponent,
-} from './components/cms/index';
+} from './components/index';
 
 // Layouts
 import { FullLayoutComponent } from './components/layouts/full-layout.component';

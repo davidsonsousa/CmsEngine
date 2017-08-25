@@ -2,8 +2,8 @@ import { Component, AfterViewInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastyService } from 'ng2-toasty';
 
-import { WebsiteService } from '../../../services/website.service';
-import { ToastType } from '../../../models/index';
+import { WebsiteService } from '../../services/website.service';
+import { ToastType } from '../../models/index';
 
 @Component({
   selector: 'cms-website-list',

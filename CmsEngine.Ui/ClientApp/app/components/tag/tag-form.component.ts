@@ -2,8 +2,8 @@ import { Component, AfterViewInit, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastyService } from 'ng2-toasty';
 
-import { TagService } from '../../../services/tag.service';
-import { TagEditModel, ToastType } from '../../../models/index';
+import { TagService } from '../../services/tag.service';
+import { TagEditModel, ToastType } from '../../models/index';
 
 @Component({
   selector: 'cms-tag-form',
@@ -25,7 +25,7 @@ export class TagFormComponent implements OnInit {
     private router: Router
   ) {
     activatedRoute.params.subscribe(p => {
-      this.tagEditModel.vanityId = p["id"];
+      this.tagEditModel.vanityId = p['id'];
     });
   }
 

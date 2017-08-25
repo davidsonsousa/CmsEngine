@@ -2,8 +2,8 @@ import { Component, AfterViewInit, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastyService } from 'ng2-toasty';
 
-import { WebsiteService } from '../../../services/website.service';
-import { WebsiteEditModel, ToastType } from '../../../models/index';
+import { WebsiteService } from '../../services/website.service';
+import { WebsiteEditModel, ToastType } from '../../models/index';
 
 @Component({
   selector: 'cms-website-form',
@@ -29,7 +29,7 @@ export class WebsiteFormComponent implements OnInit {
     private router: Router
   ) {
     activatedRoute.params.subscribe(p => {
-      this.websiteEditModel.vanityId = p["id"];
+      this.websiteEditModel.vanityId = p['id'];
     });
   }
 

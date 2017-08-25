@@ -2,9 +2,9 @@ import { Component, AfterViewInit, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastyService } from 'ng2-toasty';
 
-import { PageService } from '../../../services/page.service';
-import { PageEditModel, ToastType } from '../../../models/index';
-import { DocumentStatus } from '../../../models/enums';
+import { PageService } from '../../services/page.service';
+import { PageEditModel, ToastType } from '../../models/index';
+import { DocumentStatus } from '../../models/enums';
 
 @Component({
   selector: 'cms-page-form',
@@ -30,7 +30,7 @@ export class PageFormComponent implements OnInit {
     private router: Router
   ) {
     activatedRoute.params.subscribe(p => {
-      this.pageEditModel.vanityId = p["id"];
+      this.pageEditModel.vanityId = p['id'];
     });
   }
 

@@ -2,8 +2,8 @@ import { Component, AfterViewInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastyService } from 'ng2-toasty';
 
-import { PageService } from '../../../services/page.service';
-import { ToastType } from '../../../models/index';
+import { PageService } from '../../services/page.service';
+import { ToastType } from '../../models/index';
 
 @Component({
   selector: 'cms-page-list',

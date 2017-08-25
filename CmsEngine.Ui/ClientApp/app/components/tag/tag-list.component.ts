@@ -2,8 +2,8 @@ import { Component, AfterViewInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastyService } from 'ng2-toasty';
 
-import { TagService } from '../../../services/tag.service';
-import { ToastType } from '../../../models/index';
+import { TagService } from '../../services/tag.service';
+import { ToastType } from '../../models/index';
 
 @Component({
   selector: 'cms-tag-list',

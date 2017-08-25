@@ -2,8 +2,8 @@ import { Component, AfterViewInit, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastyService } from 'ng2-toasty';
 
-import { CategoryService } from '../../../services/category.service';
-import { CategoryEditModel, ToastType } from '../../../models/index';
+import { CategoryService } from '../../services/category.service';
+import { CategoryEditModel, ToastType } from '../../models/index';
 
 @Component({
   selector: 'cms-category-form',
@@ -26,7 +26,7 @@ export class CategoryFormComponent implements OnInit {
     private router: Router
   ) {
     activatedRoute.params.subscribe(p => {
-      this.categoryEditModel.vanityId = p["id"];
+      this.categoryEditModel.vanityId = p['id'];
     });
   }
 
