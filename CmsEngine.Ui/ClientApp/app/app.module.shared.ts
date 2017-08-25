@@ -18,6 +18,9 @@ import {
   WebsiteComponent, WebsiteNewComponent, WebsiteEditComponent, WebsiteFormComponent, WebsiteListComponent,
 } from './components/cms/index';
 
+// Layouts
+import { FullLayoutComponent } from './components/layouts/full-layout.component';
+
 // Shared
 import {
   ListComponent, LoadComponent
@@ -29,6 +32,7 @@ import { AppRoutingModule } from './app-routing.module';
 @NgModule({
   declarations: [
     AppComponent,
+    FullLayoutComponent,
     HomeComponent,
     // Core
     CategoryComponent, CategoryListComponent, CategoryNewComponent, CategoryEditComponent, CategoryFormComponent,
