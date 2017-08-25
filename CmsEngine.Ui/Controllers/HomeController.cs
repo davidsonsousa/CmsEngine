@@ -14,7 +14,7 @@ namespace CmsEngine.Ui.Controllers
             return View();
         }
 
-        public IActionResult Angular()
+        public IActionResult IndexAngular()
         {
             return View();
         }
