@@ -23,7 +23,7 @@ import { FullLayoutComponent } from './components/layouts/full-layout.component'
 
 // Shared
 import {
-  ListComponent, LoadComponent
+  BreadcrumbsComponent, ListComponent, LoadComponent
 } from './components/shared/index';
 
 // Routing module
@@ -33,6 +33,7 @@ import { AppRoutingModule } from './app-routing.module';
   declarations: [
     AppComponent,
     FullLayoutComponent,
+    BreadcrumbsComponent,
     HomeComponent,
     // Core
     CategoryComponent, CategoryListComponent, CategoryNewComponent, CategoryEditComponent, CategoryFormComponent,
