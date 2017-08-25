@@ -7,7 +7,6 @@ import { RouterModule } from '@angular/router';
 import { ToastyModule } from 'ng2-toasty';
 
 import { AppComponent } from './app.component';
-import { NavMenuComponent } from './components/navmenu/navmenu.component';
 import { HomeComponent } from './components/home/home.component';
 
 // Core
@@ -30,7 +29,6 @@ import { AppRoutingModule } from './app-routing.module';
 @NgModule({
   declarations: [
     AppComponent,
-    NavMenuComponent,
     HomeComponent,
     // Core
     CategoryComponent, CategoryListComponent, CategoryNewComponent, CategoryEditComponent, CategoryFormComponent,
