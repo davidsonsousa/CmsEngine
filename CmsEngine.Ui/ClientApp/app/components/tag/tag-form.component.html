@@ -1,13 +1,18 @@
-﻿<form #f="ngForm" (ngSubmit)="onSubmit()">
-  <div class="form-group">
-    <label for="name">Name</label>
-    <input type="text" value="" id="name" name="name" class="form-control"
-           [(ngModel)]="tagEditModel.name" #name="ngModel" />
+<form #f="ngForm" (ngSubmit)="onSubmit()">
+  <div class="card-body">
+    <div class="form-group">
+      <label for="name">Name</label>
+      <input type="text" value="" id="name" name="name" class="form-control"
+             [(ngModel)]="tagEditModel.name" #name="ngModel" />
+    </div>
+    <div class="form-group">
+      <label for="slug">Slug</label>
+      <input type="text" value="" id="slug" name="slug" class="form-control"
+             [(ngModel)]="tagEditModel.slug" #description="ngModel" />
+    </div>
   </div>
-  <div class="form-group">
-    <label for="slug">Slug</label>
-    <input type="text" value="" id="slug" name="slug" class="form-control"
-           [(ngModel)]="tagEditModel.slug" #description="ngModel" />
+  <div class="card-footer">
+    <button type="submit" class="btn btn-sm btn-primary"><i class="fa fa-dot-circle-o"></i> Submit</button>
+    <button type="reset" class="btn btn-sm btn-danger"><i class="fa fa-ban"></i> Reset</button>
   </div>
-  <button class="btn btn-primary">Save</button>
 </form>
