@@ -1,33 +1,38 @@
 <form #f="ngForm" (ngSubmit)="onSubmit()">
-  <div class="form-group">
-    <label for="title">Title</label>
-    <input type="text" value="" id="title" name="title" class="form-control"
-           [(ngModel)]="postEditModel.title" #title="ngModel" />
+  <div class="card-body">
+    <div class="form-group">
+      <label for="title">Title</label>
+      <input type="text" value="" id="title" name="title" class="form-control"
+             [(ngModel)]="postEditModel.title" #title="ngModel" />
+    </div>
+    <div class="form-group">
+      <label for="slug">Slug</label>
+      <input type="text" value="" id="slug" name="slug" class="form-control"
+             [(ngModel)]="postEditModel.slug" #slug="ngModel" />
+    </div>
+    <div class="form-group">
+      <label for="description">Description</label>
+      <input type="text" value="" id="description" name="description" class="form-control"
+             [(ngModel)]="postEditModel.description" #description="ngModel" />
+    </div>
+    <div class="form-group">
+      <label for="documentContent">Document content</label>
+      <input type="text" value="" id="documentContent" name="documentContent" class="form-control"
+             [(ngModel)]="postEditModel.documentContent" #documentContent="ngModel" />
+    </div>
+    <div class="form-group">
+      <label for="author">Author</label>
+      <input type="text" value="" id="author" name="author" class="form-control"
+             [(ngModel)]="postEditModel.author" #author="ngModel" />
+    </div>
+    <div class="form-group">
+      <label for="status">Status</label>
+      <input type="text" value="" id="status" name="status" class="form-control"
+             [(ngModel)]="postEditModel.status" #dateFormat="ngModel" />
+    </div>
   </div>
-  <div class="form-group">
-    <label for="slug">Slug</label>
-    <input type="text" value="" id="slug" name="slug" class="form-control"
-           [(ngModel)]="postEditModel.slug" #slug="ngModel" />
+  <div class="card-footer">
+    <button type="submit" class="btn btn-sm btn-primary"><i class="fa fa-dot-circle-o"></i> Submit</button>
+    <button type="reset" class="btn btn-sm btn-danger"><i class="fa fa-ban"></i> Reset</button>
   </div>
-  <div class="form-group">
-    <label for="description">Description</label>
-    <input type="text" value="" id="description" name="description" class="form-control"
-           [(ngModel)]="postEditModel.description" #description="ngModel" />
-  </div>
-  <div class="form-group">
-    <label for="documentContent">Document content</label>
-    <input type="text" value="" id="documentContent" name="documentContent" class="form-control"
-           [(ngModel)]="postEditModel.documentContent" #documentContent="ngModel" />
-  </div>
-  <div class="form-group">
-    <label for="author">Author</label>
-    <input type="text" value="" id="author" name="author" class="form-control"
-           [(ngModel)]="postEditModel.author" #author="ngModel" />
-  </div>
-  <div class="form-group">
-    <label for="status">Status</label>
-    <input type="text" value="" id="status" name="status" class="form-control"
-           [(ngModel)]="postEditModel.status" #dateFormat="ngModel" />
-  </div>
-  <button class="btn btn-primary">Save</button>
 </form>
