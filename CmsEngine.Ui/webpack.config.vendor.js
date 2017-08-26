@@ -16,14 +16,15 @@ const treeShakableModules = [
 ];
 const nonTreeShakableModules = [
   'bootstrap',
-  'bootstrap/dist/css/bootstrap.css',
   'es6-promise',
   'es6-shim',
   'event-source-polyfill',
   'font-awesome/css/font-awesome.css',
+  'simple-line-icons/css/simple-line-icons.css',
   'ng2-toasty',
   'ng2-toasty/bundles/style-bootstrap.css',
   'jquery',
+  './ClientApp/scss/style.scss'
 ];
 const allModules = treeShakableModules.concat(nonTreeShakableModules);
 
@@ -44,7 +45,10 @@ module.exports = (env) => {
       library: '[name]_[hash]'
     },
     plugins: [
-      new webpack.ProvidePlugin({ $: 'jquery', jQuery: 'jquery' }), // Maps these identifiers to the jQuery package (because Bootstrap expects it to be a global variable)
+      new webpack.ProvidePlugin({
+        $: 'jquery', jQuery: 'jquery', 'window.jQuery': 'jquery',
+        Popper: ['popper.js', 'default']
+      }),
       new webpack.ContextReplacementPlugin(/\@angular\b.*\b(bundles|linker)/, path.join(__dirname, './ClientApp')), // Workaround for https://github.com/angular/angular/issues/11580
       new webpack.ContextReplacementPlugin(/angular(\\|\/)core(\\|\/)@angular/, path.join(__dirname, './ClientApp')), // Workaround for https://github.com/angular/angular/issues/14898
       new webpack.IgnorePlugin(/^vertx$/) // Workaround for https://github.com/stefanpenner/es6-promise/issues/100
@@ -60,7 +64,8 @@ module.exports = (env) => {
     output: { path: path.join(__dirname, 'wwwroot', 'dist') },
     module: {
       rules: [
-        { test: /\.css(\?|$)/, use: extractCSS.extract({ use: isDevBuild ? 'css-loader' : 'css-loader?minimize' }) }
+        { test: /\.css(\?|$)/, use: extractCSS.extract({ use: isDevBuild ? 'css-loader' : 'css-loader?minimize' }) },
+        { test: /\.scss(\?|$)/, use: extractCSS.extract({ use: [isDevBuild ? 'css-loader' : 'css-loader?minimize', 'sass-loader'] }) }
       ]
     },
     plugins: [
@@ -83,7 +88,10 @@ module.exports = (env) => {
       libraryTarget: 'commonjs2',
     },
     module: {
-      rules: [{ test: /\.css(\?|$)/, use: ['to-string-loader', isDevBuild ? 'css-loader' : 'css-loader?minimize'] }]
+      rules: [
+        { test: /\.css(\?|$)/, use: ['to-string-loader', isDevBuild ? 'css-loader' : 'css-loader?minimize'] },
+        { test: /\.scss(\?|$)/, use: ['to-string-loader', isDevBuild ? 'css-loader' : 'css-loader?minimize', 'sass-loader'] }
+      ]
     },
     plugins: [
       new webpack.DllPlugin({
