@@ -5,6 +5,7 @@ using CmsEngine.Data.Models;
 using CmsEngine.Data.ViewModels;
 using CmsEngine.Extensions;
 using CmsEngine.Utils;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,7 +18,8 @@ namespace CmsEngine.Services
         private readonly IRepository<T> _repository;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
-        //private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        private Website _websiteInstance;
 
         #region Properties
 
@@ -28,6 +30,19 @@ namespace CmsEngine.Services
         //        return _httpContextAccessor.HttpContext.User;
         //    }
         //}
+
+        public Website WebsiteInstance
+        {
+            get
+            {
+                if (_websiteInstance == null)
+                {
+                    _websiteInstance = _unitOfWork.GetRepository<Website>().Get(q => q.SiteUrl == _httpContextAccessor.HttpContext.Request.Host.Host).FirstOrDefault();
+                }
+
+                return _websiteInstance;
+            }
+        }
 
         /// <summary>
         /// Repository used by the Service
@@ -52,12 +67,12 @@ namespace CmsEngine.Services
 
         #endregion
 
-        protected internal BaseService(IUnitOfWork uow, IMapper mapper/*, IHttpContextAccessor hca*/)
+        protected internal BaseService(IUnitOfWork uow, IMapper mapper, IHttpContextAccessor hca)
         {
             _repository = uow.GetRepository<T>();
             _unitOfWork = uow;
             _mapper = mapper;
-            //_httpContextAccessor = hca;
+            _httpContextAccessor = hca;
         }
 
         //public IEnumerable<T> Filter(string searchTerm, IEnumerable<T> listItems)

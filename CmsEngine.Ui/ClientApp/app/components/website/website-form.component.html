@@ -1,0 +1,38 @@
+<form #f="ngForm" (ngSubmit)="onSubmit()">
+  <div class="card-body">
+    <div class="form-group">
+      <label for="name">Name</label>
+      <input type="text" value="" id="name" name="name" class="form-control"
+             [(ngModel)]="websiteEditModel.name" #name="ngModel" />
+    </div>
+    <div class="form-group">
+      <label for="description">Description</label>
+      <input type="text" value="" id="description" name="description" class="form-control"
+             [(ngModel)]="websiteEditModel.description" #description="ngModel" />
+    </div>
+    <div class="form-group">
+      <label for="culture">Culture</label>
+      <input type="text" value="" id="culture" name="culture" class="form-control"
+             [(ngModel)]="websiteEditModel.culture" #culture="ngModel" />
+    </div>
+    <div class="form-group">
+      <label for="urlFormat">Url format</label>
+      <input type="text" value="" id="urlFormat" name="urlFormat" class="form-control"
+             [(ngModel)]="websiteEditModel.urlFormat" #urlFormat="ngModel" />
+    </div>
+    <div class="form-group">
+      <label for="dateFormat">Date format</label>
+      <input type="text" value="" id="dateFormat" name="dateFormat" class="form-control"
+             [(ngModel)]="websiteEditModel.dateFormat" #dateFormat="ngModel" />
+    </div>
+    <div class="form-group">
+      <label for="siteUrl">Site Url</label>
+      <input type="text" value="" id="siteUrl" name="siteUrl" class="form-control"
+             [(ngModel)]="websiteEditModel.siteUrl" #siteUrl="ngModel" />
+    </div>
+  </div>
+  <div class="card-footer">
+    <button type="submit" class="btn btn-sm btn-primary"><i class="fa fa-dot-circle-o"></i> Submit</button>
+    <button type="reset" class="btn btn-sm btn-danger"><i class="fa fa-ban"></i> Reset</button>
+  </div>
+</form>

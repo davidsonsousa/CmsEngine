@@ -12,7 +12,7 @@ using System.Linq.Expressions;
 
 namespace CmsEngine.Tests.Fixtures
 {
-    public class TagFixture
+    public class TagFixture : BaseFixture
     {
         private Mock<IRepository<Tag>> moqRepository;
         public Mock<IRepository<Tag>> MoqRepository
@@ -38,13 +38,13 @@ namespace CmsEngine.Tests.Fixtures
             get { return moqMapper; }
         }
 
-        public TagFixture()
+        public TagFixture() : base()
         {
             SetupRepository();
             SetupUnitOfWork();
             SetupMapper();
 
-            service = new TagService(moqUnitOfWork.Object, moqMapper.Object);
+            service = new TagService(moqUnitOfWork.Object, moqMapper.Object, MoqHttpContextAccessor.Object);
         }
 
         /// <summary>
@@ -109,6 +109,9 @@ namespace CmsEngine.Tests.Fixtures
         {
             moqUnitOfWork = new Mock<IUnitOfWork>();
             moqUnitOfWork.Setup(x => x.GetRepository<Tag>()).Returns(MoqRepository.Object);
+
+            // Website instance
+            moqUnitOfWork.Setup(x => x.GetRepository<Website>()).Returns(MoqInstance.Object);
         }
 
         /// <summary>
@@ -119,6 +122,7 @@ namespace CmsEngine.Tests.Fixtures
             moqMapper = new Mock<IMapper>();
             moqMapper.Setup(x => x.Map<Tag, TagEditModel>(It.IsAny<Tag>())).Returns(GetEditModel());
             moqMapper.Setup(x => x.Map<Tag, TagViewModel>(It.IsAny<Tag>())).Returns(GetViewModel());
+            moqMapper.Setup(x => x.Map<Tag, TagViewModel>(null)).Returns<TagViewModel>(null);
             moqMapper.Setup(x => x.Map<IEnumerable<Tag>, IEnumerable<TagViewModel>>(It.IsAny<IEnumerable<Tag>>())).Returns(GetViewModels());
         }
     }

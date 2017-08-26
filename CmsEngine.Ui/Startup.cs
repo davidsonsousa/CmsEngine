@@ -3,47 +3,42 @@ using CmsEngine.Data;
 using CmsEngine.Data.AccessLayer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.SpaServices.Webpack;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.PlatformAbstractions;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Swashbuckle.AspNetCore.Swagger;
-using System.IO;
 
-namespace WebApplicationBasic
+namespace CmsEngine.Ui
 {
     public class Startup
     {
-        public Startup(IHostingEnvironment env)
+        public Startup(IConfiguration configuration)
         {
-            var builder = new ConfigurationBuilder()
-                .SetBasePath(env.ContentRootPath)
-                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
-                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
-                .AddEnvironmentVariables();
-            Configuration = builder.Build();
+            Configuration = configuration;
         }
 
-        public IConfigurationRoot Configuration { get; }
+        public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            // Add HttpContextAccessor as .NET Core doesn't have HttpContext.Current anymore
+            services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
             // Add AutoMapper
             services.AddAutoMapper();
 
             // Add CmsEngineContext
-            string connection = Configuration.GetConnectionString("DefaultConnection");
-            services.AddDbContext<CmsEngineContext>(options => options.UseSqlServer(connection));
-            
-            // Add framework services.
+            var connection = Configuration.GetConnectionString("DefaultConnection");
+            services.AddDbContextPool<CmsEngineContext>(options => options.UseSqlServer(connection));
+
             services.AddMvc();
 
             // Add Swagger
-            services.AddSwaggerGen(c =>
-            {
+            services.AddSwaggerGen(c => {
                 c.SwaggerDoc("v1", new Info
                 {
                     Version = "v1",
@@ -63,15 +58,13 @@ namespace WebApplicationBasic
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-            loggerFactory.AddConsole(Configuration.GetSection("Logging"));
-            loggerFactory.AddDebug();
-
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseWebpackDevMiddleware(new WebpackDevMiddlewareOptions {
+                app.UseWebpackDevMiddleware(new WebpackDevMiddlewareOptions
+                {
                     HotModuleReplacement = true
                 });
             }
@@ -83,8 +76,7 @@ namespace WebApplicationBasic
             app.UseStaticFiles();
 
             app.UseSwagger();
-            app.UseSwaggerUI(c =>
-            {
+            app.UseSwaggerUI(c => {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "CMSEngine API v1");
             });
 
@@ -96,7 +88,8 @@ namespace WebApplicationBasic
 
                 routes.MapSpaFallbackRoute(
                     name: "spa-fallback",
-                    defaults: new { controller = "Home", action = "Index" });
+                    templatePrefix: "cms",
+                    defaults: new { controller = "Home", action = "IndexAngular" });
             });
         }
     }

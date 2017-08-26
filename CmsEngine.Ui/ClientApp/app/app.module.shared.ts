@@ -1,57 +1,56 @@
-﻿import { NgModule } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
+import { RouterModule } from '@angular/router';
+
 import { ToastyModule } from 'ng2-toasty';
 
-import { AppComponent } from './components/app/app.component'
-import { NavMenuComponent } from './components/navmenu/navmenu.component';
+import { AppComponent } from './app.component';
 import { HomeComponent } from './components/home/home.component';
-import { FetchDataComponent } from './components/fetchdata/fetchdata.component';
-import { CounterComponent } from './components/counter/counter.component';
 
+// Core
 import {
-  // Core
-  CategoryComponent, PageComponent, PostComponent, TagComponent,
-  WebsiteComponent, WebsiteNewComponent, WebsiteEditComponent, WebsiteFormComponent,
-  // Shared
-  ListComponent
-} from './components/cms/index';
+  CategoryComponent, CategoryListComponent, CategoryNewComponent, CategoryEditComponent, CategoryFormComponent,
+  PageComponent, PageListComponent, PageNewComponent, PageEditComponent, PageFormComponent,
+  PostComponent, PostListComponent, PostNewComponent, PostEditComponent, PostFormComponent,
+  TagComponent, TagListComponent, TagNewComponent, TagEditComponent, TagFormComponent,
+  WebsiteComponent, WebsiteNewComponent, WebsiteEditComponent, WebsiteFormComponent, WebsiteListComponent,
+} from './components/index';
 
-export const sharedConfig: NgModule = {
-  bootstrap: [AppComponent],
+// Layouts
+import { FullLayoutComponent } from './components/layouts/full-layout.component';
+
+// Shared
+import {
+  BreadcrumbsComponent, ListComponent, LoadComponent
+} from './components/shared/index';
+
+// Routing module
+import { AppRoutingModule } from './app-routing.module';
+
+@NgModule({
   declarations: [
     AppComponent,
-    NavMenuComponent,
-    CounterComponent,
-    FetchDataComponent,
+    FullLayoutComponent,
+    BreadcrumbsComponent,
     HomeComponent,
     // Core
-    CategoryComponent,
-    PageComponent,
-    PostComponent,
-    TagComponent,
-    WebsiteComponent, WebsiteNewComponent, WebsiteEditComponent, WebsiteFormComponent,
+    CategoryComponent, CategoryListComponent, CategoryNewComponent, CategoryEditComponent, CategoryFormComponent,
+    PageComponent, PageListComponent, PageNewComponent, PageEditComponent, PageFormComponent,
+    PostComponent, PostListComponent, PostNewComponent, PostEditComponent, PostFormComponent,
+    TagComponent, TagListComponent, TagNewComponent, TagEditComponent, TagFormComponent,
+    WebsiteComponent, WebsiteNewComponent, WebsiteEditComponent, WebsiteFormComponent, WebsiteListComponent,
     // Shared
-    ListComponent
+    ListComponent, LoadComponent
   ],
   imports: [
-    FormsModule,
+    CommonModule,
     HttpModule,
+    FormsModule,
     ToastyModule.forRoot(),
-    RouterModule.forRoot([
-      { path: '', redirectTo: 'home', pathMatch: 'full' },
-      { path: 'home', component: HomeComponent },
-      { path: 'counter', component: CounterComponent },
-      { path: 'fetch-data', component: FetchDataComponent },
-      { path: 'categories', component: CategoryComponent },
-      { path: 'pages', component: PageComponent },
-      { path: 'posts', component: PostComponent },
-      { path: 'tags', component: TagComponent },
-      { path: 'websites', component: WebsiteComponent },
-      { path: 'websites/new', component: WebsiteNewComponent },
-      { path: 'websites/edit/:id', component: WebsiteEditComponent },
-      { path: '**', redirectTo: 'home' }
-    ])
+    AppRoutingModule
   ]
-};
+})
+export class AppModuleShared {
+}

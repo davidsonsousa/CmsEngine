@@ -12,7 +12,7 @@ using System.Linq.Expressions;
 
 namespace CmsEngine.Tests.Fixtures
 {
-    public class CategoryFixture
+    public class CategoryFixture : BaseFixture
     {
         private Mock<IRepository<Category>> moqRepository;
         public Mock<IRepository<Category>> MoqRepository
@@ -38,13 +38,13 @@ namespace CmsEngine.Tests.Fixtures
             get { return moqMapper; }
         }
 
-        public CategoryFixture()
+        public CategoryFixture(): base()
         {
             SetupRepository();
             SetupUnitOfWork();
             SetupMapper();
 
-            service = new CategoryService(moqUnitOfWork.Object, moqMapper.Object);
+            service = new CategoryService(moqUnitOfWork.Object, moqMapper.Object, MoqHttpContextAccessor.Object);
         }
 
         /// <summary>
@@ -109,6 +109,9 @@ namespace CmsEngine.Tests.Fixtures
         {
             moqUnitOfWork = new Mock<IUnitOfWork>();
             moqUnitOfWork.Setup(x => x.GetRepository<Category>()).Returns(MoqRepository.Object);
+
+            // Website instance
+            moqUnitOfWork.Setup(x => x.GetRepository<Website>()).Returns(MoqInstance.Object);
         }
 
         /// <summary>
@@ -119,6 +122,7 @@ namespace CmsEngine.Tests.Fixtures
             moqMapper = new Mock<IMapper>();
             moqMapper.Setup(x => x.Map<Category, CategoryEditModel>(It.IsAny<Category>())).Returns(GetEditModel());
             moqMapper.Setup(x => x.Map<Category, CategoryViewModel>(It.IsAny<Category>())).Returns(GetViewModel());
+            moqMapper.Setup(x => x.Map<Category, CategoryViewModel>(null)).Returns<CategoryViewModel>(null);
             moqMapper.Setup(x => x.Map<IEnumerable<Category>, IEnumerable<CategoryViewModel>>(It.IsAny<IEnumerable<Category>>())).Returns(GetViewModels());
         }
     }

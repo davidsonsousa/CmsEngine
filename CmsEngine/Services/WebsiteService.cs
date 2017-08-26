@@ -4,15 +4,16 @@ using CmsEngine.Data.EditModels;
 using CmsEngine.Data.Models;
 using CmsEngine.Data.ViewModels;
 using CmsEngine.Utils;
+using Microsoft.AspNetCore.Http;
 using System;
-using System.Linq;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace CmsEngine.Services
 {
     public class WebsiteService : BaseService<Website>
     {
-        public WebsiteService(IUnitOfWork uow, IMapper mapper) : base(uow, mapper)
+        public WebsiteService(IUnitOfWork uow, IMapper mapper, IHttpContextAccessor hca) : base(uow, mapper, hca)
         {
         }
 

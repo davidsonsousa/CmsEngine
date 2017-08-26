@@ -1,0 +1,30 @@
+@{ Layout = null; }
+<!DOCTYPE html>
+<html>
+<head>
+  <base href="~/cms" />
+  <meta charset="utf-8" />
+
+  <!-- Core UI -->
+
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="CoreUI - Open Source Bootstrap Admin Template">
+  <meta name="author" content="Łukasz Holeczek">
+  <meta name="keyword" content="Bootstrap,Admin,Template,Open,Source,AngularJS,Angular,Angular2,Angular 2,Angular4,Angular 4,jQuery,CSS,HTML,RWD,Dashboard,React,React.js,Vue,Vue.js">
+  @*<link rel="shortcut icon" href="assets/img/favicon.png">*@
+
+  <!-- /Core UI -->
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CmsEngine Admin</title>
+
+  <link rel="stylesheet" href="~/dist/vendor.css" asp-append-version="true" />
+</head>
+<body class="app">
+  <app asp-prerender-module="ClientApp/dist/main-server">Loading...</app>
+
+  <script src="~/dist/vendor.js" asp-append-version="true"></script>
+  <script src="~/dist/main-client.js" asp-append-version="true"></script>
+</body>
+</html>

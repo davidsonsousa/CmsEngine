@@ -12,7 +12,7 @@ using System.Linq.Expressions;
 
 namespace CmsEngine.Tests.Fixtures
 {
-    public class WebsiteFixture
+    public class WebsiteFixture : BaseFixture
     {
         private Mock<IRepository<Website>> moqRepository;
         public Mock<IRepository<Website>> MoqRepository
@@ -38,13 +38,13 @@ namespace CmsEngine.Tests.Fixtures
             get { return moqMapper; }
         }
 
-        public WebsiteFixture()
+        public WebsiteFixture() : base()
         {
             SetupRepository();
             SetupUnitOfWork();
             SetupMapper();
 
-            service = new WebsiteService(moqUnitOfWork.Object, moqMapper.Object);
+            service = new WebsiteService(MoqUnitOfWork.Object, MoqMapper.Object, MoqHttpContextAccessor.Object);
         }
 
         /// <summary>

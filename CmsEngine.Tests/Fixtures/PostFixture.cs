@@ -12,7 +12,7 @@ using System.Linq.Expressions;
 
 namespace CmsEngine.Tests.Fixtures
 {
-    public class PostFixture
+    public class PostFixture : BaseFixture
     {
         private Mock<IRepository<Post>> moqRepository;
         public Mock<IRepository<Post>> MoqRepository
@@ -38,13 +38,13 @@ namespace CmsEngine.Tests.Fixtures
             get { return moqMapper; }
         }
 
-        public PostFixture()
+        public PostFixture(): base()
         {
             SetupRepository();
             SetupUnitOfWork();
             SetupMapper();
 
-            service = new PostService(moqUnitOfWork.Object, moqMapper.Object);
+            service = new PostService(moqUnitOfWork.Object, moqMapper.Object, MoqHttpContextAccessor.Object);
         }
 
 
@@ -110,6 +110,9 @@ namespace CmsEngine.Tests.Fixtures
         {
             moqUnitOfWork = new Mock<IUnitOfWork>();
             moqUnitOfWork.Setup(x => x.GetRepository<Post>()).Returns(MoqRepository.Object);
+
+            // Website instance
+            moqUnitOfWork.Setup(x => x.GetRepository<Website>()).Returns(MoqInstance.Object);
         }
 
         /// <summary>
@@ -120,6 +123,7 @@ namespace CmsEngine.Tests.Fixtures
             moqMapper = new Mock<IMapper>();
             moqMapper.Setup(x => x.Map<Post, PostEditModel>(It.IsAny<Post>())).Returns(GetEditModel());
             moqMapper.Setup(x => x.Map<Post, PostViewModel>(It.IsAny<Post>())).Returns(GetViewModel());
+            moqMapper.Setup(x => x.Map<Post, PostViewModel>(null)).Returns<PostViewModel>(null);
             moqMapper.Setup(x => x.Map<IEnumerable<Post>, IEnumerable<PostViewModel>>(It.IsAny<IEnumerable<Post>>())).Returns(GetViewModels());
         }
     }
