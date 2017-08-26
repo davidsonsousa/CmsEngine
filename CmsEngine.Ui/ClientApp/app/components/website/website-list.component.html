@@ -1,6 +1,12 @@
-<h1>Websites</h1>
-<a [routerLink]="['../new']" class="btn btn-primary">New website</a>
-<cms-list [tableColumns]="columns"
-          [tableItems]="websites"
-          (vanityIdToInteract)="onDeleteWebsite($event)">
-</cms-list>
+<div class="card">
+  <div class="card-header">
+    <i class="fa fa-align-justify"></i> Websites
+    <a [routerLink]="['../new']" class="btn btn-primary">New website</a>
+  </div>
+  <div class="card-body">
+    <cms-list [tableColumns]="columns"
+              [tableItems]="websites"
+              (vanityIdToInteract)="onDeleteWebsite($event)">
+    </cms-list>
+  </div>
+</div>
