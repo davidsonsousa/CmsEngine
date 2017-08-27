@@ -23,8 +23,9 @@ import { FullLayoutComponent } from './components/layouts/full-layout.component'
 
 // Shared
 import {
-  BreadcrumbsComponent, ListComponent, LoadComponent
-} from './components/shared/index';
+  BreadcrumbsComponent, ListComponent, LoadComponent,
+  NAV_DROPDOWN_DIRECTIVES, SIDEBAR_TOGGLE_DIRECTIVES
+} from './shared/index';
 
 // Routing module
 import { AppRoutingModule } from './app-routing.module';
@@ -33,7 +34,6 @@ import { AppRoutingModule } from './app-routing.module';
   declarations: [
     AppComponent,
     FullLayoutComponent,
-    BreadcrumbsComponent,
     HomeComponent,
     // Core
     CategoryComponent, CategoryListComponent, CategoryNewComponent, CategoryEditComponent, CategoryFormComponent,
@@ -42,7 +42,8 @@ import { AppRoutingModule } from './app-routing.module';
     TagComponent, TagListComponent, TagNewComponent, TagEditComponent, TagFormComponent,
     WebsiteComponent, WebsiteNewComponent, WebsiteEditComponent, WebsiteFormComponent, WebsiteListComponent,
     // Shared
-    ListComponent, LoadComponent
+    BreadcrumbsComponent, ListComponent, LoadComponent,
+    NAV_DROPDOWN_DIRECTIVES, SIDEBAR_TOGGLE_DIRECTIVES
   ],
   imports: [
     CommonModule,
