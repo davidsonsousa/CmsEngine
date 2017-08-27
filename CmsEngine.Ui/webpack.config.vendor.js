@@ -20,7 +20,6 @@ const nonTreeShakableModules = [
   'es6-shim',
   'event-source-polyfill',
   'font-awesome/css/font-awesome.css',
-  'simple-line-icons/css/simple-line-icons.css',
   'ng2-toasty',
   'ng2-toasty/bundles/style-bootstrap.css',
   'jquery',
