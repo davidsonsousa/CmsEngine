@@ -4,7 +4,8 @@ import {
   AfterViewInit,
   EventEmitter,
   Input,
-  Output,  forwardRef,
+  Output,
+  forwardRef,
   NgZone
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
@@ -22,14 +23,13 @@ const noop = () => { }; // does nothing. Signals that no operation is required
     multi: true
   }]
 })
-export class TextEditorComponent implements AfterViewInit, OnDestroy, ControlValueAccessor {
+export class TextEditorComponent implements AfterViewInit, OnDestroy, ControlValueAccessor  {
   @Input() elementId: string;
   @Input() name: string;
-  @Output() onEditorKeyUp = new EventEmitter<any>();
-
-  constructor(private ngZone: NgZone) { }
 
   editor;
+
+  constructor(private ngZone: NgZone) { }
 
   // using '_value' because variable 'value' is already defined by get()/set()
   private _value: string = '';
@@ -46,16 +46,13 @@ export class TextEditorComponent implements AfterViewInit, OnDestroy, ControlVal
       // skin_url: '/tinymce/skins/lightgray',
       setup: editor => {
         this.editor = editor;
-        editor.on('keyup', (e) => {
+        editor.on('blur', (e) => {
           const content = editor.getContent();
-          this.onEditorKeyUp.emit(content);
           this.value = content;
 
-          //
           // This tells ng to update the model (div in main area) with new HTML in editor pane
           // See:  https://community.tinymce.com/communityQuestion?id=90661000000IetUAAS
           // and:  https://blog.thoughtram.io/angular/2016/02/01/zones-in-angular-2.html
-          //
           this.ngZone.run(() => { });
         });
       },
