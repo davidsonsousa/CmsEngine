@@ -24,7 +24,8 @@ import { FullLayoutComponent } from './components/layouts/full-layout.component'
 // Shared
 import {
   BreadcrumbsComponent, ListComponent, LoadComponent,
-  NAV_DROPDOWN_DIRECTIVES, SIDEBAR_TOGGLE_DIRECTIVES
+  NAV_DROPDOWN_DIRECTIVES, SIDEBAR_TOGGLE_DIRECTIVES,
+  TextEditorComponent
 } from './shared/index';
 
 // Routing module
@@ -43,7 +44,8 @@ import { AppRoutingModule } from './app-routing.module';
     WebsiteComponent, WebsiteNewComponent, WebsiteEditComponent, WebsiteFormComponent, WebsiteListComponent,
     // Shared
     BreadcrumbsComponent, ListComponent, LoadComponent,
-    NAV_DROPDOWN_DIRECTIVES, SIDEBAR_TOGGLE_DIRECTIVES
+    NAV_DROPDOWN_DIRECTIVES, SIDEBAR_TOGGLE_DIRECTIVES,
+    TextEditorComponent
   ],
   imports: [
     CommonModule,
