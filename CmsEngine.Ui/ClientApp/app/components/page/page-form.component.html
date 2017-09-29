@@ -17,8 +17,11 @@
     </div>
     <div class="form-group">
       <label for="documentContent">Document content</label>
-      <input type="text" value="" id="documentContent" name="documentContent" class="form-control"
-             [(ngModel)]="pageEditModel.documentContent" #documentContent="ngModel" />
+      <cms-text-editor name="documentContent"
+                       elementId="documentContent"
+                       [(ngModel)]="pageEditModel.documentContent"
+                       #documentContent="ngModel">
+      </cms-text-editor>
     </div>
     <div class="form-group">
       <label for="author">Author</label>
