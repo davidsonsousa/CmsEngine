@@ -1,4 +1,4 @@
-﻿import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'cms-list',
@@ -13,8 +13,16 @@ export class ListComponent {
     return this.tableColumns;
   }
 
+  // TODO: Improve the DocumentStatus replacement
+  // The general idea is to replace the status numbers by their respective names, maybe with colors to better indicate status
+  // The aproach below works, but it's far from the best
   get items() {
-    return this.tableItems;
+    let tempItems = JSON.stringify(this.tableItems)
+      .replace(/"status":0/g, `"status":"Published"`)
+      .replace(/"status":1/g, `"status":"Pending approval"`)
+      .replace(/"status":2/g, `"status":"Draft"`);
+
+    return JSON.parse(tempItems);
   }
 
   public deleteItem(vanityId: string): void {
