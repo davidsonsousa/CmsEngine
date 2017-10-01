@@ -29,8 +29,11 @@
     </div>
     <div class="form-group">
       <label for="status">Status</label>
-      <input type="text" value="" id="status" name="status" class="form-control"
-             [(ngModel)]="postEditModel.status" #dateFormat="ngModel" />
+      <cms-status-select name="status"
+                         elementId="status"
+                         [(ngModel)]="postEditModel.status"
+                         #status="ngModel">
+      </cms-status-select>
     </div>
   </div>
   <div class="card-footer">
