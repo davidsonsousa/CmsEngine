@@ -4,3 +4,4 @@ export * from './load.component';
 export * from './nav-dropdown.directive';
 export * from './sidebar.directive';
 export * from './text-editor.component';
+export * from './status-select.component';
