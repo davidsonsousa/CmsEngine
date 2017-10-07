@@ -16,9 +16,11 @@
              [(ngModel)]="pageEditModel.description" #description="ngModel" />
     </div>
     <div class="form-group">
-      <label for="documentContent">Document content</label>
-      <input type="text" value="" id="documentContent" name="documentContent" class="form-control"
-             [(ngModel)]="pageEditModel.documentContent" #documentContent="ngModel" />
+      <cms-text-editor name="documentContent"
+                       elementId="documentContent"
+                       [(ngModel)]="pageEditModel.documentContent"
+                       #documentContent="ngModel">
+      </cms-text-editor>
     </div>
     <div class="form-group">
       <label for="author">Author</label>
@@ -27,8 +29,11 @@
     </div>
     <div class="form-group">
       <label for="status">Status</label>
-      <input type="text" value="" id="status" name="status" class="form-control"
-             [(ngModel)]="pageEditModel.status" #dateFormat="ngModel" />
+      <cms-status-select name="status"
+                         elementId="status"
+                         [(ngModel)]="pageEditModel.status"
+                         #status="ngModel">
+      </cms-status-select>
     </div>
   </div>
   <div class="card-footer">

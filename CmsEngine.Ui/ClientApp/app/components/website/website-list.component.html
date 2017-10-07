@@ -4,9 +4,8 @@
     <a [routerLink]="['../new']" class="btn btn-primary">New website</a>
   </div>
   <div class="card-body">
-    <cms-list [tableColumns]="columns"
-              [tableItems]="websites"
-              (vanityIdToInteract)="onDeleteWebsite($event)">
+    <cms-list [dataTable]="dataTable"
+              (vanityIdToInteract)="onDeletePost($event)">
     </cms-list>
   </div>
 </div>

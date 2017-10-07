@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { ToastyService } from 'ng2-toasty';
 
 import { PostService } from '../../services/post.service';
-import { ToastType } from '../../models/index';
+import { ToastType, DataTableViewModel } from '../../models/index';
 
 @Component({
   selector: 'cms-post-list',
@@ -11,8 +11,7 @@ import { ToastType } from '../../models/index';
   providers: [PostService]
 })
 export class PostListComponent implements AfterViewInit {
-  public posts: string[] = [];
-  public columns: string[] = [];
+  public dataTable: DataTableViewModel;
   public vanityId: string;
 
   constructor(
@@ -35,10 +34,9 @@ export class PostListComponent implements AfterViewInit {
   }
 
   private loadData() {
-    this.postService.get()
-      .subscribe((posts: any) => {
-        this.posts = posts;
-        this.columns = this.postService.extractProperties(this.posts[0]);
+    this.postService.getDataTable()
+      .subscribe((dataTable: DataTableViewModel) => {
+        this.dataTable = dataTable;
       }, (err: any) => {
         this.postService.showToast(ToastType.Error, err.message);
       });

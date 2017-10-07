@@ -1,6 +1,7 @@
 const path = require('path');
 const webpack = require('webpack');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
+var CopyWebpackPlugin = require('copy-webpack-plugin');
 const merge = require('webpack-merge');
 const treeShakableModules = [
   '@angular/animations',
@@ -20,7 +21,6 @@ const nonTreeShakableModules = [
   'es6-shim',
   'event-source-polyfill',
   'font-awesome/css/font-awesome.css',
-  'simple-line-icons/css/simple-line-icons.css',
   'ng2-toasty',
   'ng2-toasty/bundles/style-bootstrap.css',
   'jquery',
@@ -73,7 +73,10 @@ module.exports = (env) => {
       new webpack.DllPlugin({
         path: path.join(__dirname, 'wwwroot', 'dist', '[name]-manifest.json'),
         name: '[name]_[hash]'
-      })
+      }),
+      new CopyWebpackPlugin([
+        { from: 'ClientApp/assets/tinymce', to: 'tinymce' }
+      ]),
     ].concat(isDevBuild ? [] : [
       new webpack.optimize.UglifyJsPlugin()
     ])

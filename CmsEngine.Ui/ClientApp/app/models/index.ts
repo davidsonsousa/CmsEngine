@@ -1,4 +1,5 @@
 export * from './enums';
+export * from './datatable-viewmodel';
 export * from './post-editmodel';
 export * from './page-editmodel';
 export * from './category-editmodel';

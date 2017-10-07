@@ -1,10 +1,10 @@
-﻿using AutoMapper;
+using System;
+using AutoMapper;
 using CmsEngine.Data.AccessLayer;
 using CmsEngine.Data.EditModels;
 using CmsEngine.Services;
-using Microsoft.AspNetCore.Mvc;
-using System;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 
 namespace CmsEngine.Ui.Controllers.Api
 {
@@ -55,6 +55,25 @@ namespace CmsEngine.Ui.Controllers.Api
                 }
 
                 return Ok(category);
+            }
+            catch
+            {
+                return BadRequest();
+            }
+        }
+
+        /// <summary>
+        /// Get all categories for the DataTable
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("datatable")]
+        public IActionResult GetDataTable()
+        {
+            try
+            {
+                var categories = categoryService.GetAllEnumerable();
+                var dataTable = categoryService.BuildDataTable(categories);
+                return Ok(dataTable);
             }
             catch
             {

@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { ToastyService } from 'ng2-toasty';
 
 import { TagService } from '../../services/tag.service';
-import { ToastType } from '../../models/index';
+import { ToastType, DataTableViewModel } from '../../models/index';
 
 @Component({
   selector: 'cms-tag-list',
@@ -11,8 +11,7 @@ import { ToastType } from '../../models/index';
   providers: [TagService]
 })
 export class TagListComponent implements AfterViewInit {
-  public tags: string[] = [];
-  public columns: string[] = [];
+  public dataTable: DataTableViewModel;
   public vanityId: string;
 
   constructor(
@@ -35,10 +34,9 @@ export class TagListComponent implements AfterViewInit {
   }
 
   private loadData() {
-    this.tagService.get()
-      .subscribe((tags: any) => {
-        this.tags = tags;
-        this.columns = this.tagService.extractProperties(this.tags[0]);
+    this.tagService.getDataTable()
+      .subscribe((dataTable: DataTableViewModel) => {
+        this.dataTable = dataTable;
       }, (err: any) => {
         this.tagService.showToast(ToastType.Error, err.message);
       });

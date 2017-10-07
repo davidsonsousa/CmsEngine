@@ -1,15 +1,15 @@
-﻿using AutoMapper;
-using CmsEngine.Data.AccessLayer;
-using CmsEngine.Data.EditModels;
-using CmsEngine.Data.Models;
-using CmsEngine.Data.ViewModels;
-using CmsEngine.Extensions;
-using CmsEngine.Utils;
-using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using AutoMapper;
+using CmsEngine.Attributes;
+using CmsEngine.Data.AccessLayer;
+using CmsEngine.Data.EditModels;
+using CmsEngine.Data.Models;
+using CmsEngine.Data.ViewModels;
+using CmsEngine.Utils;
+using Microsoft.AspNetCore.Http;
 
 namespace CmsEngine.Services
 {
@@ -101,47 +101,63 @@ namespace CmsEngine.Services
 
         //public abstract IEnumerable<T> Order(int orderColumn, string orderDirection, IEnumerable<T> listItems);
 
-        //public DataTableViewModel BuildDataTable(IEnumerable<T> listItems)
-        //{
-        //    List<List<string>> listString = new List<List<string>>();
+        public DataTableViewModel BuildDataTable(IEnumerable<T> listItems)
+        {
+            var listColumnString = new List<string> { string.Empty };
+            var listDataItems = new List<DataItem>();
 
-        //    foreach (var item in listItems)
-        //    {
-        //        // Get the properties which should appear in the DataTable
-        //        var itemProperties = item.GetType()
-        //                                 .GetProperties()
-        //                                 .Where(p => Attribute.IsDefined(p, typeof(ShowOnDataTable)))
-        //                                 .OrderBy(o => o.GetCustomAttributes(false).OfType<ShowOnDataTable>().First().Order);
+            foreach (var item in listItems)
+            {
+                // Get the properties which should appear in the DataTable
+                var itemProperties = item.GetType()
+                                         .GetProperties()
+                                         .Where(p => Attribute.IsDefined(p, typeof(ShowOnDataTable)))
+                                         .OrderBy(o => o.GetCustomAttributes(false).OfType<ShowOnDataTable>().First().Order);
 
-        //        var listPropertes = new List<string>();
+                // An empty value must *always* be the first property because of the checkboxes
+                var dataItem = new DataItem
+                {
+                    DataProperties = new List<DataProperty>
+                    {
+                        new DataProperty { DataType = "Boolean", DataContent = string.Empty }
+                    }
+                };
 
-        //        // An empty value must *always* be the first property because of the checkboxes
-        //        listPropertes.Add(string.Empty);
+                // Loop through and add the properties found
+                foreach (var property in itemProperties)
+                {
+                    var columnName = item.GetType().GetProperty(property.Name).Name;
+                    if (!listColumnString.Contains(columnName))
+                    {
+                        listColumnString.Add(columnName);
+                    }
 
-        //        // Loop through and add the properties found
-        //        foreach (var property in itemProperties)
-        //        {
-        //            listPropertes.Add(PrepareProperty(item, property));
-        //        }
+                    dataItem.DataProperties.Add(PrepareProperty(item, property));
+                }
 
-        //        // VanityId must *always* be the last property
-        //        listPropertes.Add(item.VanityId.ToString());
+                // VanityId must *always* be the last property
+                dataItem.DataProperties.Add(
+                    new DataProperty
+                    {
+                        DataContent = item.VanityId.ToString(),
+                        DataType = "Guid"
+                    });
 
-        //        listString.Add(listPropertes);
-        //    }
+                listDataItems.Add(dataItem);
+            }
 
-        //    DataTableViewModel dataTableViewModel;
+            DataTableViewModel dataTableViewModel;
 
-        //    dataTableViewModel = new DataTableViewModel
-        //    {
-        //        Data = listString,
-        //        RecordsTotal = this.GetAllReadOnly().Count(),
-        //        RecordsFiltered = listItems.Count(),
-        //        Draw = 0
-        //    };
+            dataTableViewModel = new DataTableViewModel
+            {
+                Columns = listColumnString,
+                Rows = listDataItems,
+                RecordsTotal = this.GetAllReadOnly().Count(),
+                RecordsFiltered = listItems.Count()
+            };
 
-        //    return dataTableViewModel;
-        //}
+            return dataTableViewModel;
+        }
 
         #region Get
 
@@ -149,7 +165,7 @@ namespace CmsEngine.Services
         /// Get all items
         /// </summary>
         /// <returns></returns>
-        public virtual IQueryable<T> GetAll()
+        protected IQueryable<T> GetAll()
         {
             IQueryable<T> listItems;
 
@@ -163,6 +179,11 @@ namespace CmsEngine.Services
             }
 
             return listItems;
+        }
+
+        public IEnumerable<T> GetAllEnumerable()
+        {
+            return this.GetAll().ToList();
         }
 
         public abstract IEnumerable<IViewModel> GetAllReadOnly();
@@ -193,31 +214,38 @@ namespace CmsEngine.Services
 
         #region Helpers
 
-        private string PrepareProperty(T item, PropertyInfo property)
+        private DataProperty PrepareProperty(T item, PropertyInfo property)
         {
-            var propertyValue = item.GetType().GetProperty(property.Name).GetValue(item)?.ToString() ?? "";
+            var propertyInfo = item.GetType().GetProperty(property.Name);
 
-            if (property.PropertyType.Name == "DocumentStatus")
+            var dataProperty = new DataProperty
             {
-                GeneralStatus generalStatus;
-                switch (propertyValue)
-                {
-                    case "Published":
-                        generalStatus = GeneralStatus.Success;
-                        break;
-                    case "PendingApproval":
-                        generalStatus = GeneralStatus.Warning;
-                        break;
-                    case "Draft":
-                    default:
-                        generalStatus = GeneralStatus.Info;
-                        break;
-                }
+                DataContent = propertyInfo.GetValue(item)?.ToString() ?? "",
+                DataType = propertyInfo.PropertyType.Name
+            };
 
-                propertyValue = $"<span class=\"label label-{generalStatus.ToString().ToLowerInvariant()}\">{propertyValue.ToEnum<DocumentStatus>().GetDescription()}</status-label>" ?? "";
-            }
 
-            return propertyValue;
+            //if (property.PropertyType.Name == "DocumentStatus")
+            //{
+            //    GeneralStatus generalStatus;
+            //    switch (propertyValue)
+            //    {
+            //        case "Published":
+            //            generalStatus = GeneralStatus.Success;
+            //            break;
+            //        case "PendingApproval":
+            //            generalStatus = GeneralStatus.Warning;
+            //            break;
+            //        case "Draft":
+            //        default:
+            //            generalStatus = GeneralStatus.Info;
+            //            break;
+            //    }
+
+            //    propertyValue = $"<span class=\"label label-{generalStatus.ToString().ToLowerInvariant()}\">{propertyValue.ToEnum<DocumentStatus>().GetDescription()}</status-label>" ?? "";
+            //}
+
+            return dataProperty;
         }
 
         protected virtual T GetItemById(int id)

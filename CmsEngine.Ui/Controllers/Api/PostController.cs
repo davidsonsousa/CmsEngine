@@ -1,10 +1,10 @@
+using System;
 using AutoMapper;
 using CmsEngine.Data.AccessLayer;
 using CmsEngine.Data.EditModels;
 using CmsEngine.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System;
 
 namespace CmsEngine.Ui.Controllers.Api
 {
@@ -30,6 +30,25 @@ namespace CmsEngine.Ui.Controllers.Api
             {
                 var posts = postService.GetAllReadOnly();
                 return Ok(posts);
+            }
+            catch
+            {
+                return BadRequest();
+            }
+        }
+
+        /// <summary>
+        /// Get all posts for the DataTable
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("datatable")]
+        public IActionResult GetDataTable()
+        {
+            try
+            {
+                var posts = postService.GetAllEnumerable();
+                var dataTable = postService.BuildDataTable(posts);
+                return Ok(dataTable);
             }
             catch
             {
