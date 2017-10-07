@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { ToastyService } from 'ng2-toasty';
 
 import { WebsiteService } from '../../services/website.service';
-import { ToastType } from '../../models/index';
+import { ToastType, DataTableViewModel } from '../../models/index';
 
 @Component({
   selector: 'cms-website-list',
@@ -11,8 +11,7 @@ import { ToastType } from '../../models/index';
   providers: [WebsiteService]
 })
 export class WebsiteListComponent implements AfterViewInit {
-  public websites: string[] = [];
-  public columns: string[] = [];
+  public dataTable: DataTableViewModel;
   public vanityId: string;
 
   constructor(
@@ -35,10 +34,9 @@ export class WebsiteListComponent implements AfterViewInit {
   }
 
   private loadData(): void {
-    this.websiteService.get()
-      .subscribe((websites: any) => {
-        this.websites = websites;
-        this.columns = this.websiteService.extractProperties(this.websites[0]);
+    this.websiteService.getDataTable()
+      .subscribe((dataTable: DataTableViewModel) => {
+        this.dataTable = dataTable;
       }, (err: any) => {
         this.websiteService.showToast(ToastType.Error, err.message);
       });
