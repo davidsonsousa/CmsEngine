@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { ToastyService } from 'ng2-toasty';
 
 import { CategoryService } from '../../services/category.service';
-import { ToastType } from '../../models/index';
+import { ToastType, DataTableViewModel } from '../../models/index';
 
 @Component({
   selector: 'cms-category-list',
@@ -11,8 +11,7 @@ import { ToastType } from '../../models/index';
   providers: [CategoryService]
 })
 export class CategoryListComponent implements AfterViewInit {
-  public categories: string[] = [];
-  public columns: string[] = [];
+  public dataTable: DataTableViewModel;
   public vanityId: string;
 
   constructor(
@@ -35,10 +34,9 @@ export class CategoryListComponent implements AfterViewInit {
   }
 
   private loadData() {
-    this.categoryService.get()
-      .subscribe((categories: any) => {
-        this.categories = categories;
-        this.columns = this.categoryService.extractProperties(this.categories[0]);
+    this.categoryService.getDataTable()
+      .subscribe((dataTable: DataTableViewModel) => {
+        this.dataTable = dataTable;
       }, (err: any) => {
         this.categoryService.showToast(ToastType.Error, err.message);
       });
