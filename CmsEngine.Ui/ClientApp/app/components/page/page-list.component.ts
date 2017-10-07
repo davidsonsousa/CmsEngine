@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { ToastyService } from 'ng2-toasty';
 
 import { PageService } from '../../services/page.service';
-import { ToastType } from '../../models/index';
+import { ToastType, DataTableViewModel } from '../../models/index';
 
 @Component({
   selector: 'cms-page-list',
@@ -11,8 +11,7 @@ import { ToastType } from '../../models/index';
   providers: [PageService]
 })
 export class PageListComponent implements AfterViewInit {
-  public pages: string[] = [];
-  public columns: string[] = [];
+  public dataTable: DataTableViewModel;
   public vanityId: string;
 
   constructor(
@@ -35,10 +34,9 @@ export class PageListComponent implements AfterViewInit {
   }
 
   private loadData() {
-    this.pageService.get()
-      .subscribe((pages: any) => {
-        this.pages = pages;
-        this.columns = this.pageService.extractProperties(this.pages[0]);
+    this.pageService.getDataTable()
+      .subscribe((dataTable: DataTableViewModel) => {
+        this.dataTable = dataTable;
       }, (err: any) => {
         this.pageService.showToast(ToastType.Error, err.message);
       });
