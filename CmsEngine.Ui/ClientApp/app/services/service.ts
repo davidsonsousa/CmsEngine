@@ -48,6 +48,15 @@ export class Service {
   }
 
   /**
+   * Get all items and return as a data table
+   * @param vanityId
+   */
+  public getDataTable(): any {
+    return this.http.get(this.endpoint + '/datatable')
+      .map(res => res.json());
+  }
+
+  /**
    * Post an item to the API
    * @param item
    */
