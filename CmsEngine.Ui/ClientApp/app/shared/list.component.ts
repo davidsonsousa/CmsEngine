@@ -17,7 +17,6 @@ export class ListComponent {
 
   get rows() {
     if (this.dataTable) {
-      console.log(this.dataTable.rows[0].dataProperties.find(x => x.dataType.toLowerCase() == 'guid').dataContent);
       return this.dataTable.rows;
     }
   }
