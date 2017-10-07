@@ -104,7 +104,7 @@ namespace CmsEngine.Services
         public DataTableViewModel BuildDataTable(IEnumerable<T> listItems)
         {
             var listColumnString = new List<string> { string.Empty };
-            var listDataString = new List<List<DataProperty>>();
+            var listDataItems = new List<DataItem>();
 
             foreach (var item in listItems)
             {
@@ -115,7 +115,13 @@ namespace CmsEngine.Services
                                          .OrderBy(o => o.GetCustomAttributes(false).OfType<ShowOnDataTable>().First().Order);
 
                 // An empty value must *always* be the first property because of the checkboxes
-                var listPropertes = new List<DataProperty>();
+                var dataItem = new DataItem
+                {
+                    DataProperties = new List<DataProperty>
+                    {
+                        new DataProperty { DataType = "Boolean", DataContent = string.Empty }
+                    }
+                };
 
                 // Loop through and add the properties found
                 foreach (var property in itemProperties)
@@ -126,18 +132,18 @@ namespace CmsEngine.Services
                         listColumnString.Add(columnName);
                     }
 
-                    listPropertes.Add(PrepareProperty(item, property));
+                    dataItem.DataProperties.Add(PrepareProperty(item, property));
                 }
 
                 // VanityId must *always* be the last property
-                listPropertes.Add(
+                dataItem.DataProperties.Add(
                     new DataProperty
                     {
                         DataContent = item.VanityId.ToString(),
                         DataType = "Guid"
                     });
 
-                listDataString.Add(listPropertes);
+                listDataItems.Add(dataItem);
             }
 
             DataTableViewModel dataTableViewModel;
@@ -145,7 +151,7 @@ namespace CmsEngine.Services
             dataTableViewModel = new DataTableViewModel
             {
                 Columns = listColumnString,
-                Data = listDataString,
+                Rows = listDataItems,
                 RecordsTotal = this.GetAllReadOnly().Count(),
                 RecordsFiltered = listItems.Count()
             };
