@@ -3,20 +3,25 @@
 <table class="table table-striped">
   <thead>
     <tr>
-      <th *ngFor="let key of keys">
-        {{ key }}
+      <th *ngFor="let column of columns">
+        {{ column }}
       </th>
       <th></th>
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let item of items">
-      <td *ngFor="let key of keys ">
-        {{ item[key] }}
-      </td>
-      <td>
-        <a [routerLink]="['../edit/' + item['vanityId']]" class="btn btn-default"><i class="fa fa-pencil" aria-hidden="true"></i></a>
-        <a (click)="deleteItem(item['vanityId'])" class="btn btn-danger"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
+    <tr *ngFor="let row of rows">
+      <td *ngFor="let dataProp of row.dataProperties" [ngSwitch]="dataProp.dataType">
+        <ng-container *ngSwitchCase="'Guid'">
+          <a [routerLink]="['../edit/' + dataProp.dataContent]" class="btn btn-default"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+          <a (click)="deleteItem(dataProp.dataContent)" class="btn btn-danger"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
+        </ng-container>
+        <ng-container *ngSwitchCase="'Boolean'">
+          <input type="checkbox" />
+        </ng-container>
+        <ng-container *ngSwitchDefault>
+          {{ dataProp.dataContent }}
+        </ng-container>
       </td>
     </tr>
   </tbody>
