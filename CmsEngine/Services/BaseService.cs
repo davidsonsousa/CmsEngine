@@ -181,11 +181,6 @@ namespace CmsEngine.Services
             return listItems;
         }
 
-        public IEnumerable<T> GetAllEnumerable()
-        {
-            return this.GetAll().ToList();
-        }
-
         public abstract IEnumerable<IViewModel> GetAllReadOnly();
 
         public abstract IViewModel GetById(int id);
