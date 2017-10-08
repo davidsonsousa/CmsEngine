@@ -46,6 +46,11 @@ export class TextEditorComponent implements AfterViewInit, OnDestroy, ControlVal
       // skin_url: '/tinymce/skins/lightgray',
       setup: editor => {
         this.editor = editor;
+        editor.on('init', (e) => {
+          if (this.value) {
+            tinymce.activeEditor.setContent(this.value, { format: 'raw' });
+          }
+        });
         editor.on('blur', (e) => {
           const content = editor.getContent();
           this.value = content;
@@ -57,9 +62,6 @@ export class TextEditorComponent implements AfterViewInit, OnDestroy, ControlVal
         });
       },
     });
-    if (this.value) {
-      tinymce.activeEditor.setContent(this.value, { format: 'raw' });
-    }
   }
 
   get value(): any {

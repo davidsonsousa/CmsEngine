@@ -19,7 +19,7 @@ export class StatusSelectComponent implements ControlValueAccessor {
   @Input() selectedStatus: DocumentStatus;
 
   // using '_value' because variable 'value' is already defined by get()/set()
-  private _value: string = '';
+  private _value: string;
 
   // Callback registered via registerOnChange (ControlValueAccessor)
   private onChangeCallback: (_: any) => void = noop;
@@ -43,7 +43,8 @@ export class StatusSelectComponent implements ControlValueAccessor {
   }
 
   writeValue(v: any): void {
-    if (v) {
+    // Checks for zero since otherwise the status will never be 'Published'
+    if (v || v === 0) {
       this.value = v;
     }
   }
@@ -54,6 +55,6 @@ export class StatusSelectComponent implements ControlValueAccessor {
     this.onTouchedCallback = fn;
   }
   setDisabledState?(isDisabled: boolean): void {
-    throw new Error("Method not implemented.");
+    throw new Error('Method not implemented.');
   }
 }

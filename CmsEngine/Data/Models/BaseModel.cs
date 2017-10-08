@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -8,7 +8,13 @@ namespace CmsEngine.Data.Models
     {
         #region Not mapped
         [NotMapped]
-        public bool IsNew => (Id == 0 && VanityId == Guid.Empty);
+        public bool IsNew
+        {
+            get
+            {
+                return (Id == 0 && VanityId == Guid.Empty);
+            }
+        }
         #endregion
 
         public bool IsDeleted { get; set; }

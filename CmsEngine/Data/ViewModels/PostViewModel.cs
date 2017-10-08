@@ -1,9 +1,9 @@
-﻿using CmsEngine.Attributes;
 using System;
+using CmsEngine.Attributes;
 
 namespace CmsEngine.Data.ViewModels
 {
-    public class PostViewModel : BaseViewModel, IViewModel
+    public class PostViewModel : BaseViewModel
     {
         [Searchable, Orderable, ShowOnDataTable(0)]
         public string Title { get; set; }

@@ -46,7 +46,7 @@ namespace CmsEngine.Ui.Controllers.Api
         {
             try
             {
-                var posts = postService.GetAllEnumerable();
+                var posts = postService.GetAllReadOnly();
                 var dataTable = postService.BuildDataTable(posts);
                 return Ok(dataTable);
             }

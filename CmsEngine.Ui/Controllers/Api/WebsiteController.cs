@@ -46,7 +46,7 @@ namespace CmsEngine.Ui.Controllers.Api
         {
             try
             {
-                var websites = websiteService.GetAllEnumerable();
+                var websites = websiteService.GetAllReadOnly();
                 var dataTable = websiteService.BuildDataTable(websites);
                 return Ok(dataTable);
             }

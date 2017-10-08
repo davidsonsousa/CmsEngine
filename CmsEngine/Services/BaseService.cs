@@ -101,7 +101,7 @@ namespace CmsEngine.Services
 
         //public abstract IEnumerable<T> Order(int orderColumn, string orderDirection, IEnumerable<T> listItems);
 
-        public DataTableViewModel BuildDataTable(IEnumerable<T> listItems)
+        public DataTableViewModel BuildDataTable(IEnumerable<IViewModel> listItems)
         {
             var listColumnString = new List<string> { string.Empty };
             var listDataItems = new List<DataItem>();
@@ -181,11 +181,6 @@ namespace CmsEngine.Services
             return listItems;
         }
 
-        public IEnumerable<T> GetAllEnumerable()
-        {
-            return this.GetAll().ToList();
-        }
-
         public abstract IEnumerable<IViewModel> GetAllReadOnly();
 
         public abstract IViewModel GetById(int id);
@@ -214,7 +209,7 @@ namespace CmsEngine.Services
 
         #region Helpers
 
-        private DataProperty PrepareProperty(T item, PropertyInfo property)
+        private DataProperty PrepareProperty(IViewModel item, PropertyInfo property)
         {
             var propertyInfo = item.GetType().GetProperty(property.Name);
 
