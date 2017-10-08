@@ -71,7 +71,7 @@ namespace CmsEngine.Ui.Controllers.Api
         {
             try
             {
-                var categories = categoryService.GetAllEnumerable();
+                var categories = categoryService.GetAllReadOnly();
                 var dataTable = categoryService.BuildDataTable(categories);
                 return Ok(dataTable);
             }

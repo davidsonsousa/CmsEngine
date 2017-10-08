@@ -71,7 +71,7 @@ namespace CmsEngine.Ui.Controllers.Api
         {
             try
             {
-                var pages = pageService.GetAllEnumerable();
+                var pages = pageService.GetAllReadOnly();
                 var dataTable = pageService.BuildDataTable(pages);
                 return Ok(dataTable);
             }

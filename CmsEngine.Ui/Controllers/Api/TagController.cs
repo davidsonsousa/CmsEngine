@@ -71,7 +71,7 @@ namespace CmsEngine.Ui.Controllers.Api
         {
             try
             {
-                var tags = tagService.GetAllEnumerable();
+                var tags = tagService.GetAllReadOnly();
                 var dataTable = tagService.BuildDataTable(tags);
                 return Ok(dataTable);
             }
