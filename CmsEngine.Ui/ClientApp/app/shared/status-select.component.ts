@@ -46,7 +46,6 @@ export class StatusSelectComponent implements ControlValueAccessor {
     // Checks for zero since otherwise the status will never be 'Published'
     if (v || v === 0) {
       this.value = v;
-      console.log('value: ', this.value);
     }
   }
   registerOnChange(fn: any): void {
