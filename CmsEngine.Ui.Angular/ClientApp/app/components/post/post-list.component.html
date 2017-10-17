@@ -1,0 +1,11 @@
+<div class="card">
+  <div class="card-header">
+    <i class="fa fa-align-justify"></i> Posts
+    <a [routerLink]="['../new']" class="btn btn-primary">New post</a>
+  </div>
+  <div class="card-body">
+    <cms-list [dataTable]="dataTable"
+              (vanityIdToInteract)="onDeletePost($event)">
+    </cms-list>
+  </div>
+</div>
