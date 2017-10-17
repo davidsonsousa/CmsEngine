@@ -7,38 +7,38 @@ using CmsEngine.Data.EditModels;
 using CmsEngine.Data.Models;
 using CmsEngine.Data.ViewModels;
 using CmsEngine.Tests.Fixtures;
-using CmsEngine.Ui.Controllers.Api;
+using CmsEngine.Ui.Angular.Controllers.Api;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using Xunit;
 
-namespace CmsEngine.Tests.Ui.Controllers.Api
+namespace CmsEngine.Tests.Ui.Angular.Controllers.Api
 {
-    public class WebsiteControllerTest : IClassFixture<WebsiteFixture>
+    public class TagControllerTest : IClassFixture<TagFixture>
     {
-        private Mock<IRepository<Website>> moqRepository;
+        private Mock<IRepository<Tag>> moqRepository;
 
-        private WebsiteFixture websiteFixture;
-        private WebsiteController controller;
+        private TagFixture tagFixture;
+        private TagController controller;
 
-        public WebsiteControllerTest(WebsiteFixture fixture)
+        public TagControllerTest(TagFixture fixture)
         {
-            websiteFixture = fixture;
-            moqRepository = websiteFixture.MoqRepository;
+            tagFixture = fixture;
+            moqRepository = tagFixture.MoqRepository;
 
-            controller = new WebsiteController(websiteFixture.MoqUnitOfWork.Object, websiteFixture.MoqMapper.Object, websiteFixture.MoqHttpContextAccessor.Object);
+            controller = new TagController(tagFixture.MoqUnitOfWork.Object, tagFixture.MoqMapper.Object, tagFixture.MoqHttpContextAccessor.Object);
         }
 
         [Fact]
-        public void GetAllWebsites_ShouldReturnAllWebsites()
+        public void GetAllTags_ShouldReturnAllTags()
         {
             // Arrange
-            var expectedResult = websiteFixture.GetTestWebsites();
+            var expectedResult = tagFixture.GetTestTags();
 
             // Act
             var actionResult = controller.Get();
             var okResult = actionResult as OkObjectResult;
-            var testResult = okResult.Value as IEnumerable<WebsiteViewModel>;
+            var testResult = okResult.Value as IEnumerable<TagViewModel>;
 
             // Assert
             Assert.NotNull(okResult);
@@ -48,15 +48,15 @@ namespace CmsEngine.Tests.Ui.Controllers.Api
         }
 
         [Fact]
-        public void GetWebsiteById_ShouldReturnSelectedWebsite()
+        public void GetTagById_ShouldReturnSelectedTag()
         {
             // Arrange
-            var expectedResult = websiteFixture.GetTestWebsites().FirstOrDefault(q => q.Id == 2);
+            var expectedResult = tagFixture.GetTestTags().FirstOrDefault(q => q.Id == 2);
 
             // Act
             var actionResult = controller.Get(1);
             var okResult = actionResult as OkObjectResult;
-            var testResult = okResult.Value as WebsiteViewModel;
+            var testResult = okResult.Value as TagViewModel;
 
             // Assert
             Assert.NotNull(okResult);
@@ -66,7 +66,7 @@ namespace CmsEngine.Tests.Ui.Controllers.Api
         }
 
         [Fact]
-        public void GetWebsiteById_ShouldReturnNotFound()
+        public void GetTagById_ShouldReturnNotFound()
         {
             // Arrange
 
@@ -80,16 +80,16 @@ namespace CmsEngine.Tests.Ui.Controllers.Api
         }
 
         [Fact]
-        public void GetWebsiteByVanityId_ShouldReturnSelectedWebsite()
+        public void GetTagByVanityId_ShouldReturnSelectedTag()
         {
             // Arrange
             var id = new Guid("8633a850-128f-4425-a2ec-30e23826b7ff");
-            var expectedResult = websiteFixture.GetTestWebsites().FirstOrDefault(q => q.VanityId == id);
+            var expectedResult = tagFixture.GetTestTags().FirstOrDefault(q => q.VanityId == id);
 
             // Act
             var actionResult = controller.Get(id);
             var okResult = actionResult as OkObjectResult;
-            var testResult = okResult.Value as WebsiteViewModel;
+            var testResult = okResult.Value as TagViewModel;
 
             // Assert
             Assert.NotNull(okResult);
@@ -99,7 +99,7 @@ namespace CmsEngine.Tests.Ui.Controllers.Api
         }
 
         [Fact]
-        public void GetWebsiteByVanityId_ShouldReturnNotFound()
+        public void GetTagByVanityId_ShouldReturnNotFound()
         {
             // Arrange
             var id = new Guid("41ec584b-6d8f-4110-aef4-f9a5036b9bff");
@@ -114,20 +114,19 @@ namespace CmsEngine.Tests.Ui.Controllers.Api
         }
 
         [Fact]
-        public void PostWebsite_ShouldReturnCreated()
+        public void PostTag_ShouldReturnCreated()
         {
             // Arrange
-            var websiteEditModel = new WebsiteEditModel
+            var tagEditModel = new TagEditModel
             {
-                Name = "Post Website",
-                Culture = "en-US",
-                Description = "Welcome to the post test website"
+                Name = "Post Tag",
+                Slug = "post-tag"
             };
 
-            moqRepository.Setup(x => x.Insert(It.IsAny<Website>())).Verifiable();
+            moqRepository.Setup(x => x.Insert(It.IsAny<Tag>())).Verifiable();
 
             // Act
-            var actionResult = controller.Post(websiteEditModel);
+            var actionResult = controller.Post(tagEditModel);
             var createdResult = actionResult as CreatedAtRouteResult;
 
             // Assert
@@ -136,42 +135,40 @@ namespace CmsEngine.Tests.Ui.Controllers.Api
         }
 
         [Fact]
-        public void PostWebsite_ShouldReturnBadRequest()
+        public void PostTag_ShouldReturnBadRequest()
         {
             // Arrange
-            var websiteEditModel = new WebsiteEditModel
+            var tagEditModel = new TagEditModel
             {
-                Culture = "en-US",
-                Description = "Welcome to the post test website"
+                Slug = "post-tag",
             };
 
             controller.ModelState.AddModelError("Name", "Required");
 
             // Act
-            var actionResult = controller.Post(websiteEditModel);
+            var actionResult = controller.Post(tagEditModel);
 
             // Assert
             Assert.IsType(typeof(BadRequestResult), actionResult);
         }
 
         [Fact]
-        public void PutWebsite_ShouldReturnOk()
+        public void PutTag_ShouldReturnOk()
         {
             // Arrange
-            var websiteId = new Guid("278c0380-bdd2-45bb-869b-b94659bc2b89");
-            var websiteEditModel = new WebsiteEditModel
+            var tagId = new Guid("278c0380-bdd2-45bb-869b-b94659bc2b89");
+            var tagEditModel = new TagEditModel
             {
                 Id = 1,
-                VanityId = websiteId,
-                Name = "Put Website",
-                Culture = "en-US",
-                Description = "Welcome to the put test website"
+                VanityId = tagId,
+                Name = "Put Tag",
+                Slug = "put-tag"
             };
 
-            moqRepository.Setup(x => x.Update(It.IsAny<Website>())).Verifiable();
+            moqRepository.Setup(x => x.Update(It.IsAny<Tag>())).Verifiable();
 
             // Act
-            var actionResult = controller.Put(websiteId, websiteEditModel);
+            var actionResult = controller.Put(tagId, tagEditModel);
             var okResult = actionResult as OkObjectResult;
 
             // Assert
@@ -181,37 +178,36 @@ namespace CmsEngine.Tests.Ui.Controllers.Api
         }
 
         [Fact]
-        public void PutWebsite_ShouldReturnBadRequest()
+        public void PutTag_ShouldReturnBadRequest()
         {
             // Arrange
-            var websiteId = new Guid("278c0380-bdd2-45bb-869b-b94659bc2b89");
-            var websiteEditModel = new WebsiteEditModel
+            var tagId = new Guid("278c0380-bdd2-45bb-869b-b94659bc2b89");
+            var tagEditModel = new TagEditModel
             {
                 Id = 1,
-                VanityId = websiteId,
-                Culture = "en-US",
-                Description = "Welcome to the put test website"
+                VanityId = tagId,
+                Slug = "put-tag"
             };
 
             controller.ModelState.AddModelError("Name", "Required");
 
             // Act
-            var actionResult = controller.Put(websiteId, websiteEditModel);
+            var actionResult = controller.Put(tagId, tagEditModel);
 
             // Assert
             Assert.IsType(typeof(BadRequestResult), actionResult);
         }
 
         [Fact]
-        public void DeleteWebsite_ShouldReturnOk()
+        public void DeleteTag_ShouldReturnOk()
         {
             // Arrange
-            var websiteId = new Guid("278c0380-bdd2-45bb-869b-b94659bc2b89");
+            var tagId = new Guid("278c0380-bdd2-45bb-869b-b94659bc2b89");
 
-            moqRepository.Setup(x => x.Update(It.IsAny<Website>())).Verifiable();
+            moqRepository.Setup(x => x.Update(It.IsAny<Tag>())).Verifiable();
 
             // Act
-            var actionResult = controller.Delete(websiteId);
+            var actionResult = controller.Delete(tagId);
             var okResult = actionResult as OkObjectResult;
 
             // Assert

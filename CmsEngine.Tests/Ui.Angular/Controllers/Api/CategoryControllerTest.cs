@@ -7,38 +7,38 @@ using CmsEngine.Data.EditModels;
 using CmsEngine.Data.Models;
 using CmsEngine.Data.ViewModels;
 using CmsEngine.Tests.Fixtures;
-using CmsEngine.Ui.Controllers.Api;
+using CmsEngine.Ui.Angular.Controllers.Api;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using Xunit;
 
-namespace CmsEngine.Tests.Ui.Controllers.Api
+namespace CmsEngine.Tests.Ui.Angular.Controllers.Api
 {
-    public class TagControllerTest : IClassFixture<TagFixture>
+    public class CategoryControllerTest : IClassFixture<CategoryFixture>
     {
-        private Mock<IRepository<Tag>> moqRepository;
+        private Mock<IRepository<Category>> moqRepository;
 
-        private TagFixture tagFixture;
-        private TagController controller;
+        private CategoryFixture categoryFixture;
+        private CategoryController controller;
 
-        public TagControllerTest(TagFixture fixture)
+        public CategoryControllerTest(CategoryFixture fixture)
         {
-            tagFixture = fixture;
-            moqRepository = tagFixture.MoqRepository;
+            categoryFixture = fixture;
+            moqRepository = categoryFixture.MoqRepository;
 
-            controller = new TagController(tagFixture.MoqUnitOfWork.Object, tagFixture.MoqMapper.Object, tagFixture.MoqHttpContextAccessor.Object);
+            controller = new CategoryController(categoryFixture.MoqUnitOfWork.Object, categoryFixture.MoqMapper.Object, categoryFixture.MoqHttpContextAccessor.Object);
         }
 
         [Fact]
-        public void GetAllTags_ShouldReturnAllTags()
+        public void GetAllCategories_ShouldReturnAllCategories()
         {
             // Arrange
-            var expectedResult = tagFixture.GetTestTags();
+            var expectedResult = categoryFixture.GetTestCategories();
 
             // Act
             var actionResult = controller.Get();
             var okResult = actionResult as OkObjectResult;
-            var testResult = okResult.Value as IEnumerable<TagViewModel>;
+            var testResult = okResult.Value as IEnumerable<CategoryViewModel>;
 
             // Assert
             Assert.NotNull(okResult);
@@ -48,15 +48,15 @@ namespace CmsEngine.Tests.Ui.Controllers.Api
         }
 
         [Fact]
-        public void GetTagById_ShouldReturnSelectedTag()
+        public void GetCategoryById_ShouldReturnSelectedCategory()
         {
             // Arrange
-            var expectedResult = tagFixture.GetTestTags().FirstOrDefault(q => q.Id == 2);
+            var expectedResult = categoryFixture.GetTestCategories().FirstOrDefault(q => q.Id == 2);
 
             // Act
             var actionResult = controller.Get(1);
             var okResult = actionResult as OkObjectResult;
-            var testResult = okResult.Value as TagViewModel;
+            var testResult = okResult.Value as CategoryViewModel;
 
             // Assert
             Assert.NotNull(okResult);
@@ -66,7 +66,7 @@ namespace CmsEngine.Tests.Ui.Controllers.Api
         }
 
         [Fact]
-        public void GetTagById_ShouldReturnNotFound()
+        public void GetCategoryById_ShouldReturnNotFound()
         {
             // Arrange
 
@@ -80,16 +80,16 @@ namespace CmsEngine.Tests.Ui.Controllers.Api
         }
 
         [Fact]
-        public void GetTagByVanityId_ShouldReturnSelectedTag()
+        public void GetCategoryByVanityId_ShouldReturnSelectedCategory()
         {
             // Arrange
             var id = new Guid("8633a850-128f-4425-a2ec-30e23826b7ff");
-            var expectedResult = tagFixture.GetTestTags().FirstOrDefault(q => q.VanityId == id);
+            var expectedResult = categoryFixture.GetTestCategories().FirstOrDefault(q => q.VanityId == id);
 
             // Act
             var actionResult = controller.Get(id);
             var okResult = actionResult as OkObjectResult;
-            var testResult = okResult.Value as TagViewModel;
+            var testResult = okResult.Value as CategoryViewModel;
 
             // Assert
             Assert.NotNull(okResult);
@@ -99,7 +99,7 @@ namespace CmsEngine.Tests.Ui.Controllers.Api
         }
 
         [Fact]
-        public void GetTagByVanityId_ShouldReturnNotFound()
+        public void GetCategoryByVanityId_ShouldReturnNotFound()
         {
             // Arrange
             var id = new Guid("41ec584b-6d8f-4110-aef4-f9a5036b9bff");
@@ -114,19 +114,20 @@ namespace CmsEngine.Tests.Ui.Controllers.Api
         }
 
         [Fact]
-        public void PostTag_ShouldReturnCreated()
+        public void PostCategory_ShouldReturnCreated()
         {
             // Arrange
-            var tagEditModel = new TagEditModel
+            var categoryEditModel = new CategoryEditModel
             {
-                Name = "Post Tag",
-                Slug = "post-tag"
+                Name = "Post Category",
+                Slug = "post-category",
+                Description = "Welcome to the post test category"
             };
 
-            moqRepository.Setup(x => x.Insert(It.IsAny<Tag>())).Verifiable();
+            moqRepository.Setup(x => x.Insert(It.IsAny<Category>())).Verifiable();
 
             // Act
-            var actionResult = controller.Post(tagEditModel);
+            var actionResult = controller.Post(categoryEditModel);
             var createdResult = actionResult as CreatedAtRouteResult;
 
             // Assert
@@ -135,40 +136,42 @@ namespace CmsEngine.Tests.Ui.Controllers.Api
         }
 
         [Fact]
-        public void PostTag_ShouldReturnBadRequest()
+        public void PostCategory_ShouldReturnBadRequest()
         {
             // Arrange
-            var tagEditModel = new TagEditModel
+            var categoryEditModel = new CategoryEditModel
             {
-                Slug = "post-tag",
+                Slug = "post-category",
+                Description = "Welcome to the post test category"
             };
 
             controller.ModelState.AddModelError("Name", "Required");
 
             // Act
-            var actionResult = controller.Post(tagEditModel);
+            var actionResult = controller.Post(categoryEditModel);
 
             // Assert
             Assert.IsType(typeof(BadRequestResult), actionResult);
         }
 
         [Fact]
-        public void PutTag_ShouldReturnOk()
+        public void PutCategory_ShouldReturnOk()
         {
             // Arrange
-            var tagId = new Guid("278c0380-bdd2-45bb-869b-b94659bc2b89");
-            var tagEditModel = new TagEditModel
+            var categoryId = new Guid("278c0380-bdd2-45bb-869b-b94659bc2b89");
+            var categoryEditModel = new CategoryEditModel
             {
                 Id = 1,
-                VanityId = tagId,
-                Name = "Put Tag",
-                Slug = "put-tag"
+                VanityId = categoryId,
+                Name = "Put Category",
+                Slug = "put-category",
+                Description = "Welcome to the put test category"
             };
 
-            moqRepository.Setup(x => x.Update(It.IsAny<Tag>())).Verifiable();
+            moqRepository.Setup(x => x.Update(It.IsAny<Category>())).Verifiable();
 
             // Act
-            var actionResult = controller.Put(tagId, tagEditModel);
+            var actionResult = controller.Put(categoryId, categoryEditModel);
             var okResult = actionResult as OkObjectResult;
 
             // Assert
@@ -178,36 +181,37 @@ namespace CmsEngine.Tests.Ui.Controllers.Api
         }
 
         [Fact]
-        public void PutTag_ShouldReturnBadRequest()
+        public void PutCategory_ShouldReturnBadRequest()
         {
             // Arrange
-            var tagId = new Guid("278c0380-bdd2-45bb-869b-b94659bc2b89");
-            var tagEditModel = new TagEditModel
+            var categoryId = new Guid("278c0380-bdd2-45bb-869b-b94659bc2b89");
+            var categoryEditModel = new CategoryEditModel
             {
                 Id = 1,
-                VanityId = tagId,
-                Slug = "put-tag"
+                VanityId = categoryId,
+                Slug = "put-category",
+                Description = "Welcome to the put test category"
             };
 
             controller.ModelState.AddModelError("Name", "Required");
 
             // Act
-            var actionResult = controller.Put(tagId, tagEditModel);
+            var actionResult = controller.Put(categoryId, categoryEditModel);
 
             // Assert
             Assert.IsType(typeof(BadRequestResult), actionResult);
         }
 
         [Fact]
-        public void DeleteTag_ShouldReturnOk()
+        public void DeleteCategory_ShouldReturnOk()
         {
             // Arrange
-            var tagId = new Guid("278c0380-bdd2-45bb-869b-b94659bc2b89");
+            var categoryId = new Guid("278c0380-bdd2-45bb-869b-b94659bc2b89");
 
-            moqRepository.Setup(x => x.Update(It.IsAny<Tag>())).Verifiable();
+            moqRepository.Setup(x => x.Update(It.IsAny<Category>())).Verifiable();
 
             // Act
-            var actionResult = controller.Delete(tagId);
+            var actionResult = controller.Delete(categoryId);
             var okResult = actionResult as OkObjectResult;
 
             // Assert

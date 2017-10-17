@@ -1,12 +1,11 @@
-﻿using CmsEngine.Data.EditModels;
-using CmsEngine.Data.Models;
-using CmsEngine.Data.ViewModels;
-using CmsEngine.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Xunit;
+using CmsEngine.Data.EditModels;
+using CmsEngine.Data.ViewModels;
+using CmsEngine.Services;
 using CmsEngine.Tests.Fixtures;
+using Xunit;
 
 namespace CmsEngine.Test.Core.Services
 {
@@ -23,19 +22,19 @@ namespace CmsEngine.Test.Core.Services
 
         #region Get
 
-        [Fact]
-        public void GetAll_ShouldReturnAllCategoriesAsQueryable()
-        {
-            // Arrange
-            var expectedResult = categoryFixture.GetTestCategories().Count;
+        //[Fact]
+        //public void GetAll_ShouldReturnAllCategoriesAsQueryable()
+        //{
+        //    // Arrange
+        //    var expectedResult = categoryFixture.GetTestCategories().Count;
 
-            // Act
-            var response = moqCategoryService.GetAll();
+        //    // Act
+        //    var response = moqCategoryService.GetAll();
 
-            // Assert
-            Assert.True(response is IQueryable<Category>, "Response is not IQueryable<Category>");
-            Assert.Equal(expectedResult, response.Count());
-        }
+        //    // Assert
+        //    Assert.True(response is IQueryable<Category>, "Response is not IQueryable<Category>");
+        //    Assert.Equal(expectedResult, response.Count());
+        //}
 
         [Fact]
         public void GetAllReadOnly_ShouldReturnAllCategoriesAsEnumerable()

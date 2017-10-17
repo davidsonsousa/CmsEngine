@@ -7,12 +7,12 @@ using CmsEngine.Data.EditModels;
 using CmsEngine.Data.Models;
 using CmsEngine.Data.ViewModels;
 using CmsEngine.Tests.Fixtures;
-using CmsEngine.Ui.Controllers.Api;
+using CmsEngine.Ui.Angular.Controllers.Api;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using Xunit;
 
-namespace CmsEngine.Tests.Ui.Controllers.Api
+namespace CmsEngine.Tests.Ui.Angular.Controllers.Api
 {
     public class PostControllerTest : IClassFixture<PostFixture>
     {

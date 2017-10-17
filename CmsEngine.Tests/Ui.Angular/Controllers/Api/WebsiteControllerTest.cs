@@ -7,38 +7,38 @@ using CmsEngine.Data.EditModels;
 using CmsEngine.Data.Models;
 using CmsEngine.Data.ViewModels;
 using CmsEngine.Tests.Fixtures;
-using CmsEngine.Ui.Controllers.Api;
+using CmsEngine.Ui.Angular.Controllers.Api;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using Xunit;
 
-namespace CmsEngine.Tests.Ui.Controllers.Api
+namespace CmsEngine.Tests.Ui.Angular.Controllers.Api
 {
-    public class CategoryControllerTest : IClassFixture<CategoryFixture>
+    public class WebsiteControllerTest : IClassFixture<WebsiteFixture>
     {
-        private Mock<IRepository<Category>> moqRepository;
+        private Mock<IRepository<Website>> moqRepository;
 
-        private CategoryFixture categoryFixture;
-        private CategoryController controller;
+        private WebsiteFixture websiteFixture;
+        private WebsiteController controller;
 
-        public CategoryControllerTest(CategoryFixture fixture)
+        public WebsiteControllerTest(WebsiteFixture fixture)
         {
-            categoryFixture = fixture;
-            moqRepository = categoryFixture.MoqRepository;
+            websiteFixture = fixture;
+            moqRepository = websiteFixture.MoqRepository;
 
-            controller = new CategoryController(categoryFixture.MoqUnitOfWork.Object, categoryFixture.MoqMapper.Object, categoryFixture.MoqHttpContextAccessor.Object);
+            controller = new WebsiteController(websiteFixture.MoqUnitOfWork.Object, websiteFixture.MoqMapper.Object, websiteFixture.MoqHttpContextAccessor.Object);
         }
 
         [Fact]
-        public void GetAllCategories_ShouldReturnAllCategories()
+        public void GetAllWebsites_ShouldReturnAllWebsites()
         {
             // Arrange
-            var expectedResult = categoryFixture.GetTestCategories();
+            var expectedResult = websiteFixture.GetTestWebsites();
 
             // Act
             var actionResult = controller.Get();
             var okResult = actionResult as OkObjectResult;
-            var testResult = okResult.Value as IEnumerable<CategoryViewModel>;
+            var testResult = okResult.Value as IEnumerable<WebsiteViewModel>;
 
             // Assert
             Assert.NotNull(okResult);
@@ -48,15 +48,15 @@ namespace CmsEngine.Tests.Ui.Controllers.Api
         }
 
         [Fact]
-        public void GetCategoryById_ShouldReturnSelectedCategory()
+        public void GetWebsiteById_ShouldReturnSelectedWebsite()
         {
             // Arrange
-            var expectedResult = categoryFixture.GetTestCategories().FirstOrDefault(q => q.Id == 2);
+            var expectedResult = websiteFixture.GetTestWebsites().FirstOrDefault(q => q.Id == 2);
 
             // Act
             var actionResult = controller.Get(1);
             var okResult = actionResult as OkObjectResult;
-            var testResult = okResult.Value as CategoryViewModel;
+            var testResult = okResult.Value as WebsiteViewModel;
 
             // Assert
             Assert.NotNull(okResult);
@@ -66,7 +66,7 @@ namespace CmsEngine.Tests.Ui.Controllers.Api
         }
 
         [Fact]
-        public void GetCategoryById_ShouldReturnNotFound()
+        public void GetWebsiteById_ShouldReturnNotFound()
         {
             // Arrange
 
@@ -80,16 +80,16 @@ namespace CmsEngine.Tests.Ui.Controllers.Api
         }
 
         [Fact]
-        public void GetCategoryByVanityId_ShouldReturnSelectedCategory()
+        public void GetWebsiteByVanityId_ShouldReturnSelectedWebsite()
         {
             // Arrange
             var id = new Guid("8633a850-128f-4425-a2ec-30e23826b7ff");
-            var expectedResult = categoryFixture.GetTestCategories().FirstOrDefault(q => q.VanityId == id);
+            var expectedResult = websiteFixture.GetTestWebsites().FirstOrDefault(q => q.VanityId == id);
 
             // Act
             var actionResult = controller.Get(id);
             var okResult = actionResult as OkObjectResult;
-            var testResult = okResult.Value as CategoryViewModel;
+            var testResult = okResult.Value as WebsiteViewModel;
 
             // Assert
             Assert.NotNull(okResult);
@@ -99,7 +99,7 @@ namespace CmsEngine.Tests.Ui.Controllers.Api
         }
 
         [Fact]
-        public void GetCategoryByVanityId_ShouldReturnNotFound()
+        public void GetWebsiteByVanityId_ShouldReturnNotFound()
         {
             // Arrange
             var id = new Guid("41ec584b-6d8f-4110-aef4-f9a5036b9bff");
@@ -114,20 +114,20 @@ namespace CmsEngine.Tests.Ui.Controllers.Api
         }
 
         [Fact]
-        public void PostCategory_ShouldReturnCreated()
+        public void PostWebsite_ShouldReturnCreated()
         {
             // Arrange
-            var categoryEditModel = new CategoryEditModel
+            var websiteEditModel = new WebsiteEditModel
             {
-                Name = "Post Category",
-                Slug = "post-category",
-                Description = "Welcome to the post test category"
+                Name = "Post Website",
+                Culture = "en-US",
+                Description = "Welcome to the post test website"
             };
 
-            moqRepository.Setup(x => x.Insert(It.IsAny<Category>())).Verifiable();
+            moqRepository.Setup(x => x.Insert(It.IsAny<Website>())).Verifiable();
 
             // Act
-            var actionResult = controller.Post(categoryEditModel);
+            var actionResult = controller.Post(websiteEditModel);
             var createdResult = actionResult as CreatedAtRouteResult;
 
             // Assert
@@ -136,42 +136,42 @@ namespace CmsEngine.Tests.Ui.Controllers.Api
         }
 
         [Fact]
-        public void PostCategory_ShouldReturnBadRequest()
+        public void PostWebsite_ShouldReturnBadRequest()
         {
             // Arrange
-            var categoryEditModel = new CategoryEditModel
+            var websiteEditModel = new WebsiteEditModel
             {
-                Slug = "post-category",
-                Description = "Welcome to the post test category"
+                Culture = "en-US",
+                Description = "Welcome to the post test website"
             };
 
             controller.ModelState.AddModelError("Name", "Required");
 
             // Act
-            var actionResult = controller.Post(categoryEditModel);
+            var actionResult = controller.Post(websiteEditModel);
 
             // Assert
             Assert.IsType(typeof(BadRequestResult), actionResult);
         }
 
         [Fact]
-        public void PutCategory_ShouldReturnOk()
+        public void PutWebsite_ShouldReturnOk()
         {
             // Arrange
-            var categoryId = new Guid("278c0380-bdd2-45bb-869b-b94659bc2b89");
-            var categoryEditModel = new CategoryEditModel
+            var websiteId = new Guid("278c0380-bdd2-45bb-869b-b94659bc2b89");
+            var websiteEditModel = new WebsiteEditModel
             {
                 Id = 1,
-                VanityId = categoryId,
-                Name = "Put Category",
-                Slug = "put-category",
-                Description = "Welcome to the put test category"
+                VanityId = websiteId,
+                Name = "Put Website",
+                Culture = "en-US",
+                Description = "Welcome to the put test website"
             };
 
-            moqRepository.Setup(x => x.Update(It.IsAny<Category>())).Verifiable();
+            moqRepository.Setup(x => x.Update(It.IsAny<Website>())).Verifiable();
 
             // Act
-            var actionResult = controller.Put(categoryId, categoryEditModel);
+            var actionResult = controller.Put(websiteId, websiteEditModel);
             var okResult = actionResult as OkObjectResult;
 
             // Assert
@@ -181,37 +181,37 @@ namespace CmsEngine.Tests.Ui.Controllers.Api
         }
 
         [Fact]
-        public void PutCategory_ShouldReturnBadRequest()
+        public void PutWebsite_ShouldReturnBadRequest()
         {
             // Arrange
-            var categoryId = new Guid("278c0380-bdd2-45bb-869b-b94659bc2b89");
-            var categoryEditModel = new CategoryEditModel
+            var websiteId = new Guid("278c0380-bdd2-45bb-869b-b94659bc2b89");
+            var websiteEditModel = new WebsiteEditModel
             {
                 Id = 1,
-                VanityId = categoryId,
-                Slug = "put-category",
-                Description = "Welcome to the put test category"
+                VanityId = websiteId,
+                Culture = "en-US",
+                Description = "Welcome to the put test website"
             };
 
             controller.ModelState.AddModelError("Name", "Required");
 
             // Act
-            var actionResult = controller.Put(categoryId, categoryEditModel);
+            var actionResult = controller.Put(websiteId, websiteEditModel);
 
             // Assert
             Assert.IsType(typeof(BadRequestResult), actionResult);
         }
 
         [Fact]
-        public void DeleteCategory_ShouldReturnOk()
+        public void DeleteWebsite_ShouldReturnOk()
         {
             // Arrange
-            var categoryId = new Guid("278c0380-bdd2-45bb-869b-b94659bc2b89");
+            var websiteId = new Guid("278c0380-bdd2-45bb-869b-b94659bc2b89");
 
-            moqRepository.Setup(x => x.Update(It.IsAny<Category>())).Verifiable();
+            moqRepository.Setup(x => x.Update(It.IsAny<Website>())).Verifiable();
 
             // Act
-            var actionResult = controller.Delete(categoryId);
+            var actionResult = controller.Delete(websiteId);
             var okResult = actionResult as OkObjectResult;
 
             // Assert
