@@ -1,8 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using CmsEngine.Ui.Controllers;
+using CmsEngine.Ui.Admin.Controllers;
 
 namespace Microsoft.AspNetCore.Mvc
 {

@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace CmsEngine.Ui.Models.ManageViewModels
+namespace CmsEngine.Data.ViewModels.ManageViewModels
 {
     public class IndexViewModel
     {

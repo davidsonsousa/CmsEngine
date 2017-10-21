@@ -1,11 +1,8 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
-using CmsEngine.Ui.Services;
+using CmsEngine.Services;
 
-namespace CmsEngine.Ui.Services
+namespace CmsEngine.Extensions
 {
     public static class EmailSenderExtensions
     {

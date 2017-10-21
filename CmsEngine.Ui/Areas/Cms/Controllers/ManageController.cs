@@ -1,23 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
+using System;
 using System.Linq;
 using System.Text;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
+using CmsEngine.Data.ViewModels.ManageViewModels;
+using CmsEngine.Extensions;
+using CmsEngine.Services;
+using CmsEngine.Ui.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
-using CmsEngine.Ui.Models;
-using CmsEngine.Ui.Models.ManageViewModels;
-using CmsEngine.Ui.Services;
 
-namespace CmsEngine.Ui.Controllers
+namespace CmsEngine.Ui.Admin.Controllers
 {
     [Authorize]
-    [Route("[controller]/[action]")]
+    [Area("Cms")]
     public class ManageController : Controller
     {
         private readonly UserManager<ApplicationUser> _userManager;
