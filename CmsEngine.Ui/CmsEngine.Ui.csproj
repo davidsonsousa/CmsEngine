@@ -26,4 +26,8 @@
     <ItemGroup>
       <Folder Include="wwwroot\" />
     </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\CmsEngine\CmsEngine.csproj" />
+    </ItemGroup>
 </Project>
