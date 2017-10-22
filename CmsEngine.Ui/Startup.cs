@@ -1,12 +1,16 @@
+using AutoMapper;
+using CmsEngine.Data;
 using CmsEngine.Services;
 using CmsEngine.Ui.Data;
 using CmsEngine.Ui.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace CmsEngine.Ui
 {
@@ -31,6 +35,16 @@ namespace CmsEngine.Ui
 
             // Add application services.
             services.AddTransient<IEmailSender, EmailSender>();
+
+            // Add HttpContextAccessor as .NET Core doesn't have HttpContext.Current anymore
+            services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
+            // Add AutoMapper
+            services.AddAutoMapper();
+
+            // Add CmsEngineContext
+            var connection = Configuration.GetConnectionString("DefaultConnection");
+            services.AddDbContextPool<CmsEngineContext>(options => options.UseSqlServer(connection));
 
             services.AddMvc();
         }
