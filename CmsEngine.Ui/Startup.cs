@@ -1,5 +1,6 @@
 using AutoMapper;
 using CmsEngine.Data;
+using CmsEngine.Data.AccessLayer;
 using CmsEngine.Services;
 using CmsEngine.Ui.Data;
 using CmsEngine.Ui.Models;
@@ -45,6 +46,9 @@ namespace CmsEngine.Ui
             // Add CmsEngineContext
             var connection = Configuration.GetConnectionString("DefaultConnection");
             services.AddDbContextPool<CmsEngineContext>(options => options.UseSqlServer(connection));
+
+            // Add Unit of Work
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             services.AddMvc();
         }
