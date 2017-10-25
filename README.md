@@ -1,4 +1,4 @@
-# CMSEngine
+# CmsEngine
 ## What is it?
 This the new code-base of the CMS I am using in my website [http://davidsonsousa.net](http://davidsonsousa.net "my website")
 
