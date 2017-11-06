@@ -26,11 +26,15 @@ gulp.task('clean:temp', function () {
   return del(gulp.paths.temp);
 });
 
+gulp.task('clean:min-min', function () {
+  return del(gulp.paths.webroot + gulp.paths.js + gulp.paths.vendors + '*.min.min.js');
+})
 
 /** CSS **/
 var vendorsCSS = [
   'node_modules/codemirror/lib/codemirror.css',
   'node_modules/datatables.net-bs4/css/dataTables.bootstrap4.css',
+  'node_modules/datatables.net-buttons-bs4/css/buttons.bootstrap4.css',
   'node_modules/font-awesome/css/font-awesome.css',
   'node_modules/ladda/dist/ladda-themeless.min.css',
   'node_modules/quill/dist/quill.snow.css',
@@ -79,6 +83,7 @@ var vendorsJS = [
   'node_modules/codemirror/mode/xml/xml.js',
   'node_modules/datatables.net/js/jquery.dataTables.js',
   'node_modules/datatables.net-bs4/js/dataTables.bootstrap4.js',
+  'node_modules/datatables.net-buttons-bs4/js/buttons.bootstrap4.js',
   'node_modules/fullcalendar/dist/fullcalendar.min.js',
   'node_modules/fullcalendar/dist/gcal.min.js',
   'node_modules/gaugeJS/dist/gauge.min.js',
@@ -107,13 +112,11 @@ gulp.task('node-vendors:copyJS', function () {
 
 gulp.task('node-vendors:minifyJS', function () {
   return gulp.src([
-    //gulp.paths.temp + gulp.paths.js + gulp.paths.vendors + '*.js',
-    //'!' + gulp.paths.temp + gulp.paths.js + gulp.paths.vendors + '*.min.js'
-    gulp.paths.temp + gulp.paths.js + gulp.paths.vendors + '*.min.js'
+    gulp.paths.temp + gulp.paths.js + gulp.paths.vendors + '*.js'
   ])
-    //.pipe(gulp.dest(gulp.paths.webroot + gulp.paths.js + gulp.paths.vendors))
-    //.pipe(uglify())
-    //.pipe(rename({ suffix: '.min' }))
+    .pipe(gulp.dest(gulp.paths.webroot + gulp.paths.js + gulp.paths.vendors))
+    .pipe(uglify())
+    .pipe(rename({ suffix: '.min' }))
     .pipe(gulp.dest(gulp.paths.webroot + gulp.paths.js + gulp.paths.vendors));
 });
 

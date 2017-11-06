@@ -3,6 +3,8 @@
 
 var gulp = require('gulp');
 var browserSync = require('browser-sync').create();
+var uglify = require('gulp-uglify');
+var concat = require('gulp-concat');
 var del = require('del');
 var sass = require('gulp-sass');
 var autoprefixer = require('gulp-autoprefixer');
@@ -48,8 +50,13 @@ gulp.task('build:styles', function () {
 });
 
 gulp.task('build:scripts', function () {
-  return gulp.src('./assets/js/**/*')
-    .pipe(gulp.dest(gulp.paths.webroot + '/js'));
+  return gulp.src('./assets/js/app.*.js')
+    .pipe(gulp.dest(gulp.paths.temp + gulp.paths.js))
+    .pipe(concat('app.js'))
+    .pipe(gulp.dest(gulp.paths.webroot + gulp.paths.js))
+    .pipe(uglify())
+    .pipe(rename({ suffix: '.min' }))
+    .pipe(gulp.dest(gulp.paths.webroot + gulp.paths.js));
 });
 
 gulp.task('copy:images', function () {
@@ -65,5 +72,6 @@ gulp.task('default', function (callback) {
   runSequence(
     'clean:dist', 'copy:images',
     'build:styles', 'build:scripts', 'build:vendors',
+    'clean:min-min',
     callback);
 });
