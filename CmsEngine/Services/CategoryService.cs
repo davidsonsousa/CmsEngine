@@ -1,4 +1,8 @@
-﻿using AutoMapper;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using AutoMapper;
+using CmsEngine.Attributes;
 using CmsEngine.Data.AccessLayer;
 using CmsEngine.Data.EditModels;
 using CmsEngine.Data.Models;
@@ -6,9 +10,6 @@ using CmsEngine.Data.ViewModels;
 using CmsEngine.Extensions;
 using CmsEngine.Utils;
 using Microsoft.AspNetCore.Http;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace CmsEngine.Services
 {
@@ -141,6 +142,47 @@ namespace CmsEngine.Services
         {
             var item = this.GetItemById(id);
             return Mapper.Map<Category, CategoryEditModel>(item);
+        }
+
+        public override IEnumerable<IViewModel> Filter(string searchTerm, IEnumerable<IViewModel> listItems)
+        {
+            var items = (IEnumerable<CategoryViewModel>)listItems;
+
+            if (!string.IsNullOrWhiteSpace(searchTerm))
+            {
+                var searchableProperties = typeof(CategoryViewModel).GetProperties().Where(p => Attribute.IsDefined(p, typeof(Searchable)));
+
+                var lambda = this.PrepareFilter(searchTerm, searchableProperties);
+
+                // TODO: There must be a way to improve this
+                var tempItems = Mapper.Map<IEnumerable<CategoryViewModel>, IEnumerable<Category>>(items);
+                items = Mapper.Map<IEnumerable<Category>, IEnumerable<CategoryViewModel>>(tempItems.Where(lambda));
+            }
+
+            return items;
+        }
+
+        public override IEnumerable<IViewModel> Order(int orderColumn, string orderDirection, IEnumerable<IViewModel> listItems)
+        {
+            try
+            {
+                var listCategories = Mapper.Map<IEnumerable<IViewModel>, IEnumerable<CategoryViewModel>>(listItems);
+
+                switch (orderColumn)
+                {
+                    case 1:
+                    case 0:
+                    default:
+                        listItems = orderDirection == "asc" ? listCategories.OrderBy(o => o.Name) : listCategories.OrderByDescending(o => o.Name);
+                        break;
+                }
+            }
+            catch
+            {
+                throw;
+            }
+
+            return listItems;
         }
 
         protected override ReturnValue Delete(Category item)
