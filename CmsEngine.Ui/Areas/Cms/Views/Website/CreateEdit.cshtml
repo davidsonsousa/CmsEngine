@@ -1,0 +1,85 @@
+@using CmsEngine.Data.Models
+@model CmsEngine.ViewModels.WebsiteViewModel
+
+@*@section styles{
+
+	}*@
+
+@*@section Breadcrumb {
+		<ol class="breadcrumb">
+			<li><a href="~/webcalendar">Home</a></li>
+			<li><a href="@Url.RouteUrl("special-days", new { action = "index"})">Special days</a></li>
+			<li class="active">Create new</li>
+		</ol>
+	}*@
+
+<div class="row">
+	<div class="col-sm-6">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				@ViewBag.PanelTitle
+			</div>
+			<form asp-area="Cms" asp-controller="Website" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post" class="form-horizontal">
+				@if (!Model.Item.IsNew)
+				{
+					<input asp-for="Item.Id" type="hidden" />
+				}
+
+				<div class="panel-body">
+					<div asp-validation-summary="All" class="text-danger"></div>
+					<div class="form-group">
+						<label asp-for="Item.Name" class="col-md-2 control-label"></label>
+						<div class="col-md-10">
+							<input asp-for="Item.Name" class="form-control" />
+							<span asp-validation-for="Item.Name" class="text-danger"></span>
+						</div>
+					</div>
+					<div class="form-group">
+						<label asp-for="Item.Description" class="col-md-2 control-label"></label>
+						<div class="col-md-10">
+							<textarea asp-for="Item.Description" class="form-control"></textarea>
+							<span asp-validation-for="Item.Description" class="text-danger"></span>
+						</div>
+					</div>
+					<div class="form-group">
+						<label asp-for="Item.Culture" class="col-md-2 control-label"></label>
+						<div class="col-md-10">
+							<input asp-for="Item.Culture" class="form-control" />
+							<span asp-validation-for="Item.Culture" class="text-danger"></span>
+						</div>
+					</div>
+					<div class="form-group">
+						<label asp-for="Item.UrlFormat" class="col-md-2 control-label"></label>
+						<div class="col-md-10">
+							<input asp-for="Item.UrlFormat" class="form-control" />
+							<span asp-validation-for="Item.UrlFormat" class="text-danger"></span>
+						</div>
+					</div>
+					<div class="form-group">
+						<label asp-for="Item.DateFormat" class="col-md-2 control-label"></label>
+						<div class="col-md-10">
+							<input asp-for="Item.DateFormat" class="form-control" />
+							<span asp-validation-for="Item.DateFormat" class="text-danger"></span>
+						</div>
+					</div>
+					<div class="form-group">
+						<label asp-for="Item.SiteUrl" class="col-md-2 control-label"></label>
+						<div class="col-md-10">
+							<input asp-for="Item.SiteUrl" class="form-control" />
+							<span asp-validation-for="Item.SiteUrl" class="text-danger"></span>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-md-offset-2 col-md-10">
+							<button type="submit" class="btn btn-primary">Save</button>
+						</div>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+
+@section scripts{
+	@{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}
