@@ -2,6 +2,13 @@
   @{ await Html.RenderPartialAsync("_DataTablesStyles"); }
 }
 
+@section Breadcrumb {
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="~/cms">Dashboard</a></li>
+    <li class="breadcrumb-item active">@ViewBag.PageTitle</li>
+  </ol>
+}
+
 <div class="card">
   <div class="card-header">
     <i class="fa fa-align-justify"></i>

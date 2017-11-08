@@ -121,7 +121,7 @@
     <!-- Main content -->
     <main class="main">
       <!-- Breadcrumb -->
-      <ol class="breadcrumb"></ol>
+      @RenderSection("Breadcrumb", false)
 
       <div class="container-fluid">
         @RenderBody()

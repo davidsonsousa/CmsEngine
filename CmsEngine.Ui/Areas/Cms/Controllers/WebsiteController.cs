@@ -21,14 +21,14 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
 
         public IActionResult Index()
         {
-            this.SetupMessages("Websites", panelTitle: "List of websites");
+            this.SetupMessages("Websites", PageType.List, panelTitle: "List of websites");
             //var websiteViewModel = websiteService.SetupViewModel();
             return View("List");
         }
 
         public IActionResult Create()
         {
-            this.SetupMessages("Website", panelTitle: "Create a new website");
+            this.SetupMessages("Website", PageType.Create, panelTitle: "Create a new website");
             var websiteEditModel = websiteService.SetupEditModel();
 
             return View("CreateEdit", websiteEditModel);
@@ -40,7 +40,7 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
         {
             if (!ModelState.IsValid)
             {
-                this.SetupMessages("Websites", panelTitle: "Create a new website");
+                this.SetupMessages("Websites", PageType.Create, panelTitle: "Create a new website");
                 return View("CreateEdit", websiteEditModel);
             }
 
@@ -49,7 +49,7 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
 
         public IActionResult Edit(Guid id)
         {
-            this.SetupMessages("Websites", panelTitle: "Edit an existing website");
+            this.SetupMessages("Websites", PageType.Edit, panelTitle: "Edit an existing website");
             var websiteViewModel = websiteService.SetupEditModel(id);
 
             return View("CreateEdit", websiteViewModel);
@@ -61,7 +61,7 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
         //{
         //    if (!ModelState.IsValid)
         //    {
-        //        this.SetupMessages("Websites", panelTitle: "Edit an existing website");
+        //        this.SetupMessages("Websites", PageType.Edit, panelTitle: "Edit an existing website");
         //        return View("CreateEdit", websiteEditModel);
         //    }
 

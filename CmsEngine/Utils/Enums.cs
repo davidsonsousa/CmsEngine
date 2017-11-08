@@ -1,4 +1,4 @@
-﻿using System.ComponentModel;
+using System.ComponentModel;
 
 namespace CmsEngine
 {
@@ -64,5 +64,12 @@ namespace CmsEngine
         Info,
         Warning,
         Danger
+    }
+
+    public enum PageType
+    {
+        Create,
+        Edit,
+        List
     }
 }

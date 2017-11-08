@@ -1,16 +1,15 @@
-@using CmsEngine.Data.Models
 @model CmsEngine.Data.EditModels.WebsiteEditModel
 @*@section styles{
 
   }*@
 
-@*@section Breadcrumb {
-    <ol class="breadcrumb">
-      <li><a href="~/webcalendar">Home</a></li>
-      <li><a href="@Url.RouteUrl("special-days", new { action = "index"})">Special days</a></li>
-      <li class="active">Create new</li>
-    </ol>
-  }*@
+@section Breadcrumb {
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="~/cms">Dashboard</a></li>
+    <li class="breadcrumb-item"><a href="~/cms/website">@ViewBag.PageTitle</a></li>
+    <li class="breadcrumb-item active">@ViewBag.PageType</li>
+  </ol>
+}
 
 <div class="row">
   <div class="col-md-6">
