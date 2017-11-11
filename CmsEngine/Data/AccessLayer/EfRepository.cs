@@ -1,8 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace CmsEngine.Data.AccessLayer
@@ -74,10 +74,11 @@ namespace CmsEngine.Data.AccessLayer
             _context.Entry(entity).State = EntityState.Modified;
         }
 
-        public void BulkUpdate(Expression<Func<T, bool>> where, Expression<Func<T, T>> update)
+        public void BulkUpdate(Expression<Func<T, bool>> where, Action<T> update)
         {
-            throw new Exception("BulkUpdate to be implemented");
-            // _dbSet.Where(where).Update(update);
+            // TODO: There must be a better way to do this
+            var items = _dbSet.Where(where).ToList();
+            items.ForEach(update);
         }
 
         public void Delete(T entity)

@@ -51,7 +51,9 @@ namespace CmsEngine.Services
             var returnValue = new ReturnValue();
             try
             {
-                Repository.BulkUpdate(q => id.Contains(q.VanityId), u => new Website { IsDeleted = true });
+                Repository.BulkUpdate(q => id.Contains(q.VanityId), u => u.IsDeleted = true);
+
+                UnitOfWork.Save();
 
                 returnValue.IsError = false;
                 returnValue.Message = $"Selected items deleted at {DateTime.Now.ToString("T")}.";

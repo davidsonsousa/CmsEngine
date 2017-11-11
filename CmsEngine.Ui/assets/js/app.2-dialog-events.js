@@ -21,7 +21,7 @@ CmsEngine.Dialog.Events.BulkDelete = function () {
     itemsToDelete.push($(this).val());
   });
 
-  $.post(CmsEngine.ClickedElement[0].href, { 'id[]': itemsToDelete }, function (data) {
+  $.post(CmsEngine.ClickedElement[0].href, { 'vanityId[]': itemsToDelete }, function (data) {
     if (data.isError == false) {
       $("#general-dialog").modal("hide");
       alert(data.message);

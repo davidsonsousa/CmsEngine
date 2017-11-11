@@ -52,7 +52,7 @@ namespace CmsEngine.Services
             var returnValue = new ReturnValue();
             try
             {
-                Repository.BulkUpdate(q => id.Contains(q.VanityId), u => new Tag { IsDeleted = true });
+                Repository.BulkUpdate(q => id.Contains(q.VanityId), u => u.IsDeleted = true);
 
                 returnValue.IsError = false;
                 returnValue.Message = $"Selected items deleted at {DateTime.Now.ToString("T")}.";
