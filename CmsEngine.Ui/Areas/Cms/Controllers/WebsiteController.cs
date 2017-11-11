@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using AutoMapper;
 using CmsEngine.Data.AccessLayer;
 using CmsEngine.Data.EditModels;
@@ -47,47 +48,44 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
             return this.Save(websiteEditModel);
         }
 
-        public IActionResult Edit(Guid id)
+        public IActionResult Edit(Guid vanityId)
         {
             this.SetupMessages("Websites", PageType.Edit, panelTitle: "Edit an existing website");
-            var websiteViewModel = websiteService.SetupEditModel(id);
+            var websiteViewModel = websiteService.SetupEditModel(vanityId);
 
             return View("CreateEdit", websiteViewModel);
         }
 
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> Edit(WebsiteEditModel websiteEditModel)
-        //{
-        //    if (!ModelState.IsValid)
-        //    {
-        //        this.SetupMessages("Websites", PageType.Edit, panelTitle: "Edit an existing website");
-        //        return View("CreateEdit", websiteEditModel);
-        //    }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(WebsiteEditModel websiteEditModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                this.SetupMessages("Websites", PageType.Edit, panelTitle: "Edit an existing website");
+                return View("CreateEdit", websiteEditModel);
+            }
 
-        //    var websiteToUpdate = websiteService.SetupEditModel(websiteEditModel.Id);
+            var websiteToUpdate = (WebsiteEditModel)websiteService.SetupEditModel(websiteEditModel.VanityId);
 
-        //    var isUpdated = await TryUpdateModelAsync(websiteToUpdate, "Item");
+            if (await TryUpdateModelAsync(websiteToUpdate))
+            {
+                return this.Save(websiteEditModel);
+            }
 
-        //    if (isUpdated)
-        //    {
-        //        websiteEditModel = websiteToUpdate;
-        //        return this.Save(websiteEditModel);
-        //    }
-
-        //    return View("CreateEdit", websiteEditModel);
-        //}
+            return View("CreateEdit", websiteEditModel);
+        }
 
         [HttpPost]
-        public IActionResult Delete(Guid id)
+        public IActionResult Delete(Guid vanityId)
         {
-            return Ok(websiteService.Delete(id));
+            return Ok(websiteService.Delete(vanityId));
         }
 
         [HttpPost("cms/website/bulk-delete")]
-        public IActionResult BulkDelete([FromForm]Guid[] id)
+        public IActionResult BulkDelete([FromForm]Guid[] vanityId)
         {
-            return Ok(websiteService.BulkDelete(id));
+            return Ok(websiteService.BulkDelete(vanityId));
         }
 
         [HttpPost]
