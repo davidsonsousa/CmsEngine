@@ -68,7 +68,7 @@ CmsEngine.Configure.DataTable = function (route) {
         "width": "85px",
         "data": null,
         "mRender": function (data, type, full) {
-          return '<a href="' + route + '/edit/' + full[full.length - 1] + '" role="button" class="btn btn-default" data-toggle="tooltip" data-placement="top" title="Edit"><span class="fa fa-pencil"></span></a>'
+          return '<a href="' + route + '/edit/' + full[full.length - 1] + '" role="button" class="btn btn-secondary" data-toggle="tooltip" data-placement="top" title="Edit"><span class="fa fa-pencil"></span></a>'
             + '<a href="' + route + '/delete/' + full[full.length - 1] + '" role="button" class="btn btn-danger delete-link" data-toggle="tooltip" data-placement="top" data-message="Do you really want to <span class=&quot;text-danger&quot;>delete</span> <strong>' + full[1] + '</strong>?" title="Delete"><span class="fa fa-trash-o"></span></a>';
         }
       }],
@@ -96,11 +96,11 @@ CmsEngine.Configure.Dialog = function (dialogId, dialogType, title, body, cancel
   }
 
   if (cancelButton.length > 0) {
-    $(dialogId + " .btn-default").show();
-    $(dialogId + " .btn-default").html(cancelButton);
+    $(dialogId + " .btn-secondary").show();
+    $(dialogId + " .btn-secondary").html(cancelButton);
   }
   else {
-    $(dialogId + " .btn-default").hide();
+    $(dialogId + " .btn-secondary").hide();
   }
 
   // Selectize
