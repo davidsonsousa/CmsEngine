@@ -195,7 +195,7 @@ namespace CmsEngine.Services
             var category = new Category();
             editModel.MapTo(category);
 
-            category.Website = WebsiteInstance;
+            category.WebsiteId = WebsiteInstance.Id;
 
             if (category.IsNew)
             {
