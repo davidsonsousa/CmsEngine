@@ -46,28 +46,6 @@ namespace CmsEngine.Services
             return Mapper.Map<Website, WebsiteViewModel>(item);
         }
 
-        public override ReturnValue BulkDelete(Guid[] id)
-        {
-            var returnValue = new ReturnValue();
-            try
-            {
-                Repository.BulkUpdate(q => id.Contains(q.VanityId), u => u.IsDeleted = true);
-
-                UnitOfWork.Save();
-
-                returnValue.IsError = false;
-                returnValue.Message = $"Selected items deleted at {DateTime.Now.ToString("T")}.";
-            }
-            catch
-            {
-                returnValue.IsError = true;
-                returnValue.Message = "An error has occurred while deleting the website";
-                throw;
-            }
-
-            return returnValue;
-        }
-
         public override ReturnValue Delete(Guid id)
         {
             var returnValue = new ReturnValue();

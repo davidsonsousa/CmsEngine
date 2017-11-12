@@ -165,7 +165,27 @@ namespace CmsEngine.Services
 
         public abstract ReturnValue Delete(Guid id);
 
-        public abstract ReturnValue BulkDelete(Guid[] id);
+        public virtual ReturnValue BulkDelete(Guid[] id)
+        {
+            var returnValue = new ReturnValue();
+            try
+            {
+                Repository.BulkUpdate(q => id.Contains(q.VanityId), u => u.IsDeleted = true);
+
+                UnitOfWork.Save();
+
+                returnValue.IsError = false;
+                returnValue.Message = $"Selected items deleted at {DateTime.Now.ToString("T")}.";
+            }
+            catch
+            {
+                returnValue.IsError = true;
+                returnValue.Message = "An error has occurred while deleting the selected items";
+                throw;
+            }
+
+            return returnValue;
+        }
 
         public abstract ReturnValue Delete(int id);
 
