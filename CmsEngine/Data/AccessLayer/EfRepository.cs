@@ -30,7 +30,7 @@ namespace CmsEngine.Data.AccessLayer
 
             if (filter != null)
             {
-                query = query.Where(filter);
+                query = query.AsNoTracking().Where(filter);
             }
 
             return query;
