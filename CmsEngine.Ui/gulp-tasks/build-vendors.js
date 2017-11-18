@@ -16,6 +16,7 @@ gulp.task('build:vendors', function (callback) {
   runSequence(
     'vendors:cleanCSS', 'compile-vendors:sass', 'node-vendors:copyCSS', 'node-vendors:minifyCSS',
     'vendors:cleanJS', 'node-vendors:copyJS', 'node-vendors:minifyJS',
+    'node-vendors:copyTinyMCE', 'node-vendors:copyDatetimePicker',
     'vendors:copyFonts',
     'clean:temp',
     callback
@@ -28,7 +29,7 @@ gulp.task('clean:temp', function () {
 
 gulp.task('clean:min-min', function () {
   return del(gulp.paths.webroot + gulp.paths.js + gulp.paths.vendors + '*.min.min.js');
-})
+});
 
 /** CSS **/
 var vendorsCSS = [
@@ -76,7 +77,7 @@ gulp.task('compile-vendors:sass', function () {
 /** JavaScript **/
 var vendorsJS = [
   'node_modules/bootstrap/dist/js/bootstrap.min.js',
-  'node_modules/bootstrap-daterangepicker/daterangepicker.js',
+  //'node_modules/bootstrap-daterangepicker/daterangepicker.js',
   'node_modules/chart.js/dist/Chart.min.js',
   'node_modules/codemirror/lib/codemirror.js',
   'node_modules/codemirror/mode/markdown/markdown.js',
@@ -92,6 +93,7 @@ var vendorsJS = [
   'node_modules/jquery/dist/jquery.min.map',
   'node_modules/jquery-ui-dist/jquery-ui.min.js',
   'node_modules/jquery-validation/dist/jquery.validate.min.js',
+  'node_modules/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js',
   'node_modules/jquery.maskedinput/src/jquery.maskedinput.js',
   'node_modules/ladda/dist/ladda.min.js',
   'node_modules/ladda/dist/spin.min.js',
@@ -134,3 +136,26 @@ gulp.task('vendors:copyFonts', function () {
   return gulp.src(vendorsFonts)
     .pipe(gulp.dest(gulp.paths.webroot + gulp.paths.css + gulp.paths.fonts));
 });
+
+/** TinyMCE **/
+gulp.task('node-vendors:copyTinyMCE', function () {
+  gulp.src([
+    'node_modules/tinymce/tinymce.min.js',
+    'node_modules/tinymce/themes/modern/theme.min.js',
+    'node_modules/tinymce/skins/lightgray/skin.min.css',
+    'node_modules/tinymce/skins/lightgray/content.min.css',
+    'node_modules/tinymce/skins/lightgray/fonts/tinymce.woff',
+    'node_modules/tinymce/skins/lightgray/fonts/tinymce.ttf',
+  ], { base: './node_modules' })
+    .pipe(gulp.dest(gulp.paths.webroot + gulp.paths.js + gulp.paths.vendors));
+});
+
+/** Datetime picker **/
+gulp.task('node-vendors:copyDatetimePicker', function () {
+  gulp.src([
+    'node_modules/pc-bootstrap4-datetimepicker/build/js/bootstrap-datetimepicker.min.js',
+    'node_modules/pc-bootstrap4-datetimepicker/build/css/bootstrap-datetimepicker.min.css'
+  ], { base: './node_modules' })
+    .pipe(gulp.dest(gulp.paths.webroot + gulp.paths.js + gulp.paths.vendors));
+});
+
