@@ -195,7 +195,7 @@ namespace CmsEngine.Services
             var page = new Page();
             editModel.MapTo(page);
 
-            page.Website = WebsiteInstance;
+            page.WebsiteId = WebsiteInstance.Id;
 
             if (page.IsNew)
             {
