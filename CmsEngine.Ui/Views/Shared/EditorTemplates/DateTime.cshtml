@@ -1,0 +1,20 @@
+@model DateTime?
+@{
+    // We need to get the HtmlAttributes in order to customize the Div with the ContainerId
+    var htmlAttributes = HtmlHelper.AnonymousObjectToHtmlAttributes(ViewData["htmlAttributes"]);
+}
+
+<div class="input-group date" id="@htmlAttributes["containerId"]">
+  @Html.TextBox("", ViewData.TemplateInfo.FormattedModelValue.ToString(), htmlAttributes)
+  <span class="input-group-addon">
+    <i class="fa fa-calendar"></i>
+  </span>
+</div>
+
+
+@*<div class="input-group date" id="published-on">
+    <input asp-for="PublishedOn" class="form-control" />
+    <span class="input-group-addon">
+      <i class="fa fa-calendar"></i>
+    </span>
+  </div>*@

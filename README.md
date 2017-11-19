@@ -1,4 +1,4 @@
-# CMSEngine
+# CmsEngine
 ## What is it?
 This the new code-base of the CMS I am using in my website [http://davidsonsousa.net](http://davidsonsousa.net "my website")
 
@@ -12,8 +12,6 @@ Because I need a pet project to study a couple of things. And do it with my own 
 * [Entity Framework Core](https://docs.microsoft.com/en-us/ef/core/)
 * [AutoMapper](http://automapper.org/)
 * [xUnit](https://xunit.github.io/)
-* [Angular 4](https://angular.io/)
-* [TypeScript](http://www.typescriptlang.org/)
 
 ## Running the project
 Since this is a .NET Core project you can run in 2 ways:
@@ -33,7 +31,7 @@ Since this is a .NET Core project you can run in 2 ways:
     - Make sure this url is mapped in your hosts file
 - Create and run migrations
   - Make that sure you are in the **solution folder (CmsEngine)**
-  - `dotnet ef --startup-project ..\CmsEngine.Ui\ migrations add MIGRATION_NAME`
+  - `dotnet ef migrations add MIGRATION_NAME --startup-project ..\CmsEngine.Ui\`
   - `cd ..\CmsEngine.Ui`
   - `dotnet ef database update`
 

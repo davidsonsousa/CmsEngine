@@ -1,11 +1,10 @@
-﻿using CmsEngine.Data.EditModels;
-using CmsEngine.Data.Models;
-using CmsEngine.Data.ViewModels;
-using CmsEngine.Services;
-using CmsEngine.Tests.Fixtures;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using CmsEngine.Data.EditModels;
+using CmsEngine.Data.ViewModels;
+using CmsEngine.Services;
+using CmsEngine.Tests.Fixtures;
 using Xunit;
 
 namespace CmsEngine.Test.Core.Services
@@ -23,19 +22,19 @@ namespace CmsEngine.Test.Core.Services
 
         #region Get
 
-        [Fact]
-        public void GetAll_ShouldReturnAllPostsAsQueryable()
-        {
-            // Arrange
-            var expectedResult = postFixture.GetTestPosts().Count;
+        //[Fact]
+        //public void GetAll_ShouldReturnAllPostsAsQueryable()
+        //{
+        //    // Arrange
+        //    var expectedResult = postFixture.GetTestPosts().Count;
 
-            // Act
-            var response = moqPostService.GetAll();
+        //    // Act
+        //    var response = moqPostService.GetAll();
 
-            // Assert
-            Assert.True(response is IQueryable<Post>, "Response is not IQueryable<Post>");
-            Assert.Equal(expectedResult, response.Count());
-        }
+        //    // Assert
+        //    Assert.True(response is IQueryable<Post>, "Response is not IQueryable<Post>");
+        //    Assert.Equal(expectedResult, response.Count());
+        //}
 
         [Fact]
         public void GetAllReadOnly_ShouldReturnAllPostsAsEnumerable()

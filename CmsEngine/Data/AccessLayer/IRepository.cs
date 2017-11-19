@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -44,7 +44,7 @@ namespace CmsEngine.Data.AccessLayer
         /// </summary>
         /// <param name="where"></param>
         /// <param name="update"></param>
-        void BulkUpdate(Expression<Func<T, bool>> where, Expression<Func<T, T>> update);
+        void BulkUpdate(Expression<Func<T, bool>> where, Action<T> update);
 
         /// <summary>
         /// Deletes record from database

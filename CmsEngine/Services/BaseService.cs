@@ -8,6 +8,8 @@ using CmsEngine.Data.AccessLayer;
 using CmsEngine.Data.EditModels;
 using CmsEngine.Data.Models;
 using CmsEngine.Data.ViewModels;
+using CmsEngine.Extensions;
+using CmsEngine.Helpers;
 using CmsEngine.Utils;
 using Microsoft.AspNetCore.Http;
 
@@ -75,36 +77,13 @@ namespace CmsEngine.Services
             _httpContextAccessor = hca;
         }
 
-        //public IEnumerable<T> Filter(string searchTerm, IEnumerable<T> listItems)
-        //{
-        //    if (!string.IsNullOrWhiteSpace(searchTerm))
-        //    {
-        //        var searchableProperties = typeof(T).GetProperties().Where(p => Attribute.IsDefined(p, typeof(Searchable)));
-        //        List<ExpressionFilter> expressionFilter = new List<ExpressionFilter>();
+        public abstract IEnumerable<IViewModel> Filter(string searchTerm, IEnumerable<IViewModel> listItems);
 
-        //        foreach (var property in searchableProperties)
-        //        {
-        //            expressionFilter.Add(new ExpressionFilter
-        //            {
-        //                PropertyName = property.Name,
-        //                Operation = Operations.Contains,
-        //                Value = searchTerm
-        //            });
-        //        }
-
-        //        var lambda = ExpressionBuilder.GetExpression<T>(expressionFilter, LogicalOperators.Or).Compile();
-        //        listItems = listItems.Where(lambda);
-        //    }
-
-        //    return listItems;
-        //}
-
-        //public abstract IEnumerable<T> Order(int orderColumn, string orderDirection, IEnumerable<T> listItems);
+        public abstract IEnumerable<IViewModel> Order(int orderColumn, string orderDirection, IEnumerable<IViewModel> listItems);
 
         public DataTableViewModel BuildDataTable(IEnumerable<IViewModel> listItems)
         {
-            var listColumnString = new List<string> { string.Empty };
-            var listDataItems = new List<DataItem>();
+            var listString = new List<List<string>>();
 
             foreach (var item in listItems)
             {
@@ -115,45 +94,28 @@ namespace CmsEngine.Services
                                          .OrderBy(o => o.GetCustomAttributes(false).OfType<ShowOnDataTable>().First().Order);
 
                 // An empty value must *always* be the first property because of the checkboxes
-                var dataItem = new DataItem
-                {
-                    DataProperties = new List<DataProperty>
-                    {
-                        new DataProperty { DataType = "Boolean", DataContent = string.Empty }
-                    }
-                };
+                var listPropertes = new List<string> { string.Empty };
 
                 // Loop through and add the properties found
                 foreach (var property in itemProperties)
                 {
-                    var columnName = item.GetType().GetProperty(property.Name).Name;
-                    if (!listColumnString.Contains(columnName))
-                    {
-                        listColumnString.Add(columnName);
-                    }
-
-                    dataItem.DataProperties.Add(PrepareProperty(item, property));
+                    listPropertes.Add(PrepareProperty(item, property));
                 }
 
                 // VanityId must *always* be the last property
-                dataItem.DataProperties.Add(
-                    new DataProperty
-                    {
-                        DataContent = item.VanityId.ToString(),
-                        DataType = "Guid"
-                    });
+                listPropertes.Add(item.VanityId.ToString());
 
-                listDataItems.Add(dataItem);
+                listString.Add(listPropertes);
             }
 
             DataTableViewModel dataTableViewModel;
 
             dataTableViewModel = new DataTableViewModel
             {
-                Columns = listColumnString,
-                Rows = listDataItems,
+                Data = listString,
                 RecordsTotal = this.GetAllReadOnly().Count(),
-                RecordsFiltered = listItems.Count()
+                RecordsFiltered = listItems.Count(),
+                Draw = 0
             };
 
             return dataTableViewModel;
@@ -203,44 +165,57 @@ namespace CmsEngine.Services
 
         public abstract ReturnValue Delete(Guid id);
 
-        public abstract ReturnValue BulkDelete(Guid[] id);
+        public virtual ReturnValue BulkDelete(Guid[] id)
+        {
+            var returnValue = new ReturnValue();
+            try
+            {
+                Repository.BulkUpdate(q => id.Contains(q.VanityId), u => u.IsDeleted = true);
+
+                UnitOfWork.Save();
+
+                returnValue.IsError = false;
+                returnValue.Message = $"Selected items deleted at {DateTime.Now.ToString("T")}.";
+            }
+            catch
+            {
+                returnValue.IsError = true;
+                returnValue.Message = "An error has occurred while deleting the selected items";
+                throw;
+            }
+
+            return returnValue;
+        }
 
         public abstract ReturnValue Delete(int id);
 
         #region Helpers
 
-        private DataProperty PrepareProperty(IViewModel item, PropertyInfo property)
+        private string PrepareProperty(IViewModel item, System.Reflection.PropertyInfo property)
         {
-            var propertyInfo = item.GetType().GetProperty(property.Name);
+            string propertyValue = item.GetType().GetProperty(property.Name).GetValue(item)?.ToString() ?? "";
 
-            var dataProperty = new DataProperty
+            if (property.PropertyType.Name == "DocumentStatus")
             {
-                DataContent = propertyInfo.GetValue(item)?.ToString() ?? "",
-                DataType = propertyInfo.PropertyType.Name
-            };
+                GeneralStatus generalStatus;
+                switch (propertyValue)
+                {
+                    case "Published":
+                        generalStatus = GeneralStatus.Success;
+                        break;
+                    case "PendingApproval":
+                        generalStatus = GeneralStatus.Warning;
+                        break;
+                    case "Draft":
+                    default:
+                        generalStatus = GeneralStatus.Info;
+                        break;
+                }
 
+                propertyValue = $"<span class=\"label label-{generalStatus.ToString().ToLowerInvariant()}\">{propertyValue.ToEnum<DocumentStatus>().GetDescription()}</status-label>" ?? "";
+            }
 
-            //if (property.PropertyType.Name == "DocumentStatus")
-            //{
-            //    GeneralStatus generalStatus;
-            //    switch (propertyValue)
-            //    {
-            //        case "Published":
-            //            generalStatus = GeneralStatus.Success;
-            //            break;
-            //        case "PendingApproval":
-            //            generalStatus = GeneralStatus.Warning;
-            //            break;
-            //        case "Draft":
-            //        default:
-            //            generalStatus = GeneralStatus.Info;
-            //            break;
-            //    }
-
-            //    propertyValue = $"<span class=\"label label-{generalStatus.ToString().ToLowerInvariant()}\">{propertyValue.ToEnum<DocumentStatus>().GetDescription()}</status-label>" ?? "";
-            //}
-
-            return dataProperty;
+            return propertyValue;
         }
 
         protected virtual T GetItemById(int id)
@@ -273,6 +248,23 @@ namespace CmsEngine.Services
             }
 
             return item;
+        }
+
+        protected virtual Func<T, bool> PrepareFilter(string searchTerm, IEnumerable<PropertyInfo> searchableProperties)
+        {
+            var expressionFilter = new List<ExpressionFilter>();
+
+            foreach (var property in searchableProperties)
+            {
+                expressionFilter.Add(new ExpressionFilter
+                {
+                    PropertyName = property.Name,
+                    Operation = Operations.Contains,
+                    Value = searchTerm
+                });
+            }
+
+            return ExpressionBuilder.GetExpression<T>(expressionFilter, LogicalOperators.Or).Compile();
         }
 
         protected abstract ReturnValue Delete(T item);

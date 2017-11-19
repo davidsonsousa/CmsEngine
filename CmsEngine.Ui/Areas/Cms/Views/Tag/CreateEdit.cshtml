@@ -1,0 +1,53 @@
+@model CmsEngine.Data.EditModels.TagEditModel
+@*@section styles{
+
+  }*@
+
+@section Breadcrumb {
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="~/cms">Dashboard</a></li>
+    <li class="breadcrumb-item"><a href="~/cms/tag">@ViewBag.PageTitle</a></li>
+    <li class="breadcrumb-item active">@ViewBag.PageType</li>
+  </ol>
+}
+
+<div class="row">
+  <div class="col-md-6">
+    <div class="card">
+      <div class="card-header">
+        <strong>@ViewBag.PanelTitle</strong>
+      </div>
+      <form asp-area="Cms" asp-controller="Tag" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post" class="form-horizontal">
+        <div class="card-body">
+          @if (!Model.IsNew)
+          {
+              <input asp-for="Id" type="hidden" />
+          }
+
+          <div asp-validation-summary="All" class="text-danger"></div>
+          <div class="form-group row">
+            <label asp-for="Name" class="col-md-3 form-control-label"></label>
+            <div class="col-md-9">
+              <input asp-for="Name" class="form-control" />
+              <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label asp-for="Slug" class="col-md-3 form-control-label"></label>
+            <div class="col-md-9">
+              <input asp-for="Slug" class="form-control" />
+              <span asp-validation-for="Slug" class="text-danger"></span>
+            </div>
+          </div>
+        </div>
+        <div class="card-footer">
+          <button type="submit" class="btn btn-primary"><i class="fa fa-dot-circle-o"></i> Save</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+@section scripts{
+  @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}

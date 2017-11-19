@@ -1,4 +1,8 @@
-﻿using AutoMapper;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using AutoMapper;
+using CmsEngine.Attributes;
 using CmsEngine.Data.AccessLayer;
 using CmsEngine.Data.EditModels;
 using CmsEngine.Data.Models;
@@ -6,9 +10,6 @@ using CmsEngine.Data.ViewModels;
 using CmsEngine.Extensions;
 using CmsEngine.Utils;
 using Microsoft.AspNetCore.Http;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace CmsEngine.Services
 {
@@ -44,26 +45,6 @@ namespace CmsEngine.Services
         {
             var item = this.GetItemById(id);
             return Mapper.Map<Page, PageViewModel>(item);
-        }
-
-        public override ReturnValue BulkDelete(Guid[] id)
-        {
-            var returnValue = new ReturnValue();
-            try
-            {
-                Repository.BulkUpdate(q => id.Contains(q.VanityId), u => new Page { IsDeleted = true });
-
-                returnValue.IsError = false;
-                returnValue.Message = $"Selected items deleted at {DateTime.Now.ToString("T")}.";
-            }
-            catch
-            {
-                returnValue.IsError = true;
-                returnValue.Message = "An error has occurred while deleting the page";
-                throw;
-            }
-
-            return returnValue;
         }
 
         public override ReturnValue Delete(Guid id)
@@ -143,6 +124,47 @@ namespace CmsEngine.Services
             return Mapper.Map<Page, PageEditModel>(item);
         }
 
+        public override IEnumerable<IViewModel> Filter(string searchTerm, IEnumerable<IViewModel> listItems)
+        {
+            var items = (IEnumerable<PageViewModel>)listItems;
+
+            if (!string.IsNullOrWhiteSpace(searchTerm))
+            {
+                var searchableProperties = typeof(PageViewModel).GetProperties().Where(p => Attribute.IsDefined(p, typeof(Searchable)));
+
+                var lambda = this.PrepareFilter(searchTerm, searchableProperties);
+
+                // TODO: There must be a way to improve this
+                var tempItems = Mapper.Map<IEnumerable<PageViewModel>, IEnumerable<Page>>(items);
+                items = Mapper.Map<IEnumerable<Page>, IEnumerable<PageViewModel>>(tempItems.Where(lambda));
+            }
+
+            return items;
+        }
+
+        public override IEnumerable<IViewModel> Order(int orderColumn, string orderDirection, IEnumerable<IViewModel> listItems)
+        {
+            try
+            {
+                var listPages = Mapper.Map<IEnumerable<IViewModel>, IEnumerable<PageViewModel>>(listItems);
+
+                switch (orderColumn)
+                {
+                    case 1:
+                    case 0:
+                    default:
+                        listItems = orderDirection == "asc" ? listPages.OrderBy(o => o.Title) : listPages.OrderByDescending(o => o.Title);
+                        break;
+                }
+            }
+            catch
+            {
+                throw;
+            }
+
+            return listItems;
+        }
+
         protected override ReturnValue Delete(Page item)
         {
             var returnValue = new ReturnValue();
@@ -173,7 +195,7 @@ namespace CmsEngine.Services
             var page = new Page();
             editModel.MapTo(page);
 
-            page.Website = WebsiteInstance;
+            page.WebsiteId = WebsiteInstance.Id;
 
             if (page.IsNew)
             {
