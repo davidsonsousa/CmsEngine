@@ -195,7 +195,7 @@ namespace CmsEngine.Services
             var post = new Post();
             editModel.MapTo(post);
 
-            post.Website = WebsiteInstance;
+            post.WebsiteId = WebsiteInstance.Id;
 
             if (post.IsNew)
             {
