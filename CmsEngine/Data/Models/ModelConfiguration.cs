@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace CmsEngine.Data.Models
@@ -67,8 +67,8 @@ namespace CmsEngine.Data.Models
                 .HasMaxLength(150)
                 .IsRequired();
 
-            b.Property(model => model.DocumentContent)
-                .IsRequired();
+            //b.Property(model => model.DocumentContent)
+            //    .IsRequired();
 
             b.Property(model => model.Author)
                 .HasMaxLength(20)
@@ -115,8 +115,8 @@ namespace CmsEngine.Data.Models
                 .HasMaxLength(150)
                 .IsRequired();
 
-            b.Property(model => model.DocumentContent)
-                .IsRequired();
+            //b.Property(model => model.DocumentContent)
+            //    .IsRequired();
 
             b.Property(model => model.Author)
                 .HasMaxLength(20)
