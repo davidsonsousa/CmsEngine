@@ -12,9 +12,10 @@ using System;
 namespace CmsEngine.Migrations
 {
     [DbContext(typeof(CmsEngineContext))]
-    partial class CmsEngineContextModelSnapshot : ModelSnapshot
+    [Migration("20171119133922_DocumentContent_NotRequired")]
+    partial class DocumentContent_NotRequired
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
