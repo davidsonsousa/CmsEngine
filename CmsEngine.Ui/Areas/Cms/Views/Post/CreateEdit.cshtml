@@ -1,0 +1,102 @@
+@model CmsEngine.Data.EditModels.PostEditModel
+
+@section PageHead{
+  <environment names="Development">
+    <script src="~/js/vendors/tinymce/tinymce.min.js"></script>
+    <link rel="stylesheet" href="~/js/vendors/pc-bootstrap4-datetimepicker/build/css/bootstrap-datetimepicker.min.css" />
+  </environment>
+}
+
+@section Breadcrumb {
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="~/cms">Dashboard</a></li>
+    <li class="breadcrumb-item"><a href="~/cms/post">@ViewBag.PageTitle</a></li>
+    <li class="breadcrumb-item active">@ViewBag.PageType</li>
+  </ol>
+}
+
+<div class="row">
+  <div class="col-md-6">
+    <div class="card">
+      <div class="card-header">
+        <strong>@ViewBag.PanelTitle</strong>
+      </div>
+      <form asp-area="Cms" asp-controller="Post" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post" class="form-horizontal">
+        <div class="card-body">
+          @if (!Model.IsNew)
+          {
+              <input asp-for="Id" type="hidden" />
+          }
+
+          <div asp-validation-summary="All" class="text-danger"></div>
+          <div class="form-group row">
+            <label asp-for="Title" class="col-md-3 form-control-label"></label>
+            <div class="col-md-9">
+              <input asp-for="Title" class="form-control" />
+              <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label asp-for="Slug" class="col-md-3 form-control-label"></label>
+            <div class="col-md-9">
+              <input asp-for="Slug" class="form-control" />
+              <span asp-validation-for="Slug" class="text-danger"></span>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label asp-for="Description" class="col-md-3 form-control-label"></label>
+            <div class="col-md-9">
+              <input asp-for="Description" class="form-control" />
+              <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+          </div>
+          <div class="form-group row">
+            <div class="col-md-12">
+              <textarea asp-for="DocumentContent" class="form-control"></textarea>
+              <span asp-validation-for="DocumentContent" class="text-danger"></span>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label asp-for="Author" class="col-md-3 form-control-label"></label>
+            <div class="col-md-9">
+              <input asp-for="Author" class="form-control" />
+              <span asp-validation-for="Author" class="text-danger"></span>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label asp-for="Status" class="col-md-3 form-control-label"></label>
+            <div class="col-md-9">
+              <select asp-for="Status" asp-items="Html.GetEnumSelectList<DocumentStatus>()" class="form-control"></select>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label asp-for="PublishedOn" class="col-md-3 form-control-label"></label>
+            <div class="col-md-9">
+              @Html.EditorFor(m => m.PublishedOn, new { htmlAttributes = new { @class = "form-control", containerId = "published-on" } })
+              <span asp-validation-for="PublishedOn" class="text-danger"></span>
+            </div>
+          </div>
+        </div>
+        <div class="card-footer">
+          <button type="submit" class="btn btn-primary"><i class="fa fa-dot-circle-o"></i> Save</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+@section scripts{
+  @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+
+  <environment names="Development">
+    <script src="~/js/vendors/moment.min.js"></script>
+    <script src="~/js/vendors/pc-bootstrap4-datetimepicker/build/js/bootstrap-datetimepicker.min.js"></script>
+  </environment>
+
+  <script>
+    $(function () {
+      CmsEngine.Configure.DateTimePicker('#published-on');
+      tinymce.init({ selector: 'textarea' });
+    });
+  </script>
+}
