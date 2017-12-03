@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace CmsEngine.Attributes
 {
@@ -6,7 +6,7 @@ namespace CmsEngine.Attributes
     /// Enables the property to be searchable in the Search functionality
     /// </summary>
     [AttributeUsage(AttributeTargets.Property)]
-    public class Searchable : Attribute
+    public sealed class Searchable : Attribute
     {
 
     }

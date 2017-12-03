@@ -13,7 +13,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace CmsEngine.Services
 {
-    public class CategoryService : BaseService<Category>
+    public sealed class CategoryService : BaseService<Category>
     {
         public CategoryService(IUnitOfWork uow, IMapper mapper, IHttpContextAccessor hca) : base(uow, mapper, hca)
         {

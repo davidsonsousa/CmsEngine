@@ -13,7 +13,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace CmsEngine.Services
 {
-    public class PostService : BaseService<Post>
+    public sealed class PostService : BaseService<Post>
     {
         public PostService(IUnitOfWork uow, IMapper mapper, IHttpContextAccessor hca) : base(uow, mapper, hca)
         {

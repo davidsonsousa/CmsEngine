@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace CmsEngine.Data.AccessLayer
 {
-    public class EfRepository<T> : IRepository<T> where T : class
+    internal class EfRepository<T> : IRepository<T> where T : class
     {
         private readonly CmsEngineContext _context;
         private readonly DbSet<T> _dbSet;

@@ -13,7 +13,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace CmsEngine.Services
 {
-    public class TagService : BaseService<Tag>
+    public sealed class TagService : BaseService<Tag>
     {
         public TagService(IUnitOfWork uow, IMapper mapper, IHttpContextAccessor hca) : base(uow, mapper, hca)
         {

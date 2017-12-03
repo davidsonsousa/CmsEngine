@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace CmsEngine.Services
 {
-    public class WebsiteService : BaseService<Website>
+    public sealed class WebsiteService : BaseService<Website>
     {
         public WebsiteService(IUnitOfWork uow, IMapper mapper, IHttpContextAccessor hca) : base(uow, mapper, hca)
         {
