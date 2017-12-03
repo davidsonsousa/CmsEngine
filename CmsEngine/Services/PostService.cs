@@ -121,7 +121,10 @@ namespace CmsEngine.Services
         public override IEditModel SetupEditModel(Guid id)
         {
             var item = this.GetItemById(id);
-            return Mapper.Map<Post, PostEditModel>(item);
+            var editModel = Mapper.Map<Post, PostEditModel>(item);
+            editModel.Categories = this.GetCheckboxListCategory();
+
+            return editModel;
         }
 
         public override IEnumerable<IViewModel> Filter(string searchTerm, IEnumerable<IViewModel> listItems)

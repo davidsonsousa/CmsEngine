@@ -271,6 +271,25 @@ namespace CmsEngine.Services
 
         protected abstract void PrepareForSaving(IEditModel editModel);
 
+        protected IEnumerable<CheckboxEditModel> GetCheckboxListCategory()
+        {
+            var categoryRepository = UnitOfWork.GetRepository<Category>();
+            var categoryList = categoryRepository.GetReadOnly(q => q.IsDeleted == false);
+            var checkBoxList = new List<CheckboxEditModel>();
+
+            foreach (var category in categoryList)
+            {
+                checkBoxList.Add(new CheckboxEditModel
+                {
+                    Label = category.Name,
+                    Value = category.VanityId.ToString(),
+                    Enabled = true
+                });
+            }
+
+            return checkBoxList;
+        }
+
         #endregion
     }
 }
