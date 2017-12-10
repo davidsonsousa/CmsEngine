@@ -28,6 +28,8 @@ namespace CmsEngine.Data.EditModels
 
         public IEnumerable<CheckboxEditModel> Categories { get; set; }
 
+        public IEnumerable<string> SelectedCategories { get; set; }
+
         public DocumentStatus Status { get; set; }
 
         [Required]
