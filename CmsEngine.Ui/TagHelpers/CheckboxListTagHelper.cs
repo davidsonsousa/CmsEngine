@@ -7,10 +7,29 @@ namespace CmsEngine.Ui.TagHelpers
 {
     public class CheckboxListTagHelper : TagHelper
     {
+        /// <summary>
+        /// Checkbox name, used to group all checkboxes in the list
+        /// </summary>
+        public string Name { get; set; }
+        /// <summary>
+        /// Class to be assigned to the outer <div> container
+        /// </summary>
         public string OuterContainerClass { get; set; }
+        /// <summary>
+        /// Class to be assigned to the inner <div> container
+        /// </summary>
         public string InnerContainerClass { get; set; }
+        /// <summary>
+        /// Class to be assigned to the <label>
+        /// </summary>
         public string LabelClass { get; set; }
+        /// <summary>
+        /// Class to be assigned to the <checkbox>
+        /// </summary>
         public string InputClass { get; set; }
+        /// <summary>
+        /// Items to appear in the checkbox list
+        /// </summary>
         public IEnumerable<CheckboxEditModel> Items { get; set; }
 
         public override void Process(TagHelperContext context, TagHelperOutput output)
@@ -37,7 +56,7 @@ namespace CmsEngine.Ui.TagHelpers
                 isEnabled = item.Enabled ? "" : " disabled";
                 sb.Append($"<div{InnerContainerClass}{isEnabled}>");
                 sb.Append($"<label{LabelClass}>");
-                sb.Append($"<input type=\"checkbox\" id=\"{item.Value}\" value=\"{item.Value}\"{InputClass}{isChecked}>{item.Label}");
+                sb.Append($"<input type=\"checkbox\" id=\"{item.Value}\" value=\"{item.Value}\" name=\"{Name}\"{InputClass}{isChecked}>{item.Label}");
                 sb.Append("</label></div>");
             }
 
