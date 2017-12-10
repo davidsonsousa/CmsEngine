@@ -1,15 +1,15 @@
-﻿using System;
+using System;
+using CmsEngine.Data.Models;
 
 namespace CmsEngine.Data.AccessLayer
 {
     public interface IUnitOfWork : IDisposable
     {
-        /// <summary>
-        /// Gets a repository according to the type
-        /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
-        /// <returns></returns>
-        IRepository<TEntity> GetRepository<TEntity>() where TEntity : class;
+        IRepository<Category> Categories { get; }
+        IRepository<Page> Pages { get; }
+        IRepository<Post> Posts { get; }
+        IRepository<Tag> Tags { get; }
+        IRepository<Website> Websites { get; }
 
         /// <summary>
         /// Saves all pending changes into the database

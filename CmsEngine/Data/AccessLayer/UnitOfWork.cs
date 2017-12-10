@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using CmsEngine.Data.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace CmsEngine.Data.AccessLayer
@@ -11,23 +12,18 @@ namespace CmsEngine.Data.AccessLayer
         private Dictionary<Type, object> _repositories;
         private bool _disposed;
 
+        public IRepository<Category> Categories { get { return this.GetRepository<Category>(); } }
+        public IRepository<Page> Pages { get { return this.GetRepository<Page>(); } }
+        public IRepository<Post> Posts { get { return this.GetRepository<Post>(); } }
+        public IRepository<Tag> Tags { get { return this.GetRepository<Tag>(); } }
+        public IRepository<Website> Websites { get { return this.GetRepository<Website>(); } }
+
         public UnitOfWork(CmsEngineContext context)
         {
             _ctx = context;
 
             _repositories = new Dictionary<Type, object>();
             _disposed = false;
-        }
-
-        public IRepository<TEntity> GetRepository<TEntity>() where TEntity : class
-        {
-            if (_repositories.Keys.Contains(typeof(TEntity)))
-                return _repositories[typeof(TEntity)] as IRepository<TEntity>;
-
-            // TODO: Make it flexible so it accepts other types of repository (example: ADO.NET, XML, JSON, etc.)
-            var repository = new EfRepository<TEntity>(_ctx);
-            _repositories.Add(typeof(TEntity), repository);
-            return repository;
         }
 
         public void Save()
@@ -63,6 +59,23 @@ namespace CmsEngine.Data.AccessLayer
             }
         }
 
+        #region Helpers
+
+        private IRepository<TEntity> GetRepository<TEntity>() where TEntity : class
+        {
+            if (_repositories.Keys.Contains(typeof(TEntity)))
+                return _repositories[typeof(TEntity)] as IRepository<TEntity>;
+
+            // TODO: Make it flexible so it accepts other types of repository (example: ADO.NET, XML, JSON, etc.)
+            var repository = new EfRepository<TEntity>(_ctx);
+            _repositories.Add(typeof(TEntity), repository);
+            return repository;
+        }
+
+        #endregion
+
+        #region Dispose
+
         protected virtual void Dispose(bool disposing)
         {
             if (!_disposed)
@@ -80,5 +93,7 @@ namespace CmsEngine.Data.AccessLayer
             Dispose(true);
             GC.SuppressFinalize(this);
         }
+
+        #endregion
     }
 }
