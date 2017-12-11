@@ -3,8 +3,8 @@ using System.Threading.Tasks;
 using AutoMapper;
 using CmsEngine.Data.AccessLayer;
 using CmsEngine.Data.EditModels;
+using CmsEngine.Data.Models;
 using CmsEngine.Data.ViewModels;
-using CmsEngine.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,24 +13,19 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
     [Area("Cms")]
     public class PageController : BaseController
     {
-        private readonly PageService pageService;
-
-        public PageController(IUnitOfWork uow, IMapper mapper, IHttpContextAccessor hca)
-        {
-            pageService = new PageService(uow, mapper, hca);
-        }
+        public PageController(IUnitOfWork uow, IMapper mapper, IHttpContextAccessor hca) : base(uow, mapper, hca) { }
 
         public IActionResult Index()
         {
             this.SetupMessages("Pages", PageType.List, panelTitle: "List of pages");
-            //var pageViewModel = pageService.SetupViewModel();
+            //var pageViewModel = service.SetupViewModel();
             return View("List");
         }
 
         public IActionResult Create()
         {
             this.SetupMessages("Page", PageType.Create, panelTitle: "Create a new page");
-            var pageEditModel = pageService.SetupEditModel();
+            var pageEditModel = service.SetupPageEditModel();
 
             return View("CreateEdit", pageEditModel);
         }
@@ -51,7 +46,7 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
         public IActionResult Edit(Guid vanityId)
         {
             this.SetupMessages("Pages", PageType.Edit, panelTitle: "Edit an existing page");
-            var pageViewModel = pageService.SetupEditModel(vanityId);
+            var pageViewModel = service.SetupPageEditModel(vanityId);
 
             return View("CreateEdit", pageViewModel);
         }
@@ -66,7 +61,7 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
                 return View("CreateEdit", pageEditModel);
             }
 
-            var pageToUpdate = (PageEditModel)pageService.SetupEditModel(pageEditModel.VanityId);
+            var pageToUpdate = (PageEditModel)service.SetupPageEditModel(pageEditModel.VanityId);
 
             if (await TryUpdateModelAsync(pageToUpdate))
             {
@@ -79,22 +74,22 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
         [HttpPost]
         public IActionResult Delete(Guid vanityId)
         {
-            return Ok(pageService.Delete(vanityId));
+            return Ok(service.DeletePage(vanityId));
         }
 
         [HttpPost("cms/page/bulk-delete")]
         public IActionResult BulkDelete([FromForm]Guid[] vanityId)
         {
-            return Ok(pageService.BulkDelete(vanityId));
+            return Ok(service.BulkDelete<Page>(vanityId));
         }
 
         [HttpPost]
         public IActionResult GetData([FromForm]DataTableParameters parameters)
         {
-            var filteredItems = pageService.Filter(parameters.Search.Value, pageService.GetAllReadOnly());
-            var orderedItems = pageService.Order(parameters.Order[0].Column, parameters.Order[0].Dir, filteredItems);
+            var filteredItems = service.FilterPage(parameters.Search.Value, service.GetAllPagesReadOnly());
+            var orderedItems = service.OrderPage(parameters.Order[0].Column, parameters.Order[0].Dir, filteredItems);
 
-            var dataTable = pageService.BuildDataTable(orderedItems);
+            var dataTable = service.BuildDataTable<Page>(orderedItems);
             dataTable.Draw = parameters.Draw;
 
             return Ok(dataTable);
@@ -104,7 +99,7 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
 
         private IActionResult Save(PageEditModel pageEditModel)
         {
-            var returnValue = pageService.Save(pageEditModel);
+            var returnValue = service.SavePage(pageEditModel);
 
             if (!returnValue.IsError)
             {

@@ -3,8 +3,8 @@ using System.Threading.Tasks;
 using AutoMapper;
 using CmsEngine.Data.AccessLayer;
 using CmsEngine.Data.EditModels;
+using CmsEngine.Data.Models;
 using CmsEngine.Data.ViewModels;
-using CmsEngine.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,24 +13,19 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
     [Area("Cms")]
     public class PostController : BaseController
     {
-        private readonly PostService postService;
-
-        public PostController(IUnitOfWork uow, IMapper mapper, IHttpContextAccessor hca)
-        {
-            postService = new PostService(uow, mapper, hca);
-        }
+        public PostController(IUnitOfWork uow, IMapper mapper, IHttpContextAccessor hca) : base(uow, mapper, hca) { }
 
         public IActionResult Index()
         {
             this.SetupMessages("Posts", PageType.List, panelTitle: "List of posts");
-            //var postViewModel = postService.SetupViewModel();
+            //var postViewModel = service.SetupViewModel();
             return View("List");
         }
 
         public IActionResult Create()
         {
             this.SetupMessages("Post", PageType.Create, panelTitle: "Create a new post");
-            var postEditModel = postService.SetupEditModel();
+            var postEditModel = service.SetupPostEditModel();
 
             return View("CreateEdit", postEditModel);
         }
@@ -51,7 +46,7 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
         public IActionResult Edit(Guid vanityId)
         {
             this.SetupMessages("Posts", PageType.Edit, panelTitle: "Edit an existing post");
-            var postViewModel = postService.SetupEditModel(vanityId);
+            var postViewModel = service.SetupPostEditModel(vanityId);
 
             return View("CreateEdit", postViewModel);
         }
@@ -66,7 +61,7 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
                 return View("CreateEdit", postEditModel);
             }
 
-            var postToUpdate = (PostEditModel)postService.SetupEditModel(postEditModel.VanityId);
+            var postToUpdate = (PostEditModel)service.SetupPostEditModel(postEditModel.VanityId);
 
             if (await TryUpdateModelAsync(postToUpdate))
             {
@@ -79,22 +74,22 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
         [HttpPost]
         public IActionResult Delete(Guid vanityId)
         {
-            return Ok(postService.Delete(vanityId));
+            return Ok(service.DeletePost(vanityId));
         }
 
         [HttpPost("cms/post/bulk-delete")]
         public IActionResult BulkDelete([FromForm]Guid[] vanityId)
         {
-            return Ok(postService.BulkDelete(vanityId));
+            return Ok(service.BulkDelete<Post>(vanityId));
         }
 
         [HttpPost]
         public IActionResult GetData([FromForm]DataTableParameters parameters)
         {
-            var filteredItems = postService.Filter(parameters.Search.Value, postService.GetAllReadOnly());
-            var orderedItems = postService.Order(parameters.Order[0].Column, parameters.Order[0].Dir, filteredItems);
+            var filteredItems = service.FilterPost(parameters.Search.Value, service.GetAllPostsReadOnly());
+            var orderedItems = service.OrderPost(parameters.Order[0].Column, parameters.Order[0].Dir, filteredItems);
 
-            var dataTable = postService.BuildDataTable(orderedItems);
+            var dataTable = service.BuildDataTable<Post>(orderedItems);
             dataTable.Draw = parameters.Draw;
 
             return Ok(dataTable);
@@ -104,7 +99,7 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
 
         private IActionResult Save(PostEditModel postEditModel)
         {
-            var returnValue = postService.Save(postEditModel);
+            var returnValue = service.SavePost(postEditModel);
 
             if (!returnValue.IsError)
             {

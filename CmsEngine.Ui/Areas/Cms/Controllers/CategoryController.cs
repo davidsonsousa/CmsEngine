@@ -3,8 +3,8 @@ using System.Threading.Tasks;
 using AutoMapper;
 using CmsEngine.Data.AccessLayer;
 using CmsEngine.Data.EditModels;
+using CmsEngine.Data.Models;
 using CmsEngine.Data.ViewModels;
-using CmsEngine.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,24 +13,19 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
     [Area("Cms")]
     public class CategoryController : BaseController
     {
-        private readonly CategoryService categoryService;
-
-        public CategoryController(IUnitOfWork uow, IMapper mapper, IHttpContextAccessor hca)
-        {
-            categoryService = new CategoryService(uow, mapper, hca);
-        }
+        public CategoryController(IUnitOfWork uow, IMapper mapper, IHttpContextAccessor hca) : base(uow, mapper, hca) { }
 
         public IActionResult Index()
         {
             this.SetupMessages("Categories", PageType.List, panelTitle: "List of categories");
-            //var categoryViewModel = categoryService.SetupViewModel();
+            //var categoryViewModel = service.SetupViewModel();
             return View("List");
         }
 
         public IActionResult Create()
         {
             this.SetupMessages("Category", PageType.Create, panelTitle: "Create a new category");
-            var categoryEditModel = categoryService.SetupEditModel();
+            var categoryEditModel = service.SetupCategoryEditModel();
 
             return View("CreateEdit", categoryEditModel);
         }
@@ -51,7 +46,7 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
         public IActionResult Edit(Guid vanityId)
         {
             this.SetupMessages("Categories", PageType.Edit, panelTitle: "Edit an existing category");
-            var categoryViewModel = categoryService.SetupEditModel(vanityId);
+            var categoryViewModel = service.SetupCategoryEditModel(vanityId);
 
             return View("CreateEdit", categoryViewModel);
         }
@@ -66,7 +61,7 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
                 return View("CreateEdit", categoryEditModel);
             }
 
-            var categoryToUpdate = (CategoryEditModel)categoryService.SetupEditModel(categoryEditModel.VanityId);
+            var categoryToUpdate = (CategoryEditModel)service.SetupCategoryEditModel(categoryEditModel.VanityId);
 
             if (await TryUpdateModelAsync(categoryToUpdate))
             {
@@ -79,22 +74,22 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
         [HttpPost]
         public IActionResult Delete(Guid vanityId)
         {
-            return Ok(categoryService.Delete(vanityId));
+            return Ok(service.DeleteCategory(vanityId));
         }
 
         [HttpPost("cms/category/bulk-delete")]
         public IActionResult BulkDelete([FromForm]Guid[] vanityId)
         {
-            return Ok(categoryService.BulkDelete(vanityId));
+            return Ok(service.BulkDelete<Category>(vanityId));
         }
 
         [HttpPost]
         public IActionResult GetData([FromForm]DataTableParameters parameters)
         {
-            var filteredItems = categoryService.Filter(parameters.Search.Value, categoryService.GetAllReadOnly());
-            var orderedItems = categoryService.Order(parameters.Order[0].Column, parameters.Order[0].Dir, filteredItems);
+            var filteredItems = service.FilterCategory(parameters.Search.Value, service.GetAllCategoriesReadOnly());
+            var orderedItems = service.OrderCategory(parameters.Order[0].Column, parameters.Order[0].Dir, filteredItems);
 
-            var dataTable = categoryService.BuildDataTable(orderedItems);
+            var dataTable = service.BuildDataTable<Category>(orderedItems);
             dataTable.Draw = parameters.Draw;
 
             return Ok(dataTable);
@@ -104,7 +99,7 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
 
         private IActionResult Save(CategoryEditModel categoryEditModel)
         {
-            var returnValue = categoryService.Save(categoryEditModel);
+            var returnValue = service.SaveCategory(categoryEditModel);
 
             if (!returnValue.IsError)
             {
