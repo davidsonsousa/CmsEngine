@@ -3,29 +3,24 @@ using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
 using CmsEngine.Attributes;
-using CmsEngine.Data.AccessLayer;
 using CmsEngine.Data.EditModels;
 using CmsEngine.Data.Models;
 using CmsEngine.Data.ViewModels;
-using CmsEngine.Extensions;
 using CmsEngine.Utils;
-using Microsoft.AspNetCore.Http;
 
-namespace CmsEngine.Services
+namespace CmsEngine
 {
-    public sealed class PageService : BaseService<Page>
+    public sealed partial class CmsService
     {
-        public PageService(IUnitOfWork uow, IMapper mapper, IHttpContextAccessor hca) : base(uow, mapper, hca)
-        {
-        }
+        #region Get
 
-        public override IEnumerable<IViewModel> GetAllReadOnly()
+        public IEnumerable<IViewModel> GetAllPagesReadOnly()
         {
             IEnumerable<Page> listItems;
 
             try
             {
-                listItems = Repository.GetReadOnly(q => q.IsDeleted == false);
+                listItems = _unitOfWork.Pages.GetReadOnly(q => q.IsDeleted == false);
             }
             catch
             {
@@ -35,96 +30,131 @@ namespace CmsEngine.Services
             return Mapper.Map<IEnumerable<Page>, IEnumerable<PageViewModel>>(listItems);
         }
 
-        public override IViewModel GetById(int id)
+        public IViewModel GetPageById(int id)
         {
-            var item = this.GetItemById(id);
+            var item = this.GetById<Page>(id);
             return Mapper.Map<Page, PageViewModel>(item);
         }
 
-        public override IViewModel GetById(Guid id)
+        public IViewModel GetPageById(Guid id)
         {
-            var item = this.GetItemById(id);
+            var item = this.GetById<Page>(id);
             return Mapper.Map<Page, PageViewModel>(item);
         }
 
-        public override ReturnValue Delete(Guid id)
-        {
-            var returnValue = new ReturnValue();
-            try
-            {
-                var page = this.GetAll().Where(q => q.VanityId == id).FirstOrDefault();
-                returnValue = this.Delete(page);
-            }
-            catch
-            {
-                returnValue.IsError = true;
-                returnValue.Message = "An error has occurred while deleting the page";
-                throw;
-            }
+        #endregion
 
-            return returnValue;
-        }
+        #region Setup
 
-        public override ReturnValue Delete(int id)
-        {
-            var returnValue = new ReturnValue();
-            try
-            {
-                var page = this.GetAll().Where(q => q.Id == id).FirstOrDefault();
-                returnValue = this.Delete(page);
-            }
-            catch
-            {
-                returnValue.IsError = true;
-                returnValue.Message = "An error has occurred while deleting the page";
-                throw;
-            }
-
-            return returnValue;
-        }
-
-        public override ReturnValue Save(IEditModel editModel)
-        {
-            var returnValue = new ReturnValue
-            {
-                IsError = false,
-                Message = $"Page '{((PageEditModel)editModel).Title}' saved at {DateTime.Now.ToString("T")}."
-            };
-
-            try
-            {
-                PrepareForSaving(editModel);
-
-                UnitOfWork.Save();
-            }
-            catch
-            {
-                returnValue.IsError = true;
-                returnValue.Message = "An error has occurred while saving the page";
-                throw;
-            }
-
-            return returnValue;
-        }
-
-        public override IEditModel SetupEditModel()
+        public IEditModel SetupPageEditModel()
         {
             return new PageEditModel();
         }
 
-        public override IEditModel SetupEditModel(int id)
+        public IEditModel SetupPageEditModel(int id)
         {
-            var item = this.GetItemById(id);
+            var item = this.GetById<Page>(id);
             return Mapper.Map<Page, PageEditModel>(item);
         }
 
-        public override IEditModel SetupEditModel(Guid id)
+        public IEditModel SetupPageEditModel(Guid id)
         {
-            var item = this.GetItemById(id);
+            var item = this.GetById<Page>(id);
             return Mapper.Map<Page, PageEditModel>(item);
         }
 
-        public override IEnumerable<IViewModel> Filter(string searchTerm, IEnumerable<IViewModel> listItems)
+        #endregion
+
+        #region Save
+
+        public ReturnValue SavePage(IEditModel editModel)
+        {
+            var returnValue = new ReturnValue
+            {
+                IsError = false,
+                Message = $"Page '{((PageEditModel)editModel).Title}' saved at {DateTime.Now.ToString("T")}"
+            };
+
+            try
+            {
+                PreparePageForSaving(editModel);
+
+                _unitOfWork.Save();
+            }
+            catch (Exception ex)
+            {
+                returnValue.IsError = true;
+                returnValue.Message = "An error has occurred while saving the page";
+                returnValue.Exception = ex.Message;
+                throw;
+            }
+
+            return returnValue;
+        }
+
+        #endregion
+
+        #region Delete
+
+        public ReturnValue DeletePage(Guid id)
+        {
+            var returnValue = new ReturnValue();
+            try
+            {
+                var page = this.GetAll<Page>().Where(q => q.VanityId == id).FirstOrDefault();
+                returnValue = this.Delete(page);
+
+                if (!returnValue.IsError)
+                {
+                    returnValue.Message = $"Page '{page.Title}' deleted at {DateTime.Now.ToString("T")}.";
+                }
+                else
+                {
+                    returnValue.Message = "An error has occurred while deleting the page";
+                }
+            }
+            catch
+            {
+                returnValue.IsError = true;
+                returnValue.Message = "An error has occurred while deleting the page";
+                throw;
+            }
+
+            return returnValue;
+        }
+
+        public ReturnValue DeletePage(int id)
+        {
+            var returnValue = new ReturnValue();
+            try
+            {
+                var page = this.GetAll<Page>().Where(q => q.Id == id).FirstOrDefault();
+                returnValue = this.Delete(page);
+
+                if (!returnValue.IsError)
+                {
+                    returnValue.Message = $"Page '{page.Title}' deleted at {DateTime.Now.ToString("T")}.";
+                }
+                else
+                {
+                    returnValue.Message = "An error has occurred while deleting the page";
+                }
+            }
+            catch
+            {
+                returnValue.IsError = true;
+                returnValue.Message = "An error has occurred while deleting the page";
+                throw;
+            }
+
+            return returnValue;
+        }
+
+        #endregion
+
+        #region DataTable
+
+        public IEnumerable<IViewModel> FilterPage(string searchTerm, IEnumerable<IViewModel> listItems)
         {
             var items = (IEnumerable<PageViewModel>)listItems;
 
@@ -132,7 +162,7 @@ namespace CmsEngine.Services
             {
                 var searchableProperties = typeof(PageViewModel).GetProperties().Where(p => Attribute.IsDefined(p, typeof(Searchable)));
 
-                var lambda = this.PrepareFilter(searchTerm, searchableProperties);
+                var lambda = this.PrepareFilter<Page>(searchTerm, searchableProperties);
 
                 // TODO: There must be a way to improve this
                 var tempItems = Mapper.Map<IEnumerable<PageViewModel>, IEnumerable<Page>>(items);
@@ -142,7 +172,7 @@ namespace CmsEngine.Services
             return items;
         }
 
-        public override IEnumerable<IViewModel> Order(int orderColumn, string orderDirection, IEnumerable<IViewModel> listItems)
+        public IEnumerable<IViewModel> OrderPage(int orderColumn, string orderDirection, IEnumerable<IViewModel> listItems)
         {
             try
             {
@@ -163,48 +193,31 @@ namespace CmsEngine.Services
             }
 
             return listItems;
+
         }
 
-        protected override ReturnValue Delete(Page item)
+        #endregion
+
+        #region Helpers
+
+        private void PreparePageForSaving(IEditModel editModel)
         {
-            var returnValue = new ReturnValue();
-            try
+            Page page;
+
+            if (editModel.IsNew)
             {
-                if (item != null)
-                {
-                    item.IsDeleted = true;
-                    Repository.Update(item);
-                }
-
-                UnitOfWork.Save();
-                returnValue.IsError = false;
-                returnValue.Message = $"Page '{item.Title}' deleted at {DateTime.Now.ToString("T")}.";
-            }
-            catch
-            {
-                returnValue.IsError = true;
-                returnValue.Message = "An error has occurred while deleting the page";
-                throw;
-            }
-
-            return returnValue;
-        }
-
-        protected override void PrepareForSaving(IEditModel editModel)
-        {
-            var page = new Page();
-            editModel.MapTo(page);
-
-            page.WebsiteId = WebsiteInstance.Id;
-
-            if (page.IsNew)
-            {
-                Repository.Insert(page);
+                page = Mapper.Map<PageEditModel, Page>((PageEditModel)editModel);
+                _unitOfWork.Pages.Insert(page);
             }
             else
             {
-                Repository.Update(page);
+                page = this.GetById<Page>(editModel.VanityId);
+                Mapper.Map((PageEditModel)editModel, page);
+
+                _unitOfWork.Pages.Update(page);
             }
         }
+
+        #endregion
     }
 }
