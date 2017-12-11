@@ -26,6 +26,17 @@ namespace CmsEngine.Data.AccessLayer
             _disposed = false;
         }
 
+        public IRepository<TEntity> GetRepository<TEntity>() where TEntity : class
+        {
+            if (_repositories.Keys.Contains(typeof(TEntity)))
+                return _repositories[typeof(TEntity)] as IRepository<TEntity>;
+
+            // TODO: Make it flexible so it accepts other types of repository (example: ADO.NET, XML, JSON, etc.)
+            var repository = new EfRepository<TEntity>(_ctx);
+            _repositories.Add(typeof(TEntity), repository);
+            return repository;
+        }
+
         public void Save()
         {
             try
@@ -58,21 +69,6 @@ namespace CmsEngine.Data.AccessLayer
                 throw ex;
             }
         }
-
-        #region Helpers
-
-        private IRepository<TEntity> GetRepository<TEntity>() where TEntity : class
-        {
-            if (_repositories.Keys.Contains(typeof(TEntity)))
-                return _repositories[typeof(TEntity)] as IRepository<TEntity>;
-
-            // TODO: Make it flexible so it accepts other types of repository (example: ADO.NET, XML, JSON, etc.)
-            var repository = new EfRepository<TEntity>(_ctx);
-            _repositories.Add(typeof(TEntity), repository);
-            return repository;
-        }
-
-        #endregion
 
         #region Dispose
 

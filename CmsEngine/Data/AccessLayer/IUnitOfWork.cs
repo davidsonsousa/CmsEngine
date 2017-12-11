@@ -12,6 +12,13 @@ namespace CmsEngine.Data.AccessLayer
         IRepository<Website> Websites { get; }
 
         /// <summary>
+        /// Get repository according to the type
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <returns></returns>
+        IRepository<TEntity> GetRepository<TEntity>() where TEntity : class;
+
+        /// <summary>
         /// Saves all pending changes into the database
         /// </summary>
         void Save();
