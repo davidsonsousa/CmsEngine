@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using CmsEngine.Data.EditModels;
 using CmsEngine.Data.ViewModels;
-using CmsEngine.Services;
 using CmsEngine.Tests.Fixtures;
 using Xunit;
 
@@ -12,7 +11,7 @@ namespace CmsEngine.Tests.Core.Services
     public class PageServiceTest : IClassFixture<PageFixture>
     {
         private PageFixture pageFixture;
-        private PageService moqPageService;
+        private CmsService moqPageService;
 
         public PageServiceTest(PageFixture fixture)
         {
@@ -43,7 +42,7 @@ namespace CmsEngine.Tests.Core.Services
             var expectedResult = pageFixture.GetTestPages().Count;
 
             // Act
-            var response = (IEnumerable<PageViewModel>)moqPageService.GetAllReadOnly();
+            var response = (IEnumerable<PageViewModel>)moqPageService.GetAllPagesReadOnly();
 
             // Assert
             Assert.True(response is IEnumerable<PageViewModel>, "Response is not IEnumerable<PageViewModel>");
@@ -57,7 +56,7 @@ namespace CmsEngine.Tests.Core.Services
             var expectedResult = pageFixture.GetTestPages().FirstOrDefault(q => q.Id == 2).Title;
 
             // Act
-            var response = (PageViewModel)moqPageService.GetById(2);
+            var response = (PageViewModel)moqPageService.GetPageById(2);
 
             // Assert
             Assert.Equal(expectedResult, response.Title);
@@ -70,7 +69,7 @@ namespace CmsEngine.Tests.Core.Services
             var expectedResult = pageFixture.GetTestPages().FirstOrDefault(q => q.VanityId == new Guid("8633a850-128f-4425-a2ec-30e23826b7ff")).Title;
 
             // Act
-            var response = (PageViewModel)moqPageService.GetById(new Guid("8633a850-128f-4425-a2ec-30e23826b7ff"));
+            var response = (PageViewModel)moqPageService.GetPageById(new Guid("8633a850-128f-4425-a2ec-30e23826b7ff"));
 
             // Assert
             Assert.Equal(expectedResult, response.Title);
@@ -86,7 +85,7 @@ namespace CmsEngine.Tests.Core.Services
             // Arrange
 
             // Act
-            var response = (PageEditModel)moqPageService.SetupEditModel();
+            var response = (PageEditModel)moqPageService.SetupPageEditModel();
 
             // Assert
             Assert.NotNull(response);
@@ -100,10 +99,10 @@ namespace CmsEngine.Tests.Core.Services
             var expectedResult = pageFixture.GetTestPages().FirstOrDefault(q => q.Id == 2).Title;
 
             // Act
-            var response = (PageEditModel)moqPageService.SetupEditModel(2);
+            var response = (PageEditModel)moqPageService.SetupPageEditModel(2);
 
             // Assert
-            Assert.IsType(typeof(PageEditModel), response);
+            Assert.IsType<PageEditModel>(response);
             Assert.Equal(expectedResult, response.Title);
         }
 
@@ -114,10 +113,10 @@ namespace CmsEngine.Tests.Core.Services
             var expectedResult = pageFixture.GetTestPages().FirstOrDefault(q => q.VanityId == new Guid("8633a850-128f-4425-a2ec-30e23826b7ff")).Title;
 
             // Act
-            var response = (PageEditModel)moqPageService.SetupEditModel(new Guid("8633a850-128f-4425-a2ec-30e23826b7ff"));
+            var response = (PageEditModel)moqPageService.SetupPageEditModel(new Guid("8633a850-128f-4425-a2ec-30e23826b7ff"));
 
             // Assert
-            Assert.IsType(typeof(PageEditModel), response);
+            Assert.IsType<PageEditModel>(response);
             Assert.Equal(expectedResult, response.Title);
         }
 
@@ -136,7 +135,7 @@ namespace CmsEngine.Tests.Core.Services
                 Title = "Page3"
             };
 
-            var response = moqPageService.Save(pageEditModel);
+            var response = moqPageService.SavePage(pageEditModel);
 
             // Assert
             Assert.False(response.IsError, "Exception thrown");
@@ -148,7 +147,7 @@ namespace CmsEngine.Tests.Core.Services
             // Arrange
 
             // Act
-            var response = moqPageService.Delete(1);
+            var response = moqPageService.DeletePage(1);
 
             // Assert
             Assert.False(response.IsError, "Exception thrown");
@@ -160,7 +159,7 @@ namespace CmsEngine.Tests.Core.Services
             // Arrange
 
             // Act
-            var response = moqPageService.Delete(new Guid("8633a850-128f-4425-a2ec-30e23826b7ff"));
+            var response = moqPageService.DeletePage(new Guid("8633a850-128f-4425-a2ec-30e23826b7ff"));
 
             // Assert
             Assert.False(response.IsError, "Exception thrown");

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using CmsEngine.Data.EditModels;
 using CmsEngine.Data.ViewModels;
-using CmsEngine.Services;
 using CmsEngine.Tests.Fixtures;
 using Xunit;
 
@@ -12,7 +11,7 @@ namespace CmsEngine.Tests.Core.Services
     public class WebsiteServiceTest : IClassFixture<WebsiteFixture>
     {
         private WebsiteFixture websiteFixture;
-        private WebsiteService moqWebsiteService;
+        private CmsService moqWebsiteService;
 
         public WebsiteServiceTest(WebsiteFixture fixture)
         {
@@ -43,7 +42,7 @@ namespace CmsEngine.Tests.Core.Services
             var expectedResult = websiteFixture.GetTestWebsites().Count;
 
             // Act
-            var response = moqWebsiteService.GetAllReadOnly();
+            var response = moqWebsiteService.GetAllWebsitesReadOnly();
 
             // Assert
             Assert.True(response is IEnumerable<WebsiteViewModel>, "Response is not IEnumerable<WebsiteViewModel>");
@@ -57,7 +56,7 @@ namespace CmsEngine.Tests.Core.Services
             var expectedResult = websiteFixture.GetTestWebsites().FirstOrDefault(q => q.Id == 2).Name;
 
             // Act
-            var response = (WebsiteViewModel)moqWebsiteService.GetById(2);
+            var response = (WebsiteViewModel)moqWebsiteService.GetWebsiteById(2);
 
             // Assert
             Assert.Equal(expectedResult, response.Name);
@@ -70,7 +69,7 @@ namespace CmsEngine.Tests.Core.Services
             var expectedResult = websiteFixture.GetTestWebsites().FirstOrDefault(q => q.VanityId == new Guid("8633a850-128f-4425-a2ec-30e23826b7ff")).Name;
 
             // Act
-            var response = (WebsiteViewModel)moqWebsiteService.GetById(new Guid("8633a850-128f-4425-a2ec-30e23826b7ff"));
+            var response = (WebsiteViewModel)moqWebsiteService.GetWebsiteById(new Guid("8633a850-128f-4425-a2ec-30e23826b7ff"));
 
             // Assert
             Assert.Equal(expectedResult, response.Name);
@@ -86,7 +85,7 @@ namespace CmsEngine.Tests.Core.Services
             // Arrange
 
             // Act
-            var response = (WebsiteEditModel)moqWebsiteService.SetupEditModel();
+            var response = (WebsiteEditModel)moqWebsiteService.SetupWebsiteEditModel();
 
             // Assert
             Assert.NotNull(response);
@@ -100,10 +99,10 @@ namespace CmsEngine.Tests.Core.Services
             var expectedResult = websiteFixture.GetTestWebsites().FirstOrDefault(q => q.Id == 2).Name;
 
             // Act
-            var response = (WebsiteEditModel)moqWebsiteService.SetupEditModel(2);
+            var response = (WebsiteEditModel)moqWebsiteService.SetupWebsiteEditModel(2);
 
             // Assert
-            Assert.IsType(typeof(WebsiteEditModel), response);
+            Assert.IsType<WebsiteEditModel>(response);
             Assert.Equal(expectedResult, response.Name);
         }
 
@@ -114,10 +113,10 @@ namespace CmsEngine.Tests.Core.Services
             var expectedResult = websiteFixture.GetTestWebsites().FirstOrDefault(q => q.VanityId == new Guid("8633a850-128f-4425-a2ec-30e23826b7ff")).Name;
 
             // Act
-            var response = (WebsiteEditModel)moqWebsiteService.SetupEditModel(new Guid("8633a850-128f-4425-a2ec-30e23826b7ff"));
+            var response = (WebsiteEditModel)moqWebsiteService.SetupWebsiteEditModel(new Guid("8633a850-128f-4425-a2ec-30e23826b7ff"));
 
             // Assert
-            Assert.IsType(typeof(WebsiteEditModel), response);
+            Assert.IsType<WebsiteEditModel>(response);
             Assert.Equal(expectedResult, response.Name);
         }
 
@@ -137,7 +136,7 @@ namespace CmsEngine.Tests.Core.Services
                 Culture = "cs-cz"
             };
 
-            var response = moqWebsiteService.Save(websiteEditModel);
+            var response = moqWebsiteService.SaveWebsite(websiteEditModel);
 
             // Assert
             Assert.False(response.IsError, "Exception thrown");
@@ -149,7 +148,7 @@ namespace CmsEngine.Tests.Core.Services
             // Arrange
 
             // Act
-            var response = moqWebsiteService.Delete(1);
+            var response = moqWebsiteService.DeleteWebsite(1);
 
             // Assert
             Assert.False(response.IsError, "Exception thrown");
@@ -161,7 +160,7 @@ namespace CmsEngine.Tests.Core.Services
             // Arrange
 
             // Act
-            var response = moqWebsiteService.Delete(new Guid("8633a850-128f-4425-a2ec-30e23826b7ff"));
+            var response = moqWebsiteService.DeleteWebsite(new Guid("8633a850-128f-4425-a2ec-30e23826b7ff"));
 
             // Assert
             Assert.False(response.IsError, "Exception thrown");

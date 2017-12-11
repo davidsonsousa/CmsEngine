@@ -1,14 +1,13 @@
-﻿using AutoMapper;
-using CmsEngine.Data.AccessLayer;
-using CmsEngine.Data.EditModels;
-using CmsEngine.Data.Models;
-using CmsEngine.Data.ViewModels;
-using CmsEngine.Services;
-using Moq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using AutoMapper;
+using CmsEngine.Data.AccessLayer;
+using CmsEngine.Data.EditModels;
+using CmsEngine.Data.Models;
+using CmsEngine.Data.ViewModels;
+using Moq;
 
 namespace CmsEngine.Tests.Fixtures
 {
@@ -26,8 +25,8 @@ namespace CmsEngine.Tests.Fixtures
             get { return moqUnitOfWork; }
         }
 
-        private PostService service;
-        public PostService Service
+        private CmsService service;
+        public CmsService Service
         {
             get { return service; }
         }
@@ -38,13 +37,13 @@ namespace CmsEngine.Tests.Fixtures
             get { return moqMapper; }
         }
 
-        public PostFixture(): base()
+        public PostFixture() : base()
         {
             SetupRepository();
             SetupUnitOfWork();
             SetupMapper();
 
-            service = new PostService(moqUnitOfWork.Object, moqMapper.Object, MoqHttpContextAccessor.Object);
+            service = new CmsService(moqUnitOfWork.Object, moqMapper.Object, MoqHttpContextAccessor.Object);
         }
 
 

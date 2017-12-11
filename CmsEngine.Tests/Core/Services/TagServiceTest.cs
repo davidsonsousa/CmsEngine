@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using CmsEngine.Data.EditModels;
 using CmsEngine.Data.ViewModels;
-using CmsEngine.Services;
 using CmsEngine.Tests.Fixtures;
 using Xunit;
 
@@ -12,7 +11,7 @@ namespace CmsEngine.Test.Core.Services
     public class TagServiceTest : IClassFixture<TagFixture>
     {
         private TagFixture tagFixture;
-        private TagService moqTagService;
+        private CmsService moqTagService;
 
         public TagServiceTest(TagFixture fixture)
         {
@@ -43,7 +42,7 @@ namespace CmsEngine.Test.Core.Services
             var expectedResult = tagFixture.GetTestTags().Count;
 
             // Act
-            var response = (IEnumerable<TagViewModel>)moqTagService.GetAllReadOnly();
+            var response = (IEnumerable<TagViewModel>)moqTagService.GetAllTagsReadOnly();
 
             // Assert
             Assert.True(response is IEnumerable<TagViewModel>, "Response is not IEnumerable<TagViewModel>");
@@ -57,7 +56,7 @@ namespace CmsEngine.Test.Core.Services
             var expectedResult = tagFixture.GetTestTags().FirstOrDefault(q => q.Id == 2).Name;
 
             // Act
-            var response = (TagViewModel)moqTagService.GetById(2);
+            var response = (TagViewModel)moqTagService.GetTagById(2);
 
             // Assert
             Assert.Equal(expectedResult, response.Name);
@@ -70,7 +69,7 @@ namespace CmsEngine.Test.Core.Services
             var expectedResult = tagFixture.GetTestTags().FirstOrDefault(q => q.VanityId == new Guid("8633a850-128f-4425-a2ec-30e23826b7ff")).Name;
 
             // Act
-            var response = (TagViewModel)moqTagService.GetById(new Guid("8633a850-128f-4425-a2ec-30e23826b7ff"));
+            var response = (TagViewModel)moqTagService.GetTagById(new Guid("8633a850-128f-4425-a2ec-30e23826b7ff"));
 
             // Assert
             Assert.Equal(expectedResult, response.Name);
@@ -86,7 +85,7 @@ namespace CmsEngine.Test.Core.Services
             // Arrange
 
             // Act
-            var response = (TagEditModel)moqTagService.SetupEditModel();
+            var response = (TagEditModel)moqTagService.SetupTagEditModel();
 
             // Assert
             Assert.NotNull(response);
@@ -100,10 +99,10 @@ namespace CmsEngine.Test.Core.Services
             var expectedResult = tagFixture.GetTestTags().FirstOrDefault(q => q.Id == 2).Name;
 
             // Act
-            var response = (TagEditModel)moqTagService.SetupEditModel(2);
+            var response = (TagEditModel)moqTagService.SetupTagEditModel(2);
 
             // Assert
-            Assert.IsType(typeof(TagEditModel), response);
+            Assert.IsType<TagEditModel>(response);
             Assert.Equal(expectedResult, response.Name);
         }
 
@@ -114,10 +113,10 @@ namespace CmsEngine.Test.Core.Services
             var expectedResult = tagFixture.GetTestTags().FirstOrDefault(q => q.VanityId == new Guid("8633a850-128f-4425-a2ec-30e23826b7ff")).Name;
 
             // Act
-            var response = (TagEditModel)moqTagService.SetupEditModel(new Guid("8633a850-128f-4425-a2ec-30e23826b7ff"));
+            var response = (TagEditModel)moqTagService.SetupTagEditModel(new Guid("8633a850-128f-4425-a2ec-30e23826b7ff"));
 
             // Assert
-            Assert.IsType(typeof(TagEditModel), response);
+            Assert.IsType<TagEditModel>(response);
             Assert.Equal(expectedResult, response.Name);
         }
 
@@ -136,7 +135,7 @@ namespace CmsEngine.Test.Core.Services
                 Name = "Tag3"
             };
 
-            var response = moqTagService.Save(tagEditModel);
+            var response = moqTagService.SaveTag(tagEditModel);
 
             // Assert
             Assert.False(response.IsError, "Exception thrown");
@@ -148,7 +147,7 @@ namespace CmsEngine.Test.Core.Services
             // Arrange
 
             // Act
-            var response = moqTagService.Delete(1);
+            var response = moqTagService.DeleteTag(1);
 
             // Assert
             Assert.False(response.IsError, "Exception thrown");
@@ -160,7 +159,7 @@ namespace CmsEngine.Test.Core.Services
             // Arrange
 
             // Act
-            var response = moqTagService.Delete(new Guid("8633a850-128f-4425-a2ec-30e23826b7ff"));
+            var response = moqTagService.DeleteTag(new Guid("8633a850-128f-4425-a2ec-30e23826b7ff"));
 
             // Assert
             Assert.False(response.IsError, "Exception thrown");
