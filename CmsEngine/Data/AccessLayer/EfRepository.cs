@@ -24,16 +24,21 @@ namespace CmsEngine.Data.AccessLayer
             _dbSet = context.Set<T>();
         }
 
-        public IQueryable<T> Get(Expression<Func<T, bool>> filter = null)
+        public IQueryable<T> Get(Expression<Func<T, bool>> filter = null, string relatedTable = "")
         {
             IQueryable<T> query = _dbSet;
 
             if (filter != null)
             {
-                query = query.AsNoTracking().Where(filter);
+                query = query.Where(filter);
             }
 
-            return query;
+            if (!string.IsNullOrWhiteSpace(relatedTable))
+            {
+                query = query.Include(relatedTable);
+            }
+
+            return query.AsNoTracking();
         }
 
         public IEnumerable<T> GetReadOnly(Expression<Func<T, bool>> filter = null)
@@ -46,16 +51,6 @@ namespace CmsEngine.Data.AccessLayer
             }
 
             return query.AsNoTracking().ToList();
-        }
-
-        public IQueryable<T> Find(Expression<Func<T, bool>> where)
-        {
-            return _dbSet.Where(where);
-        }
-
-        public IQueryable<T> Find(Expression<Func<T, bool>> where, string include)
-        {
-            return _dbSet.Where(where).Include(include);
         }
 
         public void Insert(T entity)
