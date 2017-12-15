@@ -3,20 +3,19 @@ using System.Collections.Generic;
 using System.Linq;
 using CmsEngine.Data.EditModels;
 using CmsEngine.Data.ViewModels;
-using CmsEngine.Tests.Fixtures;
 using Xunit;
 
-namespace CmsEngine.Test.Core.Services
+namespace CmsEngine.Tests.Core.Services
 {
-    public class TagServiceTest : IClassFixture<TagFixture>
+    public class TagServiceTest : IClassFixture<TestFixture>
     {
-        private TagFixture tagFixture;
+        private TestFixture testFixture;
         private CmsService moqTagService;
 
-        public TagServiceTest(TagFixture fixture)
+        public TagServiceTest(TestFixture fixture)
         {
-            tagFixture = fixture;
-            moqTagService = tagFixture.Service;
+            testFixture = fixture;
+            moqTagService = testFixture.Service;
         }
 
         #region Get
@@ -25,7 +24,7 @@ namespace CmsEngine.Test.Core.Services
         //public void GetAll_ShouldReturnAllTagsAsQueryable()
         //{
         //    // Arrange
-        //    var expectedResult = tagFixture.GetTestTags().Count;
+        //    var expectedResult = testFixture.GetTestTags().Count;
 
         //    // Act
         //    var response = moqTagService.GetAll();
@@ -39,7 +38,7 @@ namespace CmsEngine.Test.Core.Services
         public void GetAllReadOnly_ShouldReturnAllTagsAsEnumerable()
         {
             // Arrange
-            var expectedResult = tagFixture.GetTestTags().Count;
+            var expectedResult = testFixture.GetTestTags().Count;
 
             // Act
             var response = (IEnumerable<TagViewModel>)moqTagService.GetAllTagsReadOnly();
@@ -53,7 +52,7 @@ namespace CmsEngine.Test.Core.Services
         public void GetById_ShouldReturnCorrectTag()
         {
             // Arrange
-            var expectedResult = tagFixture.GetTestTags().FirstOrDefault(q => q.Id == 2).Name;
+            var expectedResult = testFixture.GetTestTags().FirstOrDefault(q => q.Id == 2).Name;
 
             // Act
             var response = (TagViewModel)moqTagService.GetTagById(2);
@@ -66,7 +65,7 @@ namespace CmsEngine.Test.Core.Services
         public void GetByVanityId_ShouldReturnCorrectTag()
         {
             // Arrange
-            var expectedResult = tagFixture.GetTestTags().FirstOrDefault(q => q.VanityId == new Guid("8633a850-128f-4425-a2ec-30e23826b7ff")).Name;
+            var expectedResult = testFixture.GetTestTags().FirstOrDefault(q => q.VanityId == new Guid("8633a850-128f-4425-a2ec-30e23826b7ff")).Name;
 
             // Act
             var response = (TagViewModel)moqTagService.GetTagById(new Guid("8633a850-128f-4425-a2ec-30e23826b7ff"));
@@ -96,7 +95,7 @@ namespace CmsEngine.Test.Core.Services
         public void SetupEditModel_ById_ShouldReturnCorrectTag()
         {
             // Arrange
-            var expectedResult = tagFixture.GetTestTags().FirstOrDefault(q => q.Id == 2).Name;
+            var expectedResult = testFixture.GetTestTags().FirstOrDefault(q => q.Id == 2).Name;
 
             // Act
             var response = (TagEditModel)moqTagService.SetupTagEditModel(2);
@@ -110,7 +109,7 @@ namespace CmsEngine.Test.Core.Services
         public void SetupEditModel_ByVanityId_ShouldReturnCorrectTag()
         {
             // Arrange
-            var expectedResult = tagFixture.GetTestTags().FirstOrDefault(q => q.VanityId == new Guid("8633a850-128f-4425-a2ec-30e23826b7ff")).Name;
+            var expectedResult = testFixture.GetTestTags().FirstOrDefault(q => q.VanityId == new Guid("8633a850-128f-4425-a2ec-30e23826b7ff")).Name;
 
             // Act
             var response = (TagEditModel)moqTagService.SetupTagEditModel(new Guid("8633a850-128f-4425-a2ec-30e23826b7ff"));

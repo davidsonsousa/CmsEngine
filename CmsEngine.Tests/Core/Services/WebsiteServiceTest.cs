@@ -3,20 +3,19 @@ using System.Collections.Generic;
 using System.Linq;
 using CmsEngine.Data.EditModels;
 using CmsEngine.Data.ViewModels;
-using CmsEngine.Tests.Fixtures;
 using Xunit;
 
 namespace CmsEngine.Tests.Core.Services
 {
-    public class WebsiteServiceTest : IClassFixture<WebsiteFixture>
+    public class WebsiteServiceTest : IClassFixture<TestFixture>
     {
-        private WebsiteFixture websiteFixture;
+        private TestFixture testFixture;
         private CmsService moqWebsiteService;
 
-        public WebsiteServiceTest(WebsiteFixture fixture)
+        public WebsiteServiceTest(TestFixture fixture)
         {
-            websiteFixture = fixture;
-            moqWebsiteService = websiteFixture.Service;
+            testFixture = fixture;
+            moqWebsiteService = testFixture.Service;
         }
 
         #region Get
@@ -25,7 +24,7 @@ namespace CmsEngine.Tests.Core.Services
         //public void GetAll_ShouldReturnAllWebsitesAsQueryable()
         //{
         //    // Arrange
-        //    var expectedResult = websiteFixture.GetTestWebsites().Count;
+        //    var expectedResult = testFixture.GetTestWebsites().Count;
 
         //    // Act
         //    var response = moqWebsiteService.GetAll();
@@ -39,7 +38,7 @@ namespace CmsEngine.Tests.Core.Services
         public void GetAllReadOnly_ShouldReturnAllWebsitesAsEnumerable()
         {
             // Arrange
-            var expectedResult = websiteFixture.GetTestWebsites().Count;
+            var expectedResult = testFixture.GetTestWebsites().Count;
 
             // Act
             var response = moqWebsiteService.GetAllWebsitesReadOnly();
@@ -53,7 +52,7 @@ namespace CmsEngine.Tests.Core.Services
         public void GetById_ShouldReturnCorrectWebsite()
         {
             // Arrange
-            var expectedResult = websiteFixture.GetTestWebsites().FirstOrDefault(q => q.Id == 2).Name;
+            var expectedResult = testFixture.GetTestWebsites().FirstOrDefault(q => q.Id == 2).Name;
 
             // Act
             var response = (WebsiteViewModel)moqWebsiteService.GetWebsiteById(2);
@@ -66,7 +65,7 @@ namespace CmsEngine.Tests.Core.Services
         public void GetByVanityId_ShouldReturnCorrectWebsite()
         {
             // Arrange
-            var expectedResult = websiteFixture.GetTestWebsites().FirstOrDefault(q => q.VanityId == new Guid("8633a850-128f-4425-a2ec-30e23826b7ff")).Name;
+            var expectedResult = testFixture.GetTestWebsites().FirstOrDefault(q => q.VanityId == new Guid("8633a850-128f-4425-a2ec-30e23826b7ff")).Name;
 
             // Act
             var response = (WebsiteViewModel)moqWebsiteService.GetWebsiteById(new Guid("8633a850-128f-4425-a2ec-30e23826b7ff"));
@@ -96,7 +95,7 @@ namespace CmsEngine.Tests.Core.Services
         public void SetupEditModel_ById_ShouldReturnCorrectWebsite()
         {
             // Arrange
-            var expectedResult = websiteFixture.GetTestWebsites().FirstOrDefault(q => q.Id == 2).Name;
+            var expectedResult = testFixture.GetTestWebsites().FirstOrDefault(q => q.Id == 2).Name;
 
             // Act
             var response = (WebsiteEditModel)moqWebsiteService.SetupWebsiteEditModel(2);
@@ -110,7 +109,7 @@ namespace CmsEngine.Tests.Core.Services
         public void SetupEditModel_ByVanityId_ShouldReturnCorrectWebsite()
         {
             // Arrange
-            var expectedResult = websiteFixture.GetTestWebsites().FirstOrDefault(q => q.VanityId == new Guid("8633a850-128f-4425-a2ec-30e23826b7ff")).Name;
+            var expectedResult = testFixture.GetTestWebsites().FirstOrDefault(q => q.VanityId == new Guid("8633a850-128f-4425-a2ec-30e23826b7ff")).Name;
 
             // Act
             var response = (WebsiteEditModel)moqWebsiteService.SetupWebsiteEditModel(new Guid("8633a850-128f-4425-a2ec-30e23826b7ff"));

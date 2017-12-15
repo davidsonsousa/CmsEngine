@@ -3,20 +3,19 @@ using System.Collections.Generic;
 using System.Linq;
 using CmsEngine.Data.EditModels;
 using CmsEngine.Data.ViewModels;
-using CmsEngine.Tests.Fixtures;
 using Xunit;
 
-namespace CmsEngine.Test.Core.Services
+namespace CmsEngine.Tests.Core.Services
 {
-    public class CategoryServiceTest : IClassFixture<CategoryFixture>
+    public class CategoryServiceTest : IClassFixture<TestFixture>
     {
-        private CategoryFixture categoryFixture;
+        private TestFixture testFixture;
         private CmsService moqCategoryService;
 
-        public CategoryServiceTest(CategoryFixture fixture)
+        public CategoryServiceTest(TestFixture fixture)
         {
-            categoryFixture = fixture;
-            moqCategoryService = categoryFixture.Service;
+            testFixture = fixture;
+            moqCategoryService = testFixture.Service;
         }
 
         #region Get
@@ -25,7 +24,7 @@ namespace CmsEngine.Test.Core.Services
         //public void GetAll_ShouldReturnAllCategoriesAsQueryable()
         //{
         //    // Arrange
-        //    var expectedResult = categoryFixture.GetTestCategories().Count;
+        //    var expectedResult = testFixture.GetTestCategories().Count;
 
         //    // Act
         //    var response = moqCategoryService.GetAll();
@@ -39,7 +38,7 @@ namespace CmsEngine.Test.Core.Services
         public void GetAllReadOnly_ShouldReturnAllCategoriesAsEnumerable()
         {
             // Arrange
-            var expectedResult = categoryFixture.GetTestCategories().Count;
+            var expectedResult = testFixture.GetTestCategories().Count;
 
             // Act
             var response = (IEnumerable<CategoryViewModel>)moqCategoryService.GetAllCategoriesReadOnly();
@@ -53,7 +52,7 @@ namespace CmsEngine.Test.Core.Services
         public void GetById_ShouldReturnCorrectCategory()
         {
             // Arrange
-            var expectedResult = categoryFixture.GetTestCategories().FirstOrDefault(q => q.Id == 2).Name;
+            var expectedResult = testFixture.GetTestCategories().FirstOrDefault(q => q.Id == 2).Name;
 
             // Act
             var response = (CategoryViewModel)moqCategoryService.GetCategoryById(2);
@@ -66,7 +65,7 @@ namespace CmsEngine.Test.Core.Services
         public void GetByVanityId_ShouldReturnCorrectCategory()
         {
             // Arrange
-            var expectedResult = categoryFixture.GetTestCategories().FirstOrDefault(q => q.VanityId == new Guid("8633a850-128f-4425-a2ec-30e23826b7ff")).Name;
+            var expectedResult = testFixture.GetTestCategories().FirstOrDefault(q => q.VanityId == new Guid("8633a850-128f-4425-a2ec-30e23826b7ff")).Name;
 
             // Act
             var response = (CategoryViewModel)moqCategoryService.GetCategoryById(new Guid("8633a850-128f-4425-a2ec-30e23826b7ff"));
@@ -96,7 +95,7 @@ namespace CmsEngine.Test.Core.Services
         public void SetupEditModel_ById_ShouldReturnCorrectCategory()
         {
             // Arrange
-            var expectedResult = categoryFixture.GetTestCategories().FirstOrDefault(q => q.Id == 2).Name;
+            var expectedResult = testFixture.GetTestCategories().FirstOrDefault(q => q.Id == 2).Name;
 
             // Act
             var response = (CategoryEditModel)moqCategoryService.SetupCategoryEditModel(2);
@@ -110,7 +109,7 @@ namespace CmsEngine.Test.Core.Services
         public void SetupEditModel_ByVanityId_ShouldReturnCorrectCategory()
         {
             // Arrange
-            var expectedResult = categoryFixture.GetTestCategories().FirstOrDefault(q => q.VanityId == new Guid("8633a850-128f-4425-a2ec-30e23826b7ff")).Name;
+            var expectedResult = testFixture.GetTestCategories().FirstOrDefault(q => q.VanityId == new Guid("8633a850-128f-4425-a2ec-30e23826b7ff")).Name;
 
             // Act
             var response = (CategoryEditModel)moqCategoryService.SetupCategoryEditModel(new Guid("8633a850-128f-4425-a2ec-30e23826b7ff"));

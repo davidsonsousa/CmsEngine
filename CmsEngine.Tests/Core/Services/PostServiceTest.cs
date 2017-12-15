@@ -3,20 +3,19 @@ using System.Collections.Generic;
 using System.Linq;
 using CmsEngine.Data.EditModels;
 using CmsEngine.Data.ViewModels;
-using CmsEngine.Tests.Fixtures;
 using Xunit;
 
-namespace CmsEngine.Test.Core.Services
+namespace CmsEngine.Tests.Core.Services
 {
-    public class PostServiceTest : IClassFixture<PostFixture>
+    public class PostServiceTest : IClassFixture<TestFixture>
     {
-        private PostFixture postFixture;
+        private TestFixture testFixture;
         private CmsService moqPostService;
 
-        public PostServiceTest(PostFixture fixture)
+        public PostServiceTest(TestFixture fixture)
         {
-            postFixture = fixture;
-            moqPostService = postFixture.Service;
+            testFixture = fixture;
+            moqPostService = testFixture.Service;
         }
 
         #region Get
@@ -25,7 +24,7 @@ namespace CmsEngine.Test.Core.Services
         //public void GetAll_ShouldReturnAllPostsAsQueryable()
         //{
         //    // Arrange
-        //    var expectedResult = postFixture.GetTestPosts().Count;
+        //    var expectedResult = testFixture.GetTestPosts().Count;
 
         //    // Act
         //    var response = moqPostService.GetAll();
@@ -39,7 +38,7 @@ namespace CmsEngine.Test.Core.Services
         public void GetAllReadOnly_ShouldReturnAllPostsAsEnumerable()
         {
             // Arrange
-            var expectedResult = postFixture.GetTestPosts().Count;
+            var expectedResult = testFixture.GetTestPosts().Count;
 
             // Act
             var response = (IEnumerable<PostViewModel>)moqPostService.GetAllPostsReadOnly();
@@ -53,7 +52,7 @@ namespace CmsEngine.Test.Core.Services
         public void GetById_ShouldReturnCorrectPost()
         {
             // Arrange
-            var expectedResult = postFixture.GetTestPosts().FirstOrDefault(q => q.Id == 2).Title;
+            var expectedResult = testFixture.GetTestPosts().FirstOrDefault(q => q.Id == 2).Title;
 
             // Act
             var response = (PostViewModel)moqPostService.GetPostById(2);
@@ -66,7 +65,7 @@ namespace CmsEngine.Test.Core.Services
         public void GetByVanityId_ShouldReturnCorrectPost()
         {
             // Arrange
-            var expectedResult = postFixture.GetTestPosts().FirstOrDefault(q => q.VanityId == new Guid("8633a850-128f-4425-a2ec-30e23826b7ff")).Title;
+            var expectedResult = testFixture.GetTestPosts().FirstOrDefault(q => q.VanityId == new Guid("8633a850-128f-4425-a2ec-30e23826b7ff")).Title;
 
             // Act
             var response = (PostViewModel)moqPostService.GetPostById(new Guid("8633a850-128f-4425-a2ec-30e23826b7ff"));
@@ -96,7 +95,7 @@ namespace CmsEngine.Test.Core.Services
         public void SetupEditModel_ById_ShouldReturnCorrectPost()
         {
             // Arrange
-            var expectedResult = postFixture.GetTestPosts().FirstOrDefault(q => q.Id == 2).Title;
+            var expectedResult = testFixture.GetTestPosts().FirstOrDefault(q => q.Id == 2).Title;
 
             // Act
             var response = (PostEditModel)moqPostService.SetupPostEditModel(2);
@@ -110,7 +109,7 @@ namespace CmsEngine.Test.Core.Services
         public void SetupEditModel_ByVanityId_ShouldReturnCorrectPost()
         {
             // Arrange
-            var expectedResult = postFixture.GetTestPosts().FirstOrDefault(q => q.VanityId == new Guid("8633a850-128f-4425-a2ec-30e23826b7ff")).Title;
+            var expectedResult = testFixture.GetTestPosts().FirstOrDefault(q => q.VanityId == new Guid("8633a850-128f-4425-a2ec-30e23826b7ff")).Title;
 
             // Act
             var response = (PostEditModel)moqPostService.SetupPostEditModel(new Guid("8633a850-128f-4425-a2ec-30e23826b7ff"));

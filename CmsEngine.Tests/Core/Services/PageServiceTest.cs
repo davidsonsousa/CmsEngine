@@ -3,20 +3,19 @@ using System.Collections.Generic;
 using System.Linq;
 using CmsEngine.Data.EditModels;
 using CmsEngine.Data.ViewModels;
-using CmsEngine.Tests.Fixtures;
 using Xunit;
 
 namespace CmsEngine.Tests.Core.Services
 {
-    public class PageServiceTest : IClassFixture<PageFixture>
+    public class PageServiceTest : IClassFixture<TestFixture>
     {
-        private PageFixture pageFixture;
+        private TestFixture testFixture;
         private CmsService moqPageService;
 
-        public PageServiceTest(PageFixture fixture)
+        public PageServiceTest(TestFixture fixture)
         {
-            pageFixture = fixture;
-            moqPageService = pageFixture.Service;
+            testFixture = fixture;
+            moqPageService = testFixture.Service;
         }
 
         #region Get
@@ -25,7 +24,7 @@ namespace CmsEngine.Tests.Core.Services
         //public void GetAll_ShouldReturnAllPagesAsQueryable()
         //{
         //    // Arrange
-        //    var expectedResult = pageFixture.GetTestPages().Count;
+        //    var expectedResult = testFixture.GetTestPages().Count;
 
         //    // Act
         //    var response = moqPageService.GetAll();
@@ -39,7 +38,7 @@ namespace CmsEngine.Tests.Core.Services
         public void GetAllReadOnly_ShouldReturnAllPagesAsEnumerable()
         {
             // Arrange
-            var expectedResult = pageFixture.GetTestPages().Count;
+            var expectedResult = testFixture.GetTestPages().Count;
 
             // Act
             var response = (IEnumerable<PageViewModel>)moqPageService.GetAllPagesReadOnly();
@@ -53,7 +52,7 @@ namespace CmsEngine.Tests.Core.Services
         public void GetById_ShouldReturnCorrectPage()
         {
             // Arrange
-            var expectedResult = pageFixture.GetTestPages().FirstOrDefault(q => q.Id == 2).Title;
+            var expectedResult = testFixture.GetTestPages().FirstOrDefault(q => q.Id == 2).Title;
 
             // Act
             var response = (PageViewModel)moqPageService.GetPageById(2);
@@ -66,7 +65,7 @@ namespace CmsEngine.Tests.Core.Services
         public void GetByVanityId_ShouldReturnCorrectPage()
         {
             // Arrange
-            var expectedResult = pageFixture.GetTestPages().FirstOrDefault(q => q.VanityId == new Guid("8633a850-128f-4425-a2ec-30e23826b7ff")).Title;
+            var expectedResult = testFixture.GetTestPages().FirstOrDefault(q => q.VanityId == new Guid("8633a850-128f-4425-a2ec-30e23826b7ff")).Title;
 
             // Act
             var response = (PageViewModel)moqPageService.GetPageById(new Guid("8633a850-128f-4425-a2ec-30e23826b7ff"));
@@ -96,7 +95,7 @@ namespace CmsEngine.Tests.Core.Services
         public void SetupEditModel_ById_ShouldReturnCorrectPage()
         {
             // Arrange
-            var expectedResult = pageFixture.GetTestPages().FirstOrDefault(q => q.Id == 2).Title;
+            var expectedResult = testFixture.GetTestPages().FirstOrDefault(q => q.Id == 2).Title;
 
             // Act
             var response = (PageEditModel)moqPageService.SetupPageEditModel(2);
@@ -110,7 +109,7 @@ namespace CmsEngine.Tests.Core.Services
         public void SetupEditModel_ByVanityId_ShouldReturnCorrectPage()
         {
             // Arrange
-            var expectedResult = pageFixture.GetTestPages().FirstOrDefault(q => q.VanityId == new Guid("8633a850-128f-4425-a2ec-30e23826b7ff")).Title;
+            var expectedResult = testFixture.GetTestPages().FirstOrDefault(q => q.VanityId == new Guid("8633a850-128f-4425-a2ec-30e23826b7ff")).Title;
 
             // Act
             var response = (PageEditModel)moqPageService.SetupPageEditModel(new Guid("8633a850-128f-4425-a2ec-30e23826b7ff"));
