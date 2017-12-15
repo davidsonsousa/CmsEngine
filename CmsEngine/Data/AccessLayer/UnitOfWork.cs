@@ -1,6 +1,7 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using CmsEngine.Data.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace CmsEngine.Data.AccessLayer
@@ -10,6 +11,12 @@ namespace CmsEngine.Data.AccessLayer
         private readonly CmsEngineContext _ctx;
         private Dictionary<Type, object> _repositories;
         private bool _disposed;
+
+        public IRepository<Category> Categories { get { return this.GetRepository<Category>(); } }
+        public IRepository<Page> Pages { get { return this.GetRepository<Page>(); } }
+        public IRepository<Post> Posts { get { return this.GetRepository<Post>(); } }
+        public IRepository<Tag> Tags { get { return this.GetRepository<Tag>(); } }
+        public IRepository<Website> Websites { get { return this.GetRepository<Website>(); } }
 
         public UnitOfWork(CmsEngineContext context)
         {
@@ -63,6 +70,8 @@ namespace CmsEngine.Data.AccessLayer
             }
         }
 
+        #region Dispose
+
         protected virtual void Dispose(bool disposing)
         {
             if (!_disposed)
@@ -80,5 +89,7 @@ namespace CmsEngine.Data.AccessLayer
             Dispose(true);
             GC.SuppressFinalize(this);
         }
+
+        #endregion
     }
 }

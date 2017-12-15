@@ -3,21 +3,19 @@ using System.Collections.Generic;
 using System.Linq;
 using CmsEngine.Data.EditModels;
 using CmsEngine.Data.ViewModels;
-using CmsEngine.Services;
-using CmsEngine.Tests.Fixtures;
 using Xunit;
 
-namespace CmsEngine.Test.Core.Services
+namespace CmsEngine.Tests.Core.Services
 {
-    public class CategoryServiceTest : IClassFixture<CategoryFixture>
+    public class CategoryServiceTest : IClassFixture<TestFixture>
     {
-        private CategoryFixture categoryFixture;
-        private CategoryService moqCategoryService;
+        private TestFixture testFixture;
+        private CmsService moqCategoryService;
 
-        public CategoryServiceTest(CategoryFixture fixture)
+        public CategoryServiceTest(TestFixture fixture)
         {
-            categoryFixture = fixture;
-            moqCategoryService = categoryFixture.Service;
+            testFixture = fixture;
+            moqCategoryService = testFixture.Service;
         }
 
         #region Get
@@ -26,7 +24,7 @@ namespace CmsEngine.Test.Core.Services
         //public void GetAll_ShouldReturnAllCategoriesAsQueryable()
         //{
         //    // Arrange
-        //    var expectedResult = categoryFixture.GetTestCategories().Count;
+        //    var expectedResult = testFixture.GetTestCategories().Count;
 
         //    // Act
         //    var response = moqCategoryService.GetAll();
@@ -40,10 +38,10 @@ namespace CmsEngine.Test.Core.Services
         public void GetAllReadOnly_ShouldReturnAllCategoriesAsEnumerable()
         {
             // Arrange
-            var expectedResult = categoryFixture.GetTestCategories().Count;
+            var expectedResult = testFixture.GetTestCategories().Count;
 
             // Act
-            var response = (IEnumerable<CategoryViewModel>)moqCategoryService.GetAllReadOnly();
+            var response = (IEnumerable<CategoryViewModel>)moqCategoryService.GetAllCategoriesReadOnly();
 
             // Assert
             Assert.True(response is IEnumerable<CategoryViewModel>, "Response is not IEnumerable<CategoryViewModel>");
@@ -54,10 +52,10 @@ namespace CmsEngine.Test.Core.Services
         public void GetById_ShouldReturnCorrectCategory()
         {
             // Arrange
-            var expectedResult = categoryFixture.GetTestCategories().FirstOrDefault(q => q.Id == 2).Name;
+            var expectedResult = testFixture.GetTestCategories().FirstOrDefault(q => q.Id == 2).Name;
 
             // Act
-            var response = (CategoryViewModel)moqCategoryService.GetById(2);
+            var response = (CategoryViewModel)moqCategoryService.GetCategoryById(2);
 
             // Assert
             Assert.Equal(expectedResult, response.Name);
@@ -67,10 +65,10 @@ namespace CmsEngine.Test.Core.Services
         public void GetByVanityId_ShouldReturnCorrectCategory()
         {
             // Arrange
-            var expectedResult = categoryFixture.GetTestCategories().FirstOrDefault(q => q.VanityId == new Guid("8633a850-128f-4425-a2ec-30e23826b7ff")).Name;
+            var expectedResult = testFixture.GetTestCategories().FirstOrDefault(q => q.VanityId == new Guid("8633a850-128f-4425-a2ec-30e23826b7ff")).Name;
 
             // Act
-            var response = (CategoryViewModel)moqCategoryService.GetById(new Guid("8633a850-128f-4425-a2ec-30e23826b7ff"));
+            var response = (CategoryViewModel)moqCategoryService.GetCategoryById(new Guid("8633a850-128f-4425-a2ec-30e23826b7ff"));
 
             // Assert
             Assert.Equal(expectedResult, response.Name);
@@ -86,7 +84,7 @@ namespace CmsEngine.Test.Core.Services
             // Arrange
 
             // Act
-            var response = (CategoryEditModel)moqCategoryService.SetupEditModel();
+            var response = (CategoryEditModel)moqCategoryService.SetupCategoryEditModel();
 
             // Assert
             Assert.NotNull(response);
@@ -97,13 +95,13 @@ namespace CmsEngine.Test.Core.Services
         public void SetupEditModel_ById_ShouldReturnCorrectCategory()
         {
             // Arrange
-            var expectedResult = categoryFixture.GetTestCategories().FirstOrDefault(q => q.Id == 2).Name;
+            var expectedResult = testFixture.GetTestCategories().FirstOrDefault(q => q.Id == 2).Name;
 
             // Act
-            var response = (CategoryEditModel)moqCategoryService.SetupEditModel(2);
+            var response = (CategoryEditModel)moqCategoryService.SetupCategoryEditModel(2);
 
             // Assert
-            Assert.IsType(typeof(CategoryEditModel), response);
+            Assert.IsType<CategoryEditModel>(response);
             Assert.Equal(expectedResult, response.Name);
         }
 
@@ -111,13 +109,13 @@ namespace CmsEngine.Test.Core.Services
         public void SetupEditModel_ByVanityId_ShouldReturnCorrectCategory()
         {
             // Arrange
-            var expectedResult = categoryFixture.GetTestCategories().FirstOrDefault(q => q.VanityId == new Guid("8633a850-128f-4425-a2ec-30e23826b7ff")).Name;
+            var expectedResult = testFixture.GetTestCategories().FirstOrDefault(q => q.VanityId == new Guid("8633a850-128f-4425-a2ec-30e23826b7ff")).Name;
 
             // Act
-            var response = (CategoryEditModel)moqCategoryService.SetupEditModel(new Guid("8633a850-128f-4425-a2ec-30e23826b7ff"));
+            var response = (CategoryEditModel)moqCategoryService.SetupCategoryEditModel(new Guid("8633a850-128f-4425-a2ec-30e23826b7ff"));
 
             // Assert
-            Assert.IsType(typeof(CategoryEditModel), response);
+            Assert.IsType<CategoryEditModel>(response);
             Assert.Equal(expectedResult, response.Name);
         }
 
@@ -136,7 +134,7 @@ namespace CmsEngine.Test.Core.Services
                 Name = "Category3"
             };
 
-            var response = moqCategoryService.Save(categoryEditModel);
+            var response = moqCategoryService.SaveCategory(categoryEditModel);
 
             // Assert
             Assert.False(response.IsError, "Exception thrown");
@@ -148,7 +146,7 @@ namespace CmsEngine.Test.Core.Services
             // Arrange
 
             // Act
-            var response = moqCategoryService.Delete(1);
+            var response = moqCategoryService.DeleteCategory(1);
 
             // Assert
             Assert.False(response.IsError, "Exception thrown");
@@ -160,7 +158,7 @@ namespace CmsEngine.Test.Core.Services
             // Arrange
 
             // Act
-            var response = moqCategoryService.Delete(new Guid("8633a850-128f-4425-a2ec-30e23826b7ff"));
+            var response = moqCategoryService.DeleteCategory(new Guid("8633a850-128f-4425-a2ec-30e23826b7ff"));
 
             // Assert
             Assert.False(response.IsError, "Exception thrown");

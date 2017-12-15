@@ -1,9 +1,19 @@
+using AutoMapper;
+using CmsEngine.Data.AccessLayer;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CmsEngine.Ui.Areas.Cms.Controllers
 {
     public class BaseController : Controller
     {
+        protected readonly CmsService service;
+
+        public BaseController(IUnitOfWork uow, IMapper mapper, IHttpContextAccessor hca)
+        {
+            service = new CmsService(uow, mapper, hca);
+        }
+
         protected void SetupMessages(string pageTitle, PageType pageType, string description = "", string panelTitle = "")
         {
             ViewBag.PageTitle = pageTitle;

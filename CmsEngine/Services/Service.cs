@@ -13,11 +13,10 @@ using CmsEngine.Helpers;
 using CmsEngine.Utils;
 using Microsoft.AspNetCore.Http;
 
-namespace CmsEngine.Services
+namespace CmsEngine
 {
-    public abstract class BaseService<T> where T : BaseModel
+    public sealed partial class CmsService
     {
-        private readonly IRepository<T> _repository;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly IHttpContextAccessor _httpContextAccessor;
@@ -39,49 +38,90 @@ namespace CmsEngine.Services
             {
                 if (_websiteInstance == null)
                 {
-                    _websiteInstance = _unitOfWork.GetRepository<Website>().Get(q => q.SiteUrl == _httpContextAccessor.HttpContext.Request.Host.Host).FirstOrDefault();
+                    _websiteInstance = _unitOfWork.Websites.Get(q => q.SiteUrl == _httpContextAccessor.HttpContext.Request.Host.Host).FirstOrDefault();
                 }
 
                 return _websiteInstance;
             }
         }
 
-        /// <summary>
-        /// Repository used by the Service
-        /// </summary>
-        protected IRepository<T> Repository
-        {
-            get { return _repository; }
-        }
-
-        protected IMapper Mapper
+        public IMapper Mapper
         {
             get { return _mapper; }
         }
 
-        /// <summary>
-        /// Unit of work used by the Service
-        /// </summary>
-        protected IUnitOfWork UnitOfWork
-        {
-            get { return _unitOfWork; }
-        }
-
         #endregion
 
-        protected internal BaseService(IUnitOfWork uow, IMapper mapper, IHttpContextAccessor hca)
+        public CmsService(IUnitOfWork uow, IMapper mapper, IHttpContextAccessor hca)
         {
-            _repository = uow.GetRepository<T>();
             _unitOfWork = uow;
             _mapper = mapper;
             _httpContextAccessor = hca;
         }
 
-        public abstract IEnumerable<IViewModel> Filter(string searchTerm, IEnumerable<IViewModel> listItems);
+        public IQueryable<T> GetAll<T>(string relatedTable = "") where T : BaseModel
+        {
+            try
+            {
+                return _unitOfWork.GetRepository<T>().Get(q => q.IsDeleted == false, relatedTable);
+            }
+            catch
+            {
+                throw;
+            }
+        }
 
-        public abstract IEnumerable<IViewModel> Order(int orderColumn, string orderDirection, IEnumerable<IViewModel> listItems);
+        public IEnumerable<IViewModel> GetAllReadOnly<TModel, TViewModel>() where TModel : BaseModel where TViewModel : BaseViewModel
+        {
+            IEnumerable<TModel> listItems;
 
-        public DataTableViewModel BuildDataTable(IEnumerable<IViewModel> listItems)
+            try
+            {
+                listItems = _unitOfWork.GetRepository<TModel>().GetReadOnly(q => q.IsDeleted == false);
+            }
+            catch
+            {
+                throw;
+            }
+
+            return Mapper.Map<IEnumerable<TModel>, IEnumerable<TViewModel>>(listItems);
+        }
+
+        public int CountRecords<T>() where T : BaseModel
+        {
+            try
+            {
+                return _unitOfWork.GetRepository<T>().GetReadOnly(q => q.IsDeleted == false).Count();
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
+        public ReturnValue BulkDelete<T>(Guid[] id) where T : BaseModel
+        {
+            var returnValue = new ReturnValue();
+            try
+            {
+                _unitOfWork.GetRepository<T>().BulkUpdate(q => id.Contains(q.VanityId), u => u.IsDeleted = true);
+
+                _unitOfWork.Save();
+
+                returnValue.IsError = false;
+                returnValue.Message = $"Selected items deleted at {DateTime.Now.ToString("T")}.";
+            }
+            catch
+            {
+                returnValue.IsError = true;
+                returnValue.Message = "An error has occurred while deleting the selected items";
+                throw;
+            }
+
+            return returnValue;
+        }
+
+        public DataTableViewModel BuildDataTable<T>(IEnumerable<IViewModel> listItems) where T : BaseModel
         {
             var listString = new List<List<string>>();
 
@@ -113,7 +153,7 @@ namespace CmsEngine.Services
             dataTableViewModel = new DataTableViewModel
             {
                 Data = listString,
-                RecordsTotal = this.GetAllReadOnly().Count(),
+                RecordsTotal = this.CountRecords<T>(),
                 RecordsFiltered = listItems.Count(),
                 Draw = 0
             };
@@ -121,79 +161,77 @@ namespace CmsEngine.Services
             return dataTableViewModel;
         }
 
-        #region Get
+        #region Helpers
 
-        /// <summary>
-        /// Get all items
-        /// </summary>
-        /// <returns></returns>
-        protected IQueryable<T> GetAll()
+        private IEnumerable<CheckboxEditModel> PopulateCheckboxList<T>(IEnumerable<string> selectedItems = null) where T : BaseModel
         {
-            IQueryable<T> listItems;
+            var itemList = _unitOfWork.GetRepository<T>().GetReadOnly(q => q.IsDeleted == false);
+            var checkBoxList = new List<CheckboxEditModel>();
 
+            foreach (var item in itemList)
+            {
+                checkBoxList.Add(new CheckboxEditModel
+                {
+                    Label = item.GetType().GetProperty("Name").GetValue(item).ToString(),
+                    Value = item.VanityId.ToString(),
+                    Enabled = true,
+                    Selected = (selectedItems == null ? false : selectedItems.Contains(item.VanityId.ToString()))
+                });
+            }
+
+            return checkBoxList;
+        }
+
+        private T GetById<T>(int id, string relatedTable = "") where T : BaseModel
+        {
             try
             {
-                listItems = Repository.Get(q => q.IsDeleted == false);
+                return this.GetAll<T>(relatedTable).Where(q => q.Id == id).FirstOrDefault();
             }
             catch
             {
                 throw;
             }
-
-            return listItems;
         }
 
-        public abstract IEnumerable<IViewModel> GetAllReadOnly();
+        private T GetById<T>(Guid id, string relatedTable = "") where T : BaseModel
+        {
+            try
+            {
+                return this.GetAll<T>(relatedTable).Where(q => q.VanityId == id).FirstOrDefault();
+            }
+            catch
+            {
+                throw;
+            }
+        }
 
-        public abstract IViewModel GetById(int id);
-
-        public abstract IViewModel GetById(Guid id);
-
-        #endregion
-
-        #region Setup View and Edit models
-
-        public abstract IEditModel SetupEditModel();
-
-        public abstract IEditModel SetupEditModel(int id);
-
-        public abstract IEditModel SetupEditModel(Guid id);
-
-        #endregion
-
-        public abstract ReturnValue Save(IEditModel editModel);
-
-        public abstract ReturnValue Delete(Guid id);
-
-        public virtual ReturnValue BulkDelete(Guid[] id)
+        private ReturnValue Delete<T>(T item) where T : BaseModel
         {
             var returnValue = new ReturnValue();
             try
             {
-                Repository.BulkUpdate(q => id.Contains(q.VanityId), u => u.IsDeleted = true);
+                if (item != null)
+                {
+                    item.IsDeleted = true;
+                    _unitOfWork.GetRepository<T>().Update(item);
+                }
 
-                UnitOfWork.Save();
-
+                _unitOfWork.Save();
                 returnValue.IsError = false;
-                returnValue.Message = $"Selected items deleted at {DateTime.Now.ToString("T")}.";
             }
             catch
             {
                 returnValue.IsError = true;
-                returnValue.Message = "An error has occurred while deleting the selected items";
                 throw;
             }
 
             return returnValue;
         }
 
-        public abstract ReturnValue Delete(int id);
-
-        #region Helpers
-
-        private string PrepareProperty(IViewModel item, System.Reflection.PropertyInfo property)
+        private string PrepareProperty(IViewModel item, PropertyInfo property)
         {
-            string propertyValue = item.GetType().GetProperty(property.Name).GetValue(item)?.ToString() ?? "";
+            var propertyValue = item.GetType().GetProperty(property.Name).GetValue(item)?.ToString() ?? "";
 
             if (property.PropertyType.Name == "DocumentStatus")
             {
@@ -218,39 +256,7 @@ namespace CmsEngine.Services
             return propertyValue;
         }
 
-        protected virtual T GetItemById(int id)
-        {
-            T item;
-
-            try
-            {
-                item = this.GetAll().Where(q => q.Id == id).FirstOrDefault();
-            }
-            catch
-            {
-                throw;
-            }
-
-            return item;
-        }
-
-        protected virtual T GetItemById(Guid id)
-        {
-            T item;
-
-            try
-            {
-                item = this.GetAll().Where(q => q.VanityId == id).FirstOrDefault();
-            }
-            catch
-            {
-                throw;
-            }
-
-            return item;
-        }
-
-        protected virtual Func<T, bool> PrepareFilter(string searchTerm, IEnumerable<PropertyInfo> searchableProperties)
+        private Func<T, bool> PrepareFilter<T>(string searchTerm, IEnumerable<PropertyInfo> searchableProperties)
         {
             var expressionFilter = new List<ExpressionFilter>();
 
@@ -266,10 +272,6 @@ namespace CmsEngine.Services
 
             return ExpressionBuilder.GetExpression<T>(expressionFilter, LogicalOperators.Or).Compile();
         }
-
-        protected abstract ReturnValue Delete(T item);
-
-        protected abstract void PrepareForSaving(IEditModel editModel);
 
         #endregion
     }

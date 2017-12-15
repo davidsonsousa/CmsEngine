@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace CmsEngine.Attributes
 {
@@ -6,7 +6,7 @@ namespace CmsEngine.Attributes
     /// Enables the properto to be visible in the DataTable
     /// </summary>
     [AttributeUsage(AttributeTargets.Property)]
-    public class ShowOnDataTable : Attribute
+    public sealed class ShowOnDataTable : Attribute
     {
         private int order;
         public int Order { get => order; }

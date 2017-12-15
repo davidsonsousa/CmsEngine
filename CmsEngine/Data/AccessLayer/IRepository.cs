@@ -8,11 +8,12 @@ namespace CmsEngine.Data.AccessLayer
     public interface IRepository<T> : IDisposable where T : class
     {
         /// <summary>
-        /// Gets items based on condition
+        /// Gets item based on condition and includes extra table
         /// </summary>
         /// <param name="filter"></param>
+        /// <param name="include"></param>
         /// <returns></returns>
-        IQueryable<T> Get(Expression<Func<T, bool>> filter = null);
+        IQueryable<T> Get(Expression<Func<T, bool>> filter = null, string relatedTable = "");
 
         /// <summary>
         /// Gets items based on condition for read-only

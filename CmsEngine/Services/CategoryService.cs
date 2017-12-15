@@ -3,29 +3,24 @@ using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
 using CmsEngine.Attributes;
-using CmsEngine.Data.AccessLayer;
 using CmsEngine.Data.EditModels;
 using CmsEngine.Data.Models;
 using CmsEngine.Data.ViewModels;
-using CmsEngine.Extensions;
 using CmsEngine.Utils;
-using Microsoft.AspNetCore.Http;
 
-namespace CmsEngine.Services
+namespace CmsEngine
 {
-    public class CategoryService : BaseService<Category>
+    public sealed partial class CmsService
     {
-        public CategoryService(IUnitOfWork uow, IMapper mapper, IHttpContextAccessor hca) : base(uow, mapper, hca)
-        {
-        }
+        #region Get
 
-        public override IEnumerable<IViewModel> GetAllReadOnly()
+        public IEnumerable<IViewModel> GetAllCategoriesReadOnly()
         {
             IEnumerable<Category> listItems;
 
             try
             {
-                listItems = Repository.GetReadOnly(q => q.IsDeleted == false);
+                listItems = _unitOfWork.Categories.GetReadOnly(q => q.IsDeleted == false);
             }
             catch
             {
@@ -35,96 +30,131 @@ namespace CmsEngine.Services
             return Mapper.Map<IEnumerable<Category>, IEnumerable<CategoryViewModel>>(listItems);
         }
 
-        public override IViewModel GetById(int id)
+        public IViewModel GetCategoryById(int id)
         {
-            var item = this.GetItemById(id);
+            var item = this.GetById<Category>(id);
             return Mapper.Map<Category, CategoryViewModel>(item);
         }
 
-        public override IViewModel GetById(Guid id)
+        public IViewModel GetCategoryById(Guid id)
         {
-            var item = this.GetItemById(id);
+            var item = this.GetById<Category>(id);
             return Mapper.Map<Category, CategoryViewModel>(item);
         }
 
-        public override ReturnValue Delete(Guid id)
-        {
-            var returnValue = new ReturnValue();
-            try
-            {
-                var category = this.GetAll().Where(q => q.VanityId == id).FirstOrDefault();
-                returnValue = this.Delete(category);
-            }
-            catch
-            {
-                returnValue.IsError = true;
-                returnValue.Message = "An error has occurred while deleting the category";
-                throw;
-            }
+        #endregion
 
-            return returnValue;
-        }
+        #region Setup
 
-        public override ReturnValue Delete(int id)
-        {
-            var returnValue = new ReturnValue();
-            try
-            {
-                var category = this.GetAll().Where(q => q.Id == id).FirstOrDefault();
-                returnValue = this.Delete(category);
-            }
-            catch
-            {
-                returnValue.IsError = true;
-                returnValue.Message = "An error has occurred while deleting the category";
-                throw;
-            }
-
-            return returnValue;
-        }
-
-        public override ReturnValue Save(IEditModel editModel)
-        {
-            var returnValue = new ReturnValue
-            {
-                IsError = false,
-                Message = $"Category '{((CategoryEditModel)editModel).Name}' saved at {DateTime.Now.ToString("T")}."
-            };
-
-            try
-            {
-                PrepareForSaving(editModel);
-
-                UnitOfWork.Save();
-            }
-            catch
-            {
-                returnValue.IsError = true;
-                returnValue.Message = "An error has occurred while saving the category";
-                throw;
-            }
-
-            return returnValue;
-        }
-
-        public override IEditModel SetupEditModel()
+        public IEditModel SetupCategoryEditModel()
         {
             return new CategoryEditModel();
         }
 
-        public override IEditModel SetupEditModel(int id)
+        public IEditModel SetupCategoryEditModel(int id)
         {
-            var item = this.GetItemById(id);
+            var item = this.GetById<Category>(id);
             return Mapper.Map<Category, CategoryEditModel>(item);
         }
 
-        public override IEditModel SetupEditModel(Guid id)
+        public IEditModel SetupCategoryEditModel(Guid id)
         {
-            var item = this.GetItemById(id);
+            var item = this.GetById<Category>(id);
             return Mapper.Map<Category, CategoryEditModel>(item);
         }
 
-        public override IEnumerable<IViewModel> Filter(string searchTerm, IEnumerable<IViewModel> listItems)
+        #endregion
+
+        #region Save
+
+        public ReturnValue SaveCategory(IEditModel editModel)
+        {
+            var returnValue = new ReturnValue
+            {
+                IsError = false,
+                Message = $"Category '{((CategoryEditModel)editModel).Name}' saved at {DateTime.Now.ToString("T")}"
+            };
+
+            try
+            {
+                PrepareCategoryForSaving(editModel);
+
+                _unitOfWork.Save();
+            }
+            catch (Exception ex)
+            {
+                returnValue.IsError = true;
+                returnValue.Message = "An error has occurred while saving the category";
+                returnValue.Exception = ex.Message;
+                throw;
+            }
+
+            return returnValue;
+        }
+
+        #endregion
+
+        #region Delete
+
+        public ReturnValue DeleteCategory(Guid id)
+        {
+            var returnValue = new ReturnValue();
+            try
+            {
+                var category = this.GetAll<Category>().Where(q => q.VanityId == id).FirstOrDefault();
+                returnValue = this.Delete(category);
+
+                if (!returnValue.IsError)
+                {
+                    returnValue.Message = $"Category '{category.Name}' deleted at {DateTime.Now.ToString("T")}.";
+                }
+                else
+                {
+                    returnValue.Message = "An error has occurred while deleting the category";
+                }
+            }
+            catch
+            {
+                returnValue.IsError = true;
+                returnValue.Message = "An error has occurred while deleting the category";
+                throw;
+            }
+
+            return returnValue;
+        }
+
+        public ReturnValue DeleteCategory(int id)
+        {
+            var returnValue = new ReturnValue();
+            try
+            {
+                var category = this.GetAll<Category>().Where(q => q.Id == id).FirstOrDefault();
+                returnValue = this.Delete(category);
+
+                if (!returnValue.IsError)
+                {
+                    returnValue.Message = $"Category '{category.Name}' deleted at {DateTime.Now.ToString("T")}.";
+                }
+                else
+                {
+                    returnValue.Message = "An error has occurred while deleting the category";
+                }
+            }
+            catch
+            {
+                returnValue.IsError = true;
+                returnValue.Message = "An error has occurred while deleting the category";
+                throw;
+            }
+
+            return returnValue;
+        }
+
+        #endregion
+
+        #region DataTable
+
+        public IEnumerable<IViewModel> FilterCategory(string searchTerm, IEnumerable<IViewModel> listItems)
         {
             var items = (IEnumerable<CategoryViewModel>)listItems;
 
@@ -132,7 +162,7 @@ namespace CmsEngine.Services
             {
                 var searchableProperties = typeof(CategoryViewModel).GetProperties().Where(p => Attribute.IsDefined(p, typeof(Searchable)));
 
-                var lambda = this.PrepareFilter(searchTerm, searchableProperties);
+                var lambda = this.PrepareFilter<Category>(searchTerm, searchableProperties);
 
                 // TODO: There must be a way to improve this
                 var tempItems = Mapper.Map<IEnumerable<CategoryViewModel>, IEnumerable<Category>>(items);
@@ -142,7 +172,7 @@ namespace CmsEngine.Services
             return items;
         }
 
-        public override IEnumerable<IViewModel> Order(int orderColumn, string orderDirection, IEnumerable<IViewModel> listItems)
+        public IEnumerable<IViewModel> OrderCategory(int orderColumn, string orderDirection, IEnumerable<IViewModel> listItems)
         {
             try
             {
@@ -163,48 +193,31 @@ namespace CmsEngine.Services
             }
 
             return listItems;
+
         }
 
-        protected override ReturnValue Delete(Category item)
+        #endregion
+
+        #region Helpers
+
+        private void PrepareCategoryForSaving(IEditModel editModel)
         {
-            var returnValue = new ReturnValue();
-            try
+            Category category;
+
+            if (editModel.IsNew)
             {
-                if (item != null)
-                {
-                    item.IsDeleted = true;
-                    Repository.Update(item);
-                }
-
-                UnitOfWork.Save();
-                returnValue.IsError = false;
-                returnValue.Message = string.Format("Category '{0}' deleted at {1}.", item.Name, DateTime.Now.ToString("T"));
-            }
-            catch
-            {
-                returnValue.IsError = true;
-                returnValue.Message = "An error has occurred while deleting the category";
-                throw;
-            }
-
-            return returnValue;
-        }
-
-        protected override void PrepareForSaving(IEditModel editModel)
-        {
-            var category = new Category();
-            editModel.MapTo(category);
-
-            category.WebsiteId = WebsiteInstance.Id;
-
-            if (category.IsNew)
-            {
-                Repository.Insert(category);
+                category = Mapper.Map<CategoryEditModel, Category>((CategoryEditModel)editModel);
+                _unitOfWork.Categories.Insert(category);
             }
             else
             {
-                Repository.Update(category);
+                category = this.GetById<Category>(editModel.VanityId);
+                Mapper.Map((CategoryEditModel)editModel, category);
+
+                _unitOfWork.Categories.Update(category);
             }
         }
+
+        #endregion
     }
 }

@@ -3,28 +3,24 @@ using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
 using CmsEngine.Attributes;
-using CmsEngine.Data.AccessLayer;
 using CmsEngine.Data.EditModels;
 using CmsEngine.Data.Models;
 using CmsEngine.Data.ViewModels;
 using CmsEngine.Utils;
-using Microsoft.AspNetCore.Http;
 
-namespace CmsEngine.Services
+namespace CmsEngine
 {
-    public class WebsiteService : BaseService<Website>
+    public sealed partial class CmsService
     {
-        public WebsiteService(IUnitOfWork uow, IMapper mapper, IHttpContextAccessor hca) : base(uow, mapper, hca)
-        {
-        }
+        #region Get
 
-        public override IEnumerable<IViewModel> GetAllReadOnly()
+        public IEnumerable<IViewModel> GetAllWebsitesReadOnly()
         {
             IEnumerable<Website> listItems;
 
             try
             {
-                listItems = Repository.GetReadOnly(q => q.IsDeleted == false);
+                listItems = _unitOfWork.Websites.GetReadOnly(q => q.IsDeleted == false);
             }
             catch
             {
@@ -34,55 +30,44 @@ namespace CmsEngine.Services
             return Mapper.Map<IEnumerable<Website>, IEnumerable<WebsiteViewModel>>(listItems);
         }
 
-        public override IViewModel GetById(int id)
+        public IViewModel GetWebsiteById(int id)
         {
-            var item = this.GetItemById(id);
+            var item = this.GetById<Website>(id);
             return Mapper.Map<Website, WebsiteViewModel>(item);
         }
 
-        public override IViewModel GetById(Guid id)
+        public IViewModel GetWebsiteById(Guid id)
         {
-            var item = this.GetItemById(id);
+            var item = this.GetById<Website>(id);
             return Mapper.Map<Website, WebsiteViewModel>(item);
         }
 
-        public override ReturnValue Delete(Guid id)
-        {
-            var returnValue = new ReturnValue();
-            try
-            {
-                var website = this.GetAll().Where(q => q.VanityId == id).FirstOrDefault();
-                returnValue = this.Delete(website);
-            }
-            catch
-            {
-                returnValue.IsError = true;
-                returnValue.Message = "An error has occurred while deleting the website";
-                throw;
-            }
+        #endregion
 
-            return returnValue;
+        #region Setup
+
+        public IEditModel SetupWebsiteEditModel()
+        {
+            return new WebsiteEditModel();
         }
 
-        public override ReturnValue Delete(int id)
+        public IEditModel SetupWebsiteEditModel(int id)
         {
-            var returnValue = new ReturnValue();
-            try
-            {
-                var website = this.GetAll().Where(q => q.Id == id).FirstOrDefault();
-                returnValue = this.Delete(website);
-            }
-            catch
-            {
-                returnValue.IsError = true;
-                returnValue.Message = "An error has occurred while deleting the website";
-                throw;
-            }
-
-            return returnValue;
+            var item = this.GetById<Website>(id);
+            return Mapper.Map<Website, WebsiteEditModel>(item);
         }
 
-        public override ReturnValue Save(IEditModel editModel)
+        public IEditModel SetupWebsiteEditModel(Guid id)
+        {
+            var item = this.GetById<Website>(id);
+            return Mapper.Map<Website, WebsiteEditModel>(item);
+        }
+
+        #endregion
+
+        #region Save
+
+        public ReturnValue SaveWebsite(IEditModel editModel)
         {
             var returnValue = new ReturnValue
             {
@@ -92,9 +77,9 @@ namespace CmsEngine.Services
 
             try
             {
-                PrepareForSaving(editModel);
+                PrepareWebsiteForSaving(editModel);
 
-                UnitOfWork.Save();
+                _unitOfWork.Save();
             }
             catch (Exception ex)
             {
@@ -107,24 +92,69 @@ namespace CmsEngine.Services
             return returnValue;
         }
 
-        public override IEditModel SetupEditModel()
+        #endregion
+
+        #region Delete
+
+        public ReturnValue DeleteWebsite(Guid id)
         {
-            return new WebsiteEditModel();
+            var returnValue = new ReturnValue();
+            try
+            {
+                var website = this.GetAll<Website>().Where(q => q.VanityId == id).FirstOrDefault();
+                returnValue = this.Delete(website);
+
+                if (!returnValue.IsError)
+                {
+                    returnValue.Message = $"Website '{website.Name}' deleted at {DateTime.Now.ToString("T")}.";
+                }
+                else
+                {
+                    returnValue.Message = "An error has occurred while deleting the website";
+                }
+            }
+            catch
+            {
+                returnValue.IsError = true;
+                returnValue.Message = "An error has occurred while deleting the website";
+                throw;
+            }
+
+            return returnValue;
         }
 
-        public override IEditModel SetupEditModel(int id)
+        public ReturnValue DeleteWebsite(int id)
         {
-            var item = this.GetItemById(id);
-            return Mapper.Map<Website, WebsiteEditModel>(item);
+            var returnValue = new ReturnValue();
+            try
+            {
+                var website = this.GetAll<Website>().Where(q => q.Id == id).FirstOrDefault();
+                returnValue = this.Delete(website);
+
+                if (!returnValue.IsError)
+                {
+                    returnValue.Message = $"Website '{website.Name}' deleted at {DateTime.Now.ToString("T")}.";
+                }
+                else
+                {
+                    returnValue.Message = "An error has occurred while deleting the website";
+                }
+            }
+            catch
+            {
+                returnValue.IsError = true;
+                returnValue.Message = "An error has occurred while deleting the website";
+                throw;
+            }
+
+            return returnValue;
         }
 
-        public override IEditModel SetupEditModel(Guid id)
-        {
-            var item = this.GetItemById(id);
-            return Mapper.Map<Website, WebsiteEditModel>(item);
-        }
+        #endregion
 
-        public override IEnumerable<IViewModel> Filter(string searchTerm, IEnumerable<IViewModel> listItems)
+        #region DataTable
+
+        public IEnumerable<IViewModel> FilterWebsite(string searchTerm, IEnumerable<IViewModel> listItems)
         {
             var items = (IEnumerable<WebsiteViewModel>)listItems;
 
@@ -132,7 +162,7 @@ namespace CmsEngine.Services
             {
                 var searchableProperties = typeof(WebsiteViewModel).GetProperties().Where(p => Attribute.IsDefined(p, typeof(Searchable)));
 
-                var lambda = this.PrepareFilter(searchTerm, searchableProperties);
+                var lambda = this.PrepareFilter<Website>(searchTerm, searchableProperties);
 
                 // TODO: There must be a way to improve this
                 var tempItems = Mapper.Map<IEnumerable<WebsiteViewModel>, IEnumerable<Website>>(items);
@@ -142,7 +172,7 @@ namespace CmsEngine.Services
             return items;
         }
 
-        public override IEnumerable<IViewModel> Order(int orderColumn, string orderDirection, IEnumerable<IViewModel> listItems)
+        public IEnumerable<IViewModel> OrderWebsite(int orderColumn, string orderDirection, IEnumerable<IViewModel> listItems)
         {
             try
             {
@@ -169,49 +199,31 @@ namespace CmsEngine.Services
             }
 
             return listItems;
+
         }
 
-        protected override ReturnValue Delete(Website item)
-        {
-            var returnValue = new ReturnValue();
-            try
-            {
-                if (item != null)
-                {
-                    item.IsDeleted = true;
-                    Repository.Update(item);
-                }
+        #endregion
 
-                UnitOfWork.Save();
-                returnValue.IsError = false;
-                returnValue.Message = $"Website '{item.Name}' deleted at {DateTime.Now.ToString("T")}.";
-            }
-            catch
-            {
-                returnValue.IsError = true;
-                returnValue.Message = "An error has occurred while deleting the website";
-                throw;
-            }
+        #region Helpers
 
-            return returnValue;
-        }
-
-        protected override void PrepareForSaving(IEditModel editModel)
+        private void PrepareWebsiteForSaving(IEditModel editModel)
         {
             Website website;
 
             if (editModel.IsNew)
             {
                 website = Mapper.Map<WebsiteEditModel, Website>((WebsiteEditModel)editModel);
-                Repository.Insert(website);
+                _unitOfWork.Websites.Insert(website);
             }
             else
             {
-                website = GetItemById(editModel.VanityId);
+                website = this.GetById<Website>(editModel.VanityId);
                 Mapper.Map((WebsiteEditModel)editModel, website);
 
-                Repository.Update(website);
+                _unitOfWork.Websites.Update(website);
             }
         }
+
+        #endregion
     }
 }

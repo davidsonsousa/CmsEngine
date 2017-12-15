@@ -1,53 +1,14 @@
-﻿using AutoMapper;
-using CmsEngine.Data.AccessLayer;
+using System;
+using System.Collections.Generic;
 using CmsEngine.Data.EditModels;
 using CmsEngine.Data.Models;
 using CmsEngine.Data.ViewModels;
-using CmsEngine.Services;
 using Moq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
 
-namespace CmsEngine.Tests.Fixtures
+namespace CmsEngine.Tests
 {
-    public class PostFixture : BaseFixture
+    public sealed partial class TestFixture
     {
-        private Mock<IRepository<Post>> moqRepository;
-        public Mock<IRepository<Post>> MoqRepository
-        {
-            get { return moqRepository; }
-        }
-
-        private Mock<IUnitOfWork> moqUnitOfWork;
-        public Mock<IUnitOfWork> MoqUnitOfWork
-        {
-            get { return moqUnitOfWork; }
-        }
-
-        private PostService service;
-        public PostService Service
-        {
-            get { return service; }
-        }
-
-        private Mock<IMapper> moqMapper;
-        public Mock<IMapper> MoqMapper
-        {
-            get { return moqMapper; }
-        }
-
-        public PostFixture(): base()
-        {
-            SetupRepository();
-            SetupUnitOfWork();
-            SetupMapper();
-
-            service = new PostService(moqUnitOfWork.Object, moqMapper.Object, MoqHttpContextAccessor.Object);
-        }
-
-
         /// <summary>
         /// Returns a list of posts
         /// </summary>
@@ -63,7 +24,7 @@ namespace CmsEngine.Tests.Fixtures
         /// <summary>
         /// Returns a list of ViewModels
         /// </summary>
-        public List<PostViewModel> GetViewModels()
+        public List<PostViewModel> GetPostViewModels()
         {
             return new List<PostViewModel>
                 {
@@ -76,7 +37,7 @@ namespace CmsEngine.Tests.Fixtures
         /// Returns the EditModel of Id 2
         /// </summary>
         /// <returns></returns>
-        public PostEditModel GetEditModel()
+        public PostEditModel GetPostEditModel()
         {
             return new PostEditModel { Id = 2, VanityId = new Guid("8633a850-128f-4425-a2ec-30e23826b7ff"), Title = "Post2", Description = "Welcome to website 2" };
         }
@@ -85,46 +46,20 @@ namespace CmsEngine.Tests.Fixtures
         /// Returns the ViewModel of Id 2
         /// </summary>
         /// <returns></returns>
-        public PostViewModel GetViewModel()
+        public PostViewModel GetPostViewModel()
         {
             return new PostViewModel { Id = 2, VanityId = new Guid("8633a850-128f-4425-a2ec-30e23826b7ff"), Title = "Post2", Description = "Welcome to website 2" };
         }
 
         /// <summary>
-        /// Setup the Repository instance and its returning values
-        /// </summary>
-        /// <returns></returns>
-        private void SetupRepository()
-        {
-            moqRepository = new Mock<IRepository<Post>>();
-            moqRepository.Setup(x => x.Get(It.IsAny<Expression<Func<Post, bool>>>())).Returns(GetTestPosts().AsQueryable());
-            moqRepository.Setup(x => x.GetReadOnly(It.IsAny<Expression<Func<Post, bool>>>())).Returns(GetTestPosts());
-        }
-
-        /// <summary>
-        /// Setup the UnitOfWork instance
-        /// </summary>
-        /// <param name="moqRepository"></param>
-        /// <returns></returns>
-        private void SetupUnitOfWork()
-        {
-            moqUnitOfWork = new Mock<IUnitOfWork>();
-            moqUnitOfWork.Setup(x => x.GetRepository<Post>()).Returns(MoqRepository.Object);
-
-            // Website instance
-            moqUnitOfWork.Setup(x => x.GetRepository<Website>()).Returns(MoqInstance.Object);
-        }
-
-        /// <summary>
         /// Setup Mapper instance
         /// </summary>
-        private void SetupMapper()
+        private void SetupPostMapper()
         {
-            moqMapper = new Mock<IMapper>();
-            moqMapper.Setup(x => x.Map<Post, PostEditModel>(It.IsAny<Post>())).Returns(GetEditModel());
-            moqMapper.Setup(x => x.Map<Post, PostViewModel>(It.IsAny<Post>())).Returns(GetViewModel());
-            moqMapper.Setup(x => x.Map<Post, PostViewModel>(null)).Returns<PostViewModel>(null);
-            moqMapper.Setup(x => x.Map<IEnumerable<Post>, IEnumerable<PostViewModel>>(It.IsAny<IEnumerable<Post>>())).Returns(GetViewModels());
+            _moqMapper.Setup(x => x.Map<Post, PostEditModel>(It.IsAny<Post>())).Returns(GetPostEditModel());
+            _moqMapper.Setup(x => x.Map<Post, PostViewModel>(It.IsAny<Post>())).Returns(GetPostViewModel());
+            _moqMapper.Setup(x => x.Map<Post, PostViewModel>(null)).Returns<PostViewModel>(null);
+            _moqMapper.Setup(x => x.Map<IEnumerable<Post>, IEnumerable<PostViewModel>>(It.IsAny<IEnumerable<Post>>())).Returns(GetPostViewModels());
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace CmsEngine.Data.EditModels
@@ -24,6 +25,10 @@ namespace CmsEngine.Data.EditModels
         public string DocumentContent { get; set; }
 
         public string Author { get; set; }
+
+        public IEnumerable<CheckboxEditModel> Categories { get; set; }
+
+        public IEnumerable<string> SelectedCategories { get; set; }
 
         public DocumentStatus Status { get; set; }
 

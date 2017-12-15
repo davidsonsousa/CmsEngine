@@ -1,53 +1,14 @@
-﻿using AutoMapper;
-using CmsEngine.Data.AccessLayer;
+using System;
+using System.Collections.Generic;
 using CmsEngine.Data.EditModels;
 using CmsEngine.Data.Models;
 using CmsEngine.Data.ViewModels;
-using CmsEngine.Services;
 using Moq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
 
-namespace CmsEngine.Tests.Fixtures
+namespace CmsEngine.Tests
 {
-    public class PageFixture : BaseFixture
+    public sealed partial class TestFixture
     {
-        private Mock<IRepository<Page>> moqRepository;
-        public Mock<IRepository<Page>> MoqRepository
-        {
-            get { return moqRepository; }
-        }
-
-        private Mock<IUnitOfWork> moqUnitOfWork;
-        public Mock<IUnitOfWork> MoqUnitOfWork
-        {
-            get { return moqUnitOfWork; }
-        }
-
-        private PageService service;
-        public PageService Service
-        {
-            get { return service; }
-        }
-
-        private Mock<IMapper> moqMapper;
-        public Mock<IMapper> MoqMapper
-        {
-            get { return moqMapper; }
-        }
-
-        public PageFixture(): base()
-        {
-            SetupRepository();
-            SetupUnitOfWork();
-            SetupMapper();
-
-            service = new PageService(moqUnitOfWork.Object, moqMapper.Object, MoqHttpContextAccessor.Object);
-        }
-
-
         /// <summary>
         /// Returns a list of pages
         /// </summary>
@@ -63,7 +24,7 @@ namespace CmsEngine.Tests.Fixtures
         /// <summary>
         /// Returns a list of ViewModels
         /// </summary>
-        public List<PageViewModel> GetViewModels()
+        public List<PageViewModel> GetPageViewModels()
         {
             return new List<PageViewModel>
                 {
@@ -76,7 +37,7 @@ namespace CmsEngine.Tests.Fixtures
         /// Returns the EditModel of Id 2
         /// </summary>
         /// <returns></returns>
-        public PageEditModel GetEditModel()
+        public PageEditModel GetPageEditModel()
         {
             return new PageEditModel { Id = 2, VanityId = new Guid("8633a850-128f-4425-a2ec-30e23826b7ff"), Title = "Page2", Description = "Welcome to website 2" };
         }
@@ -85,46 +46,21 @@ namespace CmsEngine.Tests.Fixtures
         /// Returns the ViewModel of Id 2
         /// </summary>
         /// <returns></returns>
-        public PageViewModel GetViewModel()
+        public PageViewModel GetPageViewModel()
         {
             return new PageViewModel { Id = 2, VanityId = new Guid("8633a850-128f-4425-a2ec-30e23826b7ff"), Title = "Page2", Description = "Welcome to website 2" };
         }
 
         /// <summary>
-        /// Setup the Repository instance and its returning values
-        /// </summary>
-        /// <returns></returns>
-        private void SetupRepository()
-        {
-            moqRepository = new Mock<IRepository<Page>>();
-            moqRepository.Setup(x => x.Get(It.IsAny<Expression<Func<Page, bool>>>())).Returns(GetTestPages().AsQueryable());
-            moqRepository.Setup(x => x.GetReadOnly(It.IsAny<Expression<Func<Page, bool>>>())).Returns(GetTestPages());
-        }
-
-        /// <summary>
-        /// Setup the UnitOfWork instance
-        /// </summary>
-        /// <param name="moqRepository"></param>
-        /// <returns></returns>
-        private void SetupUnitOfWork()
-        {
-            moqUnitOfWork = new Mock<IUnitOfWork>();
-            moqUnitOfWork.Setup(x => x.GetRepository<Page>()).Returns(MoqRepository.Object);
-
-            // Website instance
-            moqUnitOfWork.Setup(x => x.GetRepository<Website>()).Returns(MoqInstance.Object);
-        }
-
-        /// <summary>
         /// Setup Mapper instance
         /// </summary>
-        private void SetupMapper()
+        private void SetupPageMapper()
         {
-            moqMapper = new Mock<IMapper>();
-            moqMapper.Setup(x => x.Map<Page, PageEditModel>(It.IsAny<Page>())).Returns(GetEditModel());
-            moqMapper.Setup(x => x.Map<Page, PageViewModel>(It.IsAny<Page>())).Returns(GetViewModel());
-            moqMapper.Setup(x => x.Map<Page, PageViewModel>(null)).Returns<PageViewModel>(null);
-            moqMapper.Setup(x => x.Map<IEnumerable<Page>, IEnumerable<PageViewModel>>(It.IsAny<IEnumerable<Page>>())).Returns(GetViewModels());
+            _moqMapper.Setup(x => x.Map<Page, PageEditModel>(It.IsAny<Page>())).Returns(GetPageEditModel());
+            _moqMapper.Setup(x => x.Map<Page, PageViewModel>(It.IsAny<Page>())).Returns(GetPageViewModel());
+            _moqMapper.Setup(x => x.Map<Page, PageViewModel>(null)).Returns<PageViewModel>(null);
+            _moqMapper.Setup(x => x.Map<IEnumerable<Page>, IEnumerable<PageViewModel>>(It.IsAny<IEnumerable<Page>>())).Returns(GetPageViewModels());
         }
+
     }
 }

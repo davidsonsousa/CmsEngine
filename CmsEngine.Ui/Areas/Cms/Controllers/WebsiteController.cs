@@ -3,8 +3,8 @@ using System.Threading.Tasks;
 using AutoMapper;
 using CmsEngine.Data.AccessLayer;
 using CmsEngine.Data.EditModels;
+using CmsEngine.Data.Models;
 using CmsEngine.Data.ViewModels;
-using CmsEngine.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,24 +13,19 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
     [Area("Cms")]
     public class WebsiteController : BaseController
     {
-        private readonly WebsiteService websiteService;
-
-        public WebsiteController(IUnitOfWork uow, IMapper mapper, IHttpContextAccessor hca)
-        {
-            websiteService = new WebsiteService(uow, mapper, hca);
-        }
+        public WebsiteController(IUnitOfWork uow, IMapper mapper, IHttpContextAccessor hca) : base(uow, mapper, hca) { }
 
         public IActionResult Index()
         {
             this.SetupMessages("Websites", PageType.List, panelTitle: "List of websites");
-            //var websiteViewModel = websiteService.SetupViewModel();
+            //var websiteViewModel = service.SetupViewModel();
             return View("List");
         }
 
         public IActionResult Create()
         {
             this.SetupMessages("Website", PageType.Create, panelTitle: "Create a new website");
-            var websiteEditModel = websiteService.SetupEditModel();
+            var websiteEditModel = service.SetupWebsiteEditModel();
 
             return View("CreateEdit", websiteEditModel);
         }
@@ -51,7 +46,7 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
         public IActionResult Edit(Guid vanityId)
         {
             this.SetupMessages("Websites", PageType.Edit, panelTitle: "Edit an existing website");
-            var websiteViewModel = websiteService.SetupEditModel(vanityId);
+            var websiteViewModel = service.SetupWebsiteEditModel(vanityId);
 
             return View("CreateEdit", websiteViewModel);
         }
@@ -66,7 +61,7 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
                 return View("CreateEdit", websiteEditModel);
             }
 
-            var websiteToUpdate = (WebsiteEditModel)websiteService.SetupEditModel(websiteEditModel.VanityId);
+            var websiteToUpdate = (WebsiteEditModel)service.SetupWebsiteEditModel(websiteEditModel.VanityId);
 
             if (await TryUpdateModelAsync(websiteToUpdate))
             {
@@ -79,22 +74,22 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
         [HttpPost]
         public IActionResult Delete(Guid vanityId)
         {
-            return Ok(websiteService.Delete(vanityId));
+            return Ok(service.DeleteWebsite(vanityId));
         }
 
         [HttpPost("cms/website/bulk-delete")]
         public IActionResult BulkDelete([FromForm]Guid[] vanityId)
         {
-            return Ok(websiteService.BulkDelete(vanityId));
+            return Ok(service.BulkDelete<Website>(vanityId));
         }
 
         [HttpPost]
         public IActionResult GetData([FromForm]DataTableParameters parameters)
         {
-            var filteredItems = websiteService.Filter(parameters.Search.Value, websiteService.GetAllReadOnly());
-            var orderedItems = websiteService.Order(parameters.Order[0].Column, parameters.Order[0].Dir, filteredItems);
+            var filteredItems = service.FilterWebsite(parameters.Search.Value, service.GetAllWebsitesReadOnly());
+            var orderedItems = service.OrderWebsite(parameters.Order[0].Column, parameters.Order[0].Dir, filteredItems);
 
-            var dataTable = websiteService.BuildDataTable(orderedItems);
+            var dataTable = service.BuildDataTable<Website>(orderedItems);
             dataTable.Draw = parameters.Draw;
 
             return Ok(dataTable);
@@ -104,7 +99,7 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
 
         private IActionResult Save(WebsiteEditModel websiteEditModel)
         {
-            var returnValue = websiteService.Save(websiteEditModel);
+            var returnValue = service.SaveWebsite(websiteEditModel);
 
             if (!returnValue.IsError)
             {

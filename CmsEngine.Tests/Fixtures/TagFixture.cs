@@ -1,55 +1,16 @@
-﻿using AutoMapper;
-using CmsEngine.Data.AccessLayer;
+using System;
+using System.Collections.Generic;
 using CmsEngine.Data.EditModels;
 using CmsEngine.Data.Models;
 using CmsEngine.Data.ViewModels;
-using CmsEngine.Services;
 using Moq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
 
-namespace CmsEngine.Tests.Fixtures
+namespace CmsEngine.Tests
 {
-    public class TagFixture : BaseFixture
-    {
-        private Mock<IRepository<Tag>> moqRepository;
-        public Mock<IRepository<Tag>> MoqRepository
-        {
-            get { return moqRepository; }
-        }
-
-        private Mock<IUnitOfWork> moqUnitOfWork;
-        public Mock<IUnitOfWork> MoqUnitOfWork
-        {
-            get { return moqUnitOfWork; }
-        }
-
-        private TagService service;
-        public TagService Service
-        {
-            get { return service; }
-        }
-
-        private Mock<IMapper> moqMapper;
-        public Mock<IMapper> MoqMapper
-        {
-            get { return moqMapper; }
-        }
-
-        public TagFixture() : base()
-        {
-            SetupRepository();
-            SetupUnitOfWork();
-            SetupMapper();
-
-            service = new TagService(moqUnitOfWork.Object, moqMapper.Object, MoqHttpContextAccessor.Object);
-        }
-
-        /// <summary>
-        /// Returns a list of tags
-        /// </summary>
+    public sealed partial class TestFixture
+    {        /// <summary>
+             /// Returns a list of tags
+             /// </summary>
         public List<Tag> GetTestTags()
         {
             return new List<Tag>
@@ -62,7 +23,7 @@ namespace CmsEngine.Tests.Fixtures
         /// <summary>
         /// Returns a list of ViewModels
         /// </summary>
-        public List<TagViewModel> GetViewModels()
+        public List<TagViewModel> GetTagViewModels()
         {
             return new List<TagViewModel>
                 {
@@ -75,7 +36,7 @@ namespace CmsEngine.Tests.Fixtures
         /// Returns the EditModel of Id 2
         /// </summary>
         /// <returns></returns>
-        public TagEditModel GetEditModel()
+        public TagEditModel GetTagEditModel()
         {
             return new TagEditModel { Id = 2, VanityId = new Guid("8633a850-128f-4425-a2ec-30e23826b7ff"), Name = "Tag2" };
         }
@@ -84,46 +45,20 @@ namespace CmsEngine.Tests.Fixtures
         /// Returns the ViewModel of Id 2
         /// </summary>
         /// <returns></returns>
-        public TagViewModel GetViewModel()
+        public TagViewModel GetTagViewModel()
         {
             return new TagViewModel { Id = 2, VanityId = new Guid("8633a850-128f-4425-a2ec-30e23826b7ff"), Name = "Tag2" };
         }
 
         /// <summary>
-        /// Setup the Repository instance and its returning values
-        /// </summary>
-        /// <returns></returns>
-        private void SetupRepository()
-        {
-            moqRepository = new Mock<IRepository<Tag>>();
-            moqRepository.Setup(x => x.Get(It.IsAny<Expression<Func<Tag, bool>>>())).Returns(GetTestTags().AsQueryable());
-            moqRepository.Setup(x => x.GetReadOnly(It.IsAny<Expression<Func<Tag, bool>>>())).Returns(GetTestTags());
-        }
-
-        /// <summary>
-        /// Setup the UnitOfWork instance
-        /// </summary>
-        /// <param name="moqRepository"></param>
-        /// <returns></returns>
-        private void SetupUnitOfWork()
-        {
-            moqUnitOfWork = new Mock<IUnitOfWork>();
-            moqUnitOfWork.Setup(x => x.GetRepository<Tag>()).Returns(MoqRepository.Object);
-
-            // Website instance
-            moqUnitOfWork.Setup(x => x.GetRepository<Website>()).Returns(MoqInstance.Object);
-        }
-
-        /// <summary>
         /// Setup Mapper instance
         /// </summary>
-        private void SetupMapper()
+        private void SetupTagMapper()
         {
-            moqMapper = new Mock<IMapper>();
-            moqMapper.Setup(x => x.Map<Tag, TagEditModel>(It.IsAny<Tag>())).Returns(GetEditModel());
-            moqMapper.Setup(x => x.Map<Tag, TagViewModel>(It.IsAny<Tag>())).Returns(GetViewModel());
-            moqMapper.Setup(x => x.Map<Tag, TagViewModel>(null)).Returns<TagViewModel>(null);
-            moqMapper.Setup(x => x.Map<IEnumerable<Tag>, IEnumerable<TagViewModel>>(It.IsAny<IEnumerable<Tag>>())).Returns(GetViewModels());
+            _moqMapper.Setup(x => x.Map<Tag, TagEditModel>(It.IsAny<Tag>())).Returns(GetTagEditModel());
+            _moqMapper.Setup(x => x.Map<Tag, TagViewModel>(It.IsAny<Tag>())).Returns(GetTagViewModel());
+            _moqMapper.Setup(x => x.Map<Tag, TagViewModel>(null)).Returns<TagViewModel>(null);
+            _moqMapper.Setup(x => x.Map<IEnumerable<Tag>, IEnumerable<TagViewModel>>(It.IsAny<IEnumerable<Tag>>())).Returns(GetTagViewModels());
         }
     }
 }

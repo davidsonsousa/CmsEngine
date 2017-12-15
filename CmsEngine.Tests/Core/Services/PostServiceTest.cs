@@ -3,21 +3,19 @@ using System.Collections.Generic;
 using System.Linq;
 using CmsEngine.Data.EditModels;
 using CmsEngine.Data.ViewModels;
-using CmsEngine.Services;
-using CmsEngine.Tests.Fixtures;
 using Xunit;
 
-namespace CmsEngine.Test.Core.Services
+namespace CmsEngine.Tests.Core.Services
 {
-    public class PostServiceTest : IClassFixture<PostFixture>
+    public class PostServiceTest : IClassFixture<TestFixture>
     {
-        private PostFixture postFixture;
-        private PostService moqPostService;
+        private TestFixture testFixture;
+        private CmsService moqPostService;
 
-        public PostServiceTest(PostFixture fixture)
+        public PostServiceTest(TestFixture fixture)
         {
-            postFixture = fixture;
-            moqPostService = postFixture.Service;
+            testFixture = fixture;
+            moqPostService = testFixture.Service;
         }
 
         #region Get
@@ -26,7 +24,7 @@ namespace CmsEngine.Test.Core.Services
         //public void GetAll_ShouldReturnAllPostsAsQueryable()
         //{
         //    // Arrange
-        //    var expectedResult = postFixture.GetTestPosts().Count;
+        //    var expectedResult = testFixture.GetTestPosts().Count;
 
         //    // Act
         //    var response = moqPostService.GetAll();
@@ -40,10 +38,10 @@ namespace CmsEngine.Test.Core.Services
         public void GetAllReadOnly_ShouldReturnAllPostsAsEnumerable()
         {
             // Arrange
-            var expectedResult = postFixture.GetTestPosts().Count;
+            var expectedResult = testFixture.GetTestPosts().Count;
 
             // Act
-            var response = (IEnumerable<PostViewModel>)moqPostService.GetAllReadOnly();
+            var response = (IEnumerable<PostViewModel>)moqPostService.GetAllPostsReadOnly();
 
             // Assert
             Assert.True(response is IEnumerable<PostViewModel>, "Response is not IEnumerable<PostViewModel>");
@@ -54,10 +52,10 @@ namespace CmsEngine.Test.Core.Services
         public void GetById_ShouldReturnCorrectPost()
         {
             // Arrange
-            var expectedResult = postFixture.GetTestPosts().FirstOrDefault(q => q.Id == 2).Title;
+            var expectedResult = testFixture.GetTestPosts().FirstOrDefault(q => q.Id == 2).Title;
 
             // Act
-            var response = (PostViewModel)moqPostService.GetById(2);
+            var response = (PostViewModel)moqPostService.GetPostById(2);
 
             // Assert
             Assert.Equal(expectedResult, response.Title);
@@ -67,10 +65,10 @@ namespace CmsEngine.Test.Core.Services
         public void GetByVanityId_ShouldReturnCorrectPost()
         {
             // Arrange
-            var expectedResult = postFixture.GetTestPosts().FirstOrDefault(q => q.VanityId == new Guid("8633a850-128f-4425-a2ec-30e23826b7ff")).Title;
+            var expectedResult = testFixture.GetTestPosts().FirstOrDefault(q => q.VanityId == new Guid("8633a850-128f-4425-a2ec-30e23826b7ff")).Title;
 
             // Act
-            var response = (PostViewModel)moqPostService.GetById(new Guid("8633a850-128f-4425-a2ec-30e23826b7ff"));
+            var response = (PostViewModel)moqPostService.GetPostById(new Guid("8633a850-128f-4425-a2ec-30e23826b7ff"));
 
             // Assert
             Assert.Equal(expectedResult, response.Title);
@@ -86,7 +84,7 @@ namespace CmsEngine.Test.Core.Services
             // Arrange
 
             // Act
-            var response = (PostEditModel)moqPostService.SetupEditModel();
+            var response = (PostEditModel)moqPostService.SetupPostEditModel();
 
             // Assert
             Assert.NotNull(response);
@@ -97,13 +95,13 @@ namespace CmsEngine.Test.Core.Services
         public void SetupEditModel_ById_ShouldReturnCorrectPost()
         {
             // Arrange
-            var expectedResult = postFixture.GetTestPosts().FirstOrDefault(q => q.Id == 2).Title;
+            var expectedResult = testFixture.GetTestPosts().FirstOrDefault(q => q.Id == 2).Title;
 
             // Act
-            var response = (PostEditModel)moqPostService.SetupEditModel(2);
+            var response = (PostEditModel)moqPostService.SetupPostEditModel(2);
 
             // Assert
-            Assert.IsType(typeof(PostEditModel), response);
+            Assert.IsType<PostEditModel>(response);
             Assert.Equal(expectedResult, response.Title);
         }
 
@@ -111,13 +109,13 @@ namespace CmsEngine.Test.Core.Services
         public void SetupEditModel_ByVanityId_ShouldReturnCorrectPost()
         {
             // Arrange
-            var expectedResult = postFixture.GetTestPosts().FirstOrDefault(q => q.VanityId == new Guid("8633a850-128f-4425-a2ec-30e23826b7ff")).Title;
+            var expectedResult = testFixture.GetTestPosts().FirstOrDefault(q => q.VanityId == new Guid("8633a850-128f-4425-a2ec-30e23826b7ff")).Title;
 
             // Act
-            var response = (PostEditModel)moqPostService.SetupEditModel(new Guid("8633a850-128f-4425-a2ec-30e23826b7ff"));
+            var response = (PostEditModel)moqPostService.SetupPostEditModel(new Guid("8633a850-128f-4425-a2ec-30e23826b7ff"));
 
             // Assert
-            Assert.IsType(typeof(PostEditModel), response);
+            Assert.IsType<PostEditModel>(response);
             Assert.Equal(expectedResult, response.Title);
         }
 
@@ -136,7 +134,7 @@ namespace CmsEngine.Test.Core.Services
                 Title = "Post3"
             };
 
-            var response = moqPostService.Save(postEditModel);
+            var response = moqPostService.SavePost(postEditModel);
 
             // Assert
             Assert.False(response.IsError, "Exception thrown");
@@ -148,7 +146,7 @@ namespace CmsEngine.Test.Core.Services
             // Arrange
 
             // Act
-            var response = moqPostService.Delete(1);
+            var response = moqPostService.DeletePost(1);
 
             // Assert
             Assert.False(response.IsError, "Exception thrown");
@@ -160,7 +158,7 @@ namespace CmsEngine.Test.Core.Services
             // Arrange
 
             // Act
-            var response = moqPostService.Delete(new Guid("8633a850-128f-4425-a2ec-30e23826b7ff"));
+            var response = moqPostService.DeletePost(new Guid("8633a850-128f-4425-a2ec-30e23826b7ff"));
 
             // Assert
             Assert.False(response.IsError, "Exception thrown");

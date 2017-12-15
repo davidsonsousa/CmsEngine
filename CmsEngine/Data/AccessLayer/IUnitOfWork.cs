@@ -1,11 +1,18 @@
-﻿using System;
+using System;
+using CmsEngine.Data.Models;
 
 namespace CmsEngine.Data.AccessLayer
 {
     public interface IUnitOfWork : IDisposable
     {
+        IRepository<Category> Categories { get; }
+        IRepository<Page> Pages { get; }
+        IRepository<Post> Posts { get; }
+        IRepository<Tag> Tags { get; }
+        IRepository<Website> Websites { get; }
+
         /// <summary>
-        /// Gets a repository according to the type
+        /// Get repository according to the type
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <returns></returns>

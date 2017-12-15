@@ -3,29 +3,24 @@ using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
 using CmsEngine.Attributes;
-using CmsEngine.Data.AccessLayer;
 using CmsEngine.Data.EditModels;
 using CmsEngine.Data.Models;
 using CmsEngine.Data.ViewModels;
-using CmsEngine.Extensions;
 using CmsEngine.Utils;
-using Microsoft.AspNetCore.Http;
 
-namespace CmsEngine.Services
+namespace CmsEngine
 {
-    public class TagService : BaseService<Tag>
+    public sealed partial class CmsService
     {
-        public TagService(IUnitOfWork uow, IMapper mapper, IHttpContextAccessor hca) : base(uow, mapper, hca)
-        {
-        }
+        #region Get
 
-        public override IEnumerable<IViewModel> GetAllReadOnly()
+        public IEnumerable<IViewModel> GetAllTagsReadOnly()
         {
             IEnumerable<Tag> listItems;
 
             try
             {
-                listItems = Repository.GetReadOnly(q => q.IsDeleted == false);
+                listItems = _unitOfWork.Tags.GetReadOnly(q => q.IsDeleted == false);
             }
             catch
             {
@@ -35,96 +30,131 @@ namespace CmsEngine.Services
             return Mapper.Map<IEnumerable<Tag>, IEnumerable<TagViewModel>>(listItems);
         }
 
-        public override IViewModel GetById(int id)
+        public IViewModel GetTagById(int id)
         {
-            var item = this.GetItemById(id);
+            var item = this.GetById<Tag>(id);
             return Mapper.Map<Tag, TagViewModel>(item);
         }
 
-        public override IViewModel GetById(Guid id)
+        public IViewModel GetTagById(Guid id)
         {
-            var item = this.GetItemById(id);
+            var item = this.GetById<Tag>(id);
             return Mapper.Map<Tag, TagViewModel>(item);
         }
 
-        public override ReturnValue Delete(Guid id)
-        {
-            var returnValue = new ReturnValue();
-            try
-            {
-                var tag = this.GetAll().Where(q => q.VanityId == id).FirstOrDefault();
-                returnValue = this.Delete(tag);
-            }
-            catch
-            {
-                returnValue.IsError = true;
-                returnValue.Message = "An error has occurred while deleting the tag";
-                throw;
-            }
+        #endregion
 
-            return returnValue;
-        }
+        #region Setup
 
-        public override ReturnValue Delete(int id)
-        {
-            var returnValue = new ReturnValue();
-            try
-            {
-                var tag = this.GetAll().Where(q => q.Id == id).FirstOrDefault();
-                returnValue = this.Delete(tag);
-            }
-            catch
-            {
-                returnValue.IsError = true;
-                returnValue.Message = "An error has occurred while deleting the tag";
-                throw;
-            }
-
-            return returnValue;
-        }
-
-        public override ReturnValue Save(IEditModel editModel)
-        {
-            var returnValue = new ReturnValue
-            {
-                IsError = false,
-                Message = $"Tag '{((TagEditModel)editModel).Name}' saved at {DateTime.Now.ToString("T")}."
-            };
-
-            try
-            {
-                PrepareForSaving(editModel);
-
-                UnitOfWork.Save();
-            }
-            catch
-            {
-                returnValue.IsError = true;
-                returnValue.Message = "An error has occurred while saving the tag";
-                throw;
-            }
-
-            return returnValue;
-        }
-
-        public override IEditModel SetupEditModel()
+        public IEditModel SetupTagEditModel()
         {
             return new TagEditModel();
         }
 
-        public override IEditModel SetupEditModel(int id)
+        public IEditModel SetupTagEditModel(int id)
         {
-            var item = this.GetItemById(id);
+            var item = this.GetById<Tag>(id);
             return Mapper.Map<Tag, TagEditModel>(item);
         }
 
-        public override IEditModel SetupEditModel(Guid id)
+        public IEditModel SetupTagEditModel(Guid id)
         {
-            var item = this.GetItemById(id);
+            var item = this.GetById<Tag>(id);
             return Mapper.Map<Tag, TagEditModel>(item);
         }
 
-        public override IEnumerable<IViewModel> Filter(string searchTerm, IEnumerable<IViewModel> listItems)
+        #endregion
+
+        #region Save
+
+        public ReturnValue SaveTag(IEditModel editModel)
+        {
+            var returnValue = new ReturnValue
+            {
+                IsError = false,
+                Message = $"Tag '{((TagEditModel)editModel).Name}' saved at {DateTime.Now.ToString("T")}"
+            };
+
+            try
+            {
+                PrepareTagForSaving(editModel);
+
+                _unitOfWork.Save();
+            }
+            catch (Exception ex)
+            {
+                returnValue.IsError = true;
+                returnValue.Message = "An error has occurred while saving the tag";
+                returnValue.Exception = ex.Message;
+                throw;
+            }
+
+            return returnValue;
+        }
+
+        #endregion
+
+        #region Delete
+
+        public ReturnValue DeleteTag(Guid id)
+        {
+            var returnValue = new ReturnValue();
+            try
+            {
+                var tag = this.GetAll<Tag>().Where(q => q.VanityId == id).FirstOrDefault();
+                returnValue = this.Delete(tag);
+
+                if (!returnValue.IsError)
+                {
+                    returnValue.Message = $"Tag '{tag.Name}' deleted at {DateTime.Now.ToString("T")}.";
+                }
+                else
+                {
+                    returnValue.Message = "An error has occurred while deleting the tag";
+                }
+            }
+            catch
+            {
+                returnValue.IsError = true;
+                returnValue.Message = "An error has occurred while deleting the tag";
+                throw;
+            }
+
+            return returnValue;
+        }
+
+        public ReturnValue DeleteTag(int id)
+        {
+            var returnValue = new ReturnValue();
+            try
+            {
+                var tag = this.GetAll<Tag>().Where(q => q.Id == id).FirstOrDefault();
+                returnValue = this.Delete(tag);
+
+                if (!returnValue.IsError)
+                {
+                    returnValue.Message = $"Tag '{tag.Name}' deleted at {DateTime.Now.ToString("T")}.";
+                }
+                else
+                {
+                    returnValue.Message = "An error has occurred while deleting the tag";
+                }
+            }
+            catch
+            {
+                returnValue.IsError = true;
+                returnValue.Message = "An error has occurred while deleting the tag";
+                throw;
+            }
+
+            return returnValue;
+        }
+
+        #endregion
+
+        #region DataTable
+
+        public IEnumerable<IViewModel> FilterTag(string searchTerm, IEnumerable<IViewModel> listItems)
         {
             var items = (IEnumerable<TagViewModel>)listItems;
 
@@ -132,7 +162,7 @@ namespace CmsEngine.Services
             {
                 var searchableProperties = typeof(TagViewModel).GetProperties().Where(p => Attribute.IsDefined(p, typeof(Searchable)));
 
-                var lambda = this.PrepareFilter(searchTerm, searchableProperties);
+                var lambda = this.PrepareFilter<Tag>(searchTerm, searchableProperties);
 
                 // TODO: There must be a way to improve this
                 var tempItems = Mapper.Map<IEnumerable<TagViewModel>, IEnumerable<Tag>>(items);
@@ -142,7 +172,7 @@ namespace CmsEngine.Services
             return items;
         }
 
-        public override IEnumerable<IViewModel> Order(int orderColumn, string orderDirection, IEnumerable<IViewModel> listItems)
+        public IEnumerable<IViewModel> OrderTag(int orderColumn, string orderDirection, IEnumerable<IViewModel> listItems)
         {
             try
             {
@@ -163,48 +193,31 @@ namespace CmsEngine.Services
             }
 
             return listItems;
+
         }
 
-        protected override ReturnValue Delete(Tag item)
+        #endregion
+
+        #region Helpers
+
+        private void PrepareTagForSaving(IEditModel editModel)
         {
-            var returnValue = new ReturnValue();
-            try
+            Tag tag;
+
+            if (editModel.IsNew)
             {
-                if (item != null)
-                {
-                    item.IsDeleted = true;
-                    Repository.Update(item);
-                }
-
-                UnitOfWork.Save();
-                returnValue.IsError = false;
-                returnValue.Message = $"Tag '{item.Name}' deleted at {DateTime.Now.ToString("T")}.";
-            }
-            catch
-            {
-                returnValue.IsError = true;
-                returnValue.Message = "An error has occurred while deleting the tag";
-                throw;
-            }
-
-            return returnValue;
-        }
-
-        protected override void PrepareForSaving(IEditModel editModel)
-        {
-            var tag = new Tag();
-            editModel.MapTo(tag);
-
-            tag.Website = WebsiteInstance;
-
-            if (tag.IsNew)
-            {
-                Repository.Insert(tag);
+                tag = Mapper.Map<TagEditModel, Tag>((TagEditModel)editModel);
+                _unitOfWork.Tags.Insert(tag);
             }
             else
             {
-                Repository.Update(tag);
+                tag = this.GetById<Tag>(editModel.VanityId);
+                Mapper.Map((TagEditModel)editModel, tag);
+
+                _unitOfWork.Tags.Update(tag);
             }
         }
+
+        #endregion
     }
 }

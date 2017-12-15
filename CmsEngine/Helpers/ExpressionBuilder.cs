@@ -5,7 +5,7 @@ using System.Reflection;
 
 namespace CmsEngine.Helpers
 {
-    public class ExpressionFilter
+    public sealed class ExpressionFilter
     {
         public string PropertyName { get; set; }
         public Operations Operation { get; set; }

@@ -3,8 +3,8 @@ using System.Threading.Tasks;
 using AutoMapper;
 using CmsEngine.Data.AccessLayer;
 using CmsEngine.Data.EditModels;
+using CmsEngine.Data.Models;
 using CmsEngine.Data.ViewModels;
-using CmsEngine.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,24 +13,19 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
     [Area("Cms")]
     public class TagController : BaseController
     {
-        private readonly TagService tagService;
-
-        public TagController(IUnitOfWork uow, IMapper mapper, IHttpContextAccessor hca)
-        {
-            tagService = new TagService(uow, mapper, hca);
-        }
+        public TagController(IUnitOfWork uow, IMapper mapper, IHttpContextAccessor hca) : base(uow, mapper, hca) { }
 
         public IActionResult Index()
         {
             this.SetupMessages("Tags", PageType.List, panelTitle: "List of tags");
-            //var tagViewModel = tagService.SetupViewModel();
+            //var tagViewModel = service.SetupViewModel();
             return View("List");
         }
 
         public IActionResult Create()
         {
             this.SetupMessages("Tag", PageType.Create, panelTitle: "Create a new tag");
-            var tagEditModel = tagService.SetupEditModel();
+            var tagEditModel = service.SetupTagEditModel();
 
             return View("CreateEdit", tagEditModel);
         }
@@ -51,7 +46,7 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
         public IActionResult Edit(Guid vanityId)
         {
             this.SetupMessages("Tags", PageType.Edit, panelTitle: "Edit an existing tag");
-            var tagViewModel = tagService.SetupEditModel(vanityId);
+            var tagViewModel = service.SetupTagEditModel(vanityId);
 
             return View("CreateEdit", tagViewModel);
         }
@@ -66,7 +61,7 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
                 return View("CreateEdit", tagEditModel);
             }
 
-            var tagToUpdate = (TagEditModel)tagService.SetupEditModel(tagEditModel.VanityId);
+            var tagToUpdate = (TagEditModel)service.SetupTagEditModel(tagEditModel.VanityId);
 
             if (await TryUpdateModelAsync(tagToUpdate))
             {
@@ -79,22 +74,22 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
         [HttpPost]
         public IActionResult Delete(Guid vanityId)
         {
-            return Ok(tagService.Delete(vanityId));
+            return Ok(service.DeleteTag(vanityId));
         }
 
         [HttpPost("cms/tag/bulk-delete")]
         public IActionResult BulkDelete([FromForm]Guid[] vanityId)
         {
-            return Ok(tagService.BulkDelete(vanityId));
+            return Ok(service.BulkDelete<Tag>(vanityId));
         }
 
         [HttpPost]
         public IActionResult GetData([FromForm]DataTableParameters parameters)
         {
-            var filteredItems = tagService.Filter(parameters.Search.Value, tagService.GetAllReadOnly());
-            var orderedItems = tagService.Order(parameters.Order[0].Column, parameters.Order[0].Dir, filteredItems);
+            var filteredItems = service.FilterTag(parameters.Search.Value, service.GetAllTagsReadOnly());
+            var orderedItems = service.OrderTag(parameters.Order[0].Column, parameters.Order[0].Dir, filteredItems);
 
-            var dataTable = tagService.BuildDataTable(orderedItems);
+            var dataTable = service.BuildDataTable<Tag>(orderedItems);
             dataTable.Draw = parameters.Draw;
 
             return Ok(dataTable);
@@ -104,7 +99,7 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
 
         private IActionResult Save(TagEditModel tagEditModel)
         {
-            var returnValue = tagService.Save(tagEditModel);
+            var returnValue = service.SaveTag(tagEditModel);
 
             if (!returnValue.IsError)
             {
