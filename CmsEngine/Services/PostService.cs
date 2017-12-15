@@ -53,14 +53,20 @@ namespace CmsEngine
 
         public IEditModel SetupPostEditModel(int id)
         {
-            var item = this.GetById<Post>(id);
-            return Mapper.Map<Post, PostEditModel>(item);
+            var item = this.GetById<Post>(id, "PostCategories.Category");
+            var editModel = Mapper.Map<Post, PostEditModel>(item);
+            editModel.Categories = this.PopulateCheckboxList<Category>(editModel.SelectedCategories);
+
+            return editModel;
         }
 
         public IEditModel SetupPostEditModel(Guid id)
         {
-            var item = this.GetById<Post>(id);
-            return Mapper.Map<Post, PostEditModel>(item);
+            var item = this.GetById<Post>(id, "PostCategories.Category");
+            var editModel = Mapper.Map<Post, PostEditModel>(item);
+            editModel.Categories = this.PopulateCheckboxList<Category>(editModel.SelectedCategories);
+
+            return editModel;
         }
 
         #endregion
