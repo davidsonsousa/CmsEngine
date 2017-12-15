@@ -5,6 +5,7 @@ using System.Reflection;
 using AutoMapper;
 using CmsEngine.Attributes;
 using CmsEngine.Data.AccessLayer;
+using CmsEngine.Data.EditModels;
 using CmsEngine.Data.Models;
 using CmsEngine.Data.ViewModels;
 using CmsEngine.Extensions;
@@ -53,11 +54,11 @@ namespace CmsEngine
             _httpContextAccessor = hca;
         }
 
-        public IQueryable<T> GetAll<T>() where T : BaseModel
+        public IQueryable<T> GetAll<T>(string relatedTable = "") where T : BaseModel
         {
             try
             {
-                return _unitOfWork.GetRepository<T>().Get(q => q.IsDeleted == false);
+                return _unitOfWork.GetRepository<T>().Get(q => q.IsDeleted == false, relatedTable);
             }
             catch
             {
@@ -157,11 +158,30 @@ namespace CmsEngine
 
         #region Helpers
 
-        private T GetById<T>(int id) where T : BaseModel
+        private IEnumerable<CheckboxEditModel> PopulateCheckboxList<T>(IEnumerable<string> selectedItems = null) where T : BaseModel
+        {
+            var itemList = _unitOfWork.GetRepository<T>().GetReadOnly(q => q.IsDeleted == false);
+            var checkBoxList = new List<CheckboxEditModel>();
+
+            foreach (var item in itemList)
+            {
+                checkBoxList.Add(new CheckboxEditModel
+                {
+                    Label = item.GetType().GetProperty("Name").GetValue(item).ToString(),
+                    Value = item.VanityId.ToString(),
+                    Enabled = true,
+                    Selected = (selectedItems == null ? false : selectedItems.Contains(item.VanityId.ToString()))
+                });
+            }
+
+            return checkBoxList;
+        }
+
+        private T GetById<T>(int id, string relatedTable = "") where T : BaseModel
         {
             try
             {
-                return this.GetAll<T>().Where(q => q.Id == id).FirstOrDefault();
+                return this.GetAll<T>(relatedTable).Where(q => q.Id == id).FirstOrDefault();
             }
             catch
             {
@@ -169,11 +189,11 @@ namespace CmsEngine
             }
         }
 
-        private T GetById<T>(Guid id) where T : BaseModel
+        private T GetById<T>(Guid id, string relatedTable = "") where T : BaseModel
         {
             try
             {
-                return this.GetAll<T>().Where(q => q.VanityId == id).FirstOrDefault();
+                return this.GetAll<T>(relatedTable).Where(q => q.VanityId == id).FirstOrDefault();
             }
             catch
             {
@@ -203,7 +223,6 @@ namespace CmsEngine
 
             return returnValue;
         }
-
 
         private string PrepareProperty(IViewModel item, PropertyInfo property)
         {
