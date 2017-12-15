@@ -1,3 +1,4 @@
+using System.Linq;
 using AutoMapper;
 using CmsEngine.Data.EditModels;
 using CmsEngine.Data.Models;
@@ -19,10 +20,15 @@ namespace CmsEngine.Data
         private void MapPost()
         {
             // Edit model
-            CreateMap<Post, PostEditModel>();
+            CreateMap<Post, PostEditModel>()
+                .ForMember(
+                    em => em.SelectedCategories,
+                    opt => opt.MapFrom(p => p.PostCategories.Select(x => x.Category.VanityId.ToString()).ToList())
+                );
+
             CreateMap<PostEditModel, Post>()
-                .ForMember(em => em.Id, opt => opt.Ignore())
-                .ForMember(em => em.VanityId, opt => opt.Ignore());
+                .ForMember(p => p.Id, opt => opt.Ignore())
+                .ForMember(p => p.VanityId, opt => opt.Ignore());
 
             // View model
             CreateMap<Post, PostViewModel>();
