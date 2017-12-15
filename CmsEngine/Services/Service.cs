@@ -45,6 +45,11 @@ namespace CmsEngine
             }
         }
 
+        public IMapper Mapper
+        {
+            get { return _mapper; }
+        }
+
         #endregion
 
         public CmsService(IUnitOfWork uow, IMapper mapper, IHttpContextAccessor hca)
