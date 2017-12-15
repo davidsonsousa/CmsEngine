@@ -102,7 +102,7 @@ namespace CmsEngine.Test.Core.Services
             var response = (PostEditModel)moqPostService.SetupPostEditModel(2);
 
             // Assert
-            Assert.IsType(typeof(PostEditModel), response);
+            Assert.IsType<PostEditModel>(response);
             Assert.Equal(expectedResult, response.Title);
         }
 
@@ -116,7 +116,7 @@ namespace CmsEngine.Test.Core.Services
             var response = (PostEditModel)moqPostService.SetupPostEditModel(new Guid("8633a850-128f-4425-a2ec-30e23826b7ff"));
 
             // Assert
-            Assert.IsType(typeof(PostEditModel), response);
+            Assert.IsType<PostEditModel>(response);
             Assert.Equal(expectedResult, response.Title);
         }
 
