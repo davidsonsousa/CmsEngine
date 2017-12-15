@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -56,7 +56,7 @@ namespace CmsEngine.Tests.Fixtures
         private void SetupInstance()
         {
             moqInstance = new Mock<IRepository<Website>>();
-            moqInstance.Setup(x => x.Get(It.IsAny<Expression<Func<Website, bool>>>())).Returns(GetInstance().AsQueryable());
+            moqInstance.Setup(x => x.Get(It.IsAny<Expression<Func<Website, bool>>>(), "")).Returns(GetInstance().AsQueryable());
         }
 
         /// <summary>

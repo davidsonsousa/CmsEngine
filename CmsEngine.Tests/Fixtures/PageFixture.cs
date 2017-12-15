@@ -96,7 +96,7 @@ namespace CmsEngine.Tests.Fixtures
         private void SetupRepository()
         {
             moqRepository = new Mock<IRepository<Page>>();
-            moqRepository.Setup(x => x.Get(It.IsAny<Expression<Func<Page, bool>>>())).Returns(GetTestPages().AsQueryable());
+            moqRepository.Setup(x => x.Get(It.IsAny<Expression<Func<Page, bool>>>(), "")).Returns(GetTestPages().AsQueryable());
             moqRepository.Setup(x => x.GetReadOnly(It.IsAny<Expression<Func<Page, bool>>>())).Returns(GetTestPages());
         }
 
