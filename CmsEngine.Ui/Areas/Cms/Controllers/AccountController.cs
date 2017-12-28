@@ -1,10 +1,10 @@
 using System;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using CmsEngine.Data.Models;
 using CmsEngine.Data.ViewModels.AccountViewModels;
 using CmsEngine.Extensions;
 using CmsEngine.Services;
-using CmsEngine.Ui.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
