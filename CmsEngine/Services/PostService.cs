@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using AutoMapper;
 using CmsEngine.Attributes;
 using CmsEngine.Data.EditModels;
 using CmsEngine.Data.Models;
@@ -213,12 +212,15 @@ namespace CmsEngine
             if (editModel.IsNew)
             {
                 post = Mapper.Map<PostEditModel, Post>((PostEditModel)editModel);
+                post.WebsiteId = WebsiteInstance.Id;
+
                 _unitOfWork.Posts.Insert(post);
             }
             else
             {
                 post = this.GetById<Post>(editModel.VanityId);
                 Mapper.Map((PostEditModel)editModel, post);
+                post.WebsiteId = WebsiteInstance.Id;
 
                 _unitOfWork.Posts.Update(post);
             }

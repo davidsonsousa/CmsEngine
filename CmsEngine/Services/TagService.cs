@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using AutoMapper;
 using CmsEngine.Attributes;
 using CmsEngine.Data.EditModels;
 using CmsEngine.Data.Models;
@@ -207,12 +206,15 @@ namespace CmsEngine
             if (editModel.IsNew)
             {
                 tag = Mapper.Map<TagEditModel, Tag>((TagEditModel)editModel);
+                tag.WebsiteId = WebsiteInstance.Id;
+
                 _unitOfWork.Tags.Insert(tag);
             }
             else
             {
                 tag = this.GetById<Tag>(editModel.VanityId);
                 Mapper.Map((TagEditModel)editModel, tag);
+                tag.WebsiteId = WebsiteInstance.Id;
 
                 _unitOfWork.Tags.Update(tag);
             }
