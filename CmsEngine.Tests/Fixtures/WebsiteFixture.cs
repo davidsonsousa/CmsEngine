@@ -57,8 +57,11 @@ namespace CmsEngine.Tests
         private void SetupWebsiteMapper()
         {
             _moqMapper.Setup(x => x.Map<Website, WebsiteEditModel>(It.IsAny<Website>())).Returns(GetWebsiteEditModel());
+            _moqMapper.Setup(x => x.Map<WebsiteEditModel, Website>(It.IsAny<WebsiteEditModel>())).Returns(new Website());
+
             _moqMapper.Setup(x => x.Map<Website, WebsiteViewModel>(It.IsAny<Website>())).Returns(GetWebsiteViewModel());
             _moqMapper.Setup(x => x.Map<Website, WebsiteViewModel>(null)).Returns<WebsiteViewModel>(null);
+
             _moqMapper.Setup(x => x.Map<IEnumerable<Website>, IEnumerable<WebsiteViewModel>>(It.IsAny<IEnumerable<Website>>())).Returns(GetWebsiteViewModels());
         }
     }

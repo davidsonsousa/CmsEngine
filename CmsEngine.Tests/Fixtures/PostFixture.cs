@@ -57,8 +57,11 @@ namespace CmsEngine.Tests
         private void SetupPostMapper()
         {
             _moqMapper.Setup(x => x.Map<Post, PostEditModel>(It.IsAny<Post>())).Returns(GetPostEditModel());
+            _moqMapper.Setup(x => x.Map<PostEditModel, Post>(It.IsAny<PostEditModel>())).Returns(new Post());
+
             _moqMapper.Setup(x => x.Map<Post, PostViewModel>(It.IsAny<Post>())).Returns(GetPostViewModel());
             _moqMapper.Setup(x => x.Map<Post, PostViewModel>(null)).Returns<PostViewModel>(null);
+
             _moqMapper.Setup(x => x.Map<IEnumerable<Post>, IEnumerable<PostViewModel>>(It.IsAny<IEnumerable<Post>>())).Returns(GetPostViewModels());
         }
     }

@@ -57,8 +57,11 @@ namespace CmsEngine.Tests
         private void SetupPageMapper()
         {
             _moqMapper.Setup(x => x.Map<Page, PageEditModel>(It.IsAny<Page>())).Returns(GetPageEditModel());
+            _moqMapper.Setup(x => x.Map<PageEditModel, Page>(It.IsAny<PageEditModel>())).Returns(new Page());
+
             _moqMapper.Setup(x => x.Map<Page, PageViewModel>(It.IsAny<Page>())).Returns(GetPageViewModel());
             _moqMapper.Setup(x => x.Map<Page, PageViewModel>(null)).Returns<PageViewModel>(null);
+
             _moqMapper.Setup(x => x.Map<IEnumerable<Page>, IEnumerable<PageViewModel>>(It.IsAny<IEnumerable<Page>>())).Returns(GetPageViewModels());
         }
 
