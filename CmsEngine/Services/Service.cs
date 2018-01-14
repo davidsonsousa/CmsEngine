@@ -12,6 +12,7 @@ using CmsEngine.Extensions;
 using CmsEngine.Helpers;
 using CmsEngine.Utils;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 
 namespace CmsEngine
 {
@@ -20,6 +21,7 @@ namespace CmsEngine
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly UserManager<ApplicationUser> _userManager;
         private Website _websiteInstance;
 
         #region Properties
@@ -52,11 +54,12 @@ namespace CmsEngine
 
         #endregion
 
-        public CmsService(IUnitOfWork uow, IMapper mapper, IHttpContextAccessor hca)
+        public CmsService(IUnitOfWork uow, IMapper mapper, IHttpContextAccessor hca, UserManager<ApplicationUser> userManager)
         {
             _unitOfWork = uow;
             _mapper = mapper;
             _httpContextAccessor = hca;
+            _userManager = userManager;
         }
 
         public IQueryable<T> GetAll<T>(string relatedTable = "") where T : BaseModel
