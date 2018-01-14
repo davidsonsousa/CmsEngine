@@ -70,6 +70,7 @@ namespace CmsEngine.Tests
             SetupTagMapper();
             SetupCategoryMapper();
             SetupWebsiteMapper();
+            SetupUserMapper();
         }
 
         /// <summary>
