@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using AutoMapper;
 using CmsEngine.Data.EditModels;
@@ -15,6 +16,7 @@ namespace CmsEngine.Data
             MapCategory();
             MapTag();
             MapWebsite();
+            MapUsers();
         }
 
         private void MapPost()
@@ -85,6 +87,21 @@ namespace CmsEngine.Data
             // View model
             CreateMap<Website, WebsiteViewModel>();
             CreateMap<WebsiteViewModel, Website>();
+        }
+
+        private void MapUsers()
+        {
+            // Edit model
+            CreateMap<ApplicationUser, UserEditModel>()
+                .ForMember(dest => dest.VanityId, opt => opt.MapFrom(src => src.Id));
+            CreateMap<UserEditModel, ApplicationUser>()
+                .ForMember(em => em.Id, opt => opt.Ignore());
+
+            // View model
+            CreateMap<ApplicationUser, UserViewModel>()
+                .ForMember(dest => dest.VanityId, opt => opt.MapFrom(src => Guid.Parse(src.Id)));
+            CreateMap<UserViewModel, ApplicationUser>()
+                .ForMember(em => em.Id, opt => opt.Ignore());
         }
     }
 }
