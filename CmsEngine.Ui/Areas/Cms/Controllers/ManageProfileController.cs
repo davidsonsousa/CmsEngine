@@ -152,6 +152,8 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
         [HttpGet]
         public async Task<IActionResult> ChangePassword()
         {
+            this.SetupMessages("Change password", PageType.Create, panelTitle: "Change password");
+
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
             {
@@ -172,6 +174,8 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ChangePassword(ChangePasswordViewModel model)
         {
+            this.SetupMessages("Change password", PageType.Create, panelTitle: "Change password");
+
             if (!ModelState.IsValid)
             {
                 return View(model);
