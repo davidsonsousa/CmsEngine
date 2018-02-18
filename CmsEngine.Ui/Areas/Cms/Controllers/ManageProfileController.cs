@@ -17,7 +17,7 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
 {
     [Authorize]
     [Area("Cms")]
-    public class ManageController : BaseController
+    public class ManageProfileController : BaseController
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
@@ -27,11 +27,11 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
 
         private const string AuthenicatorUriFormat = "otpauth://totp/{0}:{1}?secret={2}&issuer={0}&digits=6";
 
-        public ManageController(
+        public ManageProfileController(
           UserManager<ApplicationUser> userManager,
           SignInManager<ApplicationUser> signInManager,
           IEmailSender emailSender,
-          ILogger<ManageController> logger,
+          ILogger<ManageProfileController> logger,
           UrlEncoder urlEncoder)
         {
             _userManager = userManager;
