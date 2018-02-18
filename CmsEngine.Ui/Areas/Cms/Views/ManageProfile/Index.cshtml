@@ -1,0 +1,76 @@
+@model IndexViewModel
+
+@section Breadcrumb {
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="~/cms">Dashboard</a></li>
+        <li class="breadcrumb-item active">@ViewBag.PageTitle</li>
+    </ol>
+}
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <strong>@ViewBag.PanelTitle</strong>
+            </div>
+            <form method="post">
+                <div class="card-body">
+                    <div asp-validation-summary="All" class="text-danger"></div>
+                    <div class="form-group row">
+                        <label asp-for="Username" class="col-md-3 form-control-label"></label>
+                        <div class="col-md-9">
+                            <input asp-for="Username" class="form-control" disabled />
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label asp-for="Name" class="col-md-3 form-control-label"></label>
+                        <div class="col-md-9">
+                            <input asp-for="Name" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label asp-for="Surname" class="col-md-3 form-control-label"></label>
+                        <div class="col-md-9">
+                            <input asp-for="Surname" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label asp-for="Email" class="col-md-3 form-control-label"></label>
+                        @if (Model.IsEmailConfirmed)
+                        {
+                            <div class="col-md-9">
+                                <div class="input-group">
+                                    <input asp-for="Email" class="form-control" />
+                                    <span class="input-group-addon" aria-hidden="true"><span class="fa fa-check-circle text-success"></span></span>
+                                </div>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="col-md-9">
+                                <input asp-for="Email" class="form-control" />
+                                <button asp-action="SendVerificationEmail" class="btn btn-link">Send verification email</button>
+                            </div>
+                        }
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+                    <div class="form-group row">
+                        <label asp-for="PhoneNumber" class="col-md-3 form-control-label"></label>
+                        <div class="col-md-9">
+                            <input asp-for="PhoneNumber" class="form-control" />
+                            <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <button type="submit" class="btn btn-primary"><i class="fa fa-dot-circle-o"></i> Save</button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+}

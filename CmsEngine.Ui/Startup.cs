@@ -46,6 +46,12 @@ namespace CmsEngine.Ui
             // Add Unit of Work
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
+            services.ConfigureApplicationCookie(options =>
+            {
+                options.LoginPath = "/Cms/Account/Login";
+                options.LogoutPath = "/Cms/Account/Logout";
+                options.AccessDeniedPath = "/Cms/Account/AccessDenied";
+            });
             services.AddMvc();
         }
 

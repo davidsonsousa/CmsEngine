@@ -12,9 +12,10 @@ using System;
 namespace CmsEngine.Migrations
 {
     [DbContext(typeof(CmsEngineContext))]
-    partial class CmsEngineContextModelSnapshot : ModelSnapshot
+    [Migration("20180218132611_ChangingUserProperties")]
+    partial class ChangingUserProperties
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

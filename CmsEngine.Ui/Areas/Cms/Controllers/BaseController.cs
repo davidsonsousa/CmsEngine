@@ -11,6 +11,11 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
     {
         protected readonly CmsService service;
 
+        public BaseController()
+        {
+
+        }
+
         public BaseController(IUnitOfWork uow, IMapper mapper, IHttpContextAccessor hca, UserManager<ApplicationUser> userManager)
         {
             service = new CmsService(uow, mapper, hca, userManager);
