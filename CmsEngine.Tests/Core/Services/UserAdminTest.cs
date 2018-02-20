@@ -1,8 +1,6 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using CmsEngine.Data.EditModels;
-using CmsEngine.Data.ViewModels;
 using Xunit;
 
 namespace CmsEngine.Tests.Core.Services
@@ -34,45 +32,45 @@ namespace CmsEngine.Tests.Core.Services
         //    Assert.Equal(expectedResult, response.Count());
         //}
 
-        [Fact]
-        public void GetAllReadOnly_ShouldReturnAllUsersAsEnumerable()
-        {
-            // Arrange
-            var expectedResult = testFixture.GetTestUsers().Count;
+        //[Fact]
+        //public void GetAllReadOnly_ShouldReturnAllUsersAsEnumerable()
+        //{
+        //    // Arrange
+        //    var expectedResult = testFixture.GetTestUsers().Count;
 
-            // Act
-            var response = (IEnumerable<UserViewModel>)moqUserService.GetAllUsersReadOnly();
+        //    // Act
+        //    var response = (IEnumerable<UserViewModel>)moqUserService.GetAllUsersReadOnly();
 
-            // Assert
-            Assert.True(response is IEnumerable<UserViewModel>, "Response is not IEnumerable<UserViewModel>");
-            Assert.Equal(expectedResult, response.Count());
-        }
+        //    // Assert
+        //    Assert.True(response is IEnumerable<UserViewModel>, "Response is not IEnumerable<UserViewModel>");
+        //    Assert.Equal(expectedResult, response.Count());
+        //}
 
-        [Fact]
-        public void GetById_ShouldReturnCorrectUser()
-        {
-            // Arrange
-            var expectedResult = testFixture.GetTestUsers().FirstOrDefault(q => q.Id == "8633a850-128f-4425-a2ec-30e23826b7ff").Name;
+        //[Fact]
+        //public void GetById_ShouldReturnCorrectUser()
+        //{
+        //    // Arrange
+        //    var expectedResult = testFixture.GetTestUsers().FirstOrDefault(q => q.Id == "8633a850-128f-4425-a2ec-30e23826b7ff").Name;
 
-            // Act
-            var response = (UserViewModel)moqUserService.GetUserById(new Guid("8633a850-128f-4425-a2ec-30e23826b7ff"));
+        //    // Act
+        //    var response = (UserViewModel)moqUserService.GetUserById(new Guid("8633a850-128f-4425-a2ec-30e23826b7ff"));
 
-            // Assert
-            Assert.Equal(expectedResult, response.Name);
-        }
+        //    // Assert
+        //    Assert.Equal(expectedResult, response.Name);
+        //}
 
-        [Fact]
-        public void GetByUsername_ShouldReturnCorrectUser()
-        {
-            // Arrange
-            var expectedResult = testFixture.GetTestUsers().FirstOrDefault(q => q.Id == "8633a850-128f-4425-a2ec-30e23826b7ff").Name;
+        //[Fact]
+        //public void GetByUsername_ShouldReturnCorrectUser()
+        //{
+        //    // Arrange
+        //    var expectedResult = testFixture.GetTestUsers().FirstOrDefault(q => q.Id == "8633a850-128f-4425-a2ec-30e23826b7ff").Name;
 
-            // Act
-            var response = (UserViewModel)moqUserService.GetUserByUsername("janedeo@something.com");
+        //    // Act
+        //    var response = (UserViewModel)moqUserService.GetUserByUsername("janedeo@something.com");
 
-            // Assert
-            Assert.Equal(expectedResult, response.Name);
-        }
+        //    // Assert
+        //    Assert.Equal(expectedResult, response.Name);
+        //}
 
         #endregion
 
@@ -140,29 +138,29 @@ namespace CmsEngine.Tests.Core.Services
             Assert.False(response.IsError, "Exception thrown");
         }
 
-        [Fact]
-        public void Delete_User_By_Id()
-        {
-            // Arrange
+        //[Fact]
+        //public void Delete_User_By_Id()
+        //{
+        //    // Arrange
 
-            // Act
-            var response = moqUserService.DeleteUser(new Guid("8633a850-128f-4425-a2ec-30e23826b7ff"));
+        //    // Act
+        //    var response = moqUserService.DeleteUser(new Guid("8633a850-128f-4425-a2ec-30e23826b7ff"));
 
-            // Assert
-            Assert.False(response.IsError, "Exception thrown");
-        }
+        //    // Assert
+        //    Assert.False(response.IsError, "Exception thrown");
+        //}
 
-        [Fact]
-        public void Delete_User_By_UserName()
-        {
-            // Arrange
+        //[Fact]
+        //public void Delete_User_By_UserName()
+        //{
+        //    // Arrange
 
-            // Act
-            var response = moqUserService.DeleteUser("johndoe@mail.com");
+        //    // Act
+        //    var response = moqUserService.DeleteUser("johndoe@mail.com");
 
-            // Assert
-            Assert.False(response.IsError, "Exception thrown");
-        }
+        //    // Assert
+        //    Assert.False(response.IsError, "Exception thrown");
+        //}
 
         #endregion
     }
