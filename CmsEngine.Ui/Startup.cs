@@ -48,6 +48,7 @@ namespace CmsEngine.Ui
 
             services.ConfigureApplicationCookie(options =>
             {
+                options.Cookie.Name = "CmsEngine";
                 options.LoginPath = "/Cms/Account/Login";
                 options.LogoutPath = "/Cms/Account/Logout";
                 options.AccessDeniedPath = "/Cms/Account/AccessDenied";

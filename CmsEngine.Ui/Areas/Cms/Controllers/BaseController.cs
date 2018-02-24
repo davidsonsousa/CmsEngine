@@ -1,12 +1,14 @@
 using AutoMapper;
 using CmsEngine.Data.AccessLayer;
 using CmsEngine.Data.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CmsEngine.Ui.Areas.Cms.Controllers
 {
+    [Authorize]
     public class BaseController : Controller
     {
         protected readonly CmsService service;
