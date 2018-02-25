@@ -47,7 +47,12 @@ namespace CmsEngine
 
         public IEditModel SetupPostEditModel()
         {
-            return new PostEditModel();
+            var editModel = new PostEditModel
+            {
+                Categories = this.PopulateCheckboxList<Category>()
+            };
+
+            return editModel;
         }
 
         public IEditModel SetupPostEditModel(int id)
