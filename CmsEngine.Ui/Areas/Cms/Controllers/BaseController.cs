@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace CmsEngine.Ui.Areas.Cms.Controllers
 {
@@ -21,6 +22,13 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
         public BaseController(IUnitOfWork uow, IMapper mapper, IHttpContextAccessor hca, UserManager<ApplicationUser> userManager)
         {
             service = new CmsService(uow, mapper, hca, userManager);
+        }
+
+        public override void OnActionExecuting(ActionExecutingContext context)
+        {
+            base.OnActionExecuting(context);
+
+            ViewBag.CurrentUser = service.CurrentUser;
         }
 
         protected void SetupMessages(string pageTitle, PageType pageType, string description = "", string panelTitle = "")
