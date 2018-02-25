@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 using AutoMapper;
 using CmsEngine.Attributes;
 using CmsEngine.Data.AccessLayer;
@@ -26,13 +27,14 @@ namespace CmsEngine
 
         #region Properties
 
-        //public IPrincipal CurrentUser
-        //{
-        //    get
-        //    {
-        //        return _httpContextAccessor.HttpContext.User;
-        //    }
-        //}
+        public UserViewModel CurrentUser
+        {
+            get
+            {
+                var task = Task.Run(async () => await GetUserByUsername(_httpContextAccessor.HttpContext.User.Identity.Name));
+                return (UserViewModel)task.Result;
+            }
+        }
 
         public Website WebsiteInstance
         {

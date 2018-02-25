@@ -1,4 +1,3 @@
-using System;
 using System.Linq;
 using AutoMapper;
 using CmsEngine.Data.EditModels;
@@ -93,13 +92,15 @@ namespace CmsEngine.Data
         {
             // Edit model
             CreateMap<ApplicationUser, UserEditModel>()
-                .ForMember(dest => dest.VanityId, opt => opt.MapFrom(src => src.Id));
+                .ForMember(em => em.Id, opt => opt.Ignore());
+            //.ForMember(dest => dest.VanityId, opt => opt.MapFrom(src => Guid.Parse(src.Id)));
             CreateMap<UserEditModel, ApplicationUser>()
                 .ForMember(em => em.Id, opt => opt.Ignore());
 
             // View model
             CreateMap<ApplicationUser, UserViewModel>()
-                .ForMember(dest => dest.VanityId, opt => opt.MapFrom(src => Guid.Parse(src.Id)));
+                .ForMember(em => em.Id, opt => opt.Ignore());
+            //.ForMember(dest => dest.VanityId, opt => opt.MapFrom(src => Guid.Parse(src.Id)));
             CreateMap<UserViewModel, ApplicationUser>()
                 .ForMember(em => em.Id, opt => opt.Ignore());
         }

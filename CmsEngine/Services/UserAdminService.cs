@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using CmsEngine.Attributes;
 using CmsEngine.Data.EditModels;
 using CmsEngine.Data.Models;
@@ -33,16 +34,16 @@ namespace CmsEngine
             return retValue;
         }
 
-        public IViewModel GetUserById(Guid id)
+        public async Task<IViewModel> GetUserById(Guid id)
         {
-            var item = _userManager.FindByIdAsync(id.ToString());
-            return Mapper.Map<ApplicationUser, UserViewModel>(item.Result);
+            var item = await _userManager.FindByIdAsync(id.ToString());
+            return Mapper.Map<ApplicationUser, UserViewModel>(item);
         }
 
-        public IViewModel GetUserByUsername(string userName)
+        public async Task<IViewModel> GetUserByUsername(string userName)
         {
-            var item = _userManager.FindByNameAsync(userName);
-            return Mapper.Map<ApplicationUser, UserViewModel>(item.Result);
+            var item = await _userManager.FindByNameAsync(userName);
+            return Mapper.Map<ApplicationUser, UserViewModel>(item);
         }
 
         #endregion
@@ -54,16 +55,16 @@ namespace CmsEngine
             return new UserEditModel();
         }
 
-        public IEditModel SetupUserEditModel(Guid id)
+        public async Task<IEditModel> SetupUserEditModel(Guid id)
         {
-            var item = _userManager.FindByIdAsync(id.ToString());
-            return Mapper.Map<ApplicationUser, UserEditModel>(item.Result);
+            var item = await _userManager.FindByIdAsync(id.ToString());
+            return Mapper.Map<ApplicationUser, UserEditModel>(item);
         }
 
-        public IEditModel SetupUserEditModel(string userName)
+        public async Task<IEditModel> SetupUserEditModel(string userName)
         {
-            var item = _userManager.FindByNameAsync(userName);
-            return Mapper.Map<ApplicationUser, UserEditModel>(item.Result);
+            var item = await _userManager.FindByNameAsync(userName);
+            return Mapper.Map<ApplicationUser, UserEditModel>(item);
         }
 
         #endregion
@@ -99,14 +100,14 @@ namespace CmsEngine
 
         #region Delete
 
-        public ReturnValue DeleteUser(Guid id)
+        public async Task<ReturnValue> DeleteUser(Guid id)
         {
             var returnValue = new ReturnValue();
             try
             {
                 var user = _userManager.Users.Where(q => q.Id == id.ToString()).FirstOrDefault();
-                var identityResult = _userManager.DeleteAsync(user);
-                returnValue.IsError = !identityResult.Result.Succeeded;
+                var identityResult = await _userManager.DeleteAsync(user);
+                returnValue.IsError = !identityResult.Succeeded;
 
                 if (!returnValue.IsError)
                 {
@@ -127,14 +128,14 @@ namespace CmsEngine
             return returnValue;
         }
 
-        public ReturnValue DeleteUser(string userName)
+        public async Task<ReturnValue> DeleteUser(string userName)
         {
             var returnValue = new ReturnValue();
             try
             {
                 var user = _userManager.Users.Where(q => q.UserName == userName).FirstOrDefault();
-                var identityResult = _userManager.DeleteAsync(user);
-                returnValue.IsError = !identityResult.Result.Succeeded;
+                var identityResult = await _userManager.DeleteAsync(user);
+                returnValue.IsError = !identityResult.Succeeded;
 
                 if (!returnValue.IsError)
                 {
@@ -205,20 +206,20 @@ namespace CmsEngine
 
         #region Helpers
 
-        private void PrepareUserForSaving(IEditModel editModel)
+        private async Task PrepareUserForSaving(IEditModel editModel)
         {
             ApplicationUser user;
 
             if (editModel.IsNew)
             {
                 user = Mapper.Map<UserEditModel, ApplicationUser>((UserEditModel)editModel);
-                _userManager.CreateAsync(user);
+                await _userManager.CreateAsync(user);
             }
             else
             {
-                user = _userManager.FindByIdAsync(editModel.VanityId.ToString()).Result;
+                user = await _userManager.FindByIdAsync(editModel.VanityId.ToString());
                 Mapper.Map((UserEditModel)editModel, user);
-                _userManager.UpdateAsync(user);
+                await _userManager.UpdateAsync(user);
             }
         }
 

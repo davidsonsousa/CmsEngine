@@ -13,6 +13,14 @@ namespace CmsEngine.Data.ViewModels
         [Searchable, Orderable, ShowOnDataTable(1)]
         public string Email { get; set; }
 
+        public string FullName
+        {
+            get
+            {
+                return $"{Name} {Surname}";
+            }
+        }
+
         public string UserName { get; set; }
     }
 }
