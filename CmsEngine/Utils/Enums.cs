@@ -1,4 +1,5 @@
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace CmsEngine
 {
@@ -44,11 +45,9 @@ namespace CmsEngine
     /// </summary>
     public enum DocumentStatus
     {
-        [Description("Published")]
         Published = 0,
-        [Description("Pending approval")]
+        [Display(Name = "Pending approval")]
         PendingApproval = 1,
-        [Description("Draft")]
         Draft = 2
     }
 
