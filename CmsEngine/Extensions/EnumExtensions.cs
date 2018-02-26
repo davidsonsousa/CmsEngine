@@ -1,7 +1,5 @@
-﻿using System;
-using System.ComponentModel;
+using System;
 using System.Linq;
-using System.Reflection;
 
 namespace CmsEngine.Extensions
 {
@@ -9,12 +7,10 @@ namespace CmsEngine.Extensions
     {
         public static string GetDescription(this Enum value)
         {
-            // Get attributes  
+            // Get attributes
             var field = value.GetType().GetField(value.ToString());
             var attributes = field.GetCustomAttributes(false);
 
-            // Description is in a hidden Attribute class called DisplayAttribute
-            // Not to be confused with DisplayNameAttribute
             dynamic displayAttribute = null;
 
             if (attributes.Any())
@@ -22,8 +18,8 @@ namespace CmsEngine.Extensions
                 displayAttribute = attributes.ElementAt(0);
             }
 
-            // Return description
-            return displayAttribute?.Description ?? "Description Not Found";
+            // Return name
+            return displayAttribute?.Name ?? field.Name;
         }
     }
 }
