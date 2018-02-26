@@ -3,12 +3,15 @@ using System.Linq;
 using System.Text;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
+using AutoMapper;
+using CmsEngine.Data.AccessLayer;
 using CmsEngine.Data.Models;
 using CmsEngine.Data.ViewModels.ManageViewModels;
 using CmsEngine.Extensions;
 using CmsEngine.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -27,12 +30,12 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
 
         private const string AuthenicatorUriFormat = "otpauth://totp/{0}:{1}?secret={2}&issuer={0}&digits=6";
 
-        public ManageProfileController(
-          UserManager<ApplicationUser> userManager,
-          SignInManager<ApplicationUser> signInManager,
-          IEmailSender emailSender,
-          ILogger<ManageProfileController> logger,
-          UrlEncoder urlEncoder)
+        public ManageProfileController(IUnitOfWork uow, IMapper mapper, IHttpContextAccessor hca
+                                     , UserManager<ApplicationUser> userManager
+                                     , SignInManager<ApplicationUser> signInManager
+                                     , IEmailSender emailSender
+                                     , ILogger<ManageProfileController> logger
+                                     , UrlEncoder urlEncoder) : base(uow, mapper, hca, userManager)
         {
             _userManager = userManager;
             _signInManager = signInManager;
