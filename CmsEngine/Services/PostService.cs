@@ -5,6 +5,7 @@ using CmsEngine.Attributes;
 using CmsEngine.Data.EditModels;
 using CmsEngine.Data.Models;
 using CmsEngine.Data.ViewModels;
+using CmsEngine.Extensions;
 using CmsEngine.Utils;
 
 namespace CmsEngine
@@ -47,7 +48,12 @@ namespace CmsEngine
 
         public IEditModel SetupPostEditModel()
         {
-            return new PostEditModel();
+            var editModel = new PostEditModel
+            {
+                Categories = this.PopulateCheckboxList<Category>()
+            };
+
+            return editModel;
         }
 
         public IEditModel SetupPostEditModel(int id)
@@ -208,21 +214,60 @@ namespace CmsEngine
         private void PreparePostForSaving(IEditModel editModel)
         {
             Post post;
+            var postEditModel = (PostEditModel)editModel;
 
             if (editModel.IsNew)
             {
-                post = Mapper.Map<PostEditModel, Post>((PostEditModel)editModel);
+                post = Mapper.Map<PostEditModel, Post>(postEditModel);
                 post.WebsiteId = WebsiteInstance.Id;
 
                 _unitOfWork.Posts.Insert(post);
+
+                PrepareRelatedCategories(post, postEditModel);
             }
             else
             {
-                post = this.GetById<Post>(editModel.VanityId);
-                Mapper.Map((PostEditModel)editModel, post);
-                post.WebsiteId = WebsiteInstance.Id;
+                post = this.GetById<Post>(editModel.VanityId, "PostCategories.Category");
+                Mapper.Map(postEditModel, post);
 
                 _unitOfWork.Posts.Update(post);
+
+                PrepareRelatedCategories(post, postEditModel);
+            }
+        }
+
+        private void PrepareRelatedCategories(Post post, PostEditModel postEditModel)
+        {
+            // TODO: Improve the logic of this method
+
+            IEnumerable<PostCategory> newItems = postEditModel.SelectedCategories?
+                                                .Select(x => new PostCategory
+                                                {
+                                                    CategoryId = GetById<Category>(Guid.Parse(x)).Id,
+                                                    Post = post
+                                                });
+
+            // Check if new items are null
+            if (newItems == null)
+            {
+                newItems = new List<PostCategory>();
+            }
+
+            ICollection<PostCategory> currentItems = null;
+
+            // Check current items
+            if (post.PostCategories != null)
+            {
+                currentItems = post.PostCategories;
+            }
+
+            // Check if the values were assigned
+            if (currentItems != null)
+            {
+                _unitOfWork.GetRepository<PostCategory>()
+                           .DeleteMany(currentItems.Except(newItems, x => x.CategoryId));
+                _unitOfWork.GetRepository<PostCategory>()
+                           .InsertMany(newItems.Except(currentItems, x => x.CategoryId));
             }
         }
 

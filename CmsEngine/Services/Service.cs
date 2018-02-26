@@ -109,7 +109,8 @@ namespace CmsEngine
             var returnValue = new ReturnValue();
             try
             {
-                _unitOfWork.GetRepository<T>().BulkUpdate(q => id.Contains(q.VanityId), u => u.IsDeleted = true);
+                var itemsToDelete = _unitOfWork.GetRepository<T>().GetReadOnly(q => id.Contains(q.VanityId));
+                _unitOfWork.GetRepository<T>().DeleteMany(itemsToDelete);
 
                 _unitOfWork.Save();
 
