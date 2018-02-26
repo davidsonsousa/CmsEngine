@@ -202,14 +202,6 @@ namespace CmsEngine.Data.Models
         public static void ConfigurePostCategory(EntityTypeBuilder<PostCategory> b)
         {
             b.HasKey(model => new { model.PostId, model.CategoryId });
-
-            b.HasOne(model => model.Post)
-                .WithMany(p => p.PostCategories)
-                .HasForeignKey(model => model.PostId);
-
-            b.HasOne(model => model.Category)
-                .WithMany(c => c.PostCategories)
-                .HasForeignKey(model => model.CategoryId);
         }
 
         public static void ConfigurePostTag(EntityTypeBuilder<PostTag> b)
