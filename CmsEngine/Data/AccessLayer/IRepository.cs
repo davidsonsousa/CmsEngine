@@ -32,7 +32,7 @@ namespace CmsEngine.Data.AccessLayer
         /// Inserts multiple records in the database
         /// </summary>
         /// <param name="entities"></param>
-        void InsertBulk(IEnumerable<T> entities);
+        void InsertMany(IEnumerable<T> entities);
 
         /// <summary>
         /// Updates record
@@ -41,16 +41,21 @@ namespace CmsEngine.Data.AccessLayer
         void Update(T entity);
 
         /// <summary>
-        /// Updates multiple records based on condition
+        /// Updates multiple records in the database
         /// </summary>
-        /// <param name="where"></param>
-        /// <param name="update"></param>
-        void BulkUpdate(Expression<Func<T, bool>> where, Action<T> update);
+        /// <param name="entities"></param>
+        void UpdateMany(IEnumerable<T> entities);
 
         /// <summary>
         /// Deletes record from database
         /// </summary>
         /// <param name="entity"></param>
         void Delete(T entity);
+
+        /// <summary>
+        /// Deletes multiple records in the database
+        /// </summary>
+        /// <param name="entities"></param>
+        void DeleteMany(IEnumerable<T> entities);
     }
 }

@@ -38,7 +38,7 @@ namespace CmsEngine.Data.AccessLayer
                 query = query.Include(relatedTable);
             }
 
-            return query.AsNoTracking();
+            return query;//.AsNoTracking();
         }
 
         public IEnumerable<T> GetReadOnly(Expression<Func<T, bool>> filter = null)
@@ -55,31 +55,53 @@ namespace CmsEngine.Data.AccessLayer
 
         public void Insert(T entity)
         {
-            _dbSet.Add(entity);
+            if (entity != null)
+            {
+                _dbSet.Add(entity);
+            }
         }
 
-        public void InsertBulk(IEnumerable<T> entities)
+        public void InsertMany(IEnumerable<T> entities)
         {
-            _dbSet.AddRange(entities);
+            if (entities != null)
+            {
+                _dbSet.AddRange(entities);
+            }
         }
 
         public void Update(T entity)
         {
-            Attach(entity);
-            _context.Entry(entity).State = EntityState.Modified;
+            if (entity != null)
+            {
+                Attach(entity);
+                _context.Entry(entity).State = EntityState.Modified;
+
+            }
         }
 
-        public void BulkUpdate(Expression<Func<T, bool>> where, Action<T> update)
+        public void UpdateMany(IEnumerable<T> entities)
         {
-            // TODO: There must be a better way to do this
-            var items = _dbSet.Where(where).ToList();
-            items.ForEach(update);
+            if (entities != null)
+            {
+                _context.UpdateRange(entities);
+            }
         }
 
         public void Delete(T entity)
         {
-            var entry = _context.Entry(entity);
-            entry.State = EntityState.Deleted;
+            if (entity != null)
+            {
+                _context.Remove(entity);
+
+            }
+        }
+
+        public void DeleteMany(IEnumerable<T> entities)
+        {
+            if (entities != null)
+            {
+                _context.RemoveRange(entities);
+            }
         }
 
         private void Attach(T entity)
