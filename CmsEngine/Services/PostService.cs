@@ -216,6 +216,12 @@ namespace CmsEngine
             Post post;
             var postEditModel = (PostEditModel)editModel;
 
+            // The field is varchar(20)
+            postEditModel.Author = CurrentUser.FullName.Length > 20
+                                   ? CurrentUser.FullName.Substring(0, 20)
+                                   : CurrentUser.FullName;
+            postEditModel.AuthorId = CurrentUser.VanityId.ToString();
+
             if (editModel.IsNew)
             {
                 post = Mapper.Map<PostEditModel, Post>(postEditModel);
