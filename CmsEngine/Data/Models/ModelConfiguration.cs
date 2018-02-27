@@ -70,8 +70,11 @@ namespace CmsEngine.Data.Models
             //b.Property(model => model.DocumentContent)
             //    .IsRequired();
 
+            b.Property(model => model.AuthorId)
+                .HasMaxLength(36)
+                .IsRequired();
+
             b.Property(model => model.Author)
-                .HasMaxLength(20)
                 .IsRequired();
 
             b.Property(model => model.PublishedOn)

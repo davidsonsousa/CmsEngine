@@ -203,6 +203,14 @@ namespace CmsEngine
         {
             Page page;
 
+            var pageEditModel = (PageEditModel)editModel;
+
+            // The field is varchar(20)
+            pageEditModel.Author = CurrentUser.FullName.Length > 20
+                                   ? CurrentUser.FullName.Substring(0, 20)
+                                   : CurrentUser.FullName;
+            pageEditModel.AuthorId = CurrentUser.VanityId.ToString();
+
             if (editModel.IsNew)
             {
                 page = Mapper.Map<PageEditModel, Page>((PageEditModel)editModel);
