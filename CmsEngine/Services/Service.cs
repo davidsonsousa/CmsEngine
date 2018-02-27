@@ -260,7 +260,7 @@ namespace CmsEngine
                         break;
                 }
 
-                propertyValue = $"<span class=\"label label-{generalStatus.ToString().ToLowerInvariant()}\">{propertyValue.ToEnum<DocumentStatus>().GetDescription()}</status-label>" ?? "";
+                propertyValue = $"<span class=\"label label-{generalStatus.ToString().ToLowerInvariant()}\">{propertyValue.ToEnum<DocumentStatus>().GetName()}</status-label>" ?? "";
             }
 
             return propertyValue;
