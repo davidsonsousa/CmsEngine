@@ -4,7 +4,7 @@ using CmsEngine.Data.EditModels;
 using CmsEngine.Data.Models;
 using CmsEngine.Data.ViewModels;
 
-namespace CmsEngine.Data
+namespace CmsEngine.Data.Mapper
 {
     public class MappingProfile : Profile
     {
@@ -92,17 +92,17 @@ namespace CmsEngine.Data
         {
             // Edit model
             CreateMap<ApplicationUser, UserEditModel>()
-                .ForMember(em => em.Id, opt => opt.Ignore());
-            //.ForMember(dest => dest.VanityId, opt => opt.MapFrom(src => Guid.Parse(src.Id)));
+                .ForMember(dest => dest.VanityId, opt => opt.ResolveUsing<UsersStringToGuidResolver>())
+                .ForMember(dest => dest.Id, opt => opt.Ignore());
             CreateMap<UserEditModel, ApplicationUser>()
-                .ForMember(em => em.Id, opt => opt.Ignore());
+                .ForMember(dest => dest.Id, opt => opt.ResolveUsing<UsersGuidToStringResolver>());
 
             // View model
             CreateMap<ApplicationUser, UserViewModel>()
-                .ForMember(em => em.Id, opt => opt.Ignore());
-            //.ForMember(dest => dest.VanityId, opt => opt.MapFrom(src => Guid.Parse(src.Id)));
+                .ForMember(dest => dest.VanityId, opt => opt.ResolveUsing<UsersStringToGuidResolver>())
+                .ForMember(dest => dest.Id, opt => opt.Ignore());
             CreateMap<UserViewModel, ApplicationUser>()
-                .ForMember(em => em.Id, opt => opt.Ignore());
+                .ForMember(dest => dest.Id, opt => opt.ResolveUsing<UsersGuidToStringResolver>());
         }
     }
 }
