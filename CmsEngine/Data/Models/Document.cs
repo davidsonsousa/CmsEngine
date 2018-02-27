@@ -23,6 +23,9 @@ namespace CmsEngine.Data.Models
 
         public string DocumentContent { get; set; }
 
+        public string AuthorId { get; set; }
+
+        [MaxLength(50, ErrorMessage = "The author must have less than 50 characters")]
         public string Author { get; set; }
 
         public DocumentStatus Status { get; set; }
