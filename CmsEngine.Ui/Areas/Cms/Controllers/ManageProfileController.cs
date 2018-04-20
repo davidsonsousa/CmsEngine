@@ -3,21 +3,24 @@ using System.Linq;
 using System.Text;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
+using AutoMapper;
+using CmsEngine.Data.AccessLayer;
+using CmsEngine.Data.Models;
 using CmsEngine.Data.ViewModels.ManageViewModels;
 using CmsEngine.Extensions;
 using CmsEngine.Services;
-using CmsEngine.Ui.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
-namespace CmsEngine.Ui.Admin.Controllers
+namespace CmsEngine.Ui.Areas.Cms.Controllers
 {
     [Authorize]
     [Area("Cms")]
-    public class ManageController : Controller
+    public class ManageProfileController : BaseController
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
@@ -27,12 +30,12 @@ namespace CmsEngine.Ui.Admin.Controllers
 
         private const string AuthenicatorUriFormat = "otpauth://totp/{0}:{1}?secret={2}&issuer={0}&digits=6";
 
-        public ManageController(
-          UserManager<ApplicationUser> userManager,
-          SignInManager<ApplicationUser> signInManager,
-          IEmailSender emailSender,
-          ILogger<ManageController> logger,
-          UrlEncoder urlEncoder)
+        public ManageProfileController(IUnitOfWork uow, IMapper mapper, IHttpContextAccessor hca
+                                     , UserManager<ApplicationUser> userManager
+                                     , SignInManager<ApplicationUser> signInManager
+                                     , IEmailSender emailSender
+                                     , ILogger<ManageProfileController> logger
+                                     , UrlEncoder urlEncoder) : base(uow, mapper, hca, userManager)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -47,6 +50,8 @@ namespace CmsEngine.Ui.Admin.Controllers
         [HttpGet]
         public async Task<IActionResult> Index()
         {
+            this.SetupMessages("Profile", PageType.Create, panelTitle: "Profile information");
+
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
             {
@@ -56,6 +61,8 @@ namespace CmsEngine.Ui.Admin.Controllers
             var model = new IndexViewModel
             {
                 Username = user.UserName,
+                Name = user.Name,
+                Surname = user.Surname,
                 Email = user.Email,
                 PhoneNumber = user.PhoneNumber,
                 IsEmailConfirmed = user.EmailConfirmed,
@@ -69,6 +76,8 @@ namespace CmsEngine.Ui.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Index(IndexViewModel model)
         {
+            this.SetupMessages("Profile", PageType.Create, panelTitle: "Profile information");
+
             if (!ModelState.IsValid)
             {
                 return View(model);
@@ -79,6 +88,17 @@ namespace CmsEngine.Ui.Admin.Controllers
             {
                 throw new ApplicationException($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
             }
+
+            user.Name = model.Name;
+            user.Surname = model.Surname;
+
+            var updateResult = await _userManager.UpdateAsync(user);
+            if (!updateResult.Succeeded)
+            {
+                throw new ApplicationException($"Unexpected error occurred updating user with ID '{user.Id}'.");
+            }
+
+            #region Set email and phone number
 
             var email = user.Email;
             if (model.Email != email)
@@ -99,6 +119,10 @@ namespace CmsEngine.Ui.Admin.Controllers
                     throw new ApplicationException($"Unexpected error occurred setting phone number for user with ID '{user.Id}'.");
                 }
             }
+
+            #endregion
+
+            _logger.LogInformation("User updated his profile sucessfully");
 
             StatusMessage = "Your profile has been updated";
             return RedirectToAction(nameof(Index));
@@ -131,6 +155,8 @@ namespace CmsEngine.Ui.Admin.Controllers
         [HttpGet]
         public async Task<IActionResult> ChangePassword()
         {
+            this.SetupMessages("Change password", PageType.Create, panelTitle: "Change password");
+
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
             {
@@ -151,6 +177,8 @@ namespace CmsEngine.Ui.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ChangePassword(ChangePasswordViewModel model)
         {
+            this.SetupMessages("Change password", PageType.Create, panelTitle: "Change password");
+
             if (!ModelState.IsValid)
             {
                 return View(model);

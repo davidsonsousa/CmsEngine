@@ -4,7 +4,7 @@ using CmsEngine.Data.EditModels;
 using CmsEngine.Data.Models;
 using CmsEngine.Data.ViewModels;
 
-namespace CmsEngine.Data
+namespace CmsEngine.Data.Mapper
 {
     public class MappingProfile : Profile
     {
@@ -15,6 +15,7 @@ namespace CmsEngine.Data
             MapCategory();
             MapTag();
             MapWebsite();
+            MapUsers();
         }
 
         private void MapPost()
@@ -85,6 +86,23 @@ namespace CmsEngine.Data
             // View model
             CreateMap<Website, WebsiteViewModel>();
             CreateMap<WebsiteViewModel, Website>();
+        }
+
+        private void MapUsers()
+        {
+            // Edit model
+            CreateMap<ApplicationUser, UserEditModel>()
+                .ForMember(dest => dest.VanityId, opt => opt.ResolveUsing<UsersStringToGuidResolver>())
+                .ForMember(dest => dest.Id, opt => opt.Ignore());
+            CreateMap<UserEditModel, ApplicationUser>()
+                .ForMember(dest => dest.Id, opt => opt.ResolveUsing<UsersGuidToStringResolver>());
+
+            // View model
+            CreateMap<ApplicationUser, UserViewModel>()
+                .ForMember(dest => dest.VanityId, opt => opt.ResolveUsing<UsersStringToGuidResolver>())
+                .ForMember(dest => dest.Id, opt => opt.Ignore());
+            CreateMap<UserViewModel, ApplicationUser>()
+                .ForMember(dest => dest.Id, opt => opt.ResolveUsing<UsersGuidToStringResolver>());
         }
     }
 }

@@ -70,8 +70,11 @@ namespace CmsEngine.Data.Models
             //b.Property(model => model.DocumentContent)
             //    .IsRequired();
 
+            b.Property(model => model.AuthorId)
+                .HasMaxLength(36)
+                .IsRequired();
+
             b.Property(model => model.Author)
-                .HasMaxLength(20)
                 .IsRequired();
 
             b.Property(model => model.PublishedOn)
@@ -202,14 +205,6 @@ namespace CmsEngine.Data.Models
         public static void ConfigurePostCategory(EntityTypeBuilder<PostCategory> b)
         {
             b.HasKey(model => new { model.PostId, model.CategoryId });
-
-            b.HasOne(model => model.Post)
-                .WithMany(p => p.PostCategories)
-                .HasForeignKey(model => model.PostId);
-
-            b.HasOne(model => model.Category)
-                .WithMany(c => c.PostCategories)
-                .HasForeignKey(model => model.CategoryId);
         }
 
         public static void ConfigurePostTag(EntityTypeBuilder<PostTag> b)

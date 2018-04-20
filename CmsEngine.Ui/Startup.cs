@@ -1,9 +1,8 @@
 using AutoMapper;
 using CmsEngine.Data;
 using CmsEngine.Data.AccessLayer;
+using CmsEngine.Data.Models;
 using CmsEngine.Services;
-using CmsEngine.Ui.Data;
-using CmsEngine.Ui.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -27,11 +26,12 @@ namespace CmsEngine.Ui
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<ApplicationDbContext>(options =>
+            // Add CmsEngineContext
+            services.AddDbContextPool<CmsEngineContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddIdentity<ApplicationUser, IdentityRole>()
-                .AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddEntityFrameworkStores<CmsEngineContext>()
                 .AddDefaultTokenProviders();
 
             // Add application services.
@@ -43,13 +43,16 @@ namespace CmsEngine.Ui
             // Add AutoMapper
             services.AddAutoMapper();
 
-            // Add CmsEngineContext
-            var connection = Configuration.GetConnectionString("DefaultConnection");
-            services.AddDbContextPool<CmsEngineContext>(options => options.UseSqlServer(connection));
-
             // Add Unit of Work
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
+            services.ConfigureApplicationCookie(options =>
+            {
+                options.Cookie.Name = "CmsEngine";
+                options.LoginPath = "/Cms/Account/Login";
+                options.LogoutPath = "/Cms/Account/Logout";
+                options.AccessDeniedPath = "/Cms/Account/AccessDenied";
+            });
             services.AddMvc();
         }
 

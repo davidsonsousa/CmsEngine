@@ -6,6 +6,7 @@ using AutoMapper;
 using CmsEngine.Data.AccessLayer;
 using CmsEngine.Data.Models;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Moq;
 
 namespace CmsEngine.Tests
@@ -21,6 +22,7 @@ namespace CmsEngine.Tests
         private Mock<IUnitOfWork> _moqUnitOfWork;
         private Mock<IMapper> _moqMapper;
         private Mock<IHttpContextAccessor> _moqHttpContextAccessor;
+        private Mock<UserManager<ApplicationUser>> _moqUserManager;
 
         private CmsService _service;
         public CmsService Service { get { return _service; } }
@@ -32,8 +34,9 @@ namespace CmsEngine.Tests
             SetupUnitOfWork();
             SetupMappers();
             SetupHttpContextAccessor();
+            SetupUserManager();
 
-            _service = new CmsService(_moqUnitOfWork.Object, _moqMapper.Object, _moqHttpContextAccessor.Object);
+            _service = new CmsService(_moqUnitOfWork.Object, _moqMapper.Object, _moqHttpContextAccessor.Object, _moqUserManager.Object);
         }
 
         /// <summary>
@@ -67,6 +70,7 @@ namespace CmsEngine.Tests
             SetupTagMapper();
             SetupCategoryMapper();
             SetupWebsiteMapper();
+            SetupUserMapper();
         }
 
         /// <summary>
@@ -88,6 +92,16 @@ namespace CmsEngine.Tests
 
             _moqHttpContextAccessor = new Mock<IHttpContextAccessor>();
             _moqHttpContextAccessor.Setup(x => x.HttpContext.Request.Host).Returns(hostString);
+        }
+
+        /// <summary>
+        /// Setup Mapper instance
+        /// </summary>
+        private void SetupUserManager()
+        {
+            var userStoreMock = new Mock<IUserStore<ApplicationUser>>();
+            _moqUserManager = new Mock<UserManager<ApplicationUser>>(userStoreMock.Object, null, null, null, null, null, null, null, null);
+            _moqUserManager.Setup(x => x.Users).Returns(GetTestUsers().AsQueryable());
         }
 
         /// <summary>

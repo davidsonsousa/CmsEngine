@@ -17,20 +17,16 @@ Because I need a pet project to study a couple of things. And do it with my own 
 Since this is a .NET Core project you can run in 2 ways:
 
 ### .NET Core CLI (using PowerShell)
-- Set the development environment
-  - Make sure that you are in the **solution folder (CmsEngine)**
-  - Run the script `ConfigDevEnv.ps1` (it must happen every time you open an instance of PowerShell)
 - Run webpack
-  - Make that sure you are in **project folder (CmsEngine.Ui)**
+  - Make that sure you are in **project folder (CmsEngine\CmsEngine.Ui)**
   -  Run the script `RunWebpack.ps1`
 - Run the project
   - `cd ..\CmsEngine.Ui`
   - `dotnet -d watch run`
     - `-d` shows the PID for debugging purposes
-  - Open your favorite browser and load `http://cmsengine.dev:5000`
-    - Make sure this url is mapped in your hosts file
+  - Open your favorite browser and load `http://cmsengine.dev:5000` (make sure this url is mapped to localhost in your hosts file)
 - Create and run migrations
-  - Make that sure you are in the **solution folder (CmsEngine)**
+  - Make that sure you are in the **library folder (CmsEngine\CmsEngine)**
   - `dotnet ef migrations add MIGRATION_NAME --startup-project ..\CmsEngine.Ui\`
   - `cd ..\CmsEngine.Ui`
   - `dotnet ef database update`

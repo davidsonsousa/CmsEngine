@@ -56,8 +56,11 @@ namespace CmsEngine.Tests
         private void SetupTagMapper()
         {
             _moqMapper.Setup(x => x.Map<Tag, TagEditModel>(It.IsAny<Tag>())).Returns(GetTagEditModel());
+            _moqMapper.Setup(x => x.Map<TagEditModel, Tag>(It.IsAny<TagEditModel>())).Returns(new Tag());
+
             _moqMapper.Setup(x => x.Map<Tag, TagViewModel>(It.IsAny<Tag>())).Returns(GetTagViewModel());
             _moqMapper.Setup(x => x.Map<Tag, TagViewModel>(null)).Returns<TagViewModel>(null);
+
             _moqMapper.Setup(x => x.Map<IEnumerable<Tag>, IEnumerable<TagViewModel>>(It.IsAny<IEnumerable<Tag>>())).Returns(GetTagViewModels());
         }
     }

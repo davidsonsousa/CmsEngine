@@ -57,8 +57,11 @@ namespace CmsEngine.Tests
         private void SetupCategoryMapper()
         {
             _moqMapper.Setup(x => x.Map<Category, CategoryEditModel>(It.IsAny<Category>())).Returns(GetCategoryEditModel());
+            _moqMapper.Setup(x => x.Map<CategoryEditModel, Category>(It.IsAny<CategoryEditModel>())).Returns(new Category());
+
             _moqMapper.Setup(x => x.Map<Category, CategoryViewModel>(It.IsAny<Category>())).Returns(GetCategoryViewModel());
             _moqMapper.Setup(x => x.Map<Category, CategoryViewModel>(null)).Returns<CategoryViewModel>(null);
+
             _moqMapper.Setup(x => x.Map<IEnumerable<Category>, IEnumerable<CategoryViewModel>>(It.IsAny<IEnumerable<Category>>())).Returns(GetCategoryViewModels());
         }
 

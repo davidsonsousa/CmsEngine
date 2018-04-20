@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
@@ -7,14 +7,17 @@ namespace CmsEngine.Extensions
 {
     public static class EnumExtensions
     {
-        public static string GetDescription(this Enum value)
+        /// <summary>
+        /// Returns the Name property from DisplayAttribute
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static string GetName(this Enum value)
         {
-            // Get attributes  
+            // Get attributes
             var field = value.GetType().GetField(value.ToString());
             var attributes = field.GetCustomAttributes(false);
 
-            // Description is in a hidden Attribute class called DisplayAttribute
-            // Not to be confused with DisplayNameAttribute
             dynamic displayAttribute = null;
 
             if (attributes.Any())
@@ -22,8 +25,32 @@ namespace CmsEngine.Extensions
                 displayAttribute = attributes.ElementAt(0);
             }
 
-            // Return description
-            return displayAttribute?.Description ?? "Description Not Found";
+            // Return name
+            return displayAttribute?.Name ?? field.Name;
+        }
+
+        /// <summary>
+        /// Returns the value of a DescriptionAttribute for a given Enum value
+        /// </summary>
+        /// <remarks>Source: http://blogs.msdn.com/b/abhinaba/archive/2005/10/21/483337.aspx </remarks>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static string GetDescription(this Enum value)
+        {
+
+            Type type = value.GetType();
+            MemberInfo[] memberInfo = type.GetMember(value.ToString());
+
+            if (memberInfo != null && memberInfo.Length > 0)
+            {
+                object[] attrs = memberInfo[0].GetCustomAttributes(typeof(DescriptionAttribute), false).ToArray();
+
+                if (attrs != null && attrs.Length > 0)
+                    return ((DescriptionAttribute)attrs[0]).Description;
+            }
+
+            return value.ToString();
+
         }
     }
 }

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 using AutoMapper;
 using CmsEngine.Attributes;
 using CmsEngine.Data.AccessLayer;
@@ -12,6 +13,7 @@ using CmsEngine.Extensions;
 using CmsEngine.Helpers;
 using CmsEngine.Utils;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 
 namespace CmsEngine
 {
@@ -20,17 +22,19 @@ namespace CmsEngine
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly UserManager<ApplicationUser> _userManager;
         private Website _websiteInstance;
 
         #region Properties
 
-        //public IPrincipal CurrentUser
-        //{
-        //    get
-        //    {
-        //        return _httpContextAccessor.HttpContext.User;
-        //    }
-        //}
+        public UserViewModel CurrentUser
+        {
+            get
+            {
+                var task = Task.Run(async () => await GetUserByUsername(_httpContextAccessor.HttpContext.User.Identity.Name));
+                return (UserViewModel)task.Result;
+            }
+        }
 
         public Website WebsiteInstance
         {
@@ -52,11 +56,12 @@ namespace CmsEngine
 
         #endregion
 
-        public CmsService(IUnitOfWork uow, IMapper mapper, IHttpContextAccessor hca)
+        public CmsService(IUnitOfWork uow, IMapper mapper, IHttpContextAccessor hca, UserManager<ApplicationUser> userManager)
         {
             _unitOfWork = uow;
             _mapper = mapper;
             _httpContextAccessor = hca;
+            _userManager = userManager;
         }
 
         public IQueryable<T> GetAll<T>(string relatedTable = "") where T : BaseModel
@@ -104,7 +109,12 @@ namespace CmsEngine
             var returnValue = new ReturnValue();
             try
             {
-                _unitOfWork.GetRepository<T>().BulkUpdate(q => id.Contains(q.VanityId), u => u.IsDeleted = true);
+                var itemsToDelete = _unitOfWork.GetRepository<T>().GetReadOnly(q => id.Contains(q.VanityId));
+                _unitOfWork.GetRepository<T>().UpdateMany(itemsToDelete.Select(x =>
+                                                                            {
+                                                                                x.IsDeleted = true;
+                                                                                return x;
+                                                                            }));
 
                 _unitOfWork.Save();
 
@@ -250,7 +260,7 @@ namespace CmsEngine
                         break;
                 }
 
-                propertyValue = $"<span class=\"label label-{generalStatus.ToString().ToLowerInvariant()}\">{propertyValue.ToEnum<DocumentStatus>().GetDescription()}</status-label>" ?? "";
+                propertyValue = $"<span class=\"label label-{generalStatus.ToString().ToLowerInvariant()}\">{propertyValue.ToEnum<DocumentStatus>().GetName()}</status-label>" ?? "";
             }
 
             return propertyValue;

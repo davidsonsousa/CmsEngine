@@ -12,9 +12,10 @@ using System;
 namespace CmsEngine.Migrations
 {
     [DbContext(typeof(CmsEngineContext))]
-    partial class CmsEngineContextModelSnapshot : ModelSnapshot
+    [Migration("20180225184150_ChangingPostCategoriesRelationship")]
+    partial class ChangingPostCategoriesRelationship
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -124,11 +125,7 @@ namespace CmsEngine.Migrations
 
                     b.Property<string>("Author")
                         .IsRequired()
-                        .HasMaxLength(50);
-
-                    b.Property<string>("AuthorId")
-                        .IsRequired()
-                        .HasMaxLength(36);
+                        .HasMaxLength(20);
 
                     b.Property<DateTime>("DateCreated");
 
@@ -181,8 +178,6 @@ namespace CmsEngine.Migrations
                     b.Property<string>("Author")
                         .IsRequired()
                         .HasMaxLength(20);
-
-                    b.Property<string>("AuthorId");
 
                     b.Property<DateTime>("DateCreated");
 

@@ -1,11 +1,12 @@
-﻿using CmsEngine.Data.Models;
-using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
+using CmsEngine.Data.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 
 namespace CmsEngine.Data
 {
-    public class CmsEngineContext : DbContext
+    public class CmsEngineContext : IdentityDbContext<ApplicationUser>
     {
         public DbSet<Website> Websites { get; set; }
         public DbSet<Page> Pages { get; set; }
