@@ -53,7 +53,7 @@ namespace CmsEngine.Tests
                     Name = "CmsEngine Test Instance",
                     Culture = "en-US",
                     Description = "Welcome to the test instance",
-                    SiteUrl = "cmsengine.dev",
+                    SiteUrl = "cmsengine.test",
                     IsDeleted = false
                 }
             };
@@ -88,7 +88,7 @@ namespace CmsEngine.Tests
         /// </summary>
         private void SetupHttpContextAccessor()
         {
-            var hostString = new HostString("cmsengine.dev", 5000);
+            var hostString = new HostString("cmsengine.test", 5000);
 
             _moqHttpContextAccessor = new Mock<IHttpContextAccessor>();
             _moqHttpContextAccessor.Setup(x => x.HttpContext.Request.Host).Returns(hostString);

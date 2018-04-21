@@ -1,4 +1,8 @@
 # CmsEngine
+
+## Build status
+![Build status](https://davidsonsousa.visualstudio.com/_apis/public/build/definitions/94e41d8b-02da-4bd1-b162-f4d76d6475e8/2/badge "Build status")
+
 ## What is it?
 This the new code-base of the CMS I am using in my website [http://davidsonsousa.net](http://davidsonsousa.net "my website")
 
@@ -24,7 +28,7 @@ Since this is a .NET Core project you can run in 2 ways:
   - `cd ..\CmsEngine.Ui`
   - `dotnet -d watch run`
     - `-d` shows the PID for debugging purposes
-  - Open your favorite browser and load `http://cmsengine.dev:5000` (make sure this url is mapped to localhost in your hosts file)
+  - Open your favorite browser and load `http://cmsengine.test:5000` (make sure this url is mapped to localhost in your hosts file)
 - Create and run migrations
   - Make that sure you are in the **library folder (CmsEngine\CmsEngine)**
   - `dotnet ef migrations add MIGRATION_NAME --startup-project ..\CmsEngine.Ui\`
