@@ -1,5 +1,3 @@
-using System;
-using System.Linq;
 using CmsEngine.Data.EditModels;
 using Xunit;
 
@@ -89,33 +87,33 @@ namespace CmsEngine.Tests.Core.Services
             Assert.True(response.IsNew, "Item is not new");
         }
 
-        [Fact]
-        public void SetupEditModel_ById_ShouldReturnCorrectUser()
-        {
-            // Arrange
-            var expectedResult = testFixture.GetTestUsers().FirstOrDefault(q => q.Id == "8633a850-128f-4425-a2ec-30e23826b7ff").Name;
+        //[Fact]
+        //public void SetupEditModel_ById_ShouldReturnCorrectUser()
+        //{
+        //    // Arrange
+        //    var expectedResult = testFixture.GetTestUsers().FirstOrDefault(q => q.Id == "8633a850-128f-4425-a2ec-30e23826b7ff").Name;
 
-            // Act
-            var response = (UserEditModel)moqUserService.SetupUserEditModel(new Guid("8633a850-128f-4425-a2ec-30e23826b7ff"));
+        //    // Act
+        //    var response = (UserEditModel)moqUserService.SetupUserEditModel(new Guid("8633a850-128f-4425-a2ec-30e23826b7ff"));
 
-            // Assert
-            Assert.IsType<UserEditModel>(response);
-            Assert.Equal(expectedResult, response.Name);
-        }
+        //    // Assert
+        //    Assert.IsType<UserEditModel>(response);
+        //    Assert.Equal(expectedResult, response.Name);
+        //}
 
-        [Fact]
-        public void SetupEditModel_ByVanityId_ShouldReturnCorrectUser()
-        {
-            // Arrange
-            var expectedResult = testFixture.GetTestUsers().FirstOrDefault(q => q.UserName == "janedeo@something.com").Name;
+        //[Fact]
+        //public void SetupEditModel_ByVanityId_ShouldReturnCorrectUser()
+        //{
+        //    // Arrange
+        //    var expectedResult = testFixture.GetTestUsers().FirstOrDefault(q => q.UserName == "janedeo@something.com").Name;
 
-            // Act
-            var response = (UserEditModel)moqUserService.SetupUserEditModel("janedeo@something.com");
+        //    // Act
+        //    var response = (UserEditModel)moqUserService.SetupUserEditModel("janedeo@something.com");
 
-            // Assert
-            Assert.IsType<UserEditModel>(response);
-            Assert.Equal(expectedResult, response.Name);
-        }
+        //    // Assert
+        //    Assert.IsType<UserEditModel>(response);
+        //    Assert.Equal(expectedResult, response.Name);
+        //}
 
         #endregion
 
