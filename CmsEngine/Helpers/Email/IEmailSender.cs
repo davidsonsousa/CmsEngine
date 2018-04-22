@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 
-namespace CmsEngine.Services
+namespace CmsEngine.Helpers.Email
 {
     public interface IEmailSender
     {

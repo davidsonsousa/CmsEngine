@@ -1,6 +1,6 @@
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
-using CmsEngine.Services;
+using CmsEngine.Helpers.Email;
 
 namespace CmsEngine.Extensions
 {
