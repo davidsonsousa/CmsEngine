@@ -1,4 +1,4 @@
-using CmsEngine.Ui.Admin.Controllers;
+using CmsEngine.Ui.Areas.Cms.Controllers;
 
 namespace Microsoft.AspNetCore.Mvc
 {
