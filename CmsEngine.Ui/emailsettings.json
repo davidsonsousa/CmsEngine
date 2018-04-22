@@ -1,0 +1,11 @@
+{
+  "EmailSettings": {
+    "Domain": "smtp.gmail.com",
+    "Port": "587",
+    "Username": "",
+    "Password": "",
+    "FromEmail": "",
+    "CcEmail": "",
+    "BccEmail": ""
+  }
+}
