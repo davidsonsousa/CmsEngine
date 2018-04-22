@@ -2,7 +2,7 @@ using AutoMapper;
 using CmsEngine.Data;
 using CmsEngine.Data.AccessLayer;
 using CmsEngine.Data.Models;
-using CmsEngine.Services;
+using CmsEngine.Helpers.Email;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -53,6 +53,9 @@ namespace CmsEngine.Ui
                 options.LogoutPath = "/Cms/Account/Logout";
                 options.AccessDeniedPath = "/Cms/Account/AccessDenied";
             });
+
+            services.Configure<EmailSettings>(Configuration.GetSection("EmailSettings"));
+
             services.AddMvc();
         }
 
