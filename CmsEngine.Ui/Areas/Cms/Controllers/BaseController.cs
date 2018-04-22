@@ -28,7 +28,7 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
         {
             base.OnActionExecuting(context);
 
-            ViewBag.CurrentUser = service.CurrentUser;
+            ViewBag.CurrentUser = service?.CurrentUser;
         }
 
         protected void SetupMessages(string pageTitle, PageType pageType, string description = "", string panelTitle = "")

@@ -8,7 +8,7 @@ using CmsEngine.Data.AccessLayer;
 using CmsEngine.Data.Models;
 using CmsEngine.Data.ViewModels.ManageViewModels;
 using CmsEngine.Extensions;
-using CmsEngine.Services;
+using CmsEngine.Helpers.Email;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
