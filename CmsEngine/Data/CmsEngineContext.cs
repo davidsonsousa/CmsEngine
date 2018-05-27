@@ -19,7 +19,7 @@ namespace CmsEngine.Data
             //Database.SetInitializer(new CmsEngineInitializer());
         }
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        protected override void OnModelCreating(ModelBuilder builder)
         {
             //modelBuilder.Conventions.Remove<OneToManyCascadeDeleteConvention>();
 
@@ -27,15 +27,15 @@ namespace CmsEngine.Data
             //modelBuilder.Properties<DateTime>().Configure(c => c.HasColumnType("datetime2").HasPrecision(0));
 
             // Model configuration
-            modelBuilder.Entity<Website>(ModelConfiguration.ConfigureWebsite);
-            modelBuilder.Entity<Page>(ModelConfiguration.ConfigurePage);
-            modelBuilder.Entity<Post>(ModelConfiguration.ConfigurePost);
-            modelBuilder.Entity<Tag>(ModelConfiguration.ConfigureTag);
-            modelBuilder.Entity<Category>(ModelConfiguration.ConfigureCategory);
-            modelBuilder.Entity<PostCategory>(ModelConfiguration.ConfigurePostCategory);
-            modelBuilder.Entity<PostTag>(ModelConfiguration.ConfigurePostTag);
+            builder.Entity<Website>(ModelConfiguration.ConfigureWebsite);
+            builder.Entity<Page>(ModelConfiguration.ConfigurePage);
+            builder.Entity<Post>(ModelConfiguration.ConfigurePost);
+            builder.Entity<Tag>(ModelConfiguration.ConfigureTag);
+            builder.Entity<Category>(ModelConfiguration.ConfigureCategory);
+            builder.Entity<PostCategory>(ModelConfiguration.ConfigurePostCategory);
+            builder.Entity<PostTag>(ModelConfiguration.ConfigurePostTag);
 
-            base.OnModelCreating(modelBuilder);
+            base.OnModelCreating(builder);
         }
 
         public override int SaveChanges()

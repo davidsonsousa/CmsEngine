@@ -4,18 +4,19 @@ using System.Threading.Tasks;
 using CmsEngine.Data.Models;
 using CmsEngine.Data.ViewModels.AccountViewModels;
 using CmsEngine.Extensions;
-using CmsEngine.Services;
+using CmsEngine.Helpers.Email;
+using CmsEngine.Ui.Admin.Controllers;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
-namespace CmsEngine.Ui.Admin.Controllers
+namespace CmsEngine.Ui.Areas.Cms.Controllers
 {
     [Authorize]
     [Area("Cms")]
-    public class AccountController : Controller
+    public class AccountController : BaseController
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
@@ -41,6 +42,8 @@ namespace CmsEngine.Ui.Admin.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Login(string returnUrl = null)
         {
+            this.SetupMessages("Login", PageType.Create);
+
             // Clear the existing external cookie to ensure a clean login process
             await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
 
@@ -81,6 +84,7 @@ namespace CmsEngine.Ui.Admin.Controllers
             }
 
             // If we got this far, something failed, redisplay form
+            this.SetupMessages("Login", PageType.Create);
             return View(model);
         }
 
@@ -345,6 +349,8 @@ namespace CmsEngine.Ui.Admin.Controllers
         [AllowAnonymous]
         public IActionResult ForgotPassword()
         {
+            this.SetupMessages("Forgot your password?", PageType.Create);
+
             return View();
         }
 
@@ -372,6 +378,7 @@ namespace CmsEngine.Ui.Admin.Controllers
             }
 
             // If we got this far, something failed, redisplay form
+            this.SetupMessages("Forgot your password?", PageType.Create);
             return View(model);
         }
 
@@ -379,6 +386,7 @@ namespace CmsEngine.Ui.Admin.Controllers
         [AllowAnonymous]
         public IActionResult ForgotPasswordConfirmation()
         {
+            this.SetupMessages("Forgot password confirmation", PageType.Create);
             return View();
         }
 
@@ -386,6 +394,8 @@ namespace CmsEngine.Ui.Admin.Controllers
         [AllowAnonymous]
         public IActionResult ResetPassword(string code = null)
         {
+            this.SetupMessages("Reset password", PageType.Create);
+
             if (code == null)
             {
                 throw new ApplicationException("A code must be supplied for password reset.");
@@ -399,6 +409,8 @@ namespace CmsEngine.Ui.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ResetPassword(ResetPasswordViewModel model)
         {
+            this.SetupMessages("Reset password", PageType.Create);
+
             if (!ModelState.IsValid)
             {
                 return View(model);
@@ -422,6 +434,7 @@ namespace CmsEngine.Ui.Admin.Controllers
         [AllowAnonymous]
         public IActionResult ResetPasswordConfirmation()
         {
+            this.SetupMessages("Reset password confirmation", PageType.Create);
             return View();
         }
 

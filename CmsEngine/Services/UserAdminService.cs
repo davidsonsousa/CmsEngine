@@ -81,7 +81,7 @@ namespace CmsEngine
 
             try
             {
-                PrepareUserForSaving(editModel);
+                PrepareUserForSaving(editModel).GetAwaiter();
 
                 _unitOfWork.Save();
             }

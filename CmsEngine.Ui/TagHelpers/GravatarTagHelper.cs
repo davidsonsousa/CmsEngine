@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Text.Encodings.Web;
 using CmsEngine.Extensions;
@@ -12,19 +13,23 @@ namespace CmsEngine.Ui.TagHelpers
         /// E-mail address registered on gravatar.com
         /// </summary>
         public string EmailAddress { get; set; }
+
         /// <summary>
         /// Image size (default is 80)
         /// </summary>
         public int ImageSize { get; set; } = 80;
+
         /// <summary>
         /// Default image loaded from gravatar.com (default is 0)
         /// </summary>
         public DefaultImage DefaultImage { get; set; } = DefaultImage.Default;
+
         /// <summary>
         /// Default image url loaded from gravatar.com (default is "")
         /// </summary>
         public string DefaultImageUrl { get; set; } = "";
         public bool ForceDefaultImage { get; set; }
+
         /// <summary>
         /// Image rating (default is G)
         /// </summary>
@@ -51,10 +56,10 @@ namespace CmsEngine.Ui.TagHelpers
             );
             if (!string.IsNullOrWhiteSpace(AdditionalCssClasses))
             {
-                if (output.Attributes.Any(x => x.Name.ToLower() == "class"))
+                if (output.Attributes.Any(x => string.Equals(x.Name, "class", StringComparison.OrdinalIgnoreCase)))
                 {
-                    AdditionalCssClasses = output.Attributes.First(x => x.Name.ToLower() == "class").Value + " " + AdditionalCssClasses;
-                    output.Attributes.Remove(output.Attributes.First(x => x.Name.ToLower() == "class"));
+                    AdditionalCssClasses = output.Attributes.First(x => string.Equals(x.Name, "class", StringComparison.OrdinalIgnoreCase)).Value + " " + AdditionalCssClasses;
+                    output.Attributes.Remove(output.Attributes.First(x => string.Equals(x.Name, "class", StringComparison.OrdinalIgnoreCase)));
                 }
 
                 // Add the additional CSS classes

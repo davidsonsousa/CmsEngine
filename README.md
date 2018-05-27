@@ -28,7 +28,7 @@ Since this is a .NET Core project you can run in 2 ways:
   - `cd ..\CmsEngine.Ui`
   - `dotnet -d watch run`
     - `-d` shows the PID for debugging purposes
-  - Open your favorite browser and load `http://cmsengine.dev:5000` (make sure this url is mapped to localhost in your hosts file)
+  - Open your favorite browser and load `http://cmsengine.test:5000` (make sure this url is mapped to localhost in your hosts file)
 - Create and run migrations
   - Make that sure you are in the **library folder (CmsEngine\CmsEngine)**
   - `dotnet ef migrations add MIGRATION_NAME --startup-project ..\CmsEngine.Ui\`

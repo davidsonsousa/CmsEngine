@@ -254,3 +254,4 @@ paket-files/
 # CmsEngine
 PublishOutput/
 package-lock.json
+/CmsEngine.Ui/emailsettings.Development.json
