@@ -39,7 +39,7 @@ gulp.paths.concatJsDest = gulp.paths.webroot + 'js/site.min.js';
 gulp.paths.concatCssDest = gulp.paths.webroot + 'css/site.min.css';
 
 gulp.task('build:admin', function () {
-    return gulp.src('./assets/scss/admin.scss')
+    return gulp.src('./assets/scss/admin/admin.scss')
         .pipe(sass())
         .pipe(autoprefixer())
         .pipe(gulp.dest(gulp.paths.webroot + gulp.paths.css))
@@ -50,7 +50,7 @@ gulp.task('build:admin', function () {
 });
 
 gulp.task('build:admin-scripts', function () {
-    return gulp.src('./assets/js/admin.*.js')
+    return gulp.src('./assets/js/admin/*.js')
         .pipe(gulp.dest(gulp.paths.temp + gulp.paths.js))
         .pipe(concat('admin.js'))
         .pipe(gulp.dest(gulp.paths.webroot + gulp.paths.js))
