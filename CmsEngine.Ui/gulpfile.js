@@ -38,8 +38,8 @@ gulp.paths = {
 gulp.paths.concatJsDest = gulp.paths.webroot + 'js/site.min.js';
 gulp.paths.concatCssDest = gulp.paths.webroot + 'css/site.min.css';
 
-gulp.task('build:styles', function () {
-  return gulp.src('./assets/scss/style.scss')
+gulp.task('build:admin', function () {
+  return gulp.src('./assets/scss/admin.scss')
     .pipe(sass())
     .pipe(autoprefixer())
     .pipe(gulp.dest(gulp.paths.webroot + gulp.paths.css))
@@ -71,7 +71,7 @@ gulp.task('clean:dist', function () {
 gulp.task('default', function (callback) {
   runSequence(
     'clean:dist', 'copy:images',
-    'build:styles', 'build:scripts', 'build:vendors',
+    'build:admin', 'build:scripts', 'build:vendors',
     'clean:min-min',
     callback);
 });
