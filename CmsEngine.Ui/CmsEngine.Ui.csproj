@@ -29,10 +29,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="assets\js\" />
-    </ItemGroup>
-
-    <ItemGroup>
       <ProjectReference Include="..\CmsEngine\CmsEngine.csproj" />
     </ItemGroup>
 </Project>
