@@ -64,9 +64,9 @@ namespace CmsEngine.Data.AccessLayer
             {
                 ex.Entries.First().Reload();
             }
-            catch (Exception ex)
+            catch
             {
-                throw ex;
+                throw;
             }
         }
 
