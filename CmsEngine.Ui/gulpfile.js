@@ -15,12 +15,12 @@ var runSequence = require('run-sequence');
 require('require-dir')('./gulp-tasks');
 
 gulp.paths = {
-  webroot: './wwwroot/',
-  temp: './wwwroot/temp/',
-  css: 'css/',
-  js: 'js/',
-  fonts: 'fonts/',
-  vendors: 'vendors/'
+    webroot: './wwwroot/',
+    temp: './wwwroot/temp/',
+    css: 'css/',
+    js: 'js/',
+    fonts: 'fonts/',
+    vendors: 'vendors/'
 };
 
 //gulp.paths.js = gulp.paths.webroot + 'js/**/*.js';
@@ -39,39 +39,39 @@ gulp.paths.concatJsDest = gulp.paths.webroot + 'js/site.min.js';
 gulp.paths.concatCssDest = gulp.paths.webroot + 'css/site.min.css';
 
 gulp.task('build:admin', function () {
-  return gulp.src('./assets/scss/admin.scss')
-    .pipe(sass())
-    .pipe(autoprefixer())
-    .pipe(gulp.dest(gulp.paths.webroot + gulp.paths.css))
-    .pipe(cssmin())
-    .pipe(rename({ suffix: '.min' }))
-    .pipe(gulp.dest(gulp.paths.webroot + gulp.paths.css));
+    return gulp.src('./assets/scss/admin.scss')
+        .pipe(sass())
+        .pipe(autoprefixer())
+        .pipe(gulp.dest(gulp.paths.webroot + gulp.paths.css))
+        .pipe(cssmin())
+        .pipe(rename({ suffix: '.min' }))
+        .pipe(gulp.dest(gulp.paths.webroot + gulp.paths.css));
     //.pipe(browserSync.stream());
 });
 
-gulp.task('build:scripts', function () {
-  return gulp.src('./assets/js/app.*.js')
-    .pipe(gulp.dest(gulp.paths.temp + gulp.paths.js))
-    .pipe(concat('app.js'))
-    .pipe(gulp.dest(gulp.paths.webroot + gulp.paths.js))
-    .pipe(uglify())
-    .pipe(rename({ suffix: '.min' }))
-    .pipe(gulp.dest(gulp.paths.webroot + gulp.paths.js));
+gulp.task('build:admin-scripts', function () {
+    return gulp.src('./assets/js/admin.*.js')
+        .pipe(gulp.dest(gulp.paths.temp + gulp.paths.js))
+        .pipe(concat('admin.js'))
+        .pipe(gulp.dest(gulp.paths.webroot + gulp.paths.js))
+        .pipe(uglify())
+        .pipe(rename({ suffix: '.min' }))
+        .pipe(gulp.dest(gulp.paths.webroot + gulp.paths.js));
 });
 
 gulp.task('copy:images', function () {
-  return gulp.src('./assets/img/**/*')
-    .pipe(gulp.dest(gulp.paths.webroot + '/img'));
+    return gulp.src('./assets/img/**/*')
+        .pipe(gulp.dest(gulp.paths.webroot + '/img'));
 });
 
 gulp.task('clean:dist', function () {
-  return del(gulp.paths.webroot + './*');
+    return del(gulp.paths.webroot + './*');
 });
 
 gulp.task('default', function (callback) {
-  runSequence(
-    'clean:dist', 'copy:images',
-    'build:admin', 'build:scripts', 'build:vendors',
-    'clean:min-min',
-    callback);
+    runSequence(
+        'clean:dist', 'copy:images',
+        'build:admin', 'build:admin-scripts', 'build:vendors',
+        'clean:min-min',
+        callback);
 });
