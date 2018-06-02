@@ -41,13 +41,18 @@ namespace CmsEngine.Data.AccessLayer
             return query;//.AsNoTracking();
         }
 
-        public IEnumerable<T> GetReadOnly(Expression<Func<T, bool>> filter = null)
+        public IEnumerable<T> GetReadOnly(Expression<Func<T, bool>> filter = null, int count = 0)
         {
             IQueryable<T> query = _dbSet;
 
             if (filter != null)
             {
                 query = query.Where(filter);
+            }
+
+            if (count > 0)
+            {
+                query = query.Take(count);
             }
 
             return query.AsNoTracking().ToList();

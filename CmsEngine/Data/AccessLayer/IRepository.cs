@@ -20,7 +20,7 @@ namespace CmsEngine.Data.AccessLayer
         /// </summary>
         /// <param name="filter"></param>
         /// <returns></returns>
-        IEnumerable<T> GetReadOnly(Expression<Func<T, bool>> filter = null);
+        IEnumerable<T> GetReadOnly(Expression<Func<T, bool>> filter = null, int count = 0);
 
         /// <summary>
         /// Inserts a record
