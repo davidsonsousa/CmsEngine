@@ -13,13 +13,13 @@ namespace CmsEngine
     {
         #region Get
 
-        public IEnumerable<IViewModel> GetAllCategoriesReadOnly()
+        public IEnumerable<IViewModel> GetAllCategoriesReadOnly(int count = 0)
         {
             IEnumerable<Category> listItems;
 
             try
             {
-                listItems = _unitOfWork.Categories.GetReadOnly(q => q.IsDeleted == false);
+                listItems = _unitOfWork.Categories.GetReadOnly(q => q.IsDeleted == false, count);
             }
             catch
             {

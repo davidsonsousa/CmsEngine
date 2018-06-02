@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using AutoMapper;
 using CmsEngine.Attributes;
 using CmsEngine.Data.EditModels;
 using CmsEngine.Data.Models;
@@ -14,13 +13,13 @@ namespace CmsEngine
     {
         #region Get
 
-        public IEnumerable<IViewModel> GetAllWebsitesReadOnly()
+        public IEnumerable<IViewModel> GetAllWebsitesReadOnly(int count = 0)
         {
             IEnumerable<Website> listItems;
 
             try
             {
-                listItems = _unitOfWork.Websites.GetReadOnly(q => q.IsDeleted == false);
+                listItems = _unitOfWork.Websites.GetReadOnly(q => q.IsDeleted == false, count);
             }
             catch
             {

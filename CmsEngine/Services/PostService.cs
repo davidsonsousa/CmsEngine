@@ -14,13 +14,13 @@ namespace CmsEngine
     {
         #region Get
 
-        public IEnumerable<IViewModel> GetAllPostsReadOnly()
+        public IEnumerable<IViewModel> GetAllPostsReadOnly(int count = 0)
         {
             IEnumerable<Post> listItems;
 
             try
             {
-                listItems = _unitOfWork.Posts.GetReadOnly(q => q.IsDeleted == false);
+                listItems = _unitOfWork.Posts.GetReadOnly(q => q.IsDeleted == false, count);
             }
             catch
             {
