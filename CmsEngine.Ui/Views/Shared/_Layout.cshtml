@@ -7,19 +7,12 @@
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="robots" content="all,follow">
-    <!-- Bootstrap CSS-->
-    <link rel="stylesheet" href="vendor/bootstrap/css/bootstrap.min.css">
+
     <link href="~/css/vendors/font-awesome.min.css" rel="stylesheet">
-    <!-- Custom icon font-->
-    <link rel="stylesheet" href="css/fontastic.css">
-    <!-- Google fonts - Open Sans-->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700">
-    <!-- Fancybox-->
-    <link rel="stylesheet" href="vendor/@@fancyapps/fancybox/jquery.fancybox.min.css">
-    <!-- theme stylesheet-->
-    <link rel="stylesheet" href="css/style.blue.css" id="theme-stylesheet">
-    <!-- Custom stylesheet - for your changes-->
-    <link rel="stylesheet" href="css/custom.css">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700" rel="stylesheet">
+    <link href="~/css/vendors/jquery.fancybox.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/site.css" id="theme-stylesheet">
+
     <!-- Favicon-->
     <link rel="shortcut icon" href="favicon.png">
     <!-- Tweaks for older IEs-->
@@ -152,12 +145,21 @@
             </div>
         </div>
     </footer>
-    <!-- JavaScript files-->
-    <script src="~/js/vendors/jquery.min.js"></script>
-    <script src="~/js/vendors/popper.min.js"></script>
-    <script src="~/js/vendors/bootstrap.min.js"></script>
-    <script src="vendor/jquery.cookie/jquery.cookie.js"></script>
-    <script src="vendor/@@fancyapps/fancybox/jquery.fancybox.min.js"></script>
-    <script src="js/front.js"></script>
+    <environment include="Development">
+        <script src="~/js/vendors/jquery.min.js"></script>
+        <script src="~/js/vendors/popper.min.js"></script>
+        <script src="~/js/vendors/bootstrap.min.js"></script>
+        <script src="~/js/vendors/jquery.cookie.js"></script>
+        <script src="~/js/vendors/jquery.fancybox.js"></script>
+        <script src="~/js/site.js"></script>
+    </environment>
+    <environment exclude="Development">
+        <script src="~/js/vendors/jquery.min.js"></script>
+        <script src="~/js/vendors/popper.min.js"></script>
+        <script src="~/js/vendors/bootstrap.min.js"></script>
+        <script src="~/js/vendors/jquery.cookie.min.js"></script>
+        <script src="~/js/vendors/jquery.fancybox.min.js"></script>
+        <script src="~/js/site.min.js"></script>
+    </environment>
 </body>
 </html>
