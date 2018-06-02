@@ -3,14 +3,14 @@
         <DotNetCliToolReference Include="Microsoft.EntityFrameworkCore.Tools.DotNet" Version="2.0.0" />
     </ItemGroup>
     <PropertyGroup>
-        <TargetFramework>netcoreapp2.0</TargetFramework>
+        <TargetFramework>netcoreapp2.1</TargetFramework>
         <RuntimeFrameworkVersion>2.0.3</RuntimeFrameworkVersion>
     </PropertyGroup>
     <ItemGroup>
         <PackageReference Include="AutoMapper" Version="6.2.2" />
-        <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.8" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="2.0.3" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.0.3" />
+        <PackageReference Include="Microsoft.AspNetCore.All" Version="2.1.0" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="2.1.0" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.1.0" />
         <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
         <PackageReference Include="Roslynator.Analyzers" Version="1.8.0" />
         <PackageReference Include="Roslynator.CodeFixes" Version="1.8.0" />

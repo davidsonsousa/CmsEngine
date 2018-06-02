@@ -6,7 +6,7 @@
         <DotNetCliToolReference Include="Microsoft.EntityFrameworkCore.Tools.DotNet" Version="2.0.0" />
     </ItemGroup>
     <PropertyGroup>
-        <TargetFramework>netcoreapp2.0</TargetFramework>
+        <TargetFramework>netcoreapp2.1</TargetFramework>
         <RuntimeFrameworkVersion>2.0.3</RuntimeFrameworkVersion>
         <UserSecretsId>aspnet-CmsEngine.Ui-206A572F-839D-4CC5-848B-AB5E60D8E04C</UserSecretsId>
     </PropertyGroup>
@@ -15,9 +15,9 @@
     <ItemGroup>
         <PackageReference Include="AutoMapper" Version="6.2.2" />
         <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="3.2.0" />
-        <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.8" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.0.3" PrivateAssets="All" />
-        <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.0.4" PrivateAssets="All" />
+        <PackageReference Include="Microsoft.AspNetCore.All" Version="2.1.0" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.1.0" PrivateAssets="All" />
+        <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.0" PrivateAssets="All" />
         <PackageReference Include="Roslynator.Analyzers" Version="1.8.0" />
         <PackageReference Include="Roslynator.CodeFixes" Version="1.8.0" />
     </ItemGroup>
@@ -30,5 +30,9 @@
 
     <ItemGroup>
       <ProjectReference Include="..\CmsEngine\CmsEngine.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Properties\PublishProfiles\" />
     </ItemGroup>
 </Project>
