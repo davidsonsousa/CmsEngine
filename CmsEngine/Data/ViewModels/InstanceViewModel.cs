@@ -16,6 +16,8 @@ namespace CmsEngine.Data.ViewModels
 
         public string SiteUrl { get; set; }
 
+        public PostViewModel SelectedPost { get; set; }
+
         public IEnumerable<PostViewModel> PagedPosts { get; set; }
         public IEnumerable<PostViewModel> LatestPosts { get; set; }
         public IEnumerable<PageViewModel> Pages { get; set; }
