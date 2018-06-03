@@ -26,19 +26,19 @@ namespace CmsEngine
                 throw;
             }
 
-            return Mapper.Map<IEnumerable<Website>, IEnumerable<WebsiteViewModel>>(listItems);
+            return _mapper.Map<IEnumerable<Website>, IEnumerable<WebsiteViewModel>>(listItems);
         }
 
         public IViewModel GetWebsiteById(int id)
         {
             var item = this.GetById<Website>(id);
-            return Mapper.Map<Website, WebsiteViewModel>(item);
+            return _mapper.Map<Website, WebsiteViewModel>(item);
         }
 
         public IViewModel GetWebsiteById(Guid id)
         {
             var item = this.GetById<Website>(id);
-            return Mapper.Map<Website, WebsiteViewModel>(item);
+            return _mapper.Map<Website, WebsiteViewModel>(item);
         }
 
         #endregion
@@ -53,13 +53,13 @@ namespace CmsEngine
         public IEditModel SetupWebsiteEditModel(int id)
         {
             var item = this.GetById<Website>(id);
-            return Mapper.Map<Website, WebsiteEditModel>(item);
+            return _mapper.Map<Website, WebsiteEditModel>(item);
         }
 
         public IEditModel SetupWebsiteEditModel(Guid id)
         {
             var item = this.GetById<Website>(id);
-            return Mapper.Map<Website, WebsiteEditModel>(item);
+            return _mapper.Map<Website, WebsiteEditModel>(item);
         }
 
         #endregion
@@ -164,8 +164,8 @@ namespace CmsEngine
                 var lambda = this.PrepareFilter<Website>(searchTerm, searchableProperties);
 
                 // TODO: There must be a way to improve this
-                var tempItems = Mapper.Map<IEnumerable<WebsiteViewModel>, IEnumerable<Website>>(items);
-                items = Mapper.Map<IEnumerable<Website>, IEnumerable<WebsiteViewModel>>(tempItems.Where(lambda));
+                var tempItems = _mapper.Map<IEnumerable<WebsiteViewModel>, IEnumerable<Website>>(items);
+                items = _mapper.Map<IEnumerable<Website>, IEnumerable<WebsiteViewModel>>(tempItems.Where(lambda));
             }
 
             return items;
@@ -175,7 +175,7 @@ namespace CmsEngine
         {
             try
             {
-                var listWebsites = Mapper.Map<IEnumerable<IViewModel>, IEnumerable<WebsiteViewModel>>(listItems);
+                var listWebsites = _mapper.Map<IEnumerable<IViewModel>, IEnumerable<WebsiteViewModel>>(listItems);
 
                 switch (orderColumn)
                 {
@@ -211,13 +211,13 @@ namespace CmsEngine
 
             if (editModel.IsNew)
             {
-                website = Mapper.Map<WebsiteEditModel, Website>((WebsiteEditModel)editModel);
+                website = _mapper.Map<WebsiteEditModel, Website>((WebsiteEditModel)editModel);
                 _unitOfWork.Websites.Insert(website);
             }
             else
             {
                 website = this.GetById<Website>(editModel.VanityId);
-                Mapper.Map((WebsiteEditModel)editModel, website);
+                _mapper.Map((WebsiteEditModel)editModel, website);
 
                 _unitOfWork.Websites.Update(website);
             }

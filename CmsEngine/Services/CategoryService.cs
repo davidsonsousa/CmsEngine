@@ -26,19 +26,19 @@ namespace CmsEngine
                 throw;
             }
 
-            return Mapper.Map<IEnumerable<Category>, IEnumerable<CategoryViewModel>>(listItems);
+            return _mapper.Map<IEnumerable<Category>, IEnumerable<CategoryViewModel>>(listItems);
         }
 
         public IViewModel GetCategoryById(int id)
         {
             var item = this.GetById<Category>(id);
-            return Mapper.Map<Category, CategoryViewModel>(item);
+            return _mapper.Map<Category, CategoryViewModel>(item);
         }
 
         public IViewModel GetCategoryById(Guid id)
         {
             var item = this.GetById<Category>(id);
-            return Mapper.Map<Category, CategoryViewModel>(item);
+            return _mapper.Map<Category, CategoryViewModel>(item);
         }
 
         #endregion
@@ -53,13 +53,13 @@ namespace CmsEngine
         public IEditModel SetupCategoryEditModel(int id)
         {
             var item = this.GetById<Category>(id);
-            return Mapper.Map<Category, CategoryEditModel>(item);
+            return _mapper.Map<Category, CategoryEditModel>(item);
         }
 
         public IEditModel SetupCategoryEditModel(Guid id)
         {
             var item = this.GetById<Category>(id);
-            return Mapper.Map<Category, CategoryEditModel>(item);
+            return _mapper.Map<Category, CategoryEditModel>(item);
         }
 
         #endregion
@@ -164,8 +164,8 @@ namespace CmsEngine
                 var lambda = this.PrepareFilter<Category>(searchTerm, searchableProperties);
 
                 // TODO: There must be a way to improve this
-                var tempItems = Mapper.Map<IEnumerable<CategoryViewModel>, IEnumerable<Category>>(items);
-                items = Mapper.Map<IEnumerable<Category>, IEnumerable<CategoryViewModel>>(tempItems.Where(lambda));
+                var tempItems = _mapper.Map<IEnumerable<CategoryViewModel>, IEnumerable<Category>>(items);
+                items = _mapper.Map<IEnumerable<Category>, IEnumerable<CategoryViewModel>>(tempItems.Where(lambda));
             }
 
             return items;
@@ -175,7 +175,7 @@ namespace CmsEngine
         {
             try
             {
-                var listCategories = Mapper.Map<IEnumerable<IViewModel>, IEnumerable<CategoryViewModel>>(listItems);
+                var listCategories = _mapper.Map<IEnumerable<IViewModel>, IEnumerable<CategoryViewModel>>(listItems);
 
                 switch (orderColumn)
                 {
@@ -205,16 +205,16 @@ namespace CmsEngine
 
             if (editModel.IsNew)
             {
-                category = Mapper.Map<CategoryEditModel, Category>((CategoryEditModel)editModel);
-                category.WebsiteId = WebsiteInstance.Id;
+                category = _mapper.Map<CategoryEditModel, Category>((CategoryEditModel)editModel);
+                category.WebsiteId = _instanceId;
 
                 _unitOfWork.Categories.Insert(category);
             }
             else
             {
                 category = this.GetById<Category>(editModel.VanityId);
-                Mapper.Map((CategoryEditModel)editModel, category);
-                category.WebsiteId = WebsiteInstance.Id;
+                _mapper.Map((CategoryEditModel)editModel, category);
+                category.WebsiteId = _instanceId;
 
                 _unitOfWork.Categories.Update(category);
             }

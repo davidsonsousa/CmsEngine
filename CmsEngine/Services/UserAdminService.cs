@@ -27,9 +27,9 @@ namespace CmsEngine
                 throw;
             }
 
-            //var retValue = Mapper.Map<IEnumerable<ApplicationUser>, IEnumerable<UserViewModel>>(listItems);
-            var retValue = Mapper.Map<IEnumerable<UserViewModel>>(listItems);
-            var test = Mapper.Map<UserViewModel>(listItems.FirstOrDefault());
+            //var retValue = _mapper.Map<IEnumerable<ApplicationUser>, IEnumerable<UserViewModel>>(listItems);
+            var retValue = _mapper.Map<IEnumerable<UserViewModel>>(listItems);
+            var test = _mapper.Map<UserViewModel>(listItems.FirstOrDefault());
 
             return retValue;
         }
@@ -37,13 +37,13 @@ namespace CmsEngine
         public async Task<IViewModel> GetUserById(Guid id)
         {
             var item = await _userManager.FindByIdAsync(id.ToString());
-            return Mapper.Map<ApplicationUser, UserViewModel>(item);
+            return _mapper.Map<ApplicationUser, UserViewModel>(item);
         }
 
         public async Task<IViewModel> GetUserByUsername(string userName)
         {
             var item = await _userManager.FindByNameAsync(userName);
-            return Mapper.Map<ApplicationUser, UserViewModel>(item);
+            return _mapper.Map<ApplicationUser, UserViewModel>(item);
         }
 
         #endregion
@@ -58,13 +58,13 @@ namespace CmsEngine
         public async Task<IEditModel> SetupUserEditModel(Guid id)
         {
             var item = await _userManager.FindByIdAsync(id.ToString());
-            return Mapper.Map<ApplicationUser, UserEditModel>(item);
+            return _mapper.Map<ApplicationUser, UserEditModel>(item);
         }
 
         public async Task<IEditModel> SetupUserEditModel(string userName)
         {
             var item = await _userManager.FindByNameAsync(userName);
-            return Mapper.Map<ApplicationUser, UserEditModel>(item);
+            return _mapper.Map<ApplicationUser, UserEditModel>(item);
         }
 
         #endregion
@@ -171,8 +171,8 @@ namespace CmsEngine
                 var lambda = this.PrepareFilter<ApplicationUser>(searchTerm, searchableProperties);
 
                 // TODO: There must be a way to improve this
-                var tempItems = Mapper.Map<IEnumerable<UserViewModel>, IEnumerable<ApplicationUser>>(items);
-                items = Mapper.Map<IEnumerable<ApplicationUser>, IEnumerable<UserViewModel>>(tempItems.Where(lambda));
+                var tempItems = _mapper.Map<IEnumerable<UserViewModel>, IEnumerable<ApplicationUser>>(items);
+                items = _mapper.Map<IEnumerable<ApplicationUser>, IEnumerable<UserViewModel>>(tempItems.Where(lambda));
             }
 
             return items;
@@ -182,7 +182,7 @@ namespace CmsEngine
         {
             try
             {
-                var listUsers = Mapper.Map<IEnumerable<IViewModel>, IEnumerable<UserViewModel>>(listItems);
+                var listUsers = _mapper.Map<IEnumerable<IViewModel>, IEnumerable<UserViewModel>>(listItems);
 
                 switch (orderColumn)
                 {
@@ -212,13 +212,13 @@ namespace CmsEngine
 
             if (editModel.IsNew)
             {
-                user = Mapper.Map<UserEditModel, ApplicationUser>((UserEditModel)editModel);
+                user = _mapper.Map<UserEditModel, ApplicationUser>((UserEditModel)editModel);
                 await _userManager.CreateAsync(user);
             }
             else
             {
                 user = await _userManager.FindByIdAsync(editModel.VanityId.ToString());
-                Mapper.Map((UserEditModel)editModel, user);
+                _mapper.Map((UserEditModel)editModel, user);
                 await _userManager.UpdateAsync(user);
             }
         }

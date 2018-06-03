@@ -23,7 +23,8 @@ namespace CmsEngine
         private readonly IMapper _mapper;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly UserManager<ApplicationUser> _userManager;
-        private Website _websiteInstance;
+        private InstanceViewModel _instance;
+        private int _instanceId;
 
         #region Properties
 
@@ -36,22 +37,36 @@ namespace CmsEngine
             }
         }
 
-        public Website WebsiteInstance
+        public InstanceViewModel Instance
         {
             get
             {
-                if (_websiteInstance == null)
+                if (_instance == null)
                 {
-                    _websiteInstance = _unitOfWork.Websites.Get(q => q.SiteUrl == _httpContextAccessor.HttpContext.Request.Host.Host).FirstOrDefault();
+                    try
+                    {
+                        var website = _unitOfWork.Websites.Get(q => q.SiteUrl == _httpContextAccessor.HttpContext.Request.Host.Host).SingleOrDefault();
+                        if (website != null)
+                        {
+                            _instance = new InstanceViewModel
+                            {
+                                Name = website.Name,
+                                Description = website.Description,
+                                Culture = website.Culture,
+                                UrlFormat = website.UrlFormat,
+                                DateFormat = website.DateFormat,
+                                SiteUrl = website.SiteUrl
+                            };
+                        }
+                    }
+                    catch
+                    {
+                        throw;
+                    }
                 }
 
-                return _websiteInstance;
+                return _instance;
             }
-        }
-
-        public IMapper Mapper
-        {
-            get { return _mapper; }
         }
 
         #endregion
@@ -62,6 +77,15 @@ namespace CmsEngine
             _mapper = mapper;
             _httpContextAccessor = hca;
             _userManager = userManager;
+
+            try
+            {
+                _instanceId = _unitOfWork.Websites.Get(q => q.SiteUrl == _httpContextAccessor.HttpContext.Request.Host.Host).SingleOrDefault().Id;
+            }
+            catch
+            {
+                throw;
+            }
         }
 
         public IQueryable<T> GetAll<T>(string relatedTable = "") where T : BaseModel
@@ -89,7 +113,7 @@ namespace CmsEngine
                 throw;
             }
 
-            return Mapper.Map<IEnumerable<TModel>, IEnumerable<TViewModel>>(listItems);
+            return _mapper.Map<IEnumerable<TModel>, IEnumerable<TViewModel>>(listItems);
         }
 
         public int CountRecords<T>() where T : BaseModel

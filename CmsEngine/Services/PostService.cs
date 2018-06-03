@@ -27,19 +27,19 @@ namespace CmsEngine
                 throw;
             }
 
-            return Mapper.Map<IEnumerable<Post>, IEnumerable<PostViewModel>>(listItems);
+            return _mapper.Map<IEnumerable<Post>, IEnumerable<PostViewModel>>(listItems);
         }
 
         public IViewModel GetPostById(int id)
         {
             var item = this.GetById<Post>(id);
-            return Mapper.Map<Post, PostViewModel>(item);
+            return _mapper.Map<Post, PostViewModel>(item);
         }
 
         public IViewModel GetPostById(Guid id)
         {
             var item = this.GetById<Post>(id);
-            return Mapper.Map<Post, PostViewModel>(item);
+            return _mapper.Map<Post, PostViewModel>(item);
         }
 
         #endregion
@@ -59,7 +59,7 @@ namespace CmsEngine
         public IEditModel SetupPostEditModel(int id)
         {
             var item = this.GetById<Post>(id, "PostCategories.Category");
-            var editModel = Mapper.Map<Post, PostEditModel>(item);
+            var editModel = _mapper.Map<Post, PostEditModel>(item);
             editModel.Categories = this.PopulateCheckboxList<Category>(editModel.SelectedCategories);
 
             return editModel;
@@ -68,7 +68,7 @@ namespace CmsEngine
         public IEditModel SetupPostEditModel(Guid id)
         {
             var item = this.GetById<Post>(id, "PostCategories.Category");
-            var editModel = Mapper.Map<Post, PostEditModel>(item);
+            var editModel = _mapper.Map<Post, PostEditModel>(item);
             editModel.Categories = this.PopulateCheckboxList<Category>(editModel.SelectedCategories);
 
             return editModel;
@@ -176,8 +176,8 @@ namespace CmsEngine
                 var lambda = this.PrepareFilter<Post>(searchTerm, searchableProperties);
 
                 // TODO: There must be a way to improve this
-                var tempItems = Mapper.Map<IEnumerable<PostViewModel>, IEnumerable<Post>>(items);
-                items = Mapper.Map<IEnumerable<Post>, IEnumerable<PostViewModel>>(tempItems.Where(lambda));
+                var tempItems = _mapper.Map<IEnumerable<PostViewModel>, IEnumerable<Post>>(items);
+                items = _mapper.Map<IEnumerable<Post>, IEnumerable<PostViewModel>>(tempItems.Where(lambda));
             }
 
             return items;
@@ -187,7 +187,7 @@ namespace CmsEngine
         {
             try
             {
-                var listPosts = Mapper.Map<IEnumerable<IViewModel>, IEnumerable<PostViewModel>>(listItems);
+                var listPosts = _mapper.Map<IEnumerable<IViewModel>, IEnumerable<PostViewModel>>(listItems);
 
                 switch (orderColumn)
                 {
@@ -224,8 +224,8 @@ namespace CmsEngine
 
             if (editModel.IsNew)
             {
-                post = Mapper.Map<PostEditModel, Post>(postEditModel);
-                post.WebsiteId = WebsiteInstance.Id;
+                post = _mapper.Map<PostEditModel, Post>(postEditModel);
+                post.WebsiteId = _instanceId;
 
                 _unitOfWork.Posts.Insert(post);
 
@@ -234,7 +234,7 @@ namespace CmsEngine
             else
             {
                 post = this.GetById<Post>(editModel.VanityId, "PostCategories.Category");
-                Mapper.Map(postEditModel, post);
+                _mapper.Map(postEditModel, post);
 
                 _unitOfWork.Posts.Update(post);
 
