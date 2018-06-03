@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -206,7 +206,7 @@ namespace CmsEngine
                     Label = item.GetType().GetProperty("Name").GetValue(item).ToString(),
                     Value = item.VanityId.ToString(),
                     Enabled = true,
-                    Selected = (selectedItems?.Contains(item.VanityId.ToString()) ?? false)
+                    Selected = (selectedItems == null ? false : selectedItems.Contains(item.VanityId.ToString()))
                 });
             }
 
