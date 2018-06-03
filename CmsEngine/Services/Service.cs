@@ -237,18 +237,6 @@ namespace CmsEngine
             }
         }
 
-        private T GetBySlug<T>(string slug, string relatedTable = "") where T : BaseModel
-        {
-            try
-            {
-                return this.GetAll<T>(relatedTable).Where(q => q.Slug == slug).SingleOrDefault();
-            }
-            catch
-            {
-                throw;
-            }
-        }
-
         private ReturnValue Delete<T>(T item) where T : BaseModel
         {
             var returnValue = new ReturnValue();

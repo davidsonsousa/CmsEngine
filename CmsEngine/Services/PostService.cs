@@ -42,6 +42,12 @@ namespace CmsEngine
             return _mapper.Map<Post, PostViewModel>(item);
         }
 
+        public IViewModel GetPostBySlug(string slug)
+        {
+            var item = this.GetAll<Post>().Where(q => q.Slug == slug).SingleOrDefault();
+            return _mapper.Map<Post, PostViewModel>(item);
+        }
+
         #endregion
 
         #region Setup
