@@ -9,12 +9,12 @@
                     @foreach (var pagedPost in Model.PagedPosts)
                     {
                         <div class="post col-xl-6">
-                            <div class="post-thumbnail"><a href="@pagedPost.Slug"><img src="https://placeimg.com/640/426/any" alt="..." class="img-fluid"></a></div>
+                            <div class="post-thumbnail"><a asp-controller="Blog" asp-action="Post" asp-route-slug="@pagedPost.Slug"><img src="https://placeimg.com/640/426/any" alt="..." class="img-fluid"></a></div>
                             <div class="post-details">
                                 <div class="post-meta d-flex justify-content-between">
                                     <div class="date meta-last">@pagedPost.PublishedOn</div>
                                     <div class="category"><a href="#">Business</a></div>
-                                </div><a href="@pagedPost.Slug">
+                                </div><a asp-controller="Blog" asp-action="Post" asp-route-slug="@pagedPost.Slug">
                                     <h3 class="h4">@pagedPost.Title</h3>
                                 </a>
                                 <p class="text-muted">@pagedPost.Description</p>
@@ -42,64 +42,6 @@
                 </nav>
             </div>
         </main>
-        <aside class="col-lg-4">
-            <!-- Widget [Search Bar Widget]-->
-            <div class="widget search">
-                <header>
-                    <h3 class="h6">Search the blog</h3>
-                </header>
-                <form action="#" class="search-form">
-                    <div class="form-group">
-                        <input type="search" placeholder="What are you looking for?">
-                        <button type="submit" class="submit"><i class="icon-search"></i></button>
-                    </div>
-                </form>
-            </div>
-            <!-- Widget [Latest Posts Widget]        -->
-            <div class="widget latest-posts">
-                <header>
-                    <h3 class="h6">Latest Posts</h3>
-                </header>
-                <div class="blog-posts">
-                    @foreach (var latestPost in Model.LatestPosts)
-                    {
-                        <a href="#">
-                            <div class="item d-flex align-items-center">
-                                <div class="image"><img src="https://placeimg.com/120/120/any" alt="..." class="img-fluid"></div>
-                                <div class="title">
-                                    <strong>@latestPost.Title</strong>
-                                    <div class="d-flex align-items-center">
-                                        <div class="views"><i class="icon-eye"></i> 500</div>
-                                        <div class="comments"><i class="icon-comment"></i>12</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </a>
-                    }
-                </div>
-            </div>
-            <!-- Widget [Categories Widget]-->
-            <div class="widget categories">
-                <header>
-                    <h3 class="h6">Categories</h3>
-                </header>
-                @foreach (var category in Model.Categories)
-                {
-                    <div class="item d-flex justify-content-between"><a href="@category.Slug">@category.Name</a><span>12</span></div>
-                }
-            </div>
-            <!-- Widget [Tags Cloud Widget]-->
-            <div class="widget tags">
-                <header>
-                    <h3 class="h6">Tags</h3>
-                </header>
-                <ul class="list-inline">
-                    @foreach (var tag in Model.Tags)
-                    {
-                        <li class="list-inline-item"><a href="@tag.Slug" class="tag">#@tag.Name</a></li>
-                    }
-                </ul>
-            </div>
-        </aside>
+        @await Html.PartialAsync("_Sidebar", Model)
     </div>
 </div>
