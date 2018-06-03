@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -217,7 +217,7 @@ namespace CmsEngine
         {
             try
             {
-                return this.GetAll<T>(relatedTable).Where(q => q.Id == id).FirstOrDefault();
+                return this.GetAll<T>(relatedTable).Where(q => q.Id == id).SingleOrDefault();
             }
             catch
             {
@@ -229,7 +229,19 @@ namespace CmsEngine
         {
             try
             {
-                return this.GetAll<T>(relatedTable).Where(q => q.VanityId == id).FirstOrDefault();
+                return this.GetAll<T>(relatedTable).Where(q => q.VanityId == id).SingleOrDefault();
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
+        private T GetBySlug<T>(string slug, string relatedTable = "") where T : BaseModel
+        {
+            try
+            {
+                return this.GetAll<T>(relatedTable).Where(q => q.Slug == slug).SingleOrDefault();
             }
             catch
             {
