@@ -18,7 +18,7 @@ namespace CmsEngine.Ui.Controllers
 
         public IActionResult Index()
         {
-            var blogViewModel = new BlogViewModel
+            var blogViewModel = new InstanceViewModel
             {
                 PagedPosts = (IEnumerable<PostViewModel>)service.GetAllPostsReadOnly(4),
                 LatestPosts = (IEnumerable<PostViewModel>)service.GetAllPostsReadOnly(3),
