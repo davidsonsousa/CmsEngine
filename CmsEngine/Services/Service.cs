@@ -23,8 +23,9 @@ namespace CmsEngine
         private readonly IMapper _mapper;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly int _instanceId;
+
         private InstanceViewModel _instance;
-        private int _instanceId;
 
         #region Properties
 
@@ -32,7 +33,7 @@ namespace CmsEngine
         {
             get
             {
-                var task = Task.Run(async () => await GetUserByUsername(_httpContextAccessor.HttpContext.User.Identity.Name));
+                var task = Task.Run(() => GetUserByUsername(_httpContextAccessor.HttpContext.User.Identity.Name));
                 return (UserViewModel)task.Result;
             }
         }
@@ -182,17 +183,13 @@ namespace CmsEngine
                 listString.Add(listPropertes);
             }
 
-            DataTableViewModel dataTableViewModel;
-
-            dataTableViewModel = new DataTableViewModel
+            return new DataTableViewModel
             {
                 Data = listString,
                 RecordsTotal = this.CountRecords<T>(),
                 RecordsFiltered = listItems.Count(),
                 Draw = 0
             };
-
-            return dataTableViewModel;
         }
 
         #region Helpers
@@ -209,7 +206,7 @@ namespace CmsEngine
                     Label = item.GetType().GetProperty("Name").GetValue(item).ToString(),
                     Value = item.VanityId.ToString(),
                     Enabled = true,
-                    Selected = (selectedItems == null ? false : selectedItems.Contains(item.VanityId.ToString()))
+                    Selected = (selectedItems?.Contains(item.VanityId.ToString()) ?? false)
                 });
             }
 

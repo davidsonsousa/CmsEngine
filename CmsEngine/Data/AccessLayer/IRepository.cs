@@ -11,7 +11,7 @@ namespace CmsEngine.Data.AccessLayer
         /// Gets item based on condition and includes extra table
         /// </summary>
         /// <param name="filter"></param>
-        /// <param name="include"></param>
+        /// <param name="relatedTable"></param>
         /// <returns></returns>
         IQueryable<T> Get(Expression<Func<T, bool>> filter = null, string relatedTable = "");
 
@@ -19,6 +19,7 @@ namespace CmsEngine.Data.AccessLayer
         /// Gets items based on condition for read-only
         /// </summary>
         /// <param name="filter"></param>
+        /// <param name="count"></param>
         /// <returns></returns>
         IEnumerable<T> GetReadOnly(Expression<Func<T, bool>> filter = null, int count = 0);
 

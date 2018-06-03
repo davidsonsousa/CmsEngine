@@ -80,7 +80,6 @@ namespace CmsEngine.Data.AccessLayer
             {
                 Attach(entity);
                 _context.Entry(entity).State = EntityState.Modified;
-
             }
         }
 
@@ -97,7 +96,6 @@ namespace CmsEngine.Data.AccessLayer
             if (entity != null)
             {
                 _context.Remove(entity);
-
             }
         }
 

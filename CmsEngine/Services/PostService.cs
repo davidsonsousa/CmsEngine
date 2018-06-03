@@ -204,7 +204,6 @@ namespace CmsEngine
             }
 
             return listItems;
-
         }
 
         #endregion
@@ -251,13 +250,7 @@ namespace CmsEngine
                                                 {
                                                     CategoryId = GetById<Category>(Guid.Parse(x)).Id,
                                                     Post = post
-                                                });
-
-            // Check if new items are null
-            if (newItems == null)
-            {
-                newItems = new List<PostCategory>();
-            }
+                                                }) ?? new List<PostCategory>();
 
             ICollection<PostCategory> currentItems = null;
 
