@@ -24,8 +24,6 @@ namespace CmsEngine.Data.Models
 
         public Guid VanityId { get; set; }
 
-        public string Slug { get; set; }
-
         #region For "quick log" purposes
 
         public DateTime DateCreated { get; set; }
