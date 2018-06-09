@@ -209,6 +209,8 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
         [AllowAnonymous]
         public IActionResult Register(string returnUrl = null)
         {
+            this.SetupMessages("Register", PageType.Create);
+
             ViewData["ReturnUrl"] = returnUrl;
             return View();
         }
@@ -239,6 +241,7 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
             }
 
             // If we got this far, something failed, redisplay form
+            this.SetupMessages("Register", PageType.Create);
             return View(model);
         }
 
