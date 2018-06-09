@@ -9,6 +9,7 @@ using CmsEngine.Data.AccessLayer;
 using CmsEngine.Data.EditModels;
 using CmsEngine.Data.Models;
 using CmsEngine.Data.ViewModels;
+using CmsEngine.Data.ViewModels.DataTableViewModels;
 using CmsEngine.Extensions;
 using CmsEngine.Helpers;
 using CmsEngine.Utils;
@@ -156,7 +157,7 @@ namespace CmsEngine
             return returnValue;
         }
 
-        public DataTableViewModel BuildDataTable<T>(IEnumerable<IViewModel> listItems) where T : BaseModel
+        public DataViewModel BuildDataTable<T>(IEnumerable<IViewModel> listItems) where T : BaseModel
         {
             var listString = new List<List<string>>();
 
@@ -183,7 +184,7 @@ namespace CmsEngine
                 listString.Add(listPropertes);
             }
 
-            return new DataTableViewModel
+            return new DataViewModel
             {
                 Data = listString,
                 RecordsTotal = this.CountRecords<T>(),
