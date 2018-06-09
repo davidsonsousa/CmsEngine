@@ -103,6 +103,10 @@ namespace CmsEngine.Data.Mapper
             // View model
             CreateMap<Website, WebsiteViewModel>();
             CreateMap<WebsiteViewModel, Website>();
+
+            // Table view model
+            CreateMap<Website, WebsiteTableViewModel>();
+            CreateMap<WebsiteTableViewModel, Website>();
         }
 
         private void MapUsers()

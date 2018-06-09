@@ -5,6 +5,7 @@ using CmsEngine.Attributes;
 using CmsEngine.Data.EditModels;
 using CmsEngine.Data.Models;
 using CmsEngine.Data.ViewModels;
+using CmsEngine.Data.ViewModels.DataTableViewModels;
 using CmsEngine.Utils;
 
 namespace CmsEngine
@@ -13,20 +14,11 @@ namespace CmsEngine
     {
         #region Get
 
-        public IEnumerable<IViewModel> GetAllWebsitesReadOnly(int count = 0)
+        public IEnumerable<T> GetAllWebsitesReadOnly<T>(int count = 0) where T : IViewModel
         {
-            IEnumerable<Website> listItems;
+            IEnumerable<Website> listItems = GetAllReadOnly<Website>(count);
 
-            try
-            {
-                listItems = _unitOfWork.Websites.GetReadOnly(q => q.IsDeleted == false, count);
-            }
-            catch
-            {
-                throw;
-            }
-
-            return _mapper.Map<IEnumerable<Website>, IEnumerable<WebsiteViewModel>>(listItems);
+            return _mapper.Map<IEnumerable<Website>, IEnumerable<T>>(listItems);
         }
 
         public IViewModel GetWebsiteById(int id)
@@ -155,17 +147,17 @@ namespace CmsEngine
 
         public IEnumerable<IViewModel> FilterWebsite(string searchTerm, IEnumerable<IViewModel> listItems)
         {
-            var items = (IEnumerable<WebsiteViewModel>)listItems;
+            var items = (IEnumerable<WebsiteTableViewModel>)listItems;
 
             if (!string.IsNullOrWhiteSpace(searchTerm))
             {
-                var searchableProperties = typeof(WebsiteViewModel).GetProperties().Where(p => Attribute.IsDefined(p, typeof(Searchable)));
+                var searchableProperties = typeof(WebsiteTableViewModel).GetProperties().Where(p => Attribute.IsDefined(p, typeof(Searchable)));
 
                 var lambda = this.PrepareFilter<Website>(searchTerm, searchableProperties);
 
                 // TODO: There must be a way to improve this
-                var tempItems = _mapper.Map<IEnumerable<WebsiteViewModel>, IEnumerable<Website>>(items);
-                items = _mapper.Map<IEnumerable<Website>, IEnumerable<WebsiteViewModel>>(tempItems.Where(lambda));
+                var tempItems = _mapper.Map<IEnumerable<WebsiteTableViewModel>, IEnumerable<Website>>(items);
+                items = _mapper.Map<IEnumerable<Website>, IEnumerable<WebsiteTableViewModel>>(tempItems.Where(lambda));
             }
 
             return items;
@@ -175,7 +167,7 @@ namespace CmsEngine
         {
             try
             {
-                var listWebsites = _mapper.Map<IEnumerable<IViewModel>, IEnumerable<WebsiteViewModel>>(listItems);
+                var listWebsites = _mapper.Map<IEnumerable<IViewModel>, IEnumerable<WebsiteTableViewModel>>(listItems);
 
                 switch (orderColumn)
                 {
