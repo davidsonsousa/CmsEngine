@@ -82,7 +82,12 @@ namespace CmsEngine
 
             try
             {
-                _instanceId = _unitOfWork.Websites.Get(q => q.SiteUrl == _httpContextAccessor.HttpContext.Request.Host.Host).SingleOrDefault().Id;
+                var website = _unitOfWork.Websites.Get(q => q.SiteUrl == _httpContextAccessor.HttpContext.Request.Host.Host).SingleOrDefault();
+
+                if (website != null)
+                {
+                    _instanceId = website.Id;
+                }
             }
             catch
             {
