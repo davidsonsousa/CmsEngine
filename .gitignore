@@ -251,6 +251,9 @@ paket-files/
 .idea/
 *.sln.iml
 
+# VS Code
+.vscode/
+
 # CmsEngine
 PublishOutput/
 package-lock.json
