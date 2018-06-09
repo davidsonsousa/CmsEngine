@@ -157,7 +157,7 @@ namespace CmsEngine
             return returnValue;
         }
 
-        public DataViewModel BuildDataTable<T>(IEnumerable<IViewModel> listItems) where T : BaseModel
+        public TableViewModel BuildDataTable<T>(IEnumerable<IViewModel> listItems) where T : BaseModel
         {
             var listString = new List<List<string>>();
 
@@ -184,7 +184,7 @@ namespace CmsEngine
                 listString.Add(listPropertes);
             }
 
-            return new DataViewModel
+            return new TableViewModel
             {
                 Data = listString,
                 RecordsTotal = this.CountRecords<T>(),
@@ -212,6 +212,22 @@ namespace CmsEngine
             }
 
             return checkBoxList;
+        }
+
+        private IEnumerable<T> GetAllReadOnly<T>(int count = 0) where T : BaseModel
+        {
+            IEnumerable<T> listItems;
+
+            try
+            {
+                listItems = _unitOfWork.GetRepository<T>().GetReadOnly(q => q.IsDeleted == false, count);
+            }
+            catch
+            {
+                throw;
+            }
+
+            return listItems;
         }
 
         private T GetById<T>(int id, string relatedTable = "") where T : BaseModel
