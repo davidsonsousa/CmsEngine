@@ -5,6 +5,7 @@ using CmsEngine.Attributes;
 using CmsEngine.Data.EditModels;
 using CmsEngine.Data.Models;
 using CmsEngine.Data.ViewModels;
+using CmsEngine.Data.ViewModels.DataTableViewModels;
 using CmsEngine.Extensions;
 using CmsEngine.Utils;
 
@@ -14,32 +15,22 @@ namespace CmsEngine
     {
         #region Get
 
-        public IEnumerable<IViewModel> GetAllPostsReadOnly(int count = 0)
+        public IEnumerable<T> GetAllPostsReadOnly<T>(int count = 0) where T : IViewModel
         {
-            IEnumerable<Post> listItems;
-
-            try
-            {
-                listItems = _unitOfWork.Posts.GetReadOnly(q => q.IsDeleted == false, count);
-            }
-            catch
-            {
-                throw;
-            }
-
-            return _mapper.Map<IEnumerable<Post>, IEnumerable<PostViewModel>>(listItems);
+            IEnumerable<Post> listItems = GetAllReadOnly<Post>(count);
+            return _mapper.Map<IEnumerable<Post>, IEnumerable<T>>(listItems);
         }
 
         public IViewModel GetPostById(int id)
         {
             var item = this.GetById<Post>(id);
-            return _mapper.Map<Post, PostViewModel>(item);
+            return _mapper.Map<Post, PostTableViewModel>(item);
         }
 
         public IViewModel GetPostById(Guid id)
         {
             var item = this.GetById<Post>(id);
-            return _mapper.Map<Post, PostViewModel>(item);
+            return _mapper.Map<Post, PostTableViewModel>(item);
         }
 
         public IViewModel GetPostBySlug(string slug)
@@ -173,17 +164,17 @@ namespace CmsEngine
 
         public IEnumerable<IViewModel> FilterPost(string searchTerm, IEnumerable<IViewModel> listItems)
         {
-            var items = (IEnumerable<PostViewModel>)listItems;
+            var items = (IEnumerable<PostTableViewModel>)listItems;
 
             if (!string.IsNullOrWhiteSpace(searchTerm))
             {
-                var searchableProperties = typeof(PostViewModel).GetProperties().Where(p => Attribute.IsDefined(p, typeof(Searchable)));
+                var searchableProperties = typeof(PostTableViewModel).GetProperties().Where(p => Attribute.IsDefined(p, typeof(Searchable)));
 
                 var lambda = this.PrepareFilter<Post>(searchTerm, searchableProperties);
 
                 // TODO: There must be a way to improve this
-                var tempItems = _mapper.Map<IEnumerable<PostViewModel>, IEnumerable<Post>>(items);
-                items = _mapper.Map<IEnumerable<Post>, IEnumerable<PostViewModel>>(tempItems.Where(lambda));
+                var tempItems = _mapper.Map<IEnumerable<PostTableViewModel>, IEnumerable<Post>>(items);
+                items = _mapper.Map<IEnumerable<Post>, IEnumerable<PostTableViewModel>>(tempItems.Where(lambda));
             }
 
             return items;
@@ -193,7 +184,7 @@ namespace CmsEngine
         {
             try
             {
-                var listPosts = _mapper.Map<IEnumerable<IViewModel>, IEnumerable<PostViewModel>>(listItems);
+                var listPosts = _mapper.Map<IEnumerable<IViewModel>, IEnumerable<PostTableViewModel>>(listItems);
 
                 switch (orderColumn)
                 {

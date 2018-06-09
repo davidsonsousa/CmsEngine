@@ -25,10 +25,10 @@ namespace CmsEngine.Ui.Controllers
         {
             base.OnActionExecuting(context);
 
-            instance.PagedPosts = (IEnumerable<PostViewModel>)service.GetAllPostsReadOnly(4);
-            instance.LatestPosts = (IEnumerable<PostViewModel>)service.GetAllPostsReadOnly(3);
+            instance.PagedPosts = service.GetAllPostsReadOnly<PostViewModel>(4);
+            instance.LatestPosts = service.GetAllPostsReadOnly<PostViewModel>(3);
             instance.Pages = (IEnumerable<PageViewModel>)service.GetAllPagesReadOnly();
-            instance.Categories = (IEnumerable<CategoryViewModel>)service.GetAllCategoriesReadOnly();
+            instance.Categories = service.GetAllCategoriesReadOnly<CategoryViewModel>();
             instance.Tags = (IEnumerable<TagViewModel>)service.GetAllTagsReadOnly();
         }
     }

@@ -3,6 +3,7 @@ using AutoMapper;
 using CmsEngine.Data.EditModels;
 using CmsEngine.Data.Models;
 using CmsEngine.Data.ViewModels;
+using CmsEngine.Data.ViewModels.DataTableViewModels;
 
 namespace CmsEngine.Data.Mapper
 {
@@ -32,8 +33,12 @@ namespace CmsEngine.Data.Mapper
                 .ForMember(p => p.VanityId, opt => opt.Ignore());
 
             // View model
-            CreateMap<Post, PostViewModel>();
-            CreateMap<PostViewModel, Post>();
+            CreateMap<Post, PostTableViewModel>();
+            CreateMap<PostTableViewModel, Post>();
+
+            // Table view model
+            CreateMap<Post, PostTableViewModel>();
+            CreateMap<PostTableViewModel, Post>();
         }
 
         private void MapPage()
@@ -60,6 +65,10 @@ namespace CmsEngine.Data.Mapper
             // View model
             CreateMap<Category, CategoryViewModel>();
             CreateMap<CategoryViewModel, Category>();
+
+            // Table view model
+            CreateMap<Category, CategoryTableViewModel>();
+            CreateMap<CategoryTableViewModel, Category>();
         }
 
         private void MapTag()

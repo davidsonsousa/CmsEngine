@@ -87,7 +87,7 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
         [HttpPost]
         public IActionResult GetData([FromForm]DataParameters parameters)
         {
-            var filteredItems = service.FilterPost(parameters.Search.Value, service.GetAllPostsReadOnly());
+            var filteredItems = service.FilterPost(parameters.Search.Value, service.GetAllPostsReadOnly<PostTableViewModel>());
             var orderedItems = service.OrderPost(parameters.Order[0].Column, parameters.Order[0].Dir, filteredItems);
 
             var dataTable = service.BuildDataTable<Post>(orderedItems);

@@ -5,6 +5,7 @@ using CmsEngine.Attributes;
 using CmsEngine.Data.EditModels;
 using CmsEngine.Data.Models;
 using CmsEngine.Data.ViewModels;
+using CmsEngine.Data.ViewModels.DataTableViewModels;
 using CmsEngine.Utils;
 
 namespace CmsEngine
@@ -13,20 +14,10 @@ namespace CmsEngine
     {
         #region Get
 
-        public IEnumerable<IViewModel> GetAllCategoriesReadOnly(int count = 0)
+        public IEnumerable<T> GetAllCategoriesReadOnly<T>(int count = 0) where T : IViewModel
         {
-            IEnumerable<Category> listItems;
-
-            try
-            {
-                listItems = _unitOfWork.Categories.GetReadOnly(q => q.IsDeleted == false, count);
-            }
-            catch
-            {
-                throw;
-            }
-
-            return _mapper.Map<IEnumerable<Category>, IEnumerable<CategoryViewModel>>(listItems);
+            IEnumerable<Category> listItems = GetAllReadOnly<Category>(count);
+            return _mapper.Map<IEnumerable<Category>, IEnumerable<T>>(listItems);
         }
 
         public IViewModel GetCategoryById(int id)
@@ -38,6 +29,12 @@ namespace CmsEngine
         public IViewModel GetCategoryById(Guid id)
         {
             var item = this.GetById<Category>(id);
+            return _mapper.Map<Category, CategoryViewModel>(item);
+        }
+
+        public IViewModel GetCategoryBySlug(string slug)
+        {
+            var item = this.GetAll<Category>().Where(q => q.Slug == slug).SingleOrDefault();
             return _mapper.Map<Category, CategoryViewModel>(item);
         }
 
@@ -155,17 +152,17 @@ namespace CmsEngine
 
         public IEnumerable<IViewModel> FilterCategory(string searchTerm, IEnumerable<IViewModel> listItems)
         {
-            var items = (IEnumerable<CategoryViewModel>)listItems;
+            var items = (IEnumerable<CategoryTableViewModel>)listItems;
 
             if (!string.IsNullOrWhiteSpace(searchTerm))
             {
-                var searchableProperties = typeof(CategoryViewModel).GetProperties().Where(p => Attribute.IsDefined(p, typeof(Searchable)));
+                var searchableProperties = typeof(CategoryTableViewModel).GetProperties().Where(p => Attribute.IsDefined(p, typeof(Searchable)));
 
                 var lambda = this.PrepareFilter<Category>(searchTerm, searchableProperties);
 
                 // TODO: There must be a way to improve this
-                var tempItems = _mapper.Map<IEnumerable<CategoryViewModel>, IEnumerable<Category>>(items);
-                items = _mapper.Map<IEnumerable<Category>, IEnumerable<CategoryViewModel>>(tempItems.Where(lambda));
+                var tempItems = _mapper.Map<IEnumerable<CategoryTableViewModel>, IEnumerable<Category>>(items);
+                items = _mapper.Map<IEnumerable<Category>, IEnumerable<CategoryTableViewModel>>(tempItems.Where(lambda));
             }
 
             return items;
@@ -175,7 +172,7 @@ namespace CmsEngine
         {
             try
             {
-                var listCategories = _mapper.Map<IEnumerable<IViewModel>, IEnumerable<CategoryViewModel>>(listItems);
+                var listCategories = _mapper.Map<IEnumerable<IViewModel>, IEnumerable<CategoryTableViewModel>>(listItems);
 
                 switch (orderColumn)
                 {
