@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using AutoMapper;
 using CmsEngine.Data.AccessLayer;
 using CmsEngine.Data.Models;
@@ -29,7 +28,7 @@ namespace CmsEngine.Ui.Controllers
             instance.LatestPosts = service.GetAllPostsReadOnly<PostViewModel>(3);
             instance.Pages = service.GetAllPagesReadOnly<PageViewModel>();
             instance.Categories = service.GetAllCategoriesReadOnly<CategoryViewModel>();
-            instance.Tags = (IEnumerable<TagViewModel>)service.GetAllTagsReadOnly();
+            instance.Tags = service.GetAllTagsReadOnly<TagViewModel>();
         }
     }
 }

@@ -86,6 +86,10 @@ namespace CmsEngine.Data.Mapper
             // View model
             CreateMap<Tag, TagViewModel>();
             CreateMap<TagViewModel, Tag>();
+
+            // Table view model
+            CreateMap<Tag, TagTableViewModel>();
+            CreateMap<TagTableViewModel, Tag>();
         }
 
         private void MapWebsite()

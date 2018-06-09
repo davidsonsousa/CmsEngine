@@ -87,7 +87,7 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
         [HttpPost]
         public IActionResult GetData([FromForm]DataParameters parameters)
         {
-            var filteredItems = service.FilterTag(parameters.Search.Value, service.GetAllTagsReadOnly());
+            var filteredItems = service.FilterTag(parameters.Search.Value, service.GetAllTagsReadOnly<TagTableViewModel>());
             var orderedItems = service.OrderTag(parameters.Order[0].Column, parameters.Order[0].Dir, filteredItems);
 
             var dataTable = service.BuildDataTable<Tag>(orderedItems);

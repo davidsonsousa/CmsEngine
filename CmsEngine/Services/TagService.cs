@@ -5,6 +5,7 @@ using CmsEngine.Attributes;
 using CmsEngine.Data.EditModels;
 using CmsEngine.Data.Models;
 using CmsEngine.Data.ViewModels;
+using CmsEngine.Data.ViewModels.DataTableViewModels;
 using CmsEngine.Utils;
 
 namespace CmsEngine
@@ -13,20 +14,10 @@ namespace CmsEngine
     {
         #region Get
 
-        public IEnumerable<IViewModel> GetAllTagsReadOnly(int count = 0)
+        public IEnumerable<T> GetAllTagsReadOnly<T>(int count = 0) where T : IViewModel
         {
-            IEnumerable<Tag> listItems;
-
-            try
-            {
-                listItems = _unitOfWork.Tags.GetReadOnly(q => q.IsDeleted == false, count);
-            }
-            catch
-            {
-                throw;
-            }
-
-            return _mapper.Map<IEnumerable<Tag>, IEnumerable<TagViewModel>>(listItems);
+            IEnumerable<Tag> listItems = GetAllReadOnly<Tag>(count);
+            return _mapper.Map<IEnumerable<Tag>, IEnumerable<T>>(listItems);
         }
 
         public IViewModel GetTagById(int id)
@@ -155,17 +146,17 @@ namespace CmsEngine
 
         public IEnumerable<IViewModel> FilterTag(string searchTerm, IEnumerable<IViewModel> listItems)
         {
-            var items = (IEnumerable<TagViewModel>)listItems;
+            var items = (IEnumerable<TagTableViewModel>)listItems;
 
             if (!string.IsNullOrWhiteSpace(searchTerm))
             {
-                var searchableProperties = typeof(TagViewModel).GetProperties().Where(p => Attribute.IsDefined(p, typeof(Searchable)));
+                var searchableProperties = typeof(TagTableViewModel).GetProperties().Where(p => Attribute.IsDefined(p, typeof(Searchable)));
 
                 var lambda = this.PrepareFilter<Tag>(searchTerm, searchableProperties);
 
                 // TODO: There must be a way to improve this
-                var tempItems = _mapper.Map<IEnumerable<TagViewModel>, IEnumerable<Tag>>(items);
-                items = _mapper.Map<IEnumerable<Tag>, IEnumerable<TagViewModel>>(tempItems.Where(lambda));
+                var tempItems = _mapper.Map<IEnumerable<TagTableViewModel>, IEnumerable<Tag>>(items);
+                items = _mapper.Map<IEnumerable<Tag>, IEnumerable<TagTableViewModel>>(tempItems.Where(lambda));
             }
 
             return items;
@@ -175,7 +166,7 @@ namespace CmsEngine
         {
             try
             {
-                var listTags = _mapper.Map<IEnumerable<IViewModel>, IEnumerable<TagViewModel>>(listItems);
+                var listTags = _mapper.Map<IEnumerable<IViewModel>, IEnumerable<TagTableViewModel>>(listItems);
 
                 switch (orderColumn)
                 {
