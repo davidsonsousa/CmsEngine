@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace CmsEngine.Data.ViewModels.DataTableViewModels
 {
-    public class DataViewModel
+    public class TableViewModel
     {
         [JsonProperty(PropertyName = "draw")]
         public int Draw { get; set; }
