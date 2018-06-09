@@ -24,13 +24,13 @@ namespace CmsEngine
         public IViewModel GetPostById(int id)
         {
             var item = this.GetById<Post>(id);
-            return _mapper.Map<Post, PostTableViewModel>(item);
+            return _mapper.Map<Post, PostViewModel>(item);
         }
 
         public IViewModel GetPostById(Guid id)
         {
             var item = this.GetById<Post>(id);
-            return _mapper.Map<Post, PostTableViewModel>(item);
+            return _mapper.Map<Post, PostViewModel>(item);
         }
 
         public IViewModel GetPostBySlug(string slug)

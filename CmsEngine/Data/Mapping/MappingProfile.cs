@@ -33,8 +33,8 @@ namespace CmsEngine.Data.Mapper
                 .ForMember(p => p.VanityId, opt => opt.Ignore());
 
             // View model
-            CreateMap<Post, PostTableViewModel>();
-            CreateMap<PostTableViewModel, Post>();
+            CreateMap<Post, PostViewModel>();
+            CreateMap<PostViewModel, Post>();
 
             // Table view model
             CreateMap<Post, PostTableViewModel>();
@@ -50,8 +50,8 @@ namespace CmsEngine.Data.Mapper
                 .ForMember(em => em.VanityId, opt => opt.Ignore());
 
             // View model
-            CreateMap<Page, PageTableViewModel>();
-            CreateMap<PageTableViewModel, Page>();
+            CreateMap<Page, PageViewModel>();
+            CreateMap<PageViewModel, Page>();
 
             // Table view model
             CreateMap<Page, PageTableViewModel>();

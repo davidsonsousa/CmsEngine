@@ -23,13 +23,13 @@ namespace CmsEngine
         public IViewModel GetPageById(int id)
         {
             var item = this.GetById<Page>(id);
-            return _mapper.Map<Page, PageTableViewModel>(item);
+            return _mapper.Map<Page, PageViewModel>(item);
         }
 
         public IViewModel GetPageById(Guid id)
         {
             var item = this.GetById<Page>(id);
-            return _mapper.Map<Page, PageTableViewModel>(item);
+            return _mapper.Map<Page, PageViewModel>(item);
         }
 
         #endregion
