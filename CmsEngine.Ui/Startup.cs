@@ -84,6 +84,9 @@ namespace CmsEngine.Ui
                     template: "{area:exists}/{controller=Home}/{action=Index}/{vanityId?}");
 
                 routes.MapRoute(
+                    name: "blogRoute",
+                    template: "{controller=Home}/{action=Index}/{slug?}");
+                routes.MapRoute(
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
