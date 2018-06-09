@@ -50,8 +50,12 @@ namespace CmsEngine.Data.Mapper
                 .ForMember(em => em.VanityId, opt => opt.Ignore());
 
             // View model
-            CreateMap<Page, PageViewModel>();
-            CreateMap<PageViewModel, Page>();
+            CreateMap<Page, PageTableViewModel>();
+            CreateMap<PageTableViewModel, Page>();
+
+            // Table view model
+            CreateMap<Page, PageTableViewModel>();
+            CreateMap<PageTableViewModel, Page>();
         }
 
         private void MapCategory()

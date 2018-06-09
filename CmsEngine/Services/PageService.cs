@@ -5,6 +5,7 @@ using CmsEngine.Attributes;
 using CmsEngine.Data.EditModels;
 using CmsEngine.Data.Models;
 using CmsEngine.Data.ViewModels;
+using CmsEngine.Data.ViewModels.DataTableViewModels;
 using CmsEngine.Utils;
 
 namespace CmsEngine
@@ -13,32 +14,22 @@ namespace CmsEngine
     {
         #region Get
 
-        public IEnumerable<IViewModel> GetAllPagesReadOnly(int count = 0)
+        public IEnumerable<T> GetAllPagesReadOnly<T>(int count = 0) where T : IViewModel
         {
-            IEnumerable<Page> listItems;
-
-            try
-            {
-                listItems = _unitOfWork.Pages.GetReadOnly(q => q.IsDeleted == false, count);
-            }
-            catch
-            {
-                throw;
-            }
-
-            return _mapper.Map<IEnumerable<Page>, IEnumerable<PageViewModel>>(listItems);
+            IEnumerable<Page> listItems = GetAllReadOnly<Page>(count);
+            return _mapper.Map<IEnumerable<Page>, IEnumerable<T>>(listItems);
         }
 
         public IViewModel GetPageById(int id)
         {
             var item = this.GetById<Page>(id);
-            return _mapper.Map<Page, PageViewModel>(item);
+            return _mapper.Map<Page, PageTableViewModel>(item);
         }
 
         public IViewModel GetPageById(Guid id)
         {
             var item = this.GetById<Page>(id);
-            return _mapper.Map<Page, PageViewModel>(item);
+            return _mapper.Map<Page, PageTableViewModel>(item);
         }
 
         #endregion
@@ -155,17 +146,17 @@ namespace CmsEngine
 
         public IEnumerable<IViewModel> FilterPage(string searchTerm, IEnumerable<IViewModel> listItems)
         {
-            var items = (IEnumerable<PageViewModel>)listItems;
+            var items = (IEnumerable<PageTableViewModel>)listItems;
 
             if (!string.IsNullOrWhiteSpace(searchTerm))
             {
-                var searchableProperties = typeof(PageViewModel).GetProperties().Where(p => Attribute.IsDefined(p, typeof(Searchable)));
+                var searchableProperties = typeof(PageTableViewModel).GetProperties().Where(p => Attribute.IsDefined(p, typeof(Searchable)));
 
                 var lambda = this.PrepareFilter<Page>(searchTerm, searchableProperties);
 
                 // TODO: There must be a way to improve this
-                var tempItems = _mapper.Map<IEnumerable<PageViewModel>, IEnumerable<Page>>(items);
-                items = _mapper.Map<IEnumerable<Page>, IEnumerable<PageViewModel>>(tempItems.Where(lambda));
+                var tempItems = _mapper.Map<IEnumerable<PageTableViewModel>, IEnumerable<Page>>(items);
+                items = _mapper.Map<IEnumerable<Page>, IEnumerable<PageTableViewModel>>(tempItems.Where(lambda));
             }
 
             return items;
@@ -175,7 +166,7 @@ namespace CmsEngine
         {
             try
             {
-                var listPages = _mapper.Map<IEnumerable<IViewModel>, IEnumerable<PageViewModel>>(listItems);
+                var listPages = _mapper.Map<IEnumerable<IViewModel>, IEnumerable<PageTableViewModel>>(listItems);
 
                 switch (orderColumn)
                 {
