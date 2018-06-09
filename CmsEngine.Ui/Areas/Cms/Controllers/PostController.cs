@@ -47,9 +47,9 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
         public IActionResult Edit(Guid vanityId)
         {
             this.SetupMessages("Posts", PageType.Edit, panelTitle: "Edit an existing post");
-            var postViewModel = service.SetupPostEditModel(vanityId);
+            var postEditModel = service.SetupPostEditModel(vanityId);
 
-            return View("CreateEdit", postViewModel);
+            return View("CreateEdit", postEditModel);
         }
 
         [HttpPost]

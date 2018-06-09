@@ -47,9 +47,9 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
         public IActionResult Edit(Guid vanityId)
         {
             this.SetupMessages("Websites", PageType.Edit, panelTitle: "Edit an existing website");
-            var websiteViewModel = service.SetupWebsiteEditModel(vanityId);
+            var websiteEditModel = service.SetupWebsiteEditModel(vanityId);
 
-            return View("CreateEdit", websiteViewModel);
+            return View("CreateEdit", websiteEditModel);
         }
 
         [HttpPost]

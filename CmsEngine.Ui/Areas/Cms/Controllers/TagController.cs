@@ -47,9 +47,9 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
         public IActionResult Edit(Guid vanityId)
         {
             this.SetupMessages("Tags", PageType.Edit, panelTitle: "Edit an existing tag");
-            var tagViewModel = service.SetupTagEditModel(vanityId);
+            var tagEditModel = service.SetupTagEditModel(vanityId);
 
-            return View("CreateEdit", tagViewModel);
+            return View("CreateEdit", tagEditModel);
         }
 
         [HttpPost]
