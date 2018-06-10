@@ -11,10 +11,10 @@ namespace CmsEngine.Data.Mapper
     {
         public MappingProfile()
         {
-            MapPost();
-            MapPage();
             MapCategory();
             MapTag();
+            MapPost();
+            MapPage();
             MapWebsite();
             MapUsers();
         }
@@ -24,16 +24,25 @@ namespace CmsEngine.Data.Mapper
             // Edit model
             CreateMap<Post, PostEditModel>()
                 .ForMember(
-                    em => em.SelectedCategories,
-                    opt => opt.MapFrom(p => p.PostCategories.Select(x => x.Category.VanityId.ToString()).ToList())
+                    dst => dst.SelectedCategories,
+                    opt => opt.MapFrom(src => src.PostCategories.Select(x => x.Category.VanityId.ToString()).ToList())
                 );
 
             CreateMap<PostEditModel, Post>()
-                .ForMember(p => p.Id, opt => opt.Ignore())
-                .ForMember(p => p.VanityId, opt => opt.Ignore());
+                .ForMember(dst => dst.Id, opt => opt.Ignore())
+                .ForMember(dst => dst.VanityId, opt => opt.Ignore());
 
             // View model
-            CreateMap<Post, PostViewModel>();
+            CreateMap<Post, PostViewModel>()
+                .ForMember(
+                    dst => dst.Categories,
+                    opt => opt.MapFrom(src => src.PostCategories.Select(pc => pc.Category))
+                )
+                .ForMember(
+                    dst => dst.Tags,
+                    opt => opt.MapFrom(src => src.PostTags.Select(pt => pt.Tag))
+                );
+
             CreateMap<PostViewModel, Post>();
 
             // Table view model
@@ -46,8 +55,8 @@ namespace CmsEngine.Data.Mapper
             // Edit model
             CreateMap<Page, PageEditModel>();
             CreateMap<PageEditModel, Page>()
-                .ForMember(em => em.Id, opt => opt.Ignore())
-                .ForMember(em => em.VanityId, opt => opt.Ignore());
+                .ForMember(dst => dst.Id, opt => opt.Ignore())
+                .ForMember(dst => dst.VanityId, opt => opt.Ignore());
 
             // View model
             CreateMap<Page, PageViewModel>();
@@ -63,8 +72,8 @@ namespace CmsEngine.Data.Mapper
             // Edit model
             CreateMap<Category, CategoryEditModel>();
             CreateMap<CategoryEditModel, Category>()
-                .ForMember(em => em.Id, opt => opt.Ignore())
-                .ForMember(em => em.VanityId, opt => opt.Ignore());
+                .ForMember(dst => dst.Id, opt => opt.Ignore())
+                .ForMember(dst => dst.VanityId, opt => opt.Ignore());
 
             // View model
             CreateMap<Category, CategoryViewModel>();
@@ -80,8 +89,8 @@ namespace CmsEngine.Data.Mapper
             // Edit model
             CreateMap<Tag, TagEditModel>();
             CreateMap<TagEditModel, Tag>()
-                .ForMember(em => em.Id, opt => opt.Ignore())
-                .ForMember(em => em.VanityId, opt => opt.Ignore());
+                .ForMember(dst => dst.Id, opt => opt.Ignore())
+                .ForMember(dst => dst.VanityId, opt => opt.Ignore());
 
             // View model
             CreateMap<Tag, TagViewModel>();
@@ -97,8 +106,8 @@ namespace CmsEngine.Data.Mapper
             // Edit model
             CreateMap<Website, WebsiteEditModel>();
             CreateMap<WebsiteEditModel, Website>()
-                .ForMember(em => em.Id, opt => opt.Ignore())
-                .ForMember(em => em.VanityId, opt => opt.Ignore());
+                .ForMember(dst => dst.Id, opt => opt.Ignore())
+                .ForMember(dst => dst.VanityId, opt => opt.Ignore());
 
             // View model
             CreateMap<Website, WebsiteViewModel>();
