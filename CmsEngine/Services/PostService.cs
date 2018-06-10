@@ -46,7 +46,10 @@ namespace CmsEngine
 
         public IViewModel GetPostBySlug(string slug)
         {
-            var item = this.GetAll<Post>().Where(q => q.Slug == slug).SingleOrDefault();
+            var item = GetAll<Post>()
+                       .Include(p => p.PostCategories).ThenInclude(pc => pc.Category)
+                       .Include(p => p.PostTags).ThenInclude(pt => pt.Tag)
+                       .Where(q => q.Slug == slug).SingleOrDefault();
             return _mapper.Map<Post, PostViewModel>(item);
         }
 
