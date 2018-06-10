@@ -13,7 +13,10 @@
                             <div class="post-details">
                                 <div class="post-meta d-flex justify-content-between">
                                     <div class="date meta-last">@pagedPost.PublishedOn</div>
-                                    <div class="category"><a href="#">Business</a></div>
+                                    @if (pagedPost.Categories.Count() > 0)
+                                    {
+                                        <div class="category"><a href="#">@pagedPost.Categories.FirstOrDefault().Name</a></div>
+                                    }
                                 </div><a asp-controller="Blog" asp-action="Post" asp-route-slug="@pagedPost.Slug">
                                     <h3 class="h4">@pagedPost.Title</h3>
                                 </a>
