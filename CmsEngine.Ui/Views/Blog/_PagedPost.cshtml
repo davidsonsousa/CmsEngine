@@ -1,12 +1,15 @@
 @model PostViewModel
 <div class="post col-xl-6">
-    <div class="post-thumbnail"><a asp-controller="Blog" asp-action="Post" asp-route-slug="@Model.Slug"><img src="https://placeimg.com/640/426/any" alt="..." class="img-fluid"></a></div>
+    <div class="post-thumbnail"><a asp-controller="Blog" asp-action="Post" asp-route-slug="@Model.Slug"><img src="https://placeimg.com/640/426/any" alt="@Model.Title" class="img-fluid"></a></div>
     <div class="post-details">
         <div class="post-meta d-flex justify-content-between">
             <div class="date meta-last">@Model.PublishedOn</div>
             @if (Model.Categories.Count() > 0)
             {
-                <div class="category"><a href="#">@Model.Categories.FirstOrDefault().Name</a></div>
+                var category = Model.Categories.First();
+                <div class="category">
+                    <a asp-controller="Blog" asp-action="Category" asp-route-slug="@category.Slug">@category.Name</a>
+                </div>
             }
         </div><a asp-controller="Blog" asp-action="Post" asp-route-slug="@Model.Slug">
             <h3 class="h4">@Model.Title</h3>
@@ -14,10 +17,10 @@
         <p class="text-muted">@Model.Description</p>
         <footer class="post-footer d-flex align-items-center">
             <a href="#" class="author d-flex align-items-center flex-wrap">
-                <div class="avatar"><img src="https://placeimg.com/100/100/people" alt="..." class="img-fluid"></div>
+                <div class="avatar"><img src="https://placeimg.com/100/100/people" alt="@Model.Author" class="img-fluid"></div>
                 <div class="title"><span>@Model.Author</span></div>
             </a>
-            <div class="date"><i class="icon-clock"></i> 2 months ago</div>
+            <div class="date"><i class="icon-clock"></i> @Model.PublishedOn.ToShortDateString()</div>
             <div class="comments meta-last"><i class="icon-comment"></i>12</div>
         </footer>
     </div>
