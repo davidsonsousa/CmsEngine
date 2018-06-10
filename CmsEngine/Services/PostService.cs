@@ -8,6 +8,7 @@ using CmsEngine.Data.ViewModels;
 using CmsEngine.Data.ViewModels.DataTableViewModels;
 using CmsEngine.Extensions;
 using CmsEngine.Utils;
+using Microsoft.EntityFrameworkCore;
 
 namespace CmsEngine
 {
@@ -18,6 +19,16 @@ namespace CmsEngine
         public IEnumerable<T> GetAllPostsReadOnly<T>(int count = 0) where T : IViewModel
         {
             IEnumerable<Post> listItems = GetAllReadOnly<Post>(count);
+            return _mapper.Map<IEnumerable<Post>, IEnumerable<T>>(listItems);
+        }
+
+        public IEnumerable<T> GetPostsWithCategoriesAndTagsReadOnly<T>(int count = 0) where T : IViewModel
+        {
+            IEnumerable<Post> listItems = GetAll<Post>()
+                                          .Include(p => p.PostCategories).ThenInclude(pc => pc.Category)
+                                          .Include(p => p.PostTags).ThenInclude(pt => pt.Tag)
+                                          .Take(count).AsNoTracking().ToList();
+
             return _mapper.Map<IEnumerable<Post>, IEnumerable<T>>(listItems);
         }
 
