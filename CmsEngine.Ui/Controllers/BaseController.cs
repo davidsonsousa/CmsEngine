@@ -27,7 +27,7 @@ namespace CmsEngine.Ui.Controllers
             instance.PagedPosts = service.GetPostsWithCategoriesAndTagsReadOnly<PostViewModel>(4);
             instance.LatestPosts = service.GetPostsWithCategoriesAndTagsReadOnly<PostViewModel>(3);
             instance.Pages = service.GetAllPagesReadOnly<PageViewModel>();
-            instance.Categories = service.GetAllCategoriesReadOnly<CategoryViewModel>();
+            instance.Categories = service.GetCategoriesWithPostCount<CategoryViewModel>();
             instance.Tags = service.GetAllTagsReadOnly<TagViewModel>();
         }
     }

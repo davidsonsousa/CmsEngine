@@ -76,7 +76,11 @@ namespace CmsEngine.Data.Mapper
                 .ForMember(dst => dst.VanityId, opt => opt.Ignore());
 
             // View model
-            CreateMap<Category, CategoryViewModel>();
+            CreateMap<Category, CategoryViewModel>()
+                .ForMember(
+                    dst => dst.PostCount,
+                    opt => opt.MapFrom(src => src.PostCategories.Count)
+                );
             CreateMap<CategoryViewModel, Category>();
 
             // Table view model
