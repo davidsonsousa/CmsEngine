@@ -4,7 +4,7 @@ using AutoMapper;
 using CmsEngine.Data.AccessLayer;
 using CmsEngine.Data.EditModels;
 using CmsEngine.Data.Models;
-using CmsEngine.Data.ViewModels;
+using CmsEngine.Data.ViewModels.DataTableViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -47,9 +47,9 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
         public IActionResult Edit(Guid vanityId)
         {
             this.SetupMessages("Websites", PageType.Edit, panelTitle: "Edit an existing website");
-            var websiteViewModel = service.SetupWebsiteEditModel(vanityId);
+            var websiteEditModel = service.SetupWebsiteEditModel(vanityId);
 
-            return View("CreateEdit", websiteViewModel);
+            return View("CreateEdit", websiteEditModel);
         }
 
         [HttpPost]
@@ -85,9 +85,9 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
         }
 
         [HttpPost]
-        public IActionResult GetData([FromForm]DataTableParameters parameters)
+        public IActionResult GetData([FromForm]DataParameters parameters)
         {
-            var filteredItems = service.FilterWebsite(parameters.Search.Value, service.GetAllWebsitesReadOnly());
+            var filteredItems = service.FilterWebsite(parameters.Search.Value, service.GetAllWebsitesReadOnly<WebsiteTableViewModel>());
             var orderedItems = service.OrderWebsite(parameters.Order[0].Column, parameters.Order[0].Dir, filteredItems);
 
             var dataTable = service.BuildDataTable<Website>(orderedItems);

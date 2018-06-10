@@ -1,0 +1,60 @@
+@model InstanceViewModel
+<aside class="col-lg-4">
+    <!-- Widget [Search Bar Widget]-->
+    <div class="widget search">
+        <header>
+            <h3 class="h6">Search the blog</h3>
+        </header>
+        <form action="#" class="search-form">
+            <div class="form-group">
+                <input type="search" placeholder="What are you looking for?">
+                <button type="submit" class="submit"><i class="icon-search"></i></button>
+            </div>
+        </form>
+    </div>
+    <!-- Widget [Latest Posts Widget] -->
+    <div class="widget latest-posts">
+        <header>
+            <h3 class="h6">Latest Posts</h3>
+        </header>
+        <div class="blog-posts">
+            @foreach (var latestPost in Model.LatestPosts)
+            {
+                <a asp-controller="Blog" asp-action="Post" asp-route-slug="@latestPost.Slug">
+                    <div class="item d-flex align-items-center">
+                        <div class="image"><img src="https://placeimg.com/120/120/any" alt="@latestPost.Title" class="img-fluid"></div>
+                        <div class="title">
+                            <strong>@latestPost.Title</strong>
+                            <div class="d-flex align-items-center">
+                                <div class="views"><i class="icon-eye"></i> 500</div>
+                                <div class="comments"><i class="icon-comment"></i>12</div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            }
+        </div>
+    </div>
+    <!-- Widget [Categories Widget]-->
+    <div class="widget categories">
+        <header>
+            <h3 class="h6">Categories</h3>
+        </header>
+        @foreach (var category in Model.Categories)
+        {
+            <div class="item d-flex justify-content-between"><a asp-controller="Blog" asp-action="Category" asp-route-slug="@category.Slug">@category.Name</a><span>@category.PostCount</span></div>
+        }
+    </div>
+    <!-- Widget [Tags Cloud Widget]-->
+    <div class="widget tags">
+        <header>
+            <h3 class="h6">Tags</h3>
+        </header>
+        <ul class="list-inline">
+            @foreach (var tag in Model.Tags)
+            {
+                <li class="list-inline-item"><a asp-controller="Blog" asp-action="Tag" asp-route-slug="@tag.Slug" class="tag">#@tag.Name</a></li>
+            }
+        </ul>
+    </div>
+</aside>

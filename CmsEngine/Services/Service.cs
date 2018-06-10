@@ -9,6 +9,7 @@ using CmsEngine.Data.AccessLayer;
 using CmsEngine.Data.EditModels;
 using CmsEngine.Data.Models;
 using CmsEngine.Data.ViewModels;
+using CmsEngine.Data.ViewModels.DataTableViewModels;
 using CmsEngine.Extensions;
 using CmsEngine.Helpers;
 using CmsEngine.Utils;
@@ -23,7 +24,9 @@ namespace CmsEngine
         private readonly IMapper _mapper;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly UserManager<ApplicationUser> _userManager;
-        private Website _websiteInstance;
+        private readonly int _instanceId;
+
+        private InstanceViewModel _instance;
 
         #region Properties
 
@@ -31,27 +34,41 @@ namespace CmsEngine
         {
             get
             {
-                var task = Task.Run(async () => await GetUserByUsername(_httpContextAccessor.HttpContext.User.Identity.Name));
+                var task = Task.Run(() => GetUserByUsername(_httpContextAccessor.HttpContext.User.Identity.Name));
                 return (UserViewModel)task.Result;
             }
         }
 
-        public Website WebsiteInstance
+        public InstanceViewModel Instance
         {
             get
             {
-                if (_websiteInstance == null)
+                if (_instance == null)
                 {
-                    _websiteInstance = _unitOfWork.Websites.Get(q => q.SiteUrl == _httpContextAccessor.HttpContext.Request.Host.Host).FirstOrDefault();
+                    try
+                    {
+                        var website = _unitOfWork.Websites.Get(q => q.SiteUrl == _httpContextAccessor.HttpContext.Request.Host.Host).SingleOrDefault();
+                        if (website != null)
+                        {
+                            _instance = new InstanceViewModel
+                            {
+                                Name = website.Name,
+                                Description = website.Description,
+                                Culture = website.Culture,
+                                UrlFormat = website.UrlFormat,
+                                DateFormat = website.DateFormat,
+                                SiteUrl = website.SiteUrl
+                            };
+                        }
+                    }
+                    catch
+                    {
+                        throw;
+                    }
                 }
 
-                return _websiteInstance;
+                return _instance;
             }
-        }
-
-        public IMapper Mapper
-        {
-            get { return _mapper; }
         }
 
         #endregion
@@ -62,6 +79,20 @@ namespace CmsEngine
             _mapper = mapper;
             _httpContextAccessor = hca;
             _userManager = userManager;
+
+            try
+            {
+                var website = _unitOfWork.Websites.Get(q => q.SiteUrl == _httpContextAccessor.HttpContext.Request.Host.Host).SingleOrDefault();
+
+                if (website != null)
+                {
+                    _instanceId = website.Id;
+                }
+            }
+            catch
+            {
+                throw;
+            }
         }
 
         public IQueryable<T> GetAll<T>(string relatedTable = "") where T : BaseModel
@@ -89,7 +120,7 @@ namespace CmsEngine
                 throw;
             }
 
-            return Mapper.Map<IEnumerable<TModel>, IEnumerable<TViewModel>>(listItems);
+            return _mapper.Map<IEnumerable<TModel>, IEnumerable<TViewModel>>(listItems);
         }
 
         public int CountRecords<T>() where T : BaseModel
@@ -131,7 +162,7 @@ namespace CmsEngine
             return returnValue;
         }
 
-        public DataTableViewModel BuildDataTable<T>(IEnumerable<IViewModel> listItems) where T : BaseModel
+        public TableViewModel BuildDataTable<T>(IEnumerable<IViewModel> listItems) where T : BaseModel
         {
             var listString = new List<List<string>>();
 
@@ -158,17 +189,13 @@ namespace CmsEngine
                 listString.Add(listPropertes);
             }
 
-            DataTableViewModel dataTableViewModel;
-
-            dataTableViewModel = new DataTableViewModel
+            return new TableViewModel
             {
                 Data = listString,
                 RecordsTotal = this.CountRecords<T>(),
                 RecordsFiltered = listItems.Count(),
                 Draw = 0
             };
-
-            return dataTableViewModel;
         }
 
         #region Helpers
@@ -192,11 +219,27 @@ namespace CmsEngine
             return checkBoxList;
         }
 
+        private IEnumerable<T> GetAllReadOnly<T>(int count = 0) where T : BaseModel
+        {
+            IEnumerable<T> listItems;
+
+            try
+            {
+                listItems = _unitOfWork.GetRepository<T>().GetReadOnly(q => q.IsDeleted == false, count);
+            }
+            catch
+            {
+                throw;
+            }
+
+            return listItems;
+        }
+
         private T GetById<T>(int id, string relatedTable = "") where T : BaseModel
         {
             try
             {
-                return this.GetAll<T>(relatedTable).Where(q => q.Id == id).FirstOrDefault();
+                return this.GetAll<T>(relatedTable).Where(q => q.Id == id).SingleOrDefault();
             }
             catch
             {
@@ -208,7 +251,7 @@ namespace CmsEngine
         {
             try
             {
-                return this.GetAll<T>(relatedTable).Where(q => q.VanityId == id).FirstOrDefault();
+                return this.GetAll<T>(relatedTable).Where(q => q.VanityId == id).SingleOrDefault();
             }
             catch
             {

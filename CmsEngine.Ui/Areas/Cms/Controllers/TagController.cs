@@ -4,7 +4,7 @@ using AutoMapper;
 using CmsEngine.Data.AccessLayer;
 using CmsEngine.Data.EditModels;
 using CmsEngine.Data.Models;
-using CmsEngine.Data.ViewModels;
+using CmsEngine.Data.ViewModels.DataTableViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -47,9 +47,9 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
         public IActionResult Edit(Guid vanityId)
         {
             this.SetupMessages("Tags", PageType.Edit, panelTitle: "Edit an existing tag");
-            var tagViewModel = service.SetupTagEditModel(vanityId);
+            var tagEditModel = service.SetupTagEditModel(vanityId);
 
-            return View("CreateEdit", tagViewModel);
+            return View("CreateEdit", tagEditModel);
         }
 
         [HttpPost]
@@ -85,9 +85,9 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
         }
 
         [HttpPost]
-        public IActionResult GetData([FromForm]DataTableParameters parameters)
+        public IActionResult GetData([FromForm]DataParameters parameters)
         {
-            var filteredItems = service.FilterTag(parameters.Search.Value, service.GetAllTagsReadOnly());
+            var filteredItems = service.FilterTag(parameters.Search.Value, service.GetAllTagsReadOnly<TagTableViewModel>());
             var orderedItems = service.OrderTag(parameters.Order[0].Column, parameters.Order[0].Dir, filteredItems);
 
             var dataTable = service.BuildDataTable<Tag>(orderedItems);

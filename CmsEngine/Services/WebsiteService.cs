@@ -1,11 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using AutoMapper;
 using CmsEngine.Attributes;
 using CmsEngine.Data.EditModels;
 using CmsEngine.Data.Models;
 using CmsEngine.Data.ViewModels;
+using CmsEngine.Data.ViewModels.DataTableViewModels;
 using CmsEngine.Utils;
 
 namespace CmsEngine
@@ -14,32 +14,23 @@ namespace CmsEngine
     {
         #region Get
 
-        public IEnumerable<IViewModel> GetAllWebsitesReadOnly()
+        public IEnumerable<T> GetAllWebsitesReadOnly<T>(int count = 0) where T : IViewModel
         {
-            IEnumerable<Website> listItems;
+            IEnumerable<Website> listItems = GetAllReadOnly<Website>(count);
 
-            try
-            {
-                listItems = _unitOfWork.Websites.GetReadOnly(q => q.IsDeleted == false);
-            }
-            catch
-            {
-                throw;
-            }
-
-            return Mapper.Map<IEnumerable<Website>, IEnumerable<WebsiteViewModel>>(listItems);
+            return _mapper.Map<IEnumerable<Website>, IEnumerable<T>>(listItems);
         }
 
         public IViewModel GetWebsiteById(int id)
         {
             var item = this.GetById<Website>(id);
-            return Mapper.Map<Website, WebsiteViewModel>(item);
+            return _mapper.Map<Website, WebsiteViewModel>(item);
         }
 
         public IViewModel GetWebsiteById(Guid id)
         {
             var item = this.GetById<Website>(id);
-            return Mapper.Map<Website, WebsiteViewModel>(item);
+            return _mapper.Map<Website, WebsiteViewModel>(item);
         }
 
         #endregion
@@ -54,13 +45,13 @@ namespace CmsEngine
         public IEditModel SetupWebsiteEditModel(int id)
         {
             var item = this.GetById<Website>(id);
-            return Mapper.Map<Website, WebsiteEditModel>(item);
+            return _mapper.Map<Website, WebsiteEditModel>(item);
         }
 
         public IEditModel SetupWebsiteEditModel(Guid id)
         {
             var item = this.GetById<Website>(id);
-            return Mapper.Map<Website, WebsiteEditModel>(item);
+            return _mapper.Map<Website, WebsiteEditModel>(item);
         }
 
         #endregion
@@ -156,17 +147,17 @@ namespace CmsEngine
 
         public IEnumerable<IViewModel> FilterWebsite(string searchTerm, IEnumerable<IViewModel> listItems)
         {
-            var items = (IEnumerable<WebsiteViewModel>)listItems;
+            var items = (IEnumerable<WebsiteTableViewModel>)listItems;
 
             if (!string.IsNullOrWhiteSpace(searchTerm))
             {
-                var searchableProperties = typeof(WebsiteViewModel).GetProperties().Where(p => Attribute.IsDefined(p, typeof(Searchable)));
+                var searchableProperties = typeof(WebsiteTableViewModel).GetProperties().Where(p => Attribute.IsDefined(p, typeof(Searchable)));
 
                 var lambda = this.PrepareFilter<Website>(searchTerm, searchableProperties);
 
                 // TODO: There must be a way to improve this
-                var tempItems = Mapper.Map<IEnumerable<WebsiteViewModel>, IEnumerable<Website>>(items);
-                items = Mapper.Map<IEnumerable<Website>, IEnumerable<WebsiteViewModel>>(tempItems.Where(lambda));
+                var tempItems = _mapper.Map<IEnumerable<WebsiteTableViewModel>, IEnumerable<Website>>(items);
+                items = _mapper.Map<IEnumerable<Website>, IEnumerable<WebsiteTableViewModel>>(tempItems.Where(lambda));
             }
 
             return items;
@@ -176,7 +167,7 @@ namespace CmsEngine
         {
             try
             {
-                var listWebsites = Mapper.Map<IEnumerable<IViewModel>, IEnumerable<WebsiteViewModel>>(listItems);
+                var listWebsites = _mapper.Map<IEnumerable<IViewModel>, IEnumerable<WebsiteTableViewModel>>(listItems);
 
                 switch (orderColumn)
                 {
@@ -199,7 +190,6 @@ namespace CmsEngine
             }
 
             return listItems;
-
         }
 
         #endregion
@@ -212,13 +202,13 @@ namespace CmsEngine
 
             if (editModel.IsNew)
             {
-                website = Mapper.Map<WebsiteEditModel, Website>((WebsiteEditModel)editModel);
+                website = _mapper.Map<WebsiteEditModel, Website>((WebsiteEditModel)editModel);
                 _unitOfWork.Websites.Insert(website);
             }
             else
             {
                 website = this.GetById<Website>(editModel.VanityId);
-                Mapper.Map((WebsiteEditModel)editModel, website);
+                _mapper.Map((WebsiteEditModel)editModel, website);
 
                 _unitOfWork.Websites.Update(website);
             }

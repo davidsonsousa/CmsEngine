@@ -4,7 +4,7 @@ using AutoMapper;
 using CmsEngine.Data.AccessLayer;
 using CmsEngine.Data.EditModels;
 using CmsEngine.Data.Models;
-using CmsEngine.Data.ViewModels;
+using CmsEngine.Data.ViewModels.DataTableViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -47,9 +47,9 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
         public IActionResult Edit(Guid vanityId)
         {
             this.SetupMessages("Pages", PageType.Edit, panelTitle: "Edit an existing page");
-            var pageViewModel = service.SetupPageEditModel(vanityId);
+            var pageEditModel = service.SetupPageEditModel(vanityId);
 
-            return View("CreateEdit", pageViewModel);
+            return View("CreateEdit", pageEditModel);
         }
 
         [HttpPost]
@@ -85,9 +85,9 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
         }
 
         [HttpPost]
-        public IActionResult GetData([FromForm]DataTableParameters parameters)
+        public IActionResult GetData([FromForm]DataParameters parameters)
         {
-            var filteredItems = service.FilterPage(parameters.Search.Value, service.GetAllPagesReadOnly());
+            var filteredItems = service.FilterPage(parameters.Search.Value, service.GetAllPagesReadOnly<PageTableViewModel>());
             var orderedItems = service.OrderPage(parameters.Order[0].Column, parameters.Order[0].Dir, filteredItems);
 
             var dataTable = service.BuildDataTable<Page>(orderedItems);

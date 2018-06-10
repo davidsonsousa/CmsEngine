@@ -59,6 +59,27 @@ gulp.task('build:admin-scripts', function () {
         .pipe(gulp.dest(gulp.paths.webroot + gulp.paths.js));
 });
 
+gulp.task('build:site', function () {
+    return gulp.src('./assets/scss/site/site.scss')
+        .pipe(sass())
+        .pipe(autoprefixer())
+        .pipe(gulp.dest(gulp.paths.webroot + gulp.paths.css))
+        .pipe(cssmin())
+        .pipe(rename({ suffix: '.min' }))
+        .pipe(gulp.dest(gulp.paths.webroot + gulp.paths.css));
+    //.pipe(browserSync.stream());
+});
+
+gulp.task('build:site-scripts', function () {
+    return gulp.src('./assets/js/site/*.js')
+        .pipe(gulp.dest(gulp.paths.temp + gulp.paths.js))
+        .pipe(concat('site.js'))
+        .pipe(gulp.dest(gulp.paths.webroot + gulp.paths.js))
+        .pipe(uglify())
+        .pipe(rename({ suffix: '.min' }))
+        .pipe(gulp.dest(gulp.paths.webroot + gulp.paths.js));
+});
+
 gulp.task('copy:images', function () {
     return gulp.src('./assets/img/**/*')
         .pipe(gulp.dest(gulp.paths.webroot + '/img'));
@@ -71,7 +92,9 @@ gulp.task('clean:dist', function () {
 gulp.task('default', function (callback) {
     runSequence(
         'clean:dist', 'copy:images',
-        'build:admin', 'build:admin-scripts', 'build:vendors',
+        'build:admin', 'build:admin-scripts',
+        'build:site', 'build:site-scripts',
+        'build:vendors',
         'clean:min-min',
         callback);
 });

@@ -5,8 +5,10 @@ using CmsEngine.Attributes;
 using CmsEngine.Data.EditModels;
 using CmsEngine.Data.Models;
 using CmsEngine.Data.ViewModels;
+using CmsEngine.Data.ViewModels.DataTableViewModels;
 using CmsEngine.Extensions;
 using CmsEngine.Utils;
+using Microsoft.EntityFrameworkCore;
 
 namespace CmsEngine
 {
@@ -14,32 +16,41 @@ namespace CmsEngine
     {
         #region Get
 
-        public IEnumerable<IViewModel> GetAllPostsReadOnly()
+        public IEnumerable<T> GetAllPostsReadOnly<T>(int count = 0) where T : IViewModel
         {
-            IEnumerable<Post> listItems;
+            IEnumerable<Post> listItems = GetAllReadOnly<Post>(count);
+            return _mapper.Map<IEnumerable<Post>, IEnumerable<T>>(listItems);
+        }
 
-            try
-            {
-                listItems = _unitOfWork.Posts.GetReadOnly(q => q.IsDeleted == false);
-            }
-            catch
-            {
-                throw;
-            }
+        public IEnumerable<T> GetPostsWithCategoriesAndTagsReadOnly<T>(int count = 0) where T : IViewModel
+        {
+            IEnumerable<Post> listItems = GetAll<Post>()
+                                          .Include(p => p.PostCategories).ThenInclude(pc => pc.Category)
+                                          .Include(p => p.PostTags).ThenInclude(pt => pt.Tag)
+                                          .Take(count).AsNoTracking().ToList();
 
-            return Mapper.Map<IEnumerable<Post>, IEnumerable<PostViewModel>>(listItems);
+            return _mapper.Map<IEnumerable<Post>, IEnumerable<T>>(listItems);
         }
 
         public IViewModel GetPostById(int id)
         {
             var item = this.GetById<Post>(id);
-            return Mapper.Map<Post, PostViewModel>(item);
+            return _mapper.Map<Post, PostViewModel>(item);
         }
 
         public IViewModel GetPostById(Guid id)
         {
             var item = this.GetById<Post>(id);
-            return Mapper.Map<Post, PostViewModel>(item);
+            return _mapper.Map<Post, PostViewModel>(item);
+        }
+
+        public IViewModel GetPostBySlug(string slug)
+        {
+            var item = GetAll<Post>()
+                       .Include(p => p.PostCategories).ThenInclude(pc => pc.Category)
+                       .Include(p => p.PostTags).ThenInclude(pt => pt.Tag)
+                       .Where(q => q.Slug == slug).SingleOrDefault();
+            return _mapper.Map<Post, PostViewModel>(item);
         }
 
         #endregion
@@ -59,7 +70,7 @@ namespace CmsEngine
         public IEditModel SetupPostEditModel(int id)
         {
             var item = this.GetById<Post>(id, "PostCategories.Category");
-            var editModel = Mapper.Map<Post, PostEditModel>(item);
+            var editModel = _mapper.Map<Post, PostEditModel>(item);
             editModel.Categories = this.PopulateCheckboxList<Category>(editModel.SelectedCategories);
 
             return editModel;
@@ -68,7 +79,7 @@ namespace CmsEngine
         public IEditModel SetupPostEditModel(Guid id)
         {
             var item = this.GetById<Post>(id, "PostCategories.Category");
-            var editModel = Mapper.Map<Post, PostEditModel>(item);
+            var editModel = _mapper.Map<Post, PostEditModel>(item);
             editModel.Categories = this.PopulateCheckboxList<Category>(editModel.SelectedCategories);
 
             return editModel;
@@ -167,17 +178,17 @@ namespace CmsEngine
 
         public IEnumerable<IViewModel> FilterPost(string searchTerm, IEnumerable<IViewModel> listItems)
         {
-            var items = (IEnumerable<PostViewModel>)listItems;
+            var items = (IEnumerable<PostTableViewModel>)listItems;
 
             if (!string.IsNullOrWhiteSpace(searchTerm))
             {
-                var searchableProperties = typeof(PostViewModel).GetProperties().Where(p => Attribute.IsDefined(p, typeof(Searchable)));
+                var searchableProperties = typeof(PostTableViewModel).GetProperties().Where(p => Attribute.IsDefined(p, typeof(Searchable)));
 
                 var lambda = this.PrepareFilter<Post>(searchTerm, searchableProperties);
 
                 // TODO: There must be a way to improve this
-                var tempItems = Mapper.Map<IEnumerable<PostViewModel>, IEnumerable<Post>>(items);
-                items = Mapper.Map<IEnumerable<Post>, IEnumerable<PostViewModel>>(tempItems.Where(lambda));
+                var tempItems = _mapper.Map<IEnumerable<PostTableViewModel>, IEnumerable<Post>>(items);
+                items = _mapper.Map<IEnumerable<Post>, IEnumerable<PostTableViewModel>>(tempItems.Where(lambda));
             }
 
             return items;
@@ -187,7 +198,7 @@ namespace CmsEngine
         {
             try
             {
-                var listPosts = Mapper.Map<IEnumerable<IViewModel>, IEnumerable<PostViewModel>>(listItems);
+                var listPosts = _mapper.Map<IEnumerable<IViewModel>, IEnumerable<PostTableViewModel>>(listItems);
 
                 switch (orderColumn)
                 {
@@ -204,7 +215,6 @@ namespace CmsEngine
             }
 
             return listItems;
-
         }
 
         #endregion
@@ -224,8 +234,8 @@ namespace CmsEngine
 
             if (editModel.IsNew)
             {
-                post = Mapper.Map<PostEditModel, Post>(postEditModel);
-                post.WebsiteId = WebsiteInstance.Id;
+                post = _mapper.Map<PostEditModel, Post>(postEditModel);
+                post.WebsiteId = _instanceId;
 
                 _unitOfWork.Posts.Insert(post);
 
@@ -234,7 +244,7 @@ namespace CmsEngine
             else
             {
                 post = this.GetById<Post>(editModel.VanityId, "PostCategories.Category");
-                Mapper.Map(postEditModel, post);
+                _mapper.Map(postEditModel, post);
 
                 _unitOfWork.Posts.Update(post);
 
@@ -251,13 +261,7 @@ namespace CmsEngine
                                                 {
                                                     CategoryId = GetById<Category>(Guid.Parse(x)).Id,
                                                     Post = post
-                                                });
-
-            // Check if new items are null
-            if (newItems == null)
-            {
-                newItems = new List<PostCategory>();
-            }
+                                                }) ?? new List<PostCategory>();
 
             ICollection<PostCategory> currentItems = null;
 

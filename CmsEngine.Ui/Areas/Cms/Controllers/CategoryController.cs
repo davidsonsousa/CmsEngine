@@ -4,7 +4,7 @@ using AutoMapper;
 using CmsEngine.Data.AccessLayer;
 using CmsEngine.Data.EditModels;
 using CmsEngine.Data.Models;
-using CmsEngine.Data.ViewModels;
+using CmsEngine.Data.ViewModels.DataTableViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -47,9 +47,9 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
         public IActionResult Edit(Guid vanityId)
         {
             this.SetupMessages("Categories", PageType.Edit, panelTitle: "Edit an existing category");
-            var categoryViewModel = service.SetupCategoryEditModel(vanityId);
+            var categoryEditModel = service.SetupCategoryEditModel(vanityId);
 
-            return View("CreateEdit", categoryViewModel);
+            return View("CreateEdit", categoryEditModel);
         }
 
         [HttpPost]
@@ -85,9 +85,9 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
         }
 
         [HttpPost]
-        public IActionResult GetData([FromForm]DataTableParameters parameters)
+        public IActionResult GetData([FromForm]DataParameters parameters)
         {
-            var filteredItems = service.FilterCategory(parameters.Search.Value, service.GetAllCategoriesReadOnly());
+            var filteredItems = service.FilterCategory(parameters.Search.Value, service.GetAllCategoriesReadOnly<CategoryTableViewModel>());
             var orderedItems = service.OrderCategory(parameters.Order[0].Column, parameters.Order[0].Dir, filteredItems);
 
             var dataTable = service.BuildDataTable<Category>(orderedItems);

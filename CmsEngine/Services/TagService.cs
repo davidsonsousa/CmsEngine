@@ -5,6 +5,7 @@ using CmsEngine.Attributes;
 using CmsEngine.Data.EditModels;
 using CmsEngine.Data.Models;
 using CmsEngine.Data.ViewModels;
+using CmsEngine.Data.ViewModels.DataTableViewModels;
 using CmsEngine.Utils;
 
 namespace CmsEngine
@@ -13,32 +14,22 @@ namespace CmsEngine
     {
         #region Get
 
-        public IEnumerable<IViewModel> GetAllTagsReadOnly()
+        public IEnumerable<T> GetAllTagsReadOnly<T>(int count = 0) where T : IViewModel
         {
-            IEnumerable<Tag> listItems;
-
-            try
-            {
-                listItems = _unitOfWork.Tags.GetReadOnly(q => q.IsDeleted == false);
-            }
-            catch
-            {
-                throw;
-            }
-
-            return Mapper.Map<IEnumerable<Tag>, IEnumerable<TagViewModel>>(listItems);
+            IEnumerable<Tag> listItems = GetAllReadOnly<Tag>(count);
+            return _mapper.Map<IEnumerable<Tag>, IEnumerable<T>>(listItems);
         }
 
         public IViewModel GetTagById(int id)
         {
             var item = this.GetById<Tag>(id);
-            return Mapper.Map<Tag, TagViewModel>(item);
+            return _mapper.Map<Tag, TagViewModel>(item);
         }
 
         public IViewModel GetTagById(Guid id)
         {
             var item = this.GetById<Tag>(id);
-            return Mapper.Map<Tag, TagViewModel>(item);
+            return _mapper.Map<Tag, TagViewModel>(item);
         }
 
         #endregion
@@ -53,13 +44,13 @@ namespace CmsEngine
         public IEditModel SetupTagEditModel(int id)
         {
             var item = this.GetById<Tag>(id);
-            return Mapper.Map<Tag, TagEditModel>(item);
+            return _mapper.Map<Tag, TagEditModel>(item);
         }
 
         public IEditModel SetupTagEditModel(Guid id)
         {
             var item = this.GetById<Tag>(id);
-            return Mapper.Map<Tag, TagEditModel>(item);
+            return _mapper.Map<Tag, TagEditModel>(item);
         }
 
         #endregion
@@ -155,17 +146,17 @@ namespace CmsEngine
 
         public IEnumerable<IViewModel> FilterTag(string searchTerm, IEnumerable<IViewModel> listItems)
         {
-            var items = (IEnumerable<TagViewModel>)listItems;
+            var items = (IEnumerable<TagTableViewModel>)listItems;
 
             if (!string.IsNullOrWhiteSpace(searchTerm))
             {
-                var searchableProperties = typeof(TagViewModel).GetProperties().Where(p => Attribute.IsDefined(p, typeof(Searchable)));
+                var searchableProperties = typeof(TagTableViewModel).GetProperties().Where(p => Attribute.IsDefined(p, typeof(Searchable)));
 
                 var lambda = this.PrepareFilter<Tag>(searchTerm, searchableProperties);
 
                 // TODO: There must be a way to improve this
-                var tempItems = Mapper.Map<IEnumerable<TagViewModel>, IEnumerable<Tag>>(items);
-                items = Mapper.Map<IEnumerable<Tag>, IEnumerable<TagViewModel>>(tempItems.Where(lambda));
+                var tempItems = _mapper.Map<IEnumerable<TagTableViewModel>, IEnumerable<Tag>>(items);
+                items = _mapper.Map<IEnumerable<Tag>, IEnumerable<TagTableViewModel>>(tempItems.Where(lambda));
             }
 
             return items;
@@ -175,7 +166,7 @@ namespace CmsEngine
         {
             try
             {
-                var listTags = Mapper.Map<IEnumerable<IViewModel>, IEnumerable<TagViewModel>>(listItems);
+                var listTags = _mapper.Map<IEnumerable<IViewModel>, IEnumerable<TagTableViewModel>>(listItems);
 
                 switch (orderColumn)
                 {
@@ -192,7 +183,6 @@ namespace CmsEngine
             }
 
             return listItems;
-
         }
 
         #endregion
@@ -205,16 +195,16 @@ namespace CmsEngine
 
             if (editModel.IsNew)
             {
-                tag = Mapper.Map<TagEditModel, Tag>((TagEditModel)editModel);
-                tag.WebsiteId = WebsiteInstance.Id;
+                tag = _mapper.Map<TagEditModel, Tag>((TagEditModel)editModel);
+                tag.WebsiteId = _instanceId;
 
                 _unitOfWork.Tags.Insert(tag);
             }
             else
             {
                 tag = this.GetById<Tag>(editModel.VanityId);
-                Mapper.Map((TagEditModel)editModel, tag);
-                tag.WebsiteId = WebsiteInstance.Id;
+                _mapper.Map((TagEditModel)editModel, tag);
+                tag.WebsiteId = _instanceId;
 
                 _unitOfWork.Tags.Update(tag);
             }
