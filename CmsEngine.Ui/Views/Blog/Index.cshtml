@@ -6,9 +6,16 @@
         <main class="posts-listing col-lg-8">
             <div class="container">
                 <div class="row">
-                    @foreach (var pagedPost in Model.PagedPosts)
+                    @if (Model.PagedPosts.Count() > 0)
                     {
-                        @await Html.PartialAsync("_PagedPost", pagedPost)
+                        foreach (var pagedPost in Model.PagedPosts)
+                        {
+                            await Html.RenderPartialAsync("_PagedPost", pagedPost);
+                        }
+                    }
+                    else
+                    {
+                        <h3>No articles available</h3>
                     }
                 </div>
                 <!-- Pagination -->
