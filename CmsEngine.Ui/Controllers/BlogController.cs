@@ -25,5 +25,17 @@ namespace CmsEngine.Ui.Controllers
             instance.SelectedPost = (PostViewModel)service.GetPostBySlug(slug);
             return View(instance);
         }
+
+        public IActionResult Category(string slug)
+        {
+            instance.PagedPosts = service.GetPostsByCategoryReadOnly<PostViewModel>(slug);
+            return View("Index", instance);
+        }
+
+        public IActionResult Tag(string slug)
+        {
+            instance.PagedPosts = service.GetPostsByTagReadOnly<PostViewModel>(slug);
+            return View("Index", instance);
+        }
     }
 }
