@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 
 namespace CmsEngine.Data.Models
 {
@@ -24,5 +24,7 @@ namespace CmsEngine.Data.Models
         public string DateFormat { get; set; } = "MM/dd/yyyy";
 
         public string SiteUrl { get; set; }
+
+        public int ArticleLimit { get; set; }
     }
 }
