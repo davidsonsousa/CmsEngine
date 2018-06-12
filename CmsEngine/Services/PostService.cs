@@ -22,21 +22,23 @@ namespace CmsEngine
             return _mapper.Map<IEnumerable<Post>, IEnumerable<T>>(listItems);
         }
 
-        public IEnumerable<T> GetPostsWithCategoriesAndTagsReadOnly<T>(int count = 0) where T : IViewModel
+        public IEnumerable<T> GetPostsReadOnly<T>(int count = 0) where T : IViewModel
         {
-            IEnumerable<Post> listItems = GetAll<Post>()
-                                          .Include(p => p.PostCategories).ThenInclude(pc => pc.Category)
-                                          .Include(p => p.PostTags).ThenInclude(pt => pt.Tag)
-                                          .Take(count).AsNoTracking().ToList();
+            var query = GetPostsWithCategoriesAndTags();
 
+            if (count > 0)
+            {
+                query = query.Take(count);
+            }
+
+            IEnumerable<Post> listItems = query.AsNoTracking().ToList();
             return _mapper.Map<IEnumerable<Post>, IEnumerable<T>>(listItems);
         }
 
         public IEnumerable<T> GetPostsByCategoryReadOnly<T>(string categorySlug, int count = 0) where T : IViewModel
         {
-            var query = GetAll<Post>().Include(p => p.PostCategories).ThenInclude(pc => pc.Category)
-                                      .Include(p => p.PostTags).ThenInclude(pt => pt.Tag)
-                                      .Where(q => q.PostCategories.Any(pc => pc.Category.Slug == categorySlug));
+            var query = GetPostsWithCategoriesAndTags().Where(q => q.PostCategories.Any(pc => pc.Category.Slug == categorySlug));
+
             if (count > 0)
             {
                 query = query.Take(count);
@@ -49,9 +51,8 @@ namespace CmsEngine
 
         public IEnumerable<T> GetPostsByTagReadOnly<T>(string tagSlug, int count = 0) where T : IViewModel
         {
-            var query = GetAll<Post>().Include(p => p.PostCategories).ThenInclude(pc => pc.Category)
-                                      .Include(p => p.PostTags).ThenInclude(pt => pt.Tag)
-                                      .Where(q => q.PostTags.Any(pc => pc.Tag.Slug == tagSlug));
+            var query = GetPostsWithCategoriesAndTags().Where(q => q.PostTags.Any(pc => pc.Tag.Slug == tagSlug));
+
             if (count > 0)
             {
                 query = query.Take(count);
@@ -250,6 +251,12 @@ namespace CmsEngine
         #endregion
 
         #region Helpers
+
+        private IQueryable<Post> GetPostsWithCategoriesAndTags()
+        {
+            return GetAll<Post>().Include(p => p.PostCategories).ThenInclude(pc => pc.Category)
+                                 .Include(p => p.PostTags).ThenInclude(pt => pt.Tag);
+        }
 
         private void PreparePostForSaving(IEditModel editModel)
         {
