@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 
 namespace CmsEngine.Data.EditModels
 {
@@ -26,5 +26,9 @@ namespace CmsEngine.Data.EditModels
         [Required]
         [MaxLength(250)]
         public string SiteUrl { get; set; }
+
+        [Required]
+        [MaxLength(250)]
+        public string ArticleLimit { get; set; }
     }
 }
