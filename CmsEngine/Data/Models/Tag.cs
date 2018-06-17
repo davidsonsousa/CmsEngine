@@ -8,7 +8,7 @@ namespace CmsEngine.Data.Models
         #region Navigation
 
         public int WebsiteId { get; set; }
-        public Website Website { get; set; }
+        public virtual Website Website { get; set; }
 
         public virtual ICollection<PostTag> PostTags { get; set; }
 

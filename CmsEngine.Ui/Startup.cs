@@ -28,7 +28,8 @@ namespace CmsEngine.Ui
         {
             // Add CmsEngineContext
             services.AddDbContextPool<CmsEngineContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+                options.UseLazyLoadingProxies()
+                       .UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<CmsEngineContext>()
