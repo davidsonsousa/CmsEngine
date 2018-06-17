@@ -18,7 +18,8 @@
     "simple-line-icons": "^2.4.1",
     "tinymce": "^4.7.2",
     "fancybox": "^3.0.1",
-    "jquery.cookie": "^1.4.1"
+    "jquery.cookie": "^1.4.1",
+    "select2": "^4.0.6-rc.1"
   },
   "devDependencies": {
     "browser-sync": "^2.16.0",
