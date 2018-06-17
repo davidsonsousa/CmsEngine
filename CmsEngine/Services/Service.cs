@@ -96,11 +96,11 @@ namespace CmsEngine
             }
         }
 
-        public IQueryable<T> GetAll<T>(string relatedTable = "") where T : BaseModel
+        public IQueryable<T> GetAll<T>(int count = 0) where T : BaseModel
         {
             try
             {
-                return _unitOfWork.GetRepository<T>().Get(q => q.IsDeleted == false, relatedTable);
+                return _unitOfWork.GetRepository<T>().Get(q => q.IsDeleted == false, count);
             }
             catch
             {
@@ -115,6 +115,23 @@ namespace CmsEngine
             try
             {
                 listItems = _unitOfWork.GetRepository<TModel>().GetReadOnly(q => q.IsDeleted == false);
+            }
+            catch
+            {
+                throw;
+            }
+
+            return _mapper.Map<IEnumerable<TModel>, IEnumerable<TViewModel>>(listItems);
+        }
+
+        private IEnumerable<TViewModel> GetPublishedDocumentsReadOnly<TModel, TViewModel>(int count = 0) where TModel : Document where TViewModel : IViewModel
+        {
+            IEnumerable<TModel> listItems;
+
+            try
+            {
+                listItems = _unitOfWork.GetRepository<TModel>()
+                                  .GetReadOnly(q => q.IsDeleted == false && q.Status == DocumentStatus.Published, count);
             }
             catch
             {
@@ -255,11 +272,11 @@ namespace CmsEngine
             return listItems;
         }
 
-        private T GetById<T>(int id, string relatedTable = "") where T : BaseModel
+        private T GetById<T>(int id, int count = 0) where T : BaseModel
         {
             try
             {
-                return this.GetAll<T>(relatedTable).Where(q => q.Id == id).SingleOrDefault();
+                return this.GetAll<T>(count).Where(q => q.Id == id).SingleOrDefault();
             }
             catch
             {
@@ -267,11 +284,11 @@ namespace CmsEngine
             }
         }
 
-        private T GetById<T>(Guid id, string relatedTable = "") where T : BaseModel
+        private T GetById<T>(Guid id, int count = 0) where T : BaseModel
         {
             try
             {
-                return this.GetAll<T>(relatedTable).Where(q => q.VanityId == id).SingleOrDefault();
+                return this.GetAll<T>(count).Where(q => q.VanityId == id).SingleOrDefault();
             }
             catch
             {
