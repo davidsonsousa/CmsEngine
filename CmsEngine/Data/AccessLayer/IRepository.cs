@@ -13,7 +13,7 @@ namespace CmsEngine.Data.AccessLayer
         /// <param name="filter"></param>
         /// <param name="relatedTable"></param>
         /// <returns></returns>
-        IQueryable<T> Get(Expression<Func<T, bool>> filter = null, string relatedTable = "");
+        IQueryable<T> Get(Expression<Func<T, bool>> filter = null, int count = 0);
 
         /// <summary>
         /// Gets items based on condition for read-only
