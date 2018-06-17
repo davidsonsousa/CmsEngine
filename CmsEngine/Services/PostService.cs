@@ -16,49 +16,41 @@ namespace CmsEngine
     {
         #region Get
 
+        public IEnumerable<T> GetPostsByStatusReadOnly<T>(DocumentStatus documentStatus, int count = 0) where T : IViewModel
+        {
+            return this.GetDocumentsByStatusReadOnly<Post, T>(documentStatus, count);
+        }
+
         public IEnumerable<T> GetAllPostsReadOnly<T>(int count = 0) where T : IViewModel
         {
             IEnumerable<Post> listItems = GetAllReadOnly<Post>(count);
             return _mapper.Map<IEnumerable<Post>, IEnumerable<T>>(listItems);
         }
 
-        public IEnumerable<T> GetPostsReadOnly<T>(int count = 0) where T : IViewModel
-        {
-            var query = GetPostsWithCategoriesAndTags();
-
-            if (count > 0)
-            {
-                query = query.Take(count);
-            }
-
-            IEnumerable<Post> listItems = query.AsNoTracking().ToList();
-            return _mapper.Map<IEnumerable<Post>, IEnumerable<T>>(listItems);
-        }
-
         public IEnumerable<T> GetPostsByCategoryReadOnly<T>(string categorySlug, int count = 0) where T : IViewModel
         {
-            var query = GetPostsWithCategoriesAndTags().Where(q => q.PostCategories.Any(pc => pc.Category.Slug == categorySlug));
+            var query = GetAll<Post>().Where(q => q.PostCategories.Any(pc => pc.Category.Slug == categorySlug));
 
             if (count > 0)
             {
                 query = query.Take(count);
             }
 
-            IEnumerable<Post> listItems = query.AsNoTracking().ToList();
+            IEnumerable<Post> listItems = query.ToList();
 
             return _mapper.Map<IEnumerable<Post>, IEnumerable<T>>(listItems);
         }
 
         public IEnumerable<T> GetPostsByTagReadOnly<T>(string tagSlug, int count = 0) where T : IViewModel
         {
-            var query = GetPostsWithCategoriesAndTags().Where(q => q.PostTags.Any(pc => pc.Tag.Slug == tagSlug));
+            var query = GetAll<Post>().Where(q => q.PostTags.Any(pc => pc.Tag.Slug == tagSlug));
 
             if (count > 0)
             {
                 query = query.Take(count);
             }
 
-            IEnumerable<Post> listItems = query.AsNoTracking().ToList();
+            IEnumerable<Post> listItems = query.ToList();
 
             return _mapper.Map<IEnumerable<Post>, IEnumerable<T>>(listItems);
         }
@@ -252,12 +244,6 @@ namespace CmsEngine
         #endregion
 
         #region Helpers
-
-        private IQueryable<Post> GetPostsWithCategoriesAndTags()
-        {
-            return GetAll<Post>().Include(p => p.PostCategories).ThenInclude(pc => pc.Category)
-                                 .Include(p => p.PostTags).ThenInclude(pt => pt.Tag);
-        }
 
         private void PreparePostForSaving(IEditModel editModel)
         {
