@@ -15,6 +15,7 @@ using CmsEngine.Helpers;
 using CmsEngine.Utils;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace CmsEngine
 {
@@ -217,6 +218,25 @@ namespace CmsEngine
             }
 
             return checkBoxList;
+        }
+
+        private IEnumerable<SelectListItem> PopulateSelectListItems<T>(IEnumerable<string> selectedItems = null) where T : BaseModel
+        {
+            var itemList = _unitOfWork.GetRepository<T>().GetReadOnly(q => q.IsDeleted == false);
+            var selectListItems = new List<SelectListItem>();
+
+            foreach (var item in itemList)
+            {
+                selectListItems.Add(new SelectListItem
+                {
+                    Text = item.GetType().GetProperty("Name").GetValue(item).ToString(),
+                    Value = item.VanityId.ToString(),
+                    Disabled = false,
+                    Selected = (selectedItems == null ? false : selectedItems.Contains(item.VanityId.ToString()))
+                });
+            }
+
+            return selectListItems;
         }
 
         private IEnumerable<T> GetAllReadOnly<T>(int count = 0) where T : BaseModel

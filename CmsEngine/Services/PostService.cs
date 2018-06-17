@@ -90,28 +90,29 @@ namespace CmsEngine
 
         public IEditModel SetupPostEditModel()
         {
-            var editModel = new PostEditModel
+            return new PostEditModel
             {
-                Categories = this.PopulateCheckboxList<Category>()
+                Categories = this.PopulateCheckboxList<Category>(),
+                Tags = this.PopulateSelectListItems<Tag>()
             };
-
-            return editModel;
         }
 
         public IEditModel SetupPostEditModel(int id)
         {
-            var item = this.GetById<Post>(id, "PostCategories.Category");
+            var item = this.GetById<Post>(id);
             var editModel = _mapper.Map<Post, PostEditModel>(item);
             editModel.Categories = this.PopulateCheckboxList<Category>(editModel.SelectedCategories);
+            editModel.Tags = this.PopulateSelectListItems<Tag>(editModel.SelectedTags);
 
             return editModel;
         }
 
         public IEditModel SetupPostEditModel(Guid id)
         {
-            var item = this.GetById<Post>(id, "PostCategories.Category");
+            var item = this.GetById<Post>(id);
             var editModel = _mapper.Map<Post, PostEditModel>(item);
             editModel.Categories = this.PopulateCheckboxList<Category>(editModel.SelectedCategories);
+            editModel.Tags = this.PopulateSelectListItems<Tag>(editModel.SelectedTags);
 
             return editModel;
         }
@@ -275,18 +276,17 @@ namespace CmsEngine
                 post.WebsiteId = _instanceId;
 
                 _unitOfWork.Posts.Insert(post);
-
-                PrepareRelatedCategories(post, postEditModel);
             }
             else
             {
-                post = this.GetById<Post>(editModel.VanityId, "PostCategories.Category");
+                post = this.GetById<Post>(editModel.VanityId);
                 _mapper.Map(postEditModel, post);
 
                 _unitOfWork.Posts.Update(post);
-
-                PrepareRelatedCategories(post, postEditModel);
             }
+
+            PrepareRelatedCategories(post, postEditModel);
+            PrepareRelatedTags(post, postEditModel);
         }
 
         private void PrepareRelatedCategories(Post post, PostEditModel postEditModel)
@@ -315,6 +315,35 @@ namespace CmsEngine
                            .DeleteMany(currentItems.Except(newItems, x => x.CategoryId));
                 _unitOfWork.GetRepository<PostCategory>()
                            .InsertMany(newItems.Except(currentItems, x => x.CategoryId));
+            }
+        }
+
+        private void PrepareRelatedTags(Post post, PostEditModel postEditModel)
+        {
+            // TODO: Improve the logic of this method
+
+            IEnumerable<PostTag> newItems = postEditModel.SelectedTags?
+                                                .Select(x => new PostTag
+                                                {
+                                                    TagId = GetById<Tag>(Guid.Parse(x)).Id,
+                                                    Post = post
+                                                }) ?? new List<PostTag>();
+
+            ICollection<PostTag> currentItems = null;
+
+            // Check current items
+            if (post.PostTags != null)
+            {
+                currentItems = post.PostTags;
+            }
+
+            // Check if the values were assigned
+            if (currentItems != null)
+            {
+                _unitOfWork.GetRepository<PostTag>()
+                           .DeleteMany(currentItems.Except(newItems, x => x.TagId));
+                _unitOfWork.GetRepository<PostTag>()
+                           .InsertMany(newItems.Except(currentItems, x => x.TagId));
             }
         }
 

@@ -26,6 +26,10 @@ namespace CmsEngine.Data.Mapper
                 .ForMember(
                     dst => dst.SelectedCategories,
                     opt => opt.MapFrom(src => src.PostCategories.Select(x => x.Category.VanityId.ToString()).ToList())
+                )
+                .ForMember(
+                    dst => dst.SelectedTags,
+                    opt => opt.MapFrom(src => src.PostTags.Select(x => x.Tag.VanityId.ToString()).ToList())
                 );
 
             CreateMap<PostEditModel, Post>()
