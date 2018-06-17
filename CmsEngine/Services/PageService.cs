@@ -14,6 +14,11 @@ namespace CmsEngine
     {
         #region Get
 
+        public IEnumerable<T> GetPagesByStatusReadOnly<T>(DocumentStatus documentStatus, int count = 0) where T : IViewModel
+        {
+            return this.GetDocumentsByStatusReadOnly<Page, T>(documentStatus, count);
+        }
+
         public IEnumerable<T> GetAllPagesReadOnly<T>(int count = 0) where T : IViewModel
         {
             IEnumerable<Page> listItems = GetAllReadOnly<Page>(count);
