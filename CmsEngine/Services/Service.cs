@@ -124,14 +124,14 @@ namespace CmsEngine
             return _mapper.Map<IEnumerable<TModel>, IEnumerable<TViewModel>>(listItems);
         }
 
-        private IEnumerable<TViewModel> GetPublishedDocumentsReadOnly<TModel, TViewModel>(int count = 0) where TModel : Document where TViewModel : IViewModel
+        private IEnumerable<TViewModel> GetDocumentsByStatusReadOnly<TModel, TViewModel>(DocumentStatus documentStatus, int count = 0) where TModel : Document where TViewModel : IViewModel
         {
             IEnumerable<TModel> listItems;
 
             try
             {
                 listItems = _unitOfWork.GetRepository<TModel>()
-                                  .GetReadOnly(q => q.IsDeleted == false && q.Status == DocumentStatus.Published, count);
+                                  .GetReadOnly(q => q.IsDeleted == false && q.Status == documentStatus, count);
             }
             catch
             {
