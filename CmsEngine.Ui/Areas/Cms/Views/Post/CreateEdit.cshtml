@@ -103,7 +103,9 @@
         $(function () {
             CmsEngine.Configure.DateTimePicker('#published-on');
             tinymce.init({ selector: 'textarea' });
-            $('.select-tags').select2();
+            $('.select-tags').select2({
+                placeholder: 'Select a tag'
+            });
         });
     </script>
 }
