@@ -23,8 +23,7 @@ namespace CmsEngine
 
         public IEnumerable<T> GetCategoriesWithPostCount<T>() where T : IViewModel
         {
-            IEnumerable<Category> listItems = GetAll<Category>()
-                                          .Include(p => p.PostCategories).AsNoTracking().ToList();
+            IEnumerable<Category> listItems = GetAll<Category>().ToList();
 
             return _mapper.Map<IEnumerable<Category>, IEnumerable<T>>(listItems);
         }
