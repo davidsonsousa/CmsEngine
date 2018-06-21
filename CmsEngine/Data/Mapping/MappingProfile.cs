@@ -83,7 +83,8 @@ namespace CmsEngine.Data.Mapper
             CreateMap<Category, CategoryViewModel>()
                 .ForMember(
                     dst => dst.PostCount,
-                    opt => opt.MapFrom(src => src.PostCategories.Count)
+                    opt => opt.MapFrom(src => src.PostCategories
+                                                 .Count(q => q.Post.IsDeleted == false && q.Post.Status == DocumentStatus.Published))
                 );
             CreateMap<CategoryViewModel, Category>();
 
