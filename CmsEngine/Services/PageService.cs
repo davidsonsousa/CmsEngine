@@ -16,7 +16,8 @@ namespace CmsEngine
 
         public IEnumerable<T> GetPagesByStatusReadOnly<T>(DocumentStatus documentStatus, int count = 0) where T : IViewModel
         {
-            return this.GetDocumentsByStatusReadOnly<Page, T>(documentStatus, count);
+            var items = this.GetDocumentsByStatus<Page, T>(documentStatus, count);
+            return _mapper.Map<IEnumerable<Page>, IEnumerable<T>>(items);
         }
 
         public IEnumerable<T> GetAllPagesReadOnly<T>(int count = 0) where T : IViewModel
