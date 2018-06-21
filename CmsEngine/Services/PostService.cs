@@ -18,7 +18,8 @@ namespace CmsEngine
 
         public IEnumerable<T> GetPostsByStatusReadOnly<T>(DocumentStatus documentStatus, int count = 0) where T : IViewModel
         {
-            return this.GetDocumentsByStatusReadOnly<Post, T>(documentStatus, count);
+            var items = GetDocumentsByStatus<Post, T>(documentStatus, count);
+            return _mapper.Map<IEnumerable<Post>, IEnumerable<T>>(items);
         }
 
         public IEnumerable<T> GetAllPostsReadOnly<T>(int count = 0) where T : IViewModel
@@ -29,7 +30,8 @@ namespace CmsEngine
 
         public IEnumerable<T> GetPostsByCategoryReadOnly<T>(string categorySlug, int count = 0) where T : IViewModel
         {
-            var query = GetAll<Post>().Where(q => q.PostCategories.Any(pc => pc.Category.Slug == categorySlug));
+            var query = GetDocumentsByStatus<Post, T>(DocumentStatus.Published, count)
+                            .Where(q => q.PostCategories.Any(pc => pc.Category.Slug == categorySlug));
 
             if (count > 0)
             {
@@ -43,7 +45,8 @@ namespace CmsEngine
 
         public IEnumerable<T> GetPostsByTagReadOnly<T>(string tagSlug, int count = 0) where T : IViewModel
         {
-            var query = GetAll<Post>().Where(q => q.PostTags.Any(pc => pc.Tag.Slug == tagSlug));
+            var query = GetDocumentsByStatus<Post, T>(DocumentStatus.Published, count)
+                            .Where(q => q.PostTags.Any(pc => pc.Tag.Slug == tagSlug));
 
             if (count > 0)
             {
