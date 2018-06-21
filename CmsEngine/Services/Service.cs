@@ -96,11 +96,25 @@ namespace CmsEngine
             }
         }
 
-        public IQueryable<T> GetAll<T>(int count = 0) where T : BaseModel
+        private IQueryable<T> GetAll<T>(int count = 0) where T : BaseModel
         {
             try
             {
                 return _unitOfWork.GetRepository<T>().Get(q => q.IsDeleted == false, count);
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
+        private IQueryable<TModel> GetDocumentsByStatus<TModel, TViewModel>(DocumentStatus documentStatus, int count = 0) where TModel : Document where TViewModel : IViewModel
+        {
+            try
+            {
+                return _unitOfWork.GetRepository<TModel>()
+                                  .Get(q => q.IsDeleted == false && q.Status == documentStatus, count)
+                                  .OrderByDescending(o => o.DateCreated);
             }
             catch
             {
@@ -115,24 +129,6 @@ namespace CmsEngine
             try
             {
                 listItems = _unitOfWork.GetRepository<TModel>().GetReadOnly(q => q.IsDeleted == false);
-            }
-            catch
-            {
-                throw;
-            }
-
-            return _mapper.Map<IEnumerable<TModel>, IEnumerable<TViewModel>>(listItems);
-        }
-
-        private IEnumerable<TViewModel> GetDocumentsByStatusReadOnly<TModel, TViewModel>(DocumentStatus documentStatus, int count = 0) where TModel : Document where TViewModel : IViewModel
-        {
-            IEnumerable<TModel> listItems;
-
-            try
-            {
-                listItems = _unitOfWork.GetRepository<TModel>()
-                                  .GetReadOnly(q => q.IsDeleted == false && q.Status == documentStatus, count)
-                                  .OrderByDescending(o => o.DateCreated);
             }
             catch
             {
