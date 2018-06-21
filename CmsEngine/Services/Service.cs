@@ -131,7 +131,8 @@ namespace CmsEngine
             try
             {
                 listItems = _unitOfWork.GetRepository<TModel>()
-                                  .GetReadOnly(q => q.IsDeleted == false && q.Status == documentStatus, count);
+                                  .GetReadOnly(q => q.IsDeleted == false && q.Status == documentStatus, count)
+                                  .OrderByDescending(o => o.DateCreated);
             }
             catch
             {
