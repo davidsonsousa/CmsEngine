@@ -100,7 +100,14 @@ namespace CmsEngine
         {
             try
             {
-                return _unitOfWork.GetRepository<T>().Get(q => q.IsDeleted == false, count);
+                var query = _unitOfWork.GetRepository<T>().Get(q => q.IsDeleted == false);
+
+                if (count > 0)
+                {
+                    query = query.Take(count);
+                }
+
+                return query;
             }
             catch
             {
@@ -112,9 +119,17 @@ namespace CmsEngine
         {
             try
             {
-                return _unitOfWork.GetRepository<TModel>()
-                                  .Get(q => q.IsDeleted == false && q.Status == documentStatus, count)
-                                  .OrderByDescending(o => o.DateCreated);
+                var query = _unitOfWork.GetRepository<TModel>()
+                                  .Get(q => q.IsDeleted == false && q.Status == documentStatus)
+                                  .OrderByDescending(o => o.PublishedOn)
+                                  .AsQueryable();
+
+                if (count > 0)
+                {
+                    query = query.Take(count);
+                }
+
+                return query;
             }
             catch
             {
@@ -259,7 +274,14 @@ namespace CmsEngine
 
             try
             {
-                listItems = _unitOfWork.GetRepository<T>().GetReadOnly(q => q.IsDeleted == false, count);
+                var query = _unitOfWork.GetRepository<T>().Get(q => q.IsDeleted == false);
+
+                if (count > 0)
+                {
+                    query = query.Take(count);
+                }
+
+                listItems = query.ToList();
             }
             catch
             {
