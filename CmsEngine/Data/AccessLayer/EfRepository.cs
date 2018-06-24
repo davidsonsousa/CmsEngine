@@ -24,35 +24,25 @@ namespace CmsEngine.Data.AccessLayer
             _dbSet = context.Set<T>();
         }
 
-        public IQueryable<T> Get(Expression<Func<T, bool>> filter = null, int count = 0)
+        public IQueryable<T> Get(Expression<Func<T, bool>> filter = null)
         {
             IQueryable<T> query = _dbSet;
 
             if (filter != null)
             {
                 query = query.Where(filter);
-            }
-
-            if (count > 0)
-            {
-                query = query.Take(count);
             }
 
             return query;
         }
 
-        public IEnumerable<T> GetReadOnly(Expression<Func<T, bool>> filter = null, int count = 0)
+        public IEnumerable<T> GetReadOnly(Expression<Func<T, bool>> filter = null)
         {
             IQueryable<T> query = _dbSet;
 
             if (filter != null)
             {
                 query = query.Where(filter);
-            }
-
-            if (count > 0)
-            {
-                query = query.Take(count);
             }
 
             return query.ToList();
