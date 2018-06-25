@@ -16,45 +16,35 @@ namespace CmsEngine
     {
         #region Get
 
+        public PaginatedList<T> GetPagedPostsByStatusReadOnly<T>(DocumentStatus documentStatus, int pageIndex = 1) where T : IViewModel
+        {
+            var posts = GetDocumentsByStatus<Post>(documentStatus);
+            return PreparePostsForPaging<T>(pageIndex, posts);
+        }
+
+        public PaginatedList<T> GetPagedPostsByCategoryReadOnly<T>(string categorySlug, int pageIndex = 1) where T : IViewModel
+        {
+            var posts = GetDocumentsByStatus<Post>(DocumentStatus.Published)
+                            .Where(q => q.PostCategories.Any(pc => pc.Category.Slug == categorySlug));
+            return PreparePostsForPaging<T>(pageIndex, posts);
+        }
+
+        public PaginatedList<T> GetPagedPostsByTagReadOnly<T>(string tagSlug, int pageIndex = 1) where T : IViewModel
+        {
+            var posts = GetDocumentsByStatus<Post>(DocumentStatus.Published)
+                            .Where(q => q.PostTags.Any(pt => pt.Tag.Slug == tagSlug));
+            return PreparePostsForPaging<T>(pageIndex, posts);
+        }
+
         public IEnumerable<T> GetPostsByStatusReadOnly<T>(DocumentStatus documentStatus, int count = 0) where T : IViewModel
         {
-            var items = GetDocumentsByStatus<Post, T>(documentStatus, count);
-            return _mapper.Map<IEnumerable<Post>, IEnumerable<T>>(items);
+            var posts = GetDocumentsByStatus<Post>(documentStatus, count);
+            return _mapper.Map<IEnumerable<Post>, IEnumerable<T>>(posts);
         }
 
         public IEnumerable<T> GetAllPostsReadOnly<T>(int count = 0) where T : IViewModel
         {
             IEnumerable<Post> listItems = GetAllReadOnly<Post>(count);
-            return _mapper.Map<IEnumerable<Post>, IEnumerable<T>>(listItems);
-        }
-
-        public IEnumerable<T> GetPostsByCategoryReadOnly<T>(string categorySlug, int count = 0) where T : IViewModel
-        {
-            var query = GetDocumentsByStatus<Post, T>(DocumentStatus.Published, count)
-                            .Where(q => q.PostCategories.Any(pc => pc.Category.Slug == categorySlug));
-
-            if (count > 0)
-            {
-                query = query.Take(count);
-            }
-
-            IEnumerable<Post> listItems = query.ToList();
-
-            return _mapper.Map<IEnumerable<Post>, IEnumerable<T>>(listItems);
-        }
-
-        public IEnumerable<T> GetPostsByTagReadOnly<T>(string tagSlug, int count = 0) where T : IViewModel
-        {
-            var query = GetDocumentsByStatus<Post, T>(DocumentStatus.Published, count)
-                            .Where(q => q.PostTags.Any(pc => pc.Tag.Slug == tagSlug));
-
-            if (count > 0)
-            {
-                query = query.Take(count);
-            }
-
-            IEnumerable<Post> listItems = query.ToList();
-
             return _mapper.Map<IEnumerable<Post>, IEnumerable<T>>(listItems);
         }
 
@@ -334,6 +324,15 @@ namespace CmsEngine
                 _unitOfWork.GetRepository<PostTag>()
                            .InsertMany(newItems.Except(currentItems, x => x.TagId));
             }
+        }
+
+        private PaginatedList<T> PreparePostsForPaging<T>(int page, IQueryable<Post> posts) where T : IViewModel
+        {
+            var count = posts.Count();
+            var items = posts.Skip((page - 1) * Instance.ArticleLimit).Take(Instance.ArticleLimit).ToList();
+            var mappedItems = _mapper.Map<IEnumerable<Post>, IEnumerable<T>>(items);
+
+            return new PaginatedList<T>(mappedItems, count, page, Instance.ArticleLimit);
         }
 
         #endregion

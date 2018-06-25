@@ -58,7 +58,8 @@ namespace CmsEngine
                                 Culture = website.Culture,
                                 UrlFormat = website.UrlFormat,
                                 DateFormat = website.DateFormat,
-                                SiteUrl = website.SiteUrl
+                                SiteUrl = website.SiteUrl,
+                                ArticleLimit = website.ArticleLimit
                             };
                         }
                     }
@@ -115,7 +116,7 @@ namespace CmsEngine
             }
         }
 
-        private IQueryable<TModel> GetDocumentsByStatus<TModel, TViewModel>(DocumentStatus documentStatus, int count = 0) where TModel : Document where TViewModel : IViewModel
+        private IQueryable<TModel> GetDocumentsByStatus<TModel>(DocumentStatus documentStatus, int count = 0) where TModel : Document
         {
             try
             {
