@@ -15,7 +15,7 @@ namespace CmsEngine.Ui.Controllers
         {
         }
 
-        public IActionResult Index()
+        public IActionResult Index(int page = 1)
         {
             return View(instance);
         }
@@ -26,15 +26,15 @@ namespace CmsEngine.Ui.Controllers
             return View(instance);
         }
 
-        public IActionResult Category(string slug)
+        public IActionResult Category(string slug, int page = 1)
         {
-            instance.PagedPosts = service.GetPostsByCategoryReadOnly<PostViewModel>(slug);
+            instance.PagedPosts = service.GetPagedPostsByCategoryReadOnly<PostViewModel>(slug, page);
             return View("Index", instance);
         }
 
-        public IActionResult Tag(string slug)
+        public IActionResult Tag(string slug, int page = 1)
         {
-            instance.PagedPosts = service.GetPostsByTagReadOnly<PostViewModel>(slug);
+            instance.PagedPosts = service.GetPagedPostsByTagReadOnly<PostViewModel>(slug, page);
             return View("Index", instance);
         }
     }

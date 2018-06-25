@@ -24,8 +24,16 @@ namespace CmsEngine.Ui.Controllers
         {
             base.OnActionExecuting(context);
 
-            instance.PagedPosts = service.GetPostsByStatusReadOnly<PostViewModel>(DocumentStatus.Published, 4);
-            instance.LatestPosts = service.GetPostsByStatusReadOnly<PostViewModel>(DocumentStatus.Published,3);
+            if (context.ActionArguments.TryGetValue("page", out object value) && int.TryParse(value.ToString(), out int page))
+            {
+                instance.PagedPosts = service.GetPagedPostsByStatusReadOnly<PostViewModel>(DocumentStatus.Published, page);
+            }
+            else
+            {
+                instance.PagedPosts = service.GetPagedPostsByStatusReadOnly<PostViewModel>(DocumentStatus.Published);
+            }
+
+            instance.LatestPosts = service.GetPostsByStatusReadOnly<PostViewModel>(DocumentStatus.Published, 3);
             instance.Pages = service.GetPagesByStatusReadOnly<PageViewModel>(DocumentStatus.Published);
             instance.Categories = service.GetCategoriesWithPostCount<CategoryViewModel>();
             instance.Tags = service.GetAllTagsReadOnly<TagViewModel>();
