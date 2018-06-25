@@ -118,7 +118,7 @@ namespace CmsEngine
                     returnValue.Message = "An error has occurred while deleting the user";
                 }
             }
-            catch (Exception ex)
+            catch
             {
                 returnValue.IsError = true;
                 returnValue.Message = "An error has occurred while deleting the user";
