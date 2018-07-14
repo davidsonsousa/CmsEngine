@@ -26,4 +26,10 @@
     <ItemGroup>
       <Folder Include="Properties\PublishProfiles\" />
     </ItemGroup>
+
+    <ItemGroup>
+      <Content Update="Views\Shared\_ValidationScriptsPartial.cshtml">
+        <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+    </ItemGroup>
 </Project>
