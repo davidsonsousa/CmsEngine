@@ -1,17 +1,49 @@
-﻿@{
-    ViewData["Title"] = "Contact";
+@model InstanceViewModel
+
+<div class="container">
+    <div class="row">
+        <main class="col-lg-8">
+            <div class="container">
+                <h1>Contact</h1>
+                <div class="card">
+                    <form asp-controller="Home" asp-action="Contact" asp-route-returnurl="@ViewData[" ReturnUrl"]" method="post" class="form-horizontal">
+                        <div class="card-body">
+                            <div asp-validation-summary="All" class="text-danger"></div>
+                            <div class="form-group row">
+                                <label asp-for="ContactForm.Sender" class="col-md-3 form-control-label"></label>
+                                <div class="col-md-9">
+                                    <input asp-for="ContactForm.Sender" class="form-control" />
+                                    <span asp-validation-for="ContactForm.Sender" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label asp-for="ContactForm.Subject" class="col-md-3 form-control-label"></label>
+                                <div class="col-md-9">
+                                    <input asp-for="ContactForm.Subject" class="form-control" />
+                                    <span asp-validation-for="ContactForm.Subject" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label asp-for="ContactForm.Message" class="col-md-3 form-control-label"></label>
+                                <div class="col-md-9">
+                                    <textarea asp-for="ContactForm.Message" class="form-control" rows="15"></textarea>
+                                    <span asp-validation-for="ContactForm.Message" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="card-footer">
+                            <button type="submit" class="btn btn-primary"><i class="fa fa-dot-circle-o"></i> Send</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </main>
+        @await Html.PartialAsync("_Sidebar", Model)
+    </div>
+</div>
+
+
+@section Scripts{
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
 }
-<h2>@ViewData["Title"]</h2>
-<h3>@ViewData["Message"]</h3>
-
-<address>
-    One Microsoft Way<br />
-    Redmond, WA 98052-6399<br />
-    <abbr title="Phone">P:</abbr>
-    425.555.0100
-</address>
-
-<address>
-    <strong>Support:</strong> <a href="mailto:Support@example.com">Support@example.com</a><br />
-    <strong>Marketing:</strong> <a href="mailto:Marketing@example.com">Marketing@example.com</a>
-</address>
