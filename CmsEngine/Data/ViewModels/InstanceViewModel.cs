@@ -11,7 +11,7 @@ namespace CmsEngine.Data.ViewModels
         public string DateFormat { get; set; }
         public string SiteUrl { get; set; }
         public int ArticleLimit { get; set; }
-
+        public ContactDetailsViewModel ContactDetails { get; set; }
         public PostViewModel SelectedPost { get; set; }
 
         public PaginatedList<PostViewModel> PagedPosts { get; set; }
