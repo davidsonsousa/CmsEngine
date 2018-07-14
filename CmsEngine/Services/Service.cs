@@ -59,7 +59,17 @@ namespace CmsEngine
                                 UrlFormat = website.UrlFormat,
                                 DateFormat = website.DateFormat,
                                 SiteUrl = website.SiteUrl,
-                                ArticleLimit = website.ArticleLimit
+                                ArticleLimit = website.ArticleLimit,
+                                ContactDetails = new ContactDetailsViewModel
+                                {
+                                    Address = website.Address,
+                                    Phone = website.Phone,
+                                    Email = website.Email,
+                                    Facebook = website.Facebook,
+                                    Twitter = website.Twitter,
+                                    Instagram = website.Instagram,
+                                    LinkedIn = website.LinkedIn
+                                }
                             };
                         }
                     }
