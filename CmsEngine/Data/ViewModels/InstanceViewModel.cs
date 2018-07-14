@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using CmsEngine.Helpers.Email;
 
 namespace CmsEngine.Data.ViewModels
 {
@@ -13,6 +14,7 @@ namespace CmsEngine.Data.ViewModels
         public int ArticleLimit { get; set; }
         public ContactDetailsViewModel ContactDetails { get; set; }
         public PostViewModel SelectedPost { get; set; }
+        public ContactForm ContactForm { get; set; }
 
         public string PageTitle { get; set; }
 
