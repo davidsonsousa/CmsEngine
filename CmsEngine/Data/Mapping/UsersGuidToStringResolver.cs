@@ -5,7 +5,7 @@ using CmsEngine.Data.ViewModels;
 
 namespace CmsEngine.Data.Mapper
 {
-    public class UsersGuidToStringResolver : IValueResolver<object, ApplicationUser, string>
+    internal class UsersGuidToStringResolver : IValueResolver<object, ApplicationUser, string>
     {
         public string Resolve(object source, ApplicationUser destination, string destMember, ResolutionContext context)
         {
