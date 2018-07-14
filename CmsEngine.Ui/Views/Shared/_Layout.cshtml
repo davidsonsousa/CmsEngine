@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>@Model.Name</title>
+    <title>@Model.PageTitle</title>
     <meta name="description" content="@Model.Description">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="robots" content="all,follow">
@@ -50,7 +50,8 @@
             <div class="container">
                 <!-- Navbar Brand -->
                 <div class="navbar-header d-flex align-items-center justify-content-between">
-                    <!-- Navbar Brand --><a asp-controller="Home" asp-action="Index" class="navbar-brand">Bootstrap Blog</a>
+                    <!-- Navbar Brand -->
+                    <a asp-controller="Home" asp-action="Index" class="navbar-brand">@Model.Name</a>
                     <!-- Toggle Button-->
                     <button type="button" data-toggle="collapse" data-target="#navbarcollapse" aria-controls="navbarcollapse" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler"><span></span><span></span><span></span></button>
                 </div>

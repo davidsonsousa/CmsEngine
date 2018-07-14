@@ -60,6 +60,7 @@ namespace CmsEngine
                                 DateFormat = website.DateFormat,
                                 SiteUrl = website.SiteUrl,
                                 ArticleLimit = website.ArticleLimit,
+                                PageTitle = website.Name,
                                 ContactDetails = new ContactDetailsViewModel
                                 {
                                     Address = website.Address,
