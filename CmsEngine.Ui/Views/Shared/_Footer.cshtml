@@ -1,57 +1,86 @@
+@model InstanceViewModel
 <footer class="main-footer">
     <div class="container">
         <div class="row">
-            <div class="col-md-4">
+            <div class="col-md-5">
                 <div class="logo">
-                    <h6 class="text-white">Bootstrap Blog</h6>
+                    <h6 class="text-white">@Model.Name</h6>
                 </div>
                 <div class="contact-details">
-                    <p>53 Broadway, Broklyn, NY 11249</p>
-                    <p>Phone: (020) 123 456 789</p>
-                    <p>Email: <a href="mailto:info@company.com">Info@Company.com</a></p>
-                    <ul class="social-menu">
-                        <li class="list-inline-item"><a href="#"><i class="fa fa-facebook"></i></a></li>
-                        <li class="list-inline-item"><a href="#"><i class="fa fa-twitter"></i></a></li>
-                        <li class="list-inline-item"><a href="#"><i class="fa fa-instagram"></i></a></li>
-                        <li class="list-inline-item"><a href="#"><i class="fa fa-behance"></i></a></li>
-                        <li class="list-inline-item"><a href="#"><i class="fa fa-pinterest"></i></a></li>
-                    </ul>
+                    @if (!string.IsNullOrWhiteSpace(Model.ContactDetails.Address))
+                    {
+                        <p>@Model.ContactDetails.Address</p>
+                    }
+                    @if (!string.IsNullOrWhiteSpace(Model.ContactDetails.Phone))
+                    {
+                        <p>Phone: @Model.ContactDetails.Phone</p>
+                    }
+
+                    @if (Model.ContactDetails.HasSocialMediaOrEmail)
+                    {
+                        <ul class="social-menu">
+                            @if (!string.IsNullOrWhiteSpace(Model.ContactDetails.Email))
+                            {
+                                <li class="list-inline-item">
+                                    <a asp-controller="Home" asp-action="Contact"><i class="fa fa-envelope-o"></i></a>
+                                </li>
+                            }
+                            @if (!string.IsNullOrWhiteSpace(Model.ContactDetails.Facebook))
+                            {
+                                <li class="list-inline-item">
+                                    <a href="@Model.ContactDetails.Facebook"><i class="fa fa-facebook"></i></a>
+                                </li>
+                            }
+                            @if (!string.IsNullOrWhiteSpace(Model.ContactDetails.Twitter))
+                            {
+                                <li class="list-inline-item">
+                                    <a href="@Model.ContactDetails.Twitter"><i class="fa fa-twitter"></i></a>
+                                </li>
+                            }
+                            @if (!string.IsNullOrWhiteSpace(Model.ContactDetails.Instagram))
+                            {
+                                <li class="list-inline-item">
+                                    <a href="@Model.ContactDetails.Instagram"><i class="fa fa-instagram"></i></a>
+                                </li>
+                            }
+                            @if (!string.IsNullOrWhiteSpace(Model.ContactDetails.LinkedIn))
+                            {
+                                <li class="list-inline-item">
+                                    <a href="@Model.ContactDetails.LinkedIn"><i class="fa fa-linkedin"></i></a>
+                                </li>
+                            }
+                        </ul>
+                    }
+
                 </div>
             </div>
-            <div class="col-md-4">
-                <div class="menus d-flex">
-                    <ul class="list-unstyled">
-                        <li> <a href="#">My Account</a></li>
-                        <li> <a href="#">Add Listing</a></li>
-                        <li> <a href="#">Pricing</a></li>
-                        <li> <a href="#">Privacy &amp; Policy</a></li>
-                    </ul>
-                    <ul class="list-unstyled">
-                        <li> <a href="#">Our Partners</a></li>
-                        <li> <a href="#">FAQ</a></li>
-                        <li> <a href="#">How It Works</a></li>
-                        <li> <a href="#">Contact</a></li>
-                    </ul>
-                </div>
-            </div>
-            <div class="col-md-4">
+            @*<div class="col-md-4">
+                    <div class="menus d-flex">
+                        <ul class="list-unstyled">
+                            <li> <a href="#">My Account</a></li>
+                            <li> <a href="#">Add Listing</a></li>
+                            <li> <a href="#">Pricing</a></li>
+                            <li> <a href="#">Privacy &amp; Policy</a></li>
+                        </ul>
+                        <ul class="list-unstyled">
+                            <li> <a href="#">Our Partners</a></li>
+                            <li> <a href="#">FAQ</a></li>
+                            <li> <a href="#">How It Works</a></li>
+                            <li> <a href="#">Contact</a></li>
+                        </ul>
+                    </div>
+                </div>*@
+            <div class="col-md-7">
                 <div class="latest-posts">
-                    <a href="#">
-                        <div class="post d-flex align-items-center">
-                            <div class="image"><img src="img/small-thumbnail-1.jpg" alt="..." class="img-fluid"></div>
-                            <div class="title"><strong>Hotels for all budgets</strong><span class="date last-meta">October 26, 2016</span></div>
-                        </div>
-                    </a><a href="#">
-                        <div class="post d-flex align-items-center">
-                            <div class="image"><img src="img/small-thumbnail-2.jpg" alt="..." class="img-fluid"></div>
-                            <div class="title"><strong>Great street atrs in London</strong><span class="date last-meta">October 26, 2016</span></div>
-                        </div>
-                    </a><a href="#">
-                        <div class="post d-flex align-items-center">
-                            <div class="image"><img src="img/small-thumbnail-3.jpg" alt="..." class="img-fluid"></div>
-                            <div class="title"><strong>Best coffee shops in Sydney</strong><span class="date last-meta">October 26, 2016</span></div>
-                        </div>
-                    </a>
+                    @foreach (var latestPost in Model.LatestPosts)
+                    {
+                        <a asp-controller="Blog" asp-action="Post" asp-route-slug="@latestPost.Slug">
+                            <div class="post d-flex align-items-center">
+                                <div class="image"><img src="https://placeimg.com/120/120/any" alt="@latestPost.Title" class="img-fluid"></div>
+                                <div class="title"><strong>@latestPost.Title</strong><span class="date last-meta">@latestPost.PublishedOn</span></div>
+                            </div>
+                        </a>
+                    }
                 </div>
             </div>
         </div>
@@ -60,11 +89,11 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-6">
-                    <p>&copy; 2017. All rights reserved. Your great site.</p>
+                    <p>&copy; @DateTime.Now.Year. All rights reserved.</p>
                 </div>
                 <div class="col-md-6 text-right">
                     <p>
-                        Template By <a href="https://bootstraptemple.com" class="text-white">Bootstrap Temple</a>
+                        Developed by <a href="//davidsonsousa.net">Davidson Sousa</a> | Template By <a href="https://bootstraptemple.com" class="text-white">Bootstrap Temple</a>
                     </p>
                 </div>
             </div>
