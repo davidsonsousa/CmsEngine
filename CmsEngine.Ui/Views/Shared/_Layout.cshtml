@@ -80,7 +80,6 @@
     @RenderBody()
 
     @await Html.PartialAsync("_Footer")
-
     <script src="~/js/vendors/jquery.min.js"></script>
     <script src="~/js/vendors/popper.min.js"></script>
     <script src="~/js/vendors/bootstrap.min.js"></script>
@@ -93,5 +92,7 @@
     <environment exclude="Development">
         <script src="~/js/site.min.js"></script>
     </environment>
+
+    @RenderSection("Scripts", required: false)
 </body>
 </html>
