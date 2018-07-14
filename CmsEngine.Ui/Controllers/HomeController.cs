@@ -24,19 +24,20 @@ namespace CmsEngine.Ui.Controllers
         public IActionResult About()
         {
             ViewData["Message"] = "Your application description page.";
-
+            instance.PageTitle = $"About - {instance.Name}";
             return View(instance);
         }
 
         public IActionResult Contact()
         {
             ViewData["Message"] = "Your contact page.";
-
+            instance.PageTitle = $"Contact - {instance.Name}";
             return View(instance);
         }
 
         public IActionResult Error()
         {
+            instance.PageTitle = $"Error - {instance.Name}";
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
     }

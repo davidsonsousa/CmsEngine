@@ -1,3 +1,4 @@
+using System.Linq;
 using AutoMapper;
 using CmsEngine.Data.AccessLayer;
 using CmsEngine.Data.Models;
@@ -23,18 +24,23 @@ namespace CmsEngine.Ui.Controllers
         public IActionResult Post(string slug)
         {
             instance.SelectedPost = (PostViewModel)service.GetPostBySlug(slug);
+            instance.PageTitle = $"{instance.SelectedPost.Title} - {instance.Name}";
             return View(instance);
         }
 
         public IActionResult Category(string slug, int page = 1)
         {
             instance.PagedPosts = service.GetPagedPostsByCategoryReadOnly<PostViewModel>(slug, page);
+            var selectedCategory = instance.PagedPosts.SelectMany(p => p.Categories.Where(c => c.Slug == slug).Select(x => x.Name)).FirstOrDefault();
+            instance.PageTitle = $"{selectedCategory} - {instance.Name}";
             return View("Index", instance);
         }
 
         public IActionResult Tag(string slug, int page = 1)
         {
             instance.PagedPosts = service.GetPagedPostsByTagReadOnly<PostViewModel>(slug, page);
+            var selectedTag = instance.PagedPosts.SelectMany(p => p.Tags.Where(t => t.Slug == slug).Select(x => x.Name)).FirstOrDefault();
+            instance.PageTitle = $"#{selectedTag} - {instance.Name}";
             return View("Index", instance);
         }
     }
