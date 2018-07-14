@@ -18,13 +18,13 @@ namespace CmsEngine.Helpers.Email
             _logger = logger;
         }
 
-        public Task SendEmailAsync(string email, string subject, string message)
+        public Task SendEmailAsync(ContactForm mailEditModel)
         {
-            Execute(email, subject, message).Wait();
+            Execute(mailEditModel).GetAwaiter().GetResult();
             return Task.FromResult(0);
         }
 
-        public async Task Execute(string toEmail, string subject, string message)
+        private async Task Execute(ContactForm mailEditModel)
         {
             try
             {
@@ -32,7 +32,7 @@ namespace CmsEngine.Helpers.Email
                 {
                     From = new MailAddress(_emailSettings.Username, "CmsEngine")
                 };
-                mail.To.Add(new MailAddress(toEmail));
+                mail.To.Add(new MailAddress(mailEditModel.Sender));
 
                 if (!string.IsNullOrWhiteSpace(_emailSettings.CcEmail))
                 {
@@ -44,9 +44,9 @@ namespace CmsEngine.Helpers.Email
                     mail.Bcc.Add(new MailAddress(_emailSettings.BccEmail));
                 }
 
-                mail.Subject = "CmsEngine - " + subject;
-                mail.Body = message;
-                mail.IsBodyHtml = true;
+                mail.Subject = $"🌐 CmsEngine - {mailEditModel.Subject}";
+                mail.Body = mailEditModel.Message;
+                mail.IsBodyHtml = false;
                 mail.Priority = MailPriority.Normal;
 
                 using (SmtpClient smtp = new SmtpClient(_emailSettings.Domain, _emailSettings.Port))
