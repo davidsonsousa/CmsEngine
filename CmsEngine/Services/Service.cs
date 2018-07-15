@@ -25,7 +25,6 @@ namespace CmsEngine
         private readonly IMapper _mapper;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly int _instanceId;
 
         private InstanceViewModel _instance;
 
@@ -53,6 +52,7 @@ namespace CmsEngine
                         {
                             _instance = new InstanceViewModel
                             {
+                                Id = website.Id,
                                 Name = website.Name,
                                 Description = website.Description,
                                 Culture = website.Culture,
@@ -92,20 +92,6 @@ namespace CmsEngine
             _mapper = mapper;
             _httpContextAccessor = hca;
             _userManager = userManager;
-
-            try
-            {
-                var website = _unitOfWork.Websites.Get(q => q.SiteUrl == _httpContextAccessor.HttpContext.Request.Host.Host).SingleOrDefault();
-
-                if (website != null)
-                {
-                    _instanceId = website.Id;
-                }
-            }
-            catch
-            {
-                throw;
-            }
         }
 
         private IQueryable<T> GetAll<T>(int count = 0) where T : BaseModel

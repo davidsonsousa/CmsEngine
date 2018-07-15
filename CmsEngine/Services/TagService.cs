@@ -196,7 +196,7 @@ namespace CmsEngine
             if (editModel.IsNew)
             {
                 tag = _mapper.Map<TagEditModel, Tag>((TagEditModel)editModel);
-                tag.WebsiteId = _instanceId;
+                tag.WebsiteId = Instance.Id;
 
                 _unitOfWork.Tags.Insert(tag);
             }
@@ -204,7 +204,7 @@ namespace CmsEngine
             {
                 tag = this.GetById<Tag>(editModel.VanityId);
                 _mapper.Map((TagEditModel)editModel, tag);
-                tag.WebsiteId = _instanceId;
+                tag.WebsiteId = Instance.Id;
 
                 _unitOfWork.Tags.Update(tag);
             }

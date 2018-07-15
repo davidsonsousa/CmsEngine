@@ -209,7 +209,7 @@ namespace CmsEngine
             if (editModel.IsNew)
             {
                 category = _mapper.Map<CategoryEditModel, Category>((CategoryEditModel)editModel);
-                category.WebsiteId = _instanceId;
+                category.WebsiteId = Instance.Id;
 
                 _unitOfWork.Categories.Insert(category);
             }
@@ -217,7 +217,7 @@ namespace CmsEngine
             {
                 category = this.GetById<Category>(editModel.VanityId);
                 _mapper.Map((CategoryEditModel)editModel, category);
-                category.WebsiteId = _instanceId;
+                category.WebsiteId = Instance.Id;
 
                 _unitOfWork.Categories.Update(category);
             }

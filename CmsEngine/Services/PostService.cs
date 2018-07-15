@@ -266,7 +266,7 @@ namespace CmsEngine
             if (editModel.IsNew)
             {
                 post = _mapper.Map<PostEditModel, Post>(postEditModel);
-                post.WebsiteId = _instanceId;
+                post.WebsiteId = Instance.Id;
 
                 _unitOfWork.Posts.Insert(post);
             }

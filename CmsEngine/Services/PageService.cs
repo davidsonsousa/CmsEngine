@@ -210,7 +210,7 @@ namespace CmsEngine
             if (editModel.IsNew)
             {
                 page = _mapper.Map<PageEditModel, Page>((PageEditModel)editModel);
-                page.WebsiteId = _instanceId;
+                page.WebsiteId = Instance.Id;
 
                 _unitOfWork.Pages.Insert(page);
             }
@@ -218,7 +218,7 @@ namespace CmsEngine
             {
                 page = this.GetById<Page>(editModel.VanityId);
                 _mapper.Map((PageEditModel)editModel, page);
-                page.WebsiteId = _instanceId;
+                page.WebsiteId = Instance.Id;
 
                 _unitOfWork.Pages.Update(page);
             }
