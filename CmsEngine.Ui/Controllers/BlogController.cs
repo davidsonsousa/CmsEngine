@@ -16,7 +16,7 @@ namespace CmsEngine.Ui.Controllers
         {
         }
 
-        public IActionResult Index(int page = 1)
+        public IActionResult Index(int page = 1, string q = "")
         {
             return View(instance);
         }
