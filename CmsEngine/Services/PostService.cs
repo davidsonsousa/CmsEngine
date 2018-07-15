@@ -36,6 +36,20 @@ namespace CmsEngine
             return PreparePostsForPaging<T>(pageIndex, posts);
         }
 
+        public PaginatedList<T> GetPagedPostsFullTextSearch<T>(DocumentStatus documentStatus, int pageIndex = 1, string searchTerm = "")
+            where T : IViewModel
+        {
+            if (string.IsNullOrWhiteSpace(searchTerm))
+            {
+                return GetPagedPostsByStatusReadOnly<T>(documentStatus, pageIndex);
+            }
+
+            var posts = GetDocumentsByStatus<Post>(documentStatus)
+                            .Where(q => q.Title.Contains(searchTerm) || q.DocumentContent.Contains(searchTerm));
+
+            return PreparePostsForPaging<T>(pageIndex, posts);
+        }
+
         public IEnumerable<T> GetPostsByStatusReadOnly<T>(DocumentStatus documentStatus, int count = 0) where T : IViewModel
         {
             var posts = GetDocumentsByStatus<Post>(documentStatus, count);
