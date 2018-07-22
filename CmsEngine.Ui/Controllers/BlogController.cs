@@ -43,5 +43,10 @@ namespace CmsEngine.Ui.Controllers
             instance.PageTitle = $"#{selectedTag} - {instance.Name}";
             return View("Index", instance);
         }
+
+        public IActionResult Feed()
+        {
+            return Content(service.GenerateFeed().ToString(), "text/xml");
+        }
     }
 }

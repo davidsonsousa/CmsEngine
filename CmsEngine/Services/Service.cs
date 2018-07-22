@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using AutoMapper;
 using CmsEngine.Attributes;
 using CmsEngine.Data.AccessLayer;
@@ -226,6 +227,33 @@ namespace CmsEngine
             };
         }
 
+        public XDocument GenerateFeed()
+        {
+            var articleList = new List<XElement>();
+
+            foreach (var item in this.GetAll<Post>().OrderByDescending(o => o.PublishedOn))
+            {
+                string url = FormatUrl("feed", item.Slug);
+                articleList.Add(new XElement("item",
+                                          new XElement("title", item.Title),
+                                          new XElement("link", url),
+                                          new XElement("description", item.DocumentContent),
+                                          new XElement("pubDate", item.PublishedOn.ToString("r")),
+                                          new XElement("guid", url)));
+            }
+
+            return new XDocument(new XDeclaration("1.0", "utf-8", null), new XElement("rss",
+                             new XElement("channel",
+                                          new XElement("title", Instance.Name),
+                                          new XElement("link", FormatUrl(string.Empty)),
+                                          new XElement("description", Instance.Description),
+                                          new XElement("language", Instance.Culture.ToLowerInvariant()),
+                                          new XElement("generator", "MultiCMS"),
+                                          articleList
+                                          ),
+                             new XAttribute("version", "2.0")));
+        }
+
         #region Helpers
 
         private IEnumerable<CheckboxEditModel> PopulateCheckboxList<T>(IEnumerable<string> selectedItems = null) where T : BaseModel
@@ -378,6 +406,24 @@ namespace CmsEngine
             }
 
             return ExpressionBuilder.GetExpression<T>(expressionFilter, LogicalOperators.Or).Compile();
+        }
+
+        private string FormatUrl(string type, string slug = "")
+        {
+            string url = "";
+
+            if (!string.IsNullOrWhiteSpace(Instance.UrlFormat))
+            {
+                url = Instance.UrlFormat.Replace("[site_url]", Instance.SiteUrl)
+                                                  .Replace("[culture]", Instance.Culture)
+                                                  .Replace("[short_culture]", Instance.Culture.Substring(0, 2))
+                                                  .Replace("[type]", type)
+                                                  .Replace("[slug]", slug);
+            }
+
+            url = url.EndsWith("/") ? url.Substring(0, url.LastIndexOf('/')) : url;
+
+            return url;
         }
 
         #endregion
