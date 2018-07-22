@@ -1,10 +1,9 @@
 @model CmsEngine.Data.EditModels.PostEditModel
 
 @section PageHead{
-    <environment names="Development">
-        <script src="~/js/vendors/tinymce/tinymce.min.js"></script>
-        <link rel="stylesheet" href="~/js/vendors/pc-bootstrap4-datetimepicker/build/css/bootstrap-datetimepicker.min.css" />
-    </environment>
+    <script src="~/js/vendors/tinymce/tinymce.min.js"></script>
+    <link rel="stylesheet" href="~/js/vendors/pc-bootstrap4-datetimepicker/build/css/bootstrap-datetimepicker.min.css" />
+    <link rel="stylesheet" href="~/css/vendors/select2.min.css" />
 }
 
 @section Breadcrumb {
@@ -21,7 +20,7 @@
             <div class="card-header">
                 <strong>@ViewBag.PanelTitle</strong>
             </div>
-            <form asp-area="Cms" asp-controller="Post" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post" class="form-horizontal">
+            <form asp-area="Cms" asp-controller="Post" asp-route-returnurl="@ViewData[" ReturnUrl"]" method="post" class="form-horizontal">
                 <div class="card-body">
                     @if (!Model.IsNew)
                     {
@@ -66,6 +65,12 @@
                         </checkbox-list>
                     </div>
                     <div class="form-group row">
+                        <label asp-for="Tags" class="col-md-3 form-control-label"></label>
+                        <div class="col-md-9">
+                            <select asp-for="SelectedTags" asp-items="Model.Tags" name="SelectedTags" class="select-tags"></select>
+                        </div>
+                    </div>
+                    <div class="form-group row">
                         <label asp-for="Status" class="col-md-3 form-control-label"></label>
                         <div class="col-md-9">
                             <select asp-for="Status" asp-items="Html.GetEnumSelectList<DocumentStatus>()" class="form-control"></select>
@@ -90,15 +95,17 @@
 @section scripts{
     @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
 
-    <environment names="Development">
-        <script src="~/js/vendors/moment.min.js"></script>
-        <script src="~/js/vendors/pc-bootstrap4-datetimepicker/build/js/bootstrap-datetimepicker.min.js"></script>
-    </environment>
+    <script src="~/js/vendors/moment.min.js"></script>
+    <script src="~/js/vendors/pc-bootstrap4-datetimepicker/build/js/bootstrap-datetimepicker.min.js"></script>
+    <script src="~/js/vendors/select2.min.js"></script>
 
     <script>
         $(function () {
             CmsEngine.Configure.DateTimePicker('#published-on');
             tinymce.init({ selector: 'textarea' });
+            $('.select-tags').select2({
+                placeholder: 'Select a tag'
+            });
         });
     </script>
 }

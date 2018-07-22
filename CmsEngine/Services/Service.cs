@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using AutoMapper;
 using CmsEngine.Attributes;
 using CmsEngine.Data.AccessLayer;
@@ -15,6 +16,7 @@ using CmsEngine.Helpers;
 using CmsEngine.Utils;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace CmsEngine
 {
@@ -24,7 +26,6 @@ namespace CmsEngine
         private readonly IMapper _mapper;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly int _instanceId;
 
         private InstanceViewModel _instance;
 
@@ -52,12 +53,25 @@ namespace CmsEngine
                         {
                             _instance = new InstanceViewModel
                             {
+                                Id = website.Id,
                                 Name = website.Name,
                                 Description = website.Description,
                                 Culture = website.Culture,
                                 UrlFormat = website.UrlFormat,
                                 DateFormat = website.DateFormat,
-                                SiteUrl = website.SiteUrl
+                                SiteUrl = website.SiteUrl,
+                                ArticleLimit = website.ArticleLimit,
+                                PageTitle = website.Name,
+                                ContactDetails = new ContactDetailsViewModel
+                                {
+                                    Address = website.Address,
+                                    Phone = website.Phone,
+                                    Email = website.Email,
+                                    Facebook = website.Facebook,
+                                    Twitter = website.Twitter,
+                                    Instagram = website.Instagram,
+                                    LinkedIn = website.LinkedIn
+                                }
                             };
                         }
                     }
@@ -79,15 +93,20 @@ namespace CmsEngine
             _mapper = mapper;
             _httpContextAccessor = hca;
             _userManager = userManager;
+        }
 
+        private IQueryable<T> GetAll<T>(int count = 0) where T : BaseModel
+        {
             try
             {
-                var website = _unitOfWork.Websites.Get(q => q.SiteUrl == _httpContextAccessor.HttpContext.Request.Host.Host).SingleOrDefault();
+                var query = _unitOfWork.GetRepository<T>().Get(q => q.IsDeleted == false);
 
-                if (website != null)
+                if (count > 0)
                 {
-                    _instanceId = website.Id;
+                    query = query.Take(count);
                 }
+
+                return query;
             }
             catch
             {
@@ -95,11 +114,21 @@ namespace CmsEngine
             }
         }
 
-        public IQueryable<T> GetAll<T>(string relatedTable = "") where T : BaseModel
+        private IQueryable<TModel> GetDocumentsByStatus<TModel>(DocumentStatus documentStatus, int count = 0) where TModel : Document
         {
             try
             {
-                return _unitOfWork.GetRepository<T>().Get(q => q.IsDeleted == false, relatedTable);
+                var query = _unitOfWork.GetRepository<TModel>()
+                                  .Get(q => q.IsDeleted == false && q.Status == documentStatus)
+                                  .OrderByDescending(o => o.PublishedOn)
+                                  .AsQueryable();
+
+                if (count > 0)
+                {
+                    query = query.Take(count);
+                }
+
+                return query;
             }
             catch
             {
@@ -198,6 +227,33 @@ namespace CmsEngine
             };
         }
 
+        public XDocument GenerateFeed()
+        {
+            var articleList = new List<XElement>();
+
+            foreach (var item in this.GetAll<Post>().OrderByDescending(o => o.PublishedOn))
+            {
+                string url = FormatUrl("feed", item.Slug);
+                articleList.Add(new XElement("item",
+                                          new XElement("title", item.Title),
+                                          new XElement("link", url),
+                                          new XElement("description", item.DocumentContent),
+                                          new XElement("pubDate", item.PublishedOn.ToString("r")),
+                                          new XElement("guid", url)));
+            }
+
+            return new XDocument(new XDeclaration("1.0", "utf-8", null), new XElement("rss",
+                             new XElement("channel",
+                                          new XElement("title", Instance.Name),
+                                          new XElement("link", FormatUrl(string.Empty)),
+                                          new XElement("description", Instance.Description),
+                                          new XElement("language", Instance.Culture.ToLowerInvariant()),
+                                          new XElement("generator", "MultiCMS"),
+                                          articleList
+                                          ),
+                             new XAttribute("version", "2.0")));
+        }
+
         #region Helpers
 
         private IEnumerable<CheckboxEditModel> PopulateCheckboxList<T>(IEnumerable<string> selectedItems = null) where T : BaseModel
@@ -219,13 +275,39 @@ namespace CmsEngine
             return checkBoxList;
         }
 
+        private IEnumerable<SelectListItem> PopulateSelectListItems<T>(IEnumerable<string> selectedItems = null) where T : BaseModel
+        {
+            var itemList = _unitOfWork.GetRepository<T>().GetReadOnly(q => q.IsDeleted == false);
+            var selectListItems = new List<SelectListItem>();
+
+            foreach (var item in itemList)
+            {
+                selectListItems.Add(new SelectListItem
+                {
+                    Text = item.GetType().GetProperty("Name").GetValue(item).ToString(),
+                    Value = item.VanityId.ToString(),
+                    Disabled = false,
+                    Selected = (selectedItems == null ? false : selectedItems.Contains(item.VanityId.ToString()))
+                });
+            }
+
+            return selectListItems;
+        }
+
         private IEnumerable<T> GetAllReadOnly<T>(int count = 0) where T : BaseModel
         {
             IEnumerable<T> listItems;
 
             try
             {
-                listItems = _unitOfWork.GetRepository<T>().GetReadOnly(q => q.IsDeleted == false, count);
+                var query = _unitOfWork.GetRepository<T>().Get(q => q.IsDeleted == false);
+
+                if (count > 0)
+                {
+                    query = query.Take(count);
+                }
+
+                listItems = query.ToList();
             }
             catch
             {
@@ -235,11 +317,11 @@ namespace CmsEngine
             return listItems;
         }
 
-        private T GetById<T>(int id, string relatedTable = "") where T : BaseModel
+        private T GetById<T>(int id, int count = 0) where T : BaseModel
         {
             try
             {
-                return this.GetAll<T>(relatedTable).Where(q => q.Id == id).SingleOrDefault();
+                return this.GetAll<T>(count).Where(q => q.Id == id).SingleOrDefault();
             }
             catch
             {
@@ -247,11 +329,11 @@ namespace CmsEngine
             }
         }
 
-        private T GetById<T>(Guid id, string relatedTable = "") where T : BaseModel
+        private T GetById<T>(Guid id, int count = 0) where T : BaseModel
         {
             try
             {
-                return this.GetAll<T>(relatedTable).Where(q => q.VanityId == id).SingleOrDefault();
+                return this.GetAll<T>(count).Where(q => q.VanityId == id).SingleOrDefault();
             }
             catch
             {
@@ -324,6 +406,24 @@ namespace CmsEngine
             }
 
             return ExpressionBuilder.GetExpression<T>(expressionFilter, LogicalOperators.Or).Compile();
+        }
+
+        private string FormatUrl(string type, string slug = "")
+        {
+            string url = "";
+
+            if (!string.IsNullOrWhiteSpace(Instance.UrlFormat))
+            {
+                url = Instance.UrlFormat.Replace("[site_url]", Instance.SiteUrl)
+                                                  .Replace("[culture]", Instance.Culture)
+                                                  .Replace("[short_culture]", Instance.Culture.Substring(0, 2))
+                                                  .Replace("[type]", type)
+                                                  .Replace("[slug]", slug);
+            }
+
+            url = url.EndsWith("/") ? url.Substring(0, url.LastIndexOf('/')) : url;
+
+            return url;
         }
 
         #endregion

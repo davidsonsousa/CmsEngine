@@ -16,19 +16,49 @@ namespace CmsEngine
     {
         #region Get
 
+        public PaginatedList<T> GetPagedPostsByStatusReadOnly<T>(DocumentStatus documentStatus, int pageIndex = 1) where T : IViewModel
+        {
+            var posts = GetDocumentsByStatus<Post>(documentStatus);
+            return PreparePostsForPaging<T>(pageIndex, posts);
+        }
+
+        public PaginatedList<T> GetPagedPostsByCategoryReadOnly<T>(string categorySlug, int pageIndex = 1) where T : IViewModel
+        {
+            var posts = GetDocumentsByStatus<Post>(DocumentStatus.Published)
+                            .Where(q => q.PostCategories.Any(pc => pc.Category.Slug == categorySlug));
+            return PreparePostsForPaging<T>(pageIndex, posts);
+        }
+
+        public PaginatedList<T> GetPagedPostsByTagReadOnly<T>(string tagSlug, int pageIndex = 1) where T : IViewModel
+        {
+            var posts = GetDocumentsByStatus<Post>(DocumentStatus.Published)
+                            .Where(q => q.PostTags.Any(pt => pt.Tag.Slug == tagSlug));
+            return PreparePostsForPaging<T>(pageIndex, posts);
+        }
+
+        public PaginatedList<T> GetPagedPostsFullTextSearch<T>(DocumentStatus documentStatus, int pageIndex = 1, string searchTerm = "")
+            where T : IViewModel
+        {
+            if (string.IsNullOrWhiteSpace(searchTerm))
+            {
+                return GetPagedPostsByStatusReadOnly<T>(documentStatus, pageIndex);
+            }
+
+            var posts = GetDocumentsByStatus<Post>(documentStatus)
+                            .Where(q => q.Title.Contains(searchTerm) || q.DocumentContent.Contains(searchTerm));
+
+            return PreparePostsForPaging<T>(pageIndex, posts);
+        }
+
+        public IEnumerable<T> GetPostsByStatusReadOnly<T>(DocumentStatus documentStatus, int count = 0) where T : IViewModel
+        {
+            var posts = GetDocumentsByStatus<Post>(documentStatus, count);
+            return _mapper.Map<IEnumerable<Post>, IEnumerable<T>>(posts);
+        }
+
         public IEnumerable<T> GetAllPostsReadOnly<T>(int count = 0) where T : IViewModel
         {
             IEnumerable<Post> listItems = GetAllReadOnly<Post>(count);
-            return _mapper.Map<IEnumerable<Post>, IEnumerable<T>>(listItems);
-        }
-
-        public IEnumerable<T> GetPostsWithCategoriesAndTagsReadOnly<T>(int count = 0) where T : IViewModel
-        {
-            IEnumerable<Post> listItems = GetAll<Post>()
-                                          .Include(p => p.PostCategories).ThenInclude(pc => pc.Category)
-                                          .Include(p => p.PostTags).ThenInclude(pt => pt.Tag)
-                                          .Take(count).AsNoTracking().ToList();
-
             return _mapper.Map<IEnumerable<Post>, IEnumerable<T>>(listItems);
         }
 
@@ -59,28 +89,29 @@ namespace CmsEngine
 
         public IEditModel SetupPostEditModel()
         {
-            var editModel = new PostEditModel
+            return new PostEditModel
             {
-                Categories = this.PopulateCheckboxList<Category>()
+                Categories = this.PopulateCheckboxList<Category>(),
+                Tags = this.PopulateSelectListItems<Tag>()
             };
-
-            return editModel;
         }
 
         public IEditModel SetupPostEditModel(int id)
         {
-            var item = this.GetById<Post>(id, "PostCategories.Category");
+            var item = this.GetById<Post>(id);
             var editModel = _mapper.Map<Post, PostEditModel>(item);
             editModel.Categories = this.PopulateCheckboxList<Category>(editModel.SelectedCategories);
+            editModel.Tags = this.PopulateSelectListItems<Tag>(editModel.SelectedTags);
 
             return editModel;
         }
 
         public IEditModel SetupPostEditModel(Guid id)
         {
-            var item = this.GetById<Post>(id, "PostCategories.Category");
+            var item = this.GetById<Post>(id);
             var editModel = _mapper.Map<Post, PostEditModel>(item);
             editModel.Categories = this.PopulateCheckboxList<Category>(editModel.SelectedCategories);
+            editModel.Tags = this.PopulateSelectListItems<Tag>(editModel.SelectedTags);
 
             return editModel;
         }
@@ -235,21 +266,20 @@ namespace CmsEngine
             if (editModel.IsNew)
             {
                 post = _mapper.Map<PostEditModel, Post>(postEditModel);
-                post.WebsiteId = _instanceId;
+                post.WebsiteId = Instance.Id;
 
                 _unitOfWork.Posts.Insert(post);
-
-                PrepareRelatedCategories(post, postEditModel);
             }
             else
             {
-                post = this.GetById<Post>(editModel.VanityId, "PostCategories.Category");
+                post = this.GetById<Post>(editModel.VanityId);
                 _mapper.Map(postEditModel, post);
 
                 _unitOfWork.Posts.Update(post);
-
-                PrepareRelatedCategories(post, postEditModel);
             }
+
+            PrepareRelatedCategories(post, postEditModel);
+            PrepareRelatedTags(post, postEditModel);
         }
 
         private void PrepareRelatedCategories(Post post, PostEditModel postEditModel)
@@ -279,6 +309,44 @@ namespace CmsEngine
                 _unitOfWork.GetRepository<PostCategory>()
                            .InsertMany(newItems.Except(currentItems, x => x.CategoryId));
             }
+        }
+
+        private void PrepareRelatedTags(Post post, PostEditModel postEditModel)
+        {
+            // TODO: Improve the logic of this method
+
+            IEnumerable<PostTag> newItems = postEditModel.SelectedTags?
+                                                .Select(x => new PostTag
+                                                {
+                                                    TagId = GetById<Tag>(Guid.Parse(x)).Id,
+                                                    Post = post
+                                                }) ?? new List<PostTag>();
+
+            ICollection<PostTag> currentItems = null;
+
+            // Check current items
+            if (post.PostTags != null)
+            {
+                currentItems = post.PostTags;
+            }
+
+            // Check if the values were assigned
+            if (currentItems != null)
+            {
+                _unitOfWork.GetRepository<PostTag>()
+                           .DeleteMany(currentItems.Except(newItems, x => x.TagId));
+                _unitOfWork.GetRepository<PostTag>()
+                           .InsertMany(newItems.Except(currentItems, x => x.TagId));
+            }
+        }
+
+        private PaginatedList<T> PreparePostsForPaging<T>(int page, IQueryable<Post> posts) where T : IViewModel
+        {
+            var count = posts.Count();
+            var items = posts.Skip((page - 1) * Instance.ArticleLimit).Take(Instance.ArticleLimit).ToList();
+            var mappedItems = _mapper.Map<IEnumerable<Post>, IEnumerable<T>>(items);
+
+            return new PaginatedList<T>(mappedItems, count, page, Instance.ArticleLimit);
         }
 
         #endregion

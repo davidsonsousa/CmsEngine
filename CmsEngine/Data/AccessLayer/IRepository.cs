@@ -13,7 +13,7 @@ namespace CmsEngine.Data.AccessLayer
         /// <param name="filter"></param>
         /// <param name="relatedTable"></param>
         /// <returns></returns>
-        IQueryable<T> Get(Expression<Func<T, bool>> filter = null, string relatedTable = "");
+        IQueryable<T> Get(Expression<Func<T, bool>> filter = null);
 
         /// <summary>
         /// Gets items based on condition for read-only
@@ -21,7 +21,7 @@ namespace CmsEngine.Data.AccessLayer
         /// <param name="filter"></param>
         /// <param name="count"></param>
         /// <returns></returns>
-        IEnumerable<T> GetReadOnly(Expression<Func<T, bool>> filter = null, int count = 0);
+        IEnumerable<T> GetReadOnly(Expression<Func<T, bool>> filter = null);
 
         /// <summary>
         /// Inserts a record

@@ -7,7 +7,6 @@ using CmsEngine.Data.Models;
 using CmsEngine.Data.ViewModels;
 using CmsEngine.Data.ViewModels.DataTableViewModels;
 using CmsEngine.Utils;
-using Microsoft.EntityFrameworkCore;
 
 namespace CmsEngine
 {
@@ -23,8 +22,7 @@ namespace CmsEngine
 
         public IEnumerable<T> GetCategoriesWithPostCount<T>() where T : IViewModel
         {
-            IEnumerable<Category> listItems = GetAll<Category>()
-                                          .Include(p => p.PostCategories).AsNoTracking().ToList();
+            IEnumerable<Category> listItems = GetAll<Category>().OrderBy(o => o.Name).ToList();
 
             return _mapper.Map<IEnumerable<Category>, IEnumerable<T>>(listItems);
         }
@@ -211,7 +209,7 @@ namespace CmsEngine
             if (editModel.IsNew)
             {
                 category = _mapper.Map<CategoryEditModel, Category>((CategoryEditModel)editModel);
-                category.WebsiteId = _instanceId;
+                category.WebsiteId = Instance.Id;
 
                 _unitOfWork.Categories.Insert(category);
             }
@@ -219,7 +217,7 @@ namespace CmsEngine
             {
                 category = this.GetById<Category>(editModel.VanityId);
                 _mapper.Map((CategoryEditModel)editModel, category);
-                category.WebsiteId = _instanceId;
+                category.WebsiteId = Instance.Id;
 
                 _unitOfWork.Categories.Update(category);
             }

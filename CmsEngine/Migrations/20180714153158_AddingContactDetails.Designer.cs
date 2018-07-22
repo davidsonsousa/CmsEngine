@@ -4,14 +4,16 @@ using CmsEngine.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace CmsEngine.Migrations
 {
     [DbContext(typeof(CmsEngineContext))]
-    partial class CmsEngineContextModelSnapshot : ModelSnapshot
+    [Migration("20180714153158_AddingContactDetails")]
+    partial class AddingContactDetails
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -299,8 +301,7 @@ namespace CmsEngine.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("Address")
-                        .HasMaxLength(250);
+                    b.Property<string>("Address");
 
                     b.Property<int>("ArticleLimit");
 
@@ -319,33 +320,27 @@ namespace CmsEngine.Migrations
                     b.Property<string>("Description")
                         .HasMaxLength(200);
 
-                    b.Property<string>("Email")
-                        .HasMaxLength(250);
+                    b.Property<string>("Email");
 
-                    b.Property<string>("Facebook")
-                        .HasMaxLength(20);
+                    b.Property<string>("Facebook");
 
-                    b.Property<string>("Instagram")
-                        .HasMaxLength(20);
+                    b.Property<string>("Instagram");
 
                     b.Property<bool>("IsDeleted");
 
-                    b.Property<string>("LinkedIn")
-                        .HasMaxLength(20);
+                    b.Property<string>("LinkedIn");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(200);
 
-                    b.Property<string>("Phone")
-                        .HasMaxLength(20);
+                    b.Property<string>("Phone");
 
                     b.Property<string>("SiteUrl")
                         .IsRequired()
                         .HasMaxLength(250);
 
-                    b.Property<string>("Twitter")
-                        .HasMaxLength(20);
+                    b.Property<string>("Twitter");
 
                     b.Property<string>("UrlFormat")
                         .IsRequired()

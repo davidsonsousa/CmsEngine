@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace CmsEngine.Data.EditModels
 {
@@ -31,6 +32,11 @@ namespace CmsEngine.Data.EditModels
         public IEnumerable<CheckboxEditModel> Categories { get; set; }
 
         public IEnumerable<string> SelectedCategories { get; set; }
+
+        // TODO: Perhaps replace the SelectListItem by something else in order to make it less ASP.NET Core dependent
+        public IEnumerable<SelectListItem> Tags { get; set; }
+
+        public IEnumerable<string> SelectedTags { get; set; }
 
         public DocumentStatus Status { get; set; }
 

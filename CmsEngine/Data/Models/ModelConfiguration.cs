@@ -33,6 +33,30 @@ namespace CmsEngine.Data.Models
                 .HasMaxLength(250)
                 .IsRequired();
 
+            b.Property(model => model.ArticleLimit)
+                .IsRequired();
+
+            b.Property(model => model.Address)
+                .HasMaxLength(250);
+
+            b.Property(model => model.Phone)
+                .HasMaxLength(20);
+
+            b.Property(model => model.Email)
+                .HasMaxLength(250);
+
+            b.Property(model => model.Facebook)
+                .HasMaxLength(20);
+
+            b.Property(model => model.Twitter)
+                .HasMaxLength(20);
+
+            b.Property(model => model.Instagram)
+                .HasMaxLength(20);
+
+            b.Property(model => model.LinkedIn)
+                .HasMaxLength(20);
+
             b.Property(model => model.UserCreated)
                 .HasMaxLength(20);
 

@@ -41,7 +41,8 @@ var vendorsCSS = [
     'node_modules/quill/dist/quill.snow.css',
     'node_modules/simple-line-icons/css/simple-line-icons.css',
     'node_modules/spinkit/css/spinkit.css',
-    'node_modules/fancybox/dist/css/jquery.fancybox.css'
+    'node_modules/fancybox/dist/css/jquery.fancybox.css',
+    'node_modules/select2/dist/css/select2.css'
 ];
 
 gulp.task('node-vendors:copyCSS', function () {
@@ -107,7 +108,8 @@ var vendorsJS = [
     'node_modules/select2/dist/js/select2.min.js',
     'node_modules/toastr/toastr.js',
     'node_modules/fancybox/dist/js/jquery.fancybox.js',
-    'node_modules/jquery.cookie/jquery.cookie.js'
+    'node_modules/jquery.cookie/jquery.cookie.js',
+    'node_modules/select2/js/select2.js'
 ];
 
 gulp.task('node-vendors:copyJS', function () {

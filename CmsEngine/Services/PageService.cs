@@ -14,6 +14,12 @@ namespace CmsEngine
     {
         #region Get
 
+        public IEnumerable<T> GetPagesByStatusReadOnly<T>(DocumentStatus documentStatus, int count = 0) where T : IViewModel
+        {
+            var items = this.GetDocumentsByStatus<Page>(documentStatus, count);
+            return _mapper.Map<IEnumerable<Page>, IEnumerable<T>>(items);
+        }
+
         public IEnumerable<T> GetAllPagesReadOnly<T>(int count = 0) where T : IViewModel
         {
             IEnumerable<Page> listItems = GetAllReadOnly<Page>(count);
@@ -204,7 +210,7 @@ namespace CmsEngine
             if (editModel.IsNew)
             {
                 page = _mapper.Map<PageEditModel, Page>((PageEditModel)editModel);
-                page.WebsiteId = _instanceId;
+                page.WebsiteId = Instance.Id;
 
                 _unitOfWork.Pages.Insert(page);
             }
@@ -212,7 +218,7 @@ namespace CmsEngine
             {
                 page = this.GetById<Page>(editModel.VanityId);
                 _mapper.Map((PageEditModel)editModel, page);
-                page.WebsiteId = _instanceId;
+                page.WebsiteId = Instance.Id;
 
                 _unitOfWork.Pages.Update(page);
             }

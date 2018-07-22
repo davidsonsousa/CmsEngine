@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 
 namespace CmsEngine.Data.EditModels
 {
@@ -26,5 +26,31 @@ namespace CmsEngine.Data.EditModels
         [Required]
         [MaxLength(250)]
         public string SiteUrl { get; set; }
+
+        [Required]
+        [MaxLength(250)]
+        public string ArticleLimit { get; set; }
+
+        [MaxLength(250)]
+        public string Address { get; set; }
+
+        [MaxLength(20)]
+        public string Phone { get; set; }
+
+        [Required]
+        [MaxLength(250)]
+        public string Email { get; set; }
+
+        [MaxLength(20)]
+        public string Facebook { get; set; }
+
+        [MaxLength(20)]
+        public string Twitter { get; set; }
+
+        [MaxLength(20)]
+        public string Instagram { get; set; }
+
+        [MaxLength(20)]
+        public string LinkedIn { get; set; }
     }
 }

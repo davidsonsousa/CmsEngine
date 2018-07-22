@@ -4,7 +4,7 @@ using CmsEngine.Data.Models;
 
 namespace CmsEngine.Data.Mapper
 {
-    public class UsersStringToGuidResolver : IValueResolver<ApplicationUser, object, Guid>
+    internal class UsersStringToGuidResolver : IValueResolver<ApplicationUser, object, Guid>
     {
         public Guid Resolve(ApplicationUser source, object destination, Guid destMember, ResolutionContext context)
         {

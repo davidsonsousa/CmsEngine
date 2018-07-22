@@ -26,6 +26,10 @@ namespace CmsEngine.Data.Mapper
                 .ForMember(
                     dst => dst.SelectedCategories,
                     opt => opt.MapFrom(src => src.PostCategories.Select(x => x.Category.VanityId.ToString()).ToList())
+                )
+                .ForMember(
+                    dst => dst.SelectedTags,
+                    opt => opt.MapFrom(src => src.PostTags.Select(x => x.Tag.VanityId.ToString()).ToList())
                 );
 
             CreateMap<PostEditModel, Post>()
@@ -79,7 +83,8 @@ namespace CmsEngine.Data.Mapper
             CreateMap<Category, CategoryViewModel>()
                 .ForMember(
                     dst => dst.PostCount,
-                    opt => opt.MapFrom(src => src.PostCategories.Count)
+                    opt => opt.MapFrom(src => src.PostCategories
+                                                 .Count(q => q.Post.IsDeleted == false && q.Post.Status == DocumentStatus.Published))
                 );
             CreateMap<CategoryViewModel, Category>();
 

@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 
 namespace CmsEngine.Data.Models
 {
@@ -14,15 +14,20 @@ namespace CmsEngine.Data.Models
         #endregion
 
         public string Name { get; set; }
-
         public string Description { get; set; }
-
         public string Culture { get; set; }
-
         public string UrlFormat { get; set; } = $"{Constants.SiteUrl}/{Constants.Type}/{Constants.Slug}";
-
         public string DateFormat { get; set; } = "MM/dd/yyyy";
-
         public string SiteUrl { get; set; }
+        public int ArticleLimit { get; set; }
+
+        // Contact details
+        public string Address { get; set; }
+        public string Phone { get; set; }
+        public string Email { get; set; }
+        public string Facebook { get; set; }
+        public string Twitter { get; set; }
+        public string Instagram { get; set; }
+        public string LinkedIn { get; set; }
     }
 }
