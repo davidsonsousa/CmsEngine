@@ -8,7 +8,6 @@ using CmsEngine.Data.ViewModels;
 using CmsEngine.Data.ViewModels.DataTableViewModels;
 using CmsEngine.Extensions;
 using CmsEngine.Utils;
-using Microsoft.EntityFrameworkCore;
 
 namespace CmsEngine
 {
@@ -64,22 +63,22 @@ namespace CmsEngine
 
         public IViewModel GetPostById(int id)
         {
-            var item = this.GetById<Post>(id);
+            var item = _unitOfWork.Posts.GetById(id);
             return _mapper.Map<Post, PostViewModel>(item);
         }
 
         public IViewModel GetPostById(Guid id)
         {
-            var item = this.GetById<Post>(id);
+            var item = _unitOfWork.Posts.GetById(id);
             return _mapper.Map<Post, PostViewModel>(item);
         }
 
         public IViewModel GetPostBySlug(string slug)
         {
-            var item = GetAll<Post>()
-                       .Include(p => p.PostCategories).ThenInclude(pc => pc.Category)
-                       .Include(p => p.PostTags).ThenInclude(pt => pt.Tag)
-                       .Where(q => q.Slug == slug).SingleOrDefault();
+            var item = _unitOfWork.Posts.Get(q => q.Slug == slug)
+                       //.Include(p => p.PostCategories).ThenInclude(pc => pc.Category)
+                       //.Include(p => p.PostTags).ThenInclude(pt => pt.Tag)
+                       .SingleOrDefault();
             return _mapper.Map<Post, PostViewModel>(item);
         }
 
@@ -98,7 +97,7 @@ namespace CmsEngine
 
         public IEditModel SetupPostEditModel(int id)
         {
-            var item = this.GetById<Post>(id);
+            var item = _unitOfWork.Posts.GetById(id);
             var editModel = _mapper.Map<Post, PostEditModel>(item);
             editModel.Categories = this.PopulateCheckboxList<Category>(editModel.SelectedCategories);
             editModel.Tags = this.PopulateSelectListItems<Tag>(editModel.SelectedTags);
@@ -108,7 +107,7 @@ namespace CmsEngine
 
         public IEditModel SetupPostEditModel(Guid id)
         {
-            var item = this.GetById<Post>(id);
+            var item = _unitOfWork.Posts.GetById(id);
             var editModel = _mapper.Map<Post, PostEditModel>(item);
             editModel.Categories = this.PopulateCheckboxList<Category>(editModel.SelectedCategories);
             editModel.Tags = this.PopulateSelectListItems<Tag>(editModel.SelectedTags);
@@ -154,7 +153,7 @@ namespace CmsEngine
             var returnValue = new ReturnValue();
             try
             {
-                var post = this.GetAll<Post>().Where(q => q.VanityId == id).FirstOrDefault();
+                var post = _unitOfWork.Posts.GetById(id);
                 returnValue = this.Delete(post);
 
                 if (!returnValue.IsError)
@@ -181,7 +180,7 @@ namespace CmsEngine
             var returnValue = new ReturnValue();
             try
             {
-                var post = this.GetAll<Post>().Where(q => q.Id == id).FirstOrDefault();
+                var post = _unitOfWork.Posts.GetById(id);
                 returnValue = this.Delete(post);
 
                 if (!returnValue.IsError)
@@ -272,7 +271,7 @@ namespace CmsEngine
             }
             else
             {
-                post = this.GetById<Post>(editModel.VanityId);
+                post = _unitOfWork.Posts.GetById(editModel.VanityId);
                 _mapper.Map(postEditModel, post);
 
                 _unitOfWork.Posts.Update(post);
@@ -289,7 +288,7 @@ namespace CmsEngine
             IEnumerable<PostCategory> newItems = postEditModel.SelectedCategories?
                                                 .Select(x => new PostCategory
                                                 {
-                                                    CategoryId = GetById<Category>(Guid.Parse(x)).Id,
+                                                    CategoryId = _unitOfWork.Categories.GetById(Guid.Parse(x)).Id,
                                                     Post = post
                                                 }) ?? new List<PostCategory>();
 
@@ -318,7 +317,7 @@ namespace CmsEngine
             IEnumerable<PostTag> newItems = postEditModel.SelectedTags?
                                                 .Select(x => new PostTag
                                                 {
-                                                    TagId = GetById<Tag>(Guid.Parse(x)).Id,
+                                                    TagId = _unitOfWork.Tags.GetById(Guid.Parse(x)).Id,
                                                     Post = post
                                                 }) ?? new List<PostTag>();
 

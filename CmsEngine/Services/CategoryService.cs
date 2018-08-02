@@ -22,26 +22,26 @@ namespace CmsEngine
 
         public IEnumerable<T> GetCategoriesWithPostCount<T>() where T : IViewModel
         {
-            IEnumerable<Category> listItems = GetAll<Category>().OrderBy(o => o.Name).ToList();
+            IEnumerable<Category> listItems = _unitOfWork.Categories.Get().OrderBy(o => o.Name).ToList();
 
             return _mapper.Map<IEnumerable<Category>, IEnumerable<T>>(listItems);
         }
 
         public IViewModel GetCategoryById(int id)
         {
-            var item = this.GetById<Category>(id);
+            var item = _unitOfWork.Categories.GetById(id);
             return _mapper.Map<Category, CategoryViewModel>(item);
         }
 
         public IViewModel GetCategoryById(Guid id)
         {
-            var item = this.GetById<Category>(id);
+            var item = _unitOfWork.Categories.GetById(id);
             return _mapper.Map<Category, CategoryViewModel>(item);
         }
 
         public IViewModel GetCategoryBySlug(string slug)
         {
-            var item = this.GetAll<Category>().Where(q => q.Slug == slug).SingleOrDefault();
+            var item = _unitOfWork.Categories.Get(q => q.Slug == slug).SingleOrDefault();
             return _mapper.Map<Category, CategoryViewModel>(item);
         }
 
@@ -56,13 +56,13 @@ namespace CmsEngine
 
         public IEditModel SetupCategoryEditModel(int id)
         {
-            var item = this.GetById<Category>(id);
+            var item = _unitOfWork.Categories.GetById(id);
             return _mapper.Map<Category, CategoryEditModel>(item);
         }
 
         public IEditModel SetupCategoryEditModel(Guid id)
         {
-            var item = this.GetById<Category>(id);
+            var item = _unitOfWork.Categories.GetById(id);
             return _mapper.Map<Category, CategoryEditModel>(item);
         }
 
@@ -104,7 +104,7 @@ namespace CmsEngine
             var returnValue = new ReturnValue();
             try
             {
-                var category = this.GetAll<Category>().Where(q => q.VanityId == id).FirstOrDefault();
+                var category = _unitOfWork.Categories.GetById(id);
                 returnValue = this.Delete(category);
 
                 if (!returnValue.IsError)
@@ -131,7 +131,7 @@ namespace CmsEngine
             var returnValue = new ReturnValue();
             try
             {
-                var category = this.GetAll<Category>().Where(q => q.Id == id).FirstOrDefault();
+                var category = _unitOfWork.Categories.GetById(id);
                 returnValue = this.Delete(category);
 
                 if (!returnValue.IsError)
@@ -215,7 +215,7 @@ namespace CmsEngine
             }
             else
             {
-                category = this.GetById<Category>(editModel.VanityId);
+                category = _unitOfWork.Categories.GetById(editModel.VanityId);
                 _mapper.Map((CategoryEditModel)editModel, category);
                 category.WebsiteId = Instance.Id;
 

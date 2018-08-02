@@ -16,7 +16,7 @@ namespace CmsEngine.Data.AccessLayer
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <returns></returns>
-        IRepository<TEntity> GetRepository<TEntity>() where TEntity : class;
+        IRepository<TEntity> GetRepository<TEntity>() where TEntity : BaseModel;
 
         /// <summary>
         /// Saves all pending changes into the database

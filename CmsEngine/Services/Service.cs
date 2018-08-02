@@ -95,25 +95,6 @@ namespace CmsEngine
             _userManager = userManager;
         }
 
-        private IQueryable<T> GetAll<T>(int count = 0) where T : BaseModel
-        {
-            try
-            {
-                var query = _unitOfWork.GetRepository<T>().Get(q => q.IsDeleted == false);
-
-                if (count > 0)
-                {
-                    query = query.Take(count);
-                }
-
-                return query;
-            }
-            catch
-            {
-                throw;
-            }
-        }
-
         private IQueryable<TModel> GetDocumentsByStatus<TModel>(DocumentStatus documentStatus, int count = 0) where TModel : Document
         {
             try
@@ -231,7 +212,7 @@ namespace CmsEngine
         {
             var articleList = new List<XElement>();
 
-            foreach (var item in this.GetAll<Post>().OrderByDescending(o => o.PublishedOn))
+            foreach (var item in _unitOfWork.Posts.Get().OrderByDescending(o => o.PublishedOn))
             {
                 string url = FormatUrl("feed", item.Slug);
                 articleList.Add(new XElement("item",
@@ -315,30 +296,6 @@ namespace CmsEngine
             }
 
             return listItems;
-        }
-
-        private T GetById<T>(int id, int count = 0) where T : BaseModel
-        {
-            try
-            {
-                return this.GetAll<T>(count).Where(q => q.Id == id).SingleOrDefault();
-            }
-            catch
-            {
-                throw;
-            }
-        }
-
-        private T GetById<T>(Guid id, int count = 0) where T : BaseModel
-        {
-            try
-            {
-                return this.GetAll<T>(count).Where(q => q.VanityId == id).SingleOrDefault();
-            }
-            catch
-            {
-                throw;
-            }
         }
 
         private ReturnValue Delete<T>(T item) where T : BaseModel
