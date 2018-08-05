@@ -57,8 +57,8 @@ CmsEngine.Configure.DataTable = function (route) {
         "orderable": false,
         "width": "15px",
         "data": null,
-        "mRender": function (data, type, full) {
-          return '<input type="checkbox" name="items-to-delete" value="' + full[full.length - 1] + '">';
+        "render": function (data, type, row, meta) {
+          return '<input type="checkbox" name="items-to-delete" value="' + row[row.length - 1] + '">';
         }
       },
       {
@@ -67,9 +67,9 @@ CmsEngine.Configure.DataTable = function (route) {
         "orderable": false,
         "width": "85px",
         "data": null,
-        "mRender": function (data, type, full) {
-          return '<a href="' + route + '/edit/' + full[full.length - 1] + '" role="button" class="btn btn-secondary" data-toggle="tooltip" data-placement="top" title="Edit"><span class="fa fa-pencil"></span></a>'
-            + '<a href="' + route + '/delete/' + full[full.length - 1] + '" role="button" class="btn btn-danger delete-link" data-toggle="tooltip" data-placement="top" data-message="Do you really want to <span class=&quot;text-danger&quot;>delete</span> <strong>' + full[1] + '</strong>?" title="Delete"><span class="fa fa-trash-o"></span></a>';
+        "render": function (data, type, row, meta) {
+          return '<a href="' + route + '/edit/' + row[row.length - 1] + '" role="button" class="btn btn-secondary" data-toggle="tooltip" data-placement="top" title="Edit"><span class="fa fa-pencil"></span></a>'
+            + '<a href="' + route + '/delete/' + row[row.length - 1] + '" role="button" class="btn btn-danger delete-link" data-toggle="tooltip" data-placement="top" data-message="Do you really want to <span class=&quot;text-danger&quot;>delete</span> <strong>' + row[1] + '</strong>?" title="Delete"><span class="fa fa-trash-o"></span></a>';
         }
       }],
     "ajax": {
