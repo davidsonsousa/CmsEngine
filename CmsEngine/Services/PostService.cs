@@ -303,9 +303,9 @@ namespace CmsEngine
             // Check if the values were assigned
             if (currentItems != null)
             {
-                _unitOfWork.GetRepository<PostCategory>()
+                _unitOfWork.GetRepositoryMany<PostCategory>()
                            .DeleteMany(currentItems.Except(newItems, x => x.CategoryId));
-                _unitOfWork.GetRepository<PostCategory>()
+                _unitOfWork.GetRepositoryMany<PostCategory>()
                            .InsertMany(newItems.Except(currentItems, x => x.CategoryId));
             }
         }
@@ -332,9 +332,9 @@ namespace CmsEngine
             // Check if the values were assigned
             if (currentItems != null)
             {
-                _unitOfWork.GetRepository<PostTag>()
+                _unitOfWork.GetRepositoryMany<PostTag>()
                            .DeleteMany(currentItems.Except(newItems, x => x.TagId));
-                _unitOfWork.GetRepository<PostTag>()
+                _unitOfWork.GetRepositoryMany<PostTag>()
                            .InsertMany(newItems.Except(currentItems, x => x.TagId));
             }
         }

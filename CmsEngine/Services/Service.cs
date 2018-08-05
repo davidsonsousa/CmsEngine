@@ -151,7 +151,7 @@ namespace CmsEngine
             try
             {
                 var itemsToDelete = _unitOfWork.GetRepository<T>().GetReadOnly(q => id.Contains(q.VanityId));
-                _unitOfWork.GetRepository<T>().UpdateMany(itemsToDelete.Select(x =>
+                _unitOfWork.GetRepositoryMany<T>().UpdateMany(itemsToDelete.Select(x =>
                                                                             {
                                                                                 x.IsDeleted = true;
                                                                                 return x;
