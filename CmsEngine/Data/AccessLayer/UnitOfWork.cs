@@ -39,6 +39,17 @@ namespace CmsEngine.Data.AccessLayer
             return repository;
         }
 
+        public IRepositoryMany<TEntity> GetRepositoryMany<TEntity>() where TEntity : class
+        {
+            if (_repositories.Keys.Contains(typeof(TEntity)))
+                return _repositories[typeof(TEntity)] as IRepositoryMany<TEntity>;
+
+            // TODO: Make it flexible so it accepts other types of repository (example: ADO.NET, XML, JSON, etc.)
+            var repository = new EfRepositoryMany<TEntity>(_ctx);
+            _repositories.Add(typeof(TEntity), repository);
+            return repository;
+        }
+
         public void Save()
         {
             try
