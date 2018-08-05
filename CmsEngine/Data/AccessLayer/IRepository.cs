@@ -36,33 +36,15 @@ namespace CmsEngine.Data.AccessLayer
         void Insert(T entity);
 
         /// <summary>
-        /// Inserts multiple records in the database
-        /// </summary>
-        /// <param name="entities"></param>
-        void InsertMany(IEnumerable<T> entities);
-
-        /// <summary>
         /// Updates record
         /// </summary>
         /// <param name="entity"></param>
         void Update(T entity);
 
         /// <summary>
-        /// Updates multiple records in the database
-        /// </summary>
-        /// <param name="entities"></param>
-        void UpdateMany(IEnumerable<T> entities);
-
-        /// <summary>
         /// Deletes record from database
         /// </summary>
         /// <param name="entity"></param>
         void Delete(T entity);
-
-        /// <summary>
-        /// Deletes multiple records in the database
-        /// </summary>
-        /// <param name="entities"></param>
-        void DeleteMany(IEnumerable<T> entities);
     }
 }

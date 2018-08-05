@@ -39,7 +39,12 @@ namespace CmsEngine.Data.AccessLayer
 
         public IQueryable<T> Get(Expression<Func<T, bool>> filter = null, int count = 0)
         {
-            var query = GetAll(q => q.IsDeleted == false).Where(filter);
+            var query = GetAll(q => q.IsDeleted == false);
+
+            if (filter != null)
+            {
+                query = query.Where(filter);
+            }
 
             if (count > 0)
             {
