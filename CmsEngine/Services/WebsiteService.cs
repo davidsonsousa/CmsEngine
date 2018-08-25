@@ -23,13 +23,13 @@ namespace CmsEngine
 
         public IViewModel GetWebsiteById(int id)
         {
-            var item = this.GetById<Website>(id);
+            var item = _unitOfWork.Websites.GetById(id);
             return _mapper.Map<Website, WebsiteViewModel>(item);
         }
 
         public IViewModel GetWebsiteById(Guid id)
         {
-            var item = this.GetById<Website>(id);
+            var item = _unitOfWork.Websites.GetById(id);
             return _mapper.Map<Website, WebsiteViewModel>(item);
         }
 
@@ -44,13 +44,13 @@ namespace CmsEngine
 
         public IEditModel SetupWebsiteEditModel(int id)
         {
-            var item = this.GetById<Website>(id);
+            var item = _unitOfWork.Websites.GetById(id);
             return _mapper.Map<Website, WebsiteEditModel>(item);
         }
 
         public IEditModel SetupWebsiteEditModel(Guid id)
         {
-            var item = this.GetById<Website>(id);
+            var item = _unitOfWork.Websites.GetById(id);
             return _mapper.Map<Website, WebsiteEditModel>(item);
         }
 
@@ -92,7 +92,7 @@ namespace CmsEngine
             var returnValue = new ReturnValue();
             try
             {
-                var website = this.GetAll<Website>().Where(q => q.VanityId == id).FirstOrDefault();
+                var website = _unitOfWork.Websites.GetById(id);
                 returnValue = this.Delete(website);
 
                 if (!returnValue.IsError)
@@ -119,7 +119,7 @@ namespace CmsEngine
             var returnValue = new ReturnValue();
             try
             {
-                var website = this.GetAll<Website>().Where(q => q.Id == id).FirstOrDefault();
+                var website = _unitOfWork.Websites.GetById(id);
                 returnValue = this.Delete(website);
 
                 if (!returnValue.IsError)
@@ -207,7 +207,7 @@ namespace CmsEngine
             }
             else
             {
-                website = this.GetById<Website>(editModel.VanityId);
+                website = _unitOfWork.Websites.GetById(editModel.VanityId);
                 _mapper.Map((WebsiteEditModel)editModel, website);
 
                 _unitOfWork.Websites.Update(website);

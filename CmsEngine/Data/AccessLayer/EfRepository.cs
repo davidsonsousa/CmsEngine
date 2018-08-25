@@ -2,12 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using CmsEngine.Data.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace CmsEngine.Data.AccessLayer
 {
-    internal class EfRepository<T> : IRepository<T> where T : class
+    internal class EfRepository<T> : IRepository<T> where T : BaseModel
     {
         private readonly CmsEngineContext _context;
         private readonly DbSet<T> _dbSet;
@@ -24,13 +25,30 @@ namespace CmsEngine.Data.AccessLayer
             _dbSet = context.Set<T>();
         }
 
-        public IQueryable<T> Get(Expression<Func<T, bool>> filter = null)
+        public IQueryable<T> GetAll(Expression<Func<T, bool>> filter = null)
         {
             IQueryable<T> query = _dbSet;
 
             if (filter != null)
             {
                 query = query.Where(filter);
+            }
+
+            return query;
+        }
+
+        public IQueryable<T> Get(Expression<Func<T, bool>> filter = null, int count = 0)
+        {
+            var query = GetAll(q => q.IsDeleted == false);
+
+            if (filter != null)
+            {
+                query = query.Where(filter);
+            }
+
+            if (count > 0)
+            {
+                query = query.Take(count);
             }
 
             return query;
@@ -46,6 +64,16 @@ namespace CmsEngine.Data.AccessLayer
             }
 
             return query.ToList();
+        }
+
+        public T GetById(int id)
+        {
+            return Get(q => q.Id == id).SingleOrDefault();
+        }
+
+        public T GetById(Guid id)
+        {
+            return Get(q => q.VanityId == id).SingleOrDefault();
         }
 
         public void Insert(T entity)

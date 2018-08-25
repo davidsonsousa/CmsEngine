@@ -1,21 +1,24 @@
 <Project Sdk="Microsoft.NET.Sdk">
-    <PropertyGroup>
-        <TargetFramework>netcoreapp2.1</TargetFramework>
-        <RuntimeFrameworkVersion>2.0.3</RuntimeFrameworkVersion>
-    </PropertyGroup>
-    <ItemGroup>
-        <PackageReference Include="AutoMapper" Version="7.0.0" />
-        <PackageReference Include="Microsoft.AspNetCore.All" Version="2.1.0" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="2.1.0" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="2.1.0" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.1.0" />
-        <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
-        <PackageReference Include="Roslynator.Analyzers" Version="1.8.0" />
-        <PackageReference Include="Roslynator.CodeFixes" Version="1.8.0" />
-    </ItemGroup>
-    <ItemGroup>
-      <Reference Include="Microsoft.Extensions.Identity.Core">
-        <HintPath>C:\Program Files\dotnet\sdk\NuGetFallbackFolder\microsoft.extensions.identity.core\2.0.0\lib\netstandard2.0\Microsoft.Extensions.Identity.Core.dll</HintPath>
-      </Reference>
-    </ItemGroup>
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="7.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.App" Version="2.1.1" />
+    <PackageReference Include="Roslynator.Analyzers" Version="1.9.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Roslynator.CodeFixes" Version="1.9.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Migrations\" />
+  </ItemGroup>
+
 </Project>

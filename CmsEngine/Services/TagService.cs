@@ -22,13 +22,13 @@ namespace CmsEngine
 
         public IViewModel GetTagById(int id)
         {
-            var item = this.GetById<Tag>(id);
+            var item = _unitOfWork.Tags.GetById(id);
             return _mapper.Map<Tag, TagViewModel>(item);
         }
 
         public IViewModel GetTagById(Guid id)
         {
-            var item = this.GetById<Tag>(id);
+            var item = _unitOfWork.Tags.GetById(id);
             return _mapper.Map<Tag, TagViewModel>(item);
         }
 
@@ -43,13 +43,13 @@ namespace CmsEngine
 
         public IEditModel SetupTagEditModel(int id)
         {
-            var item = this.GetById<Tag>(id);
+            var item = _unitOfWork.Tags.GetById(id);
             return _mapper.Map<Tag, TagEditModel>(item);
         }
 
         public IEditModel SetupTagEditModel(Guid id)
         {
-            var item = this.GetById<Tag>(id);
+            var item = _unitOfWork.Tags.GetById(id);
             return _mapper.Map<Tag, TagEditModel>(item);
         }
 
@@ -91,7 +91,7 @@ namespace CmsEngine
             var returnValue = new ReturnValue();
             try
             {
-                var tag = this.GetAll<Tag>().Where(q => q.VanityId == id).FirstOrDefault();
+                var tag = _unitOfWork.Tags.GetById(id);
                 returnValue = this.Delete(tag);
 
                 if (!returnValue.IsError)
@@ -118,7 +118,7 @@ namespace CmsEngine
             var returnValue = new ReturnValue();
             try
             {
-                var tag = this.GetAll<Tag>().Where(q => q.Id == id).FirstOrDefault();
+                var tag = _unitOfWork.Tags.GetById(id);
                 returnValue = this.Delete(tag);
 
                 if (!returnValue.IsError)
@@ -202,7 +202,7 @@ namespace CmsEngine
             }
             else
             {
-                tag = this.GetById<Tag>(editModel.VanityId);
+                tag = _unitOfWork.Tags.GetById(editModel.VanityId);
                 _mapper.Map((TagEditModel)editModel, tag);
                 tag.WebsiteId = Instance.Id;
 

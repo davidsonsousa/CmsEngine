@@ -28,13 +28,13 @@ namespace CmsEngine
 
         public IViewModel GetPageById(int id)
         {
-            var item = this.GetById<Page>(id);
+            var item = _unitOfWork.Pages.GetById(id);
             return _mapper.Map<Page, PageViewModel>(item);
         }
 
         public IViewModel GetPageById(Guid id)
         {
-            var item = this.GetById<Page>(id);
+            var item = _unitOfWork.Pages.GetById(id);
             return _mapper.Map<Page, PageViewModel>(item);
         }
 
@@ -49,13 +49,13 @@ namespace CmsEngine
 
         public IEditModel SetupPageEditModel(int id)
         {
-            var item = this.GetById<Page>(id);
+            var item = _unitOfWork.Pages.GetById(id);
             return _mapper.Map<Page, PageEditModel>(item);
         }
 
         public IEditModel SetupPageEditModel(Guid id)
         {
-            var item = this.GetById<Page>(id);
+            var item = _unitOfWork.Pages.GetById(id);
             return _mapper.Map<Page, PageEditModel>(item);
         }
 
@@ -97,7 +97,7 @@ namespace CmsEngine
             var returnValue = new ReturnValue();
             try
             {
-                var page = this.GetAll<Page>().Where(q => q.VanityId == id).FirstOrDefault();
+                var page = _unitOfWork.Pages.GetById(id);
                 returnValue = this.Delete(page);
 
                 if (!returnValue.IsError)
@@ -124,7 +124,7 @@ namespace CmsEngine
             var returnValue = new ReturnValue();
             try
             {
-                var page = this.GetAll<Page>().Where(q => q.Id == id).FirstOrDefault();
+                var page = _unitOfWork.Pages.GetById(id);
                 returnValue = this.Delete(page);
 
                 if (!returnValue.IsError)
@@ -216,7 +216,7 @@ namespace CmsEngine
             }
             else
             {
-                page = this.GetById<Page>(editModel.VanityId);
+                page = _unitOfWork.Pages.GetById(editModel.VanityId);
                 _mapper.Map((PageEditModel)editModel, page);
                 page.WebsiteId = Instance.Id;
 

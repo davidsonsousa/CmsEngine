@@ -13,9 +13,9 @@ namespace CmsEngine.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(nullable: false),
-                    ConcurrencyStamp = table.Column<string>(nullable: true),
                     Name = table.Column<string>(maxLength: 256, nullable: true),
-                    NormalizedName = table.Column<string>(maxLength: 256, nullable: true)
+                    NormalizedName = table.Column<string>(maxLength: 256, nullable: true),
+                    ConcurrencyStamp = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -27,20 +27,22 @@ namespace CmsEngine.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(nullable: false),
-                    AccessFailedCount = table.Column<int>(nullable: false),
-                    ConcurrencyStamp = table.Column<string>(nullable: true),
-                    Email = table.Column<string>(maxLength: 256, nullable: true),
-                    EmailConfirmed = table.Column<bool>(nullable: false),
-                    LockoutEnabled = table.Column<bool>(nullable: false),
-                    LockoutEnd = table.Column<DateTimeOffset>(nullable: true),
-                    NormalizedEmail = table.Column<string>(maxLength: 256, nullable: true),
+                    UserName = table.Column<string>(maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(maxLength: 256, nullable: true),
+                    Email = table.Column<string>(maxLength: 256, nullable: true),
+                    NormalizedEmail = table.Column<string>(maxLength: 256, nullable: true),
+                    EmailConfirmed = table.Column<bool>(nullable: false),
                     PasswordHash = table.Column<string>(nullable: true),
+                    SecurityStamp = table.Column<string>(nullable: true),
+                    ConcurrencyStamp = table.Column<string>(nullable: true),
                     PhoneNumber = table.Column<string>(nullable: true),
                     PhoneNumberConfirmed = table.Column<bool>(nullable: false),
-                    SecurityStamp = table.Column<string>(nullable: true),
                     TwoFactorEnabled = table.Column<bool>(nullable: false),
-                    UserName = table.Column<string>(maxLength: 256, nullable: true)
+                    LockoutEnd = table.Column<DateTimeOffset>(nullable: true),
+                    LockoutEnabled = table.Column<bool>(nullable: false),
+                    AccessFailedCount = table.Column<int>(nullable: false),
+                    Name = table.Column<string>(nullable: true),
+                    Surname = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -51,20 +53,28 @@ namespace CmsEngine.Migrations
                 name: "Websites",
                 columns: table => new
                 {
+                    IsDeleted = table.Column<bool>(nullable: false),
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    Culture = table.Column<string>(maxLength: 5, nullable: false),
+                    VanityId = table.Column<Guid>(nullable: false, defaultValueSql: "newid()"),
                     DateCreated = table.Column<DateTime>(nullable: false),
-                    DateFormat = table.Column<string>(maxLength: 10, nullable: false),
                     DateModified = table.Column<DateTime>(nullable: false),
-                    Description = table.Column<string>(maxLength: 200, nullable: true),
-                    IsDeleted = table.Column<bool>(nullable: false),
-                    Name = table.Column<string>(maxLength: 200, nullable: false),
-                    SiteUrl = table.Column<string>(maxLength: 250, nullable: false),
-                    UrlFormat = table.Column<string>(maxLength: 100, nullable: false),
                     UserCreated = table.Column<string>(maxLength: 20, nullable: true),
                     UserModified = table.Column<string>(maxLength: 20, nullable: true),
-                    VanityId = table.Column<Guid>(nullable: false, defaultValueSql: "newid()")
+                    Name = table.Column<string>(maxLength: 200, nullable: false),
+                    Description = table.Column<string>(maxLength: 200, nullable: true),
+                    Culture = table.Column<string>(maxLength: 5, nullable: false),
+                    UrlFormat = table.Column<string>(maxLength: 100, nullable: false),
+                    DateFormat = table.Column<string>(maxLength: 10, nullable: false),
+                    SiteUrl = table.Column<string>(maxLength: 250, nullable: false),
+                    ArticleLimit = table.Column<int>(nullable: false),
+                    Address = table.Column<string>(maxLength: 250, nullable: true),
+                    Phone = table.Column<string>(maxLength: 20, nullable: true),
+                    Email = table.Column<string>(maxLength: 250, nullable: true),
+                    Facebook = table.Column<string>(maxLength: 20, nullable: true),
+                    Twitter = table.Column<string>(maxLength: 20, nullable: true),
+                    Instagram = table.Column<string>(maxLength: 20, nullable: true),
+                    LinkedIn = table.Column<string>(maxLength: 20, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -77,9 +87,9 @@ namespace CmsEngine.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    RoleId = table.Column<string>(nullable: false),
                     ClaimType = table.Column<string>(nullable: true),
-                    ClaimValue = table.Column<string>(nullable: true),
-                    RoleId = table.Column<string>(nullable: false)
+                    ClaimValue = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -98,9 +108,9 @@ namespace CmsEngine.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    UserId = table.Column<string>(nullable: false),
                     ClaimType = table.Column<string>(nullable: true),
-                    ClaimValue = table.Column<string>(nullable: true),
-                    UserId = table.Column<string>(nullable: false)
+                    ClaimValue = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -117,8 +127,8 @@ namespace CmsEngine.Migrations
                 name: "AspNetUserLogins",
                 columns: table => new
                 {
-                    LoginProvider = table.Column<string>(nullable: false),
-                    ProviderKey = table.Column<string>(nullable: false),
+                    LoginProvider = table.Column<string>(maxLength: 128, nullable: false),
+                    ProviderKey = table.Column<string>(maxLength: 128, nullable: false),
                     ProviderDisplayName = table.Column<string>(nullable: true),
                     UserId = table.Column<string>(nullable: false)
                 },
@@ -162,8 +172,8 @@ namespace CmsEngine.Migrations
                 columns: table => new
                 {
                     UserId = table.Column<string>(nullable: false),
-                    LoginProvider = table.Column<string>(nullable: false),
-                    Name = table.Column<string>(nullable: false),
+                    LoginProvider = table.Column<string>(maxLength: 128, nullable: false),
+                    Name = table.Column<string>(maxLength: 128, nullable: false),
                     Value = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
@@ -181,18 +191,18 @@ namespace CmsEngine.Migrations
                 name: "Categories",
                 columns: table => new
                 {
+                    IsDeleted = table.Column<bool>(nullable: false),
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    VanityId = table.Column<Guid>(nullable: false, defaultValueSql: "newid()"),
                     DateCreated = table.Column<DateTime>(nullable: false),
                     DateModified = table.Column<DateTime>(nullable: false),
-                    Description = table.Column<string>(maxLength: 200, nullable: true),
-                    IsDeleted = table.Column<bool>(nullable: false),
-                    Name = table.Column<string>(maxLength: 25, nullable: false),
-                    Slug = table.Column<string>(maxLength: 25, nullable: false),
                     UserCreated = table.Column<string>(maxLength: 20, nullable: true),
                     UserModified = table.Column<string>(maxLength: 20, nullable: true),
-                    VanityId = table.Column<Guid>(nullable: false, defaultValueSql: "newid()"),
-                    WebsiteId = table.Column<int>(nullable: false)
+                    WebsiteId = table.Column<int>(nullable: false),
+                    Name = table.Column<string>(maxLength: 25, nullable: false),
+                    Slug = table.Column<string>(maxLength: 25, nullable: false),
+                    Description = table.Column<string>(maxLength: 200, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -209,21 +219,22 @@ namespace CmsEngine.Migrations
                 name: "Pages",
                 columns: table => new
                 {
+                    IsDeleted = table.Column<bool>(nullable: false),
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    Author = table.Column<string>(maxLength: 20, nullable: false),
+                    VanityId = table.Column<Guid>(nullable: false, defaultValueSql: "newid()"),
                     DateCreated = table.Column<DateTime>(nullable: false),
                     DateModified = table.Column<DateTime>(nullable: false),
-                    Description = table.Column<string>(maxLength: 150, nullable: false),
-                    DocumentContent = table.Column<string>(nullable: true),
-                    IsDeleted = table.Column<bool>(nullable: false),
-                    PublishedOn = table.Column<DateTime>(nullable: false),
-                    Slug = table.Column<string>(maxLength: 25, nullable: false),
-                    Status = table.Column<int>(nullable: false),
-                    Title = table.Column<string>(maxLength: 100, nullable: false),
                     UserCreated = table.Column<string>(maxLength: 20, nullable: true),
                     UserModified = table.Column<string>(maxLength: 20, nullable: true),
-                    VanityId = table.Column<Guid>(nullable: false, defaultValueSql: "newid()"),
+                    Title = table.Column<string>(maxLength: 100, nullable: false),
+                    Slug = table.Column<string>(maxLength: 25, nullable: false),
+                    Description = table.Column<string>(maxLength: 150, nullable: false),
+                    DocumentContent = table.Column<string>(nullable: true),
+                    AuthorId = table.Column<string>(maxLength: 36, nullable: false),
+                    Author = table.Column<string>(maxLength: 50, nullable: false),
+                    Status = table.Column<int>(nullable: false),
+                    PublishedOn = table.Column<DateTime>(nullable: false),
                     WebsiteId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
@@ -241,21 +252,22 @@ namespace CmsEngine.Migrations
                 name: "Posts",
                 columns: table => new
                 {
+                    IsDeleted = table.Column<bool>(nullable: false),
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    Author = table.Column<string>(maxLength: 20, nullable: false),
+                    VanityId = table.Column<Guid>(nullable: false, defaultValueSql: "newid()"),
                     DateCreated = table.Column<DateTime>(nullable: false),
                     DateModified = table.Column<DateTime>(nullable: false),
-                    Description = table.Column<string>(maxLength: 150, nullable: false),
-                    DocumentContent = table.Column<string>(nullable: true),
-                    IsDeleted = table.Column<bool>(nullable: false),
-                    PublishedOn = table.Column<DateTime>(nullable: false),
-                    Slug = table.Column<string>(maxLength: 25, nullable: false),
-                    Status = table.Column<int>(nullable: false),
-                    Title = table.Column<string>(maxLength: 100, nullable: false),
                     UserCreated = table.Column<string>(maxLength: 20, nullable: true),
                     UserModified = table.Column<string>(maxLength: 20, nullable: true),
-                    VanityId = table.Column<Guid>(nullable: false, defaultValueSql: "newid()"),
+                    Title = table.Column<string>(maxLength: 100, nullable: false),
+                    Slug = table.Column<string>(maxLength: 25, nullable: false),
+                    Description = table.Column<string>(maxLength: 150, nullable: false),
+                    DocumentContent = table.Column<string>(nullable: true),
+                    AuthorId = table.Column<string>(nullable: true),
+                    Author = table.Column<string>(maxLength: 20, nullable: false),
+                    Status = table.Column<int>(nullable: false),
+                    PublishedOn = table.Column<DateTime>(nullable: false),
                     WebsiteId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
@@ -273,17 +285,17 @@ namespace CmsEngine.Migrations
                 name: "Tags",
                 columns: table => new
                 {
+                    IsDeleted = table.Column<bool>(nullable: false),
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    VanityId = table.Column<Guid>(nullable: false, defaultValueSql: "newid()"),
                     DateCreated = table.Column<DateTime>(nullable: false),
                     DateModified = table.Column<DateTime>(nullable: false),
-                    IsDeleted = table.Column<bool>(nullable: false),
-                    Name = table.Column<string>(maxLength: 25, nullable: false),
-                    Slug = table.Column<string>(maxLength: 25, nullable: false),
                     UserCreated = table.Column<string>(maxLength: 20, nullable: true),
                     UserModified = table.Column<string>(maxLength: 20, nullable: true),
-                    VanityId = table.Column<Guid>(nullable: false, defaultValueSql: "newid()"),
-                    WebsiteId = table.Column<int>(nullable: false)
+                    WebsiteId = table.Column<int>(nullable: false),
+                    Name = table.Column<string>(maxLength: 25, nullable: false),
+                    Slug = table.Column<string>(maxLength: 25, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -343,6 +355,44 @@ namespace CmsEngine.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.NoAction);
                 });
+
+            migrationBuilder.InsertData(
+                table: "AspNetUsers",
+                columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "LockoutEnabled", "LockoutEnd", "Name", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "Surname", "TwoFactorEnabled", "UserName" },
+                values: new object[] { "55e64a12-a18c-4585-b82a-9bf94777a939", 0, "6b027369-fa6a-48fb-b7be-fc4c5b5e561d", "john@doe.com", true, false, null, "John", "JOHN@DOE.COM", "JOHN@DOE.COM", "AQAAAAEAACcQAAAAEGIUaLe7RWZGw8Tr5/xoUMOooAzJsLFw550fDqZkrbk8CD+urHQzYjK1xY8vcDMekw==", null, false, "NBTDBYKTNLGHKQ3HI7YFEHPQN5YRXWQC", "Doe", false, "john@doe.com" });
+
+            migrationBuilder.InsertData(
+                table: "Websites",
+                columns: new[] { "Id", "Address", "ArticleLimit", "Culture", "DateCreated", "DateFormat", "DateModified", "Description", "Email", "Facebook", "Instagram", "IsDeleted", "LinkedIn", "Name", "Phone", "SiteUrl", "Twitter", "UrlFormat", "UserCreated", "UserModified", "VanityId" },
+                values: new object[] { 1, null, 10, "en-US", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "MM/dd/yyyy", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "This is a sample website", null, null, null, false, null, "Sample Website", null, "cmsengine.test", null, "http://[site_url]/[type]/[slug]", null, null, new Guid("15f2a3eb-1bff-4ee4-92ef-a83dfd6df086") });
+
+            migrationBuilder.InsertData(
+                table: "Categories",
+                columns: new[] { "Id", "DateCreated", "DateModified", "Description", "IsDeleted", "Name", "Slug", "UserCreated", "UserModified", "VanityId", "WebsiteId" },
+                values: new object[] { 1, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, false, "Category example", "category-example", null, null, new Guid("3b552d79-c6c6-42dd-ad42-b104fa895a3b"), 1 });
+
+            migrationBuilder.InsertData(
+                table: "Pages",
+                columns: new[] { "Id", "Author", "AuthorId", "DateCreated", "DateModified", "Description", "DocumentContent", "IsDeleted", "PublishedOn", "Slug", "Status", "Title", "UserCreated", "UserModified", "VanityId", "WebsiteId" },
+                values: new object[] { 1, "john@doe.com", "55e64a12-a18c-4585-b82a-9bf94777a939", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "This is a sample page from a sample website", @"<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed risus libero, egestas vel tempus id, venenatis nec tellus. Nullam hendrerit id magna quis venenatis. Pellentesque rhoncus leo vitae turpis tristique, nec placerat tellus scelerisque. Aenean vitae rhoncus urna, non posuere elit. Nullam quam libero, porttitor in lectus convallis, pellentesque finibus libero. Suspendisse potenti. Fusce quis purus egestas, malesuada massa sed, dignissim purus. Curabitur vitae rhoncus nulla, sit amet dignissim quam.</p>
+                                       <p>Mauris lorem urna, convallis in enim nec, tristique ullamcorper nisl. Fusce nec tellus et arcu imperdiet ullamcorper vestibulum vitae mi. Sed bibendum molestie dolor sit amet rhoncus.Duis consectetur convallis auctor. In hac habitasse platea dictumst.Duis lorem nibh, mattis ut purus interdum, scelerisque molestie est. Nullam molestie a est vel ornare. Maecenas rhoncus accumsan ligula, at pretium purus tempus ut. Aliquam erat nulla, pretium vel eros vitae, blandit aliquam nibh. Nulla tincidunt, justo et ullamcorper dictum, augue lectus dictum ligula, eget rutrum sem nibh non felis.Aenean elementum, sem sit amet pulvinar tempus, neque eros faucibus turpis, quis molestie nisi libero quis purus.</p>
+                                       <p>Donec quam massa, tincidunt eu lacus in, lacinia hendrerit urna. Pellentesque pretium orci a felis tincidunt, sit amet volutpat est dapibus. Donec laoreet, massa in imperdiet laoreet, enim ligula auctor est, non imperdiet nisi diam vitae quam. Integer nec porttitor ante. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.Morbi non pretium risus, a lobortis eros. Etiam blandit diam tortor. Ut feugiat eros id erat auctor, ut vehicula odio vestibulum.</p>
+                                       <p>Nunc sed ex sed diam euismod eleifend. Proin blandit lorem sed placerat fermentum. Curabitur non gravida felis, ac sollicitudin nibh. Morbi ornare sapien vitae nisl condimentum cursus.Vivamus bibendum condimentum metus, ut gravida orci bibendum maximus. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.Duis varius, tortor ac placerat faucibus, lectus mauris bibendum elit, id eleifend leo diam ac nulla.Aenean egestas urna facilisis purus ullamcorper vestibulum.Etiam commodo suscipit turpis, quis lobortis metus posuere sed.</p>
+                                       <p>Praesent in augue sit amet tortor ultricies maximus eu ac dui.Pellentesque et congue elit. Suspendisse potenti. Donec facilisis eu magna nec bibendum. Nullam in dignissim elit. Integer laoreet odio massa, vel vestibulum mauris varius et. Ut non ex sit amet nisl mollis laoreet. </p> ", false, new DateTime(2018, 8, 25, 14, 55, 36, 337, DateTimeKind.Local), "sample-page", 0, "Sample page", null, null, new Guid("d9e69e30-8822-4b17-8015-eb007cef4400"), 1 });
+
+            migrationBuilder.InsertData(
+                table: "Posts",
+                columns: new[] { "Id", "Author", "AuthorId", "DateCreated", "DateModified", "Description", "DocumentContent", "IsDeleted", "PublishedOn", "Slug", "Status", "Title", "UserCreated", "UserModified", "VanityId", "WebsiteId" },
+                values: new object[] { 1, "john@doe.com", "55e64a12-a18c-4585-b82a-9bf94777a939", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Lorem ipsum dolor sit amet", @"<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed risus libero, egestas vel tempus id, venenatis nec tellus. Nullam hendrerit id magna quis venenatis. Pellentesque rhoncus leo vitae turpis tristique, nec placerat tellus scelerisque. Aenean vitae rhoncus urna, non posuere elit. Nullam quam libero, porttitor in lectus convallis, pellentesque finibus libero. Suspendisse potenti. Fusce quis purus egestas, malesuada massa sed, dignissim purus. Curabitur vitae rhoncus nulla, sit amet dignissim quam.</p>
+                                       <p>Mauris lorem urna, convallis in enim nec, tristique ullamcorper nisl. Fusce nec tellus et arcu imperdiet ullamcorper vestibulum vitae mi. Sed bibendum molestie dolor sit amet rhoncus.Duis consectetur convallis auctor. In hac habitasse platea dictumst.Duis lorem nibh, mattis ut purus interdum, scelerisque molestie est. Nullam molestie a est vel ornare. Maecenas rhoncus accumsan ligula, at pretium purus tempus ut. Aliquam erat nulla, pretium vel eros vitae, blandit aliquam nibh. Nulla tincidunt, justo et ullamcorper dictum, augue lectus dictum ligula, eget rutrum sem nibh non felis.Aenean elementum, sem sit amet pulvinar tempus, neque eros faucibus turpis, quis molestie nisi libero quis purus.</p>
+                                       <p>Donec quam massa, tincidunt eu lacus in, lacinia hendrerit urna. Pellentesque pretium orci a felis tincidunt, sit amet volutpat est dapibus. Donec laoreet, massa in imperdiet laoreet, enim ligula auctor est, non imperdiet nisi diam vitae quam. Integer nec porttitor ante. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.Morbi non pretium risus, a lobortis eros. Etiam blandit diam tortor. Ut feugiat eros id erat auctor, ut vehicula odio vestibulum.</p>
+                                       <p>Nunc sed ex sed diam euismod eleifend. Proin blandit lorem sed placerat fermentum. Curabitur non gravida felis, ac sollicitudin nibh. Morbi ornare sapien vitae nisl condimentum cursus.Vivamus bibendum condimentum metus, ut gravida orci bibendum maximus. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.Duis varius, tortor ac placerat faucibus, lectus mauris bibendum elit, id eleifend leo diam ac nulla.Aenean egestas urna facilisis purus ullamcorper vestibulum.Etiam commodo suscipit turpis, quis lobortis metus posuere sed.</p>
+                                       <p>Praesent in augue sit amet tortor ultricies maximus eu ac dui.Pellentesque et congue elit. Suspendisse potenti. Donec facilisis eu magna nec bibendum. Nullam in dignissim elit. Integer laoreet odio massa, vel vestibulum mauris varius et. Ut non ex sit amet nisl mollis laoreet. </p> ", false, new DateTime(2018, 8, 25, 14, 55, 36, 338, DateTimeKind.Local), "lorem-ipsum", 0, "Lorem Ipsum", null, null, new Guid("019793bf-9da3-4273-9b00-4f7a8d8ca2d8"), 1 });
+
+            migrationBuilder.InsertData(
+                table: "PostCategory",
+                columns: new[] { "PostId", "CategoryId" },
+                values: new object[] { 1, 1 });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",

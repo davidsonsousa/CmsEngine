@@ -17,6 +17,8 @@ namespace CmsEngine.Data.AccessLayer
         public IRepository<Post> Posts { get { return this.GetRepository<Post>(); } }
         public IRepository<Tag> Tags { get { return this.GetRepository<Tag>(); } }
         public IRepository<Website> Websites { get { return this.GetRepository<Website>(); } }
+        //public IRepository<PostCategory> PostCategories { get { return this.GetRepository<PostCategory>(); } }
+        //public IRepository<PostTag> PostTags { get { return this.GetRepository<PostTag>(); } }
 
         public UnitOfWork(CmsEngineContext context)
         {
@@ -26,13 +28,24 @@ namespace CmsEngine.Data.AccessLayer
             _disposed = false;
         }
 
-        public IRepository<TEntity> GetRepository<TEntity>() where TEntity : class
+        public IRepository<TEntity> GetRepository<TEntity>() where TEntity : BaseModel
         {
             if (_repositories.Keys.Contains(typeof(TEntity)))
                 return _repositories[typeof(TEntity)] as IRepository<TEntity>;
 
             // TODO: Make it flexible so it accepts other types of repository (example: ADO.NET, XML, JSON, etc.)
             var repository = new EfRepository<TEntity>(_ctx);
+            _repositories.Add(typeof(TEntity), repository);
+            return repository;
+        }
+
+        public IRepositoryMany<TEntity> GetRepositoryMany<TEntity>() where TEntity : class
+        {
+            if (_repositories.Keys.Contains(typeof(TEntity)))
+                return _repositories[typeof(TEntity)] as IRepositoryMany<TEntity>;
+
+            // TODO: Make it flexible so it accepts other types of repository (example: ADO.NET, XML, JSON, etc.)
+            var repository = new EfRepositoryMany<TEntity>(_ctx);
             _repositories.Add(typeof(TEntity), repository);
             return repository;
         }

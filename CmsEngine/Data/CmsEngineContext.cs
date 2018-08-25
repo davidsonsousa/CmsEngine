@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using CmsEngine.Data.Models;
+using CmsEngine.Extensions;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -34,6 +35,8 @@ namespace CmsEngine.Data
             builder.Entity<Category>(ModelConfiguration.ConfigureCategory);
             builder.Entity<PostCategory>(ModelConfiguration.ConfigurePostCategory);
             builder.Entity<PostTag>(ModelConfiguration.ConfigurePostTag);
+
+            builder.Seed();
 
             base.OnModelCreating(builder);
         }
