@@ -55,6 +55,11 @@ namespace CmsEngine.Ui.Controllers
             }
         }
 
+        public IActionResult Privacy()
+        {
+            return View();
+        }
+
         public IActionResult Error()
         {
             instance.PageTitle = $"Error - {instance.Name}";

@@ -6,11 +6,13 @@ using CmsEngine.Helpers.Email;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Console;
 
 namespace CmsEngine.Ui
 {
@@ -23,17 +25,30 @@ namespace CmsEngine.Ui
 
         public IConfiguration Configuration { get; }
 
+        public static readonly LoggerFactory loggerFactory = new LoggerFactory(new[] {
+                                                                new ConsoleLoggerProvider((category, level) =>
+                                                                                    category == DbLoggerCategory.Database.Command.Name
+                                                                                 && level == LogLevel.Information, true) });
+
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.Configure<CookiePolicyOptions>(options =>
+            {
+                // This lambda determines whether user consent for non-essential cookies is needed for a given request.
+                options.CheckConsentNeeded = context => true;
+                options.MinimumSameSitePolicy = SameSiteMode.None;
+            });
+
             // Add CmsEngineContext
             services.AddDbContextPool<CmsEngineContext>(options =>
                 options.UseLazyLoadingProxies()
+                       .UseLoggerFactory(loggerFactory)
+                       .EnableSensitiveDataLogging(true) // TODO: Perhaps use a flag from appsettings instead of a hard-coded value
                        .UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddIdentity<ApplicationUser, IdentityRole>()
-                .AddEntityFrameworkStores<CmsEngineContext>()
-                .AddDefaultTokenProviders();
+            services.AddDefaultIdentity<ApplicationUser>()
+                .AddEntityFrameworkStores<CmsEngineContext>();
 
             // Add application services.
             services.AddTransient<IEmailSender, EmailSender>();
@@ -47,17 +62,9 @@ namespace CmsEngine.Ui
             // Add Unit of Work
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
-            services.ConfigureApplicationCookie(options =>
-            {
-                options.Cookie.Name = "CmsEngine";
-                options.LoginPath = "/Cms/Account/Login";
-                options.LogoutPath = "/Cms/Account/Logout";
-                options.AccessDeniedPath = "/Cms/Account/AccessDenied";
-            });
-
             services.Configure<EmailSettings>(Configuration.GetSection("EmailSettings"));
 
-            services.AddMvc();
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -66,15 +73,17 @@ namespace CmsEngine.Ui
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseBrowserLink();
                 app.UseDatabaseErrorPage();
             }
             else
             {
                 app.UseExceptionHandler("/Home/Error");
+                app.UseHsts();
             }
 
+            app.UseHttpsRedirection();
             app.UseStaticFiles();
+            app.UseCookiePolicy();
 
             app.UseAuthentication();
 
@@ -87,6 +96,7 @@ namespace CmsEngine.Ui
                 routes.MapRoute(
                     name: "blogRoute",
                     template: "{controller=Home}/{action=Index}/{slug?}");
+
                 routes.MapRoute(
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
