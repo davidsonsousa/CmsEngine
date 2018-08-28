@@ -51,9 +51,6 @@ namespace CmsEngine.Ui
             services.AddIdentity<ApplicationUser, IdentityRole>()
                     .AddEntityFrameworkStores<CmsEngineContext>();
 
-            // Add application services.
-            services.AddSingleton<IEmailSender, EmailSender>();
-
             // Add HttpContextAccessor as .NET Core doesn't have HttpContext.Current anymore
             services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
@@ -62,8 +59,6 @@ namespace CmsEngine.Ui
 
             // Add Unit of Work
             services.AddScoped<IUnitOfWork, UnitOfWork>();
-
-            services.Configure<EmailSettings>(Configuration.GetSection("EmailSettings"));
 
             services.AddMvc()
                     .SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
@@ -80,6 +75,10 @@ namespace CmsEngine.Ui
                 options.LogoutPath = "/Identity/Account/Logout";
                 options.AccessDeniedPath = "/Identity/Account/AccessDenied";
             });
+
+            // Add application services.
+            services.AddSingleton<IEmailSender, EmailSender>();
+            services.Configure<EmailSettings>(Configuration.GetSection("EmailSettings"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
