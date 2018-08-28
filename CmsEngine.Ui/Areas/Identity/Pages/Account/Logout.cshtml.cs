@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
 using CmsEngine.Data.Models;
+using CmsEngine.Ui.Admin.Controllers;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -23,22 +21,11 @@ namespace CmsEngine.Ui.Areas.Identity.Pages.Account
             _logger = logger;
         }
 
-        public void OnGet()
-        {
-        }
-
-        public async Task<IActionResult> OnPost(string returnUrl = null)
+        public async Task<IActionResult> OnGet()
         {
             await _signInManager.SignOutAsync();
             _logger.LogInformation("User logged out.");
-            if (returnUrl != null)
-            {
-                return LocalRedirect(returnUrl);
-            }
-            else
-            {
-                return Page();
-            }
+            return RedirectToAction(nameof(HomeController.Index), "Home", new { area = "cms" });
         }
     }
 }
