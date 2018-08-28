@@ -1,12 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
+using System;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
+using AutoMapper;
+using CmsEngine.Data.AccessLayer;
 using CmsEngine.Data.Models;
+using CmsEngine.Extensions;
+using CmsEngine.Helpers.Email;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
@@ -17,15 +19,18 @@ namespace CmsEngine.Ui.Areas.Identity.Pages.Account.Manage
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IEmailSender _emailSender;
+        private readonly CmsService _service;
 
         public IndexModel(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
-            IEmailSender emailSender)
+            IEmailSender emailSender,
+            IUnitOfWork uow, IMapper mapper, IHttpContextAccessor hca)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _emailSender = emailSender;
+            _service = new CmsService(uow, mapper, hca, userManager);
         }
 
         public string Username { get; set; }
@@ -40,6 +45,12 @@ namespace CmsEngine.Ui.Areas.Identity.Pages.Account.Manage
 
         public class InputModel
         {
+            public string Username { get; set; }
+
+            public string Name { get; set; }
+
+            public string Surname { get; set; }
+
             [Required]
             [EmailAddress]
             public string Email { get; set; }
@@ -51,6 +62,8 @@ namespace CmsEngine.Ui.Areas.Identity.Pages.Account.Manage
 
         public async Task<IActionResult> OnGetAsync()
         {
+            ViewData["CurrentUser"] = _service?.CurrentUser;
+
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
             {
@@ -65,6 +78,9 @@ namespace CmsEngine.Ui.Areas.Identity.Pages.Account.Manage
 
             Input = new InputModel
             {
+                Username = user.UserName,
+                Name = user.Name,
+                Surname = user.Surname,
                 Email = email,
                 PhoneNumber = phoneNumber
             };
@@ -109,6 +125,13 @@ namespace CmsEngine.Ui.Areas.Identity.Pages.Account.Manage
                 }
             }
 
+            if (Input.Name != user.Name || Input.Surname != user.Surname)
+            {
+                user.Name = Input.Name;
+                user.Surname = Input.Surname;
+                await _userManager.UpdateAsync(user);
+            }
+
             await _signInManager.RefreshSignInAsync(user);
             StatusMessage = "Your profile has been updated";
             return RedirectToPage();
@@ -136,10 +159,7 @@ namespace CmsEngine.Ui.Areas.Identity.Pages.Account.Manage
                 pageHandler: null,
                 values: new { userId = userId, code = code },
                 protocol: Request.Scheme);
-            await _emailSender.SendEmailAsync(
-                email,
-                "Confirm your email",
-                $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+            await _emailSender.SendEmailConfirmationAsync(email, HtmlEncoder.Default.Encode(callbackUrl));
 
             StatusMessage = "Verification email sent. Please check your email.";
             return RedirectToPage();

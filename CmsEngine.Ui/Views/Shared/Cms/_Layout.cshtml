@@ -76,7 +76,7 @@
                     @*<div class="dropdown-header text-center">
                             <strong>Account</strong>
                         </div>*@
-                    <a class="dropdown-item" asp-area="Cms" asp-controller="ManageProfile" asp-action="Index"><i class="fa fa-user"></i> Profile</a>
+                    <a class="dropdown-item" asp-area="Identity" asp-controller="Account" asp-action="Manage"><i class="fa fa-user"></i> Profile</a>
                     <a class="dropdown-item" asp-area="Cms" asp-controller="ManageProfile" asp-action="ChangePassword"><i class="fa fa-key"></i> Change password</a>
                     @*<a class="dropdown-item" href="#"><i class="fa fa-bell-o"></i> Updates<span class="badge badge-info">42</span></a>
                         <a class="dropdown-item" href="#"><i class="fa fa-envelope-o"></i> Messages<span class="badge badge-success">42</span></a>
@@ -138,7 +138,7 @@
         <span class="ml-auto"><a href="http://coreui.io">CoreUI</a> template by creativeLabs</span>
     </footer>
 
-    @await Html.PartialAsync("_Dialog")
+    @await Html.PartialAsync("Cms/_Dialog")
 
     <script src="~/js/vendors/jquery.min.js"></script>
     <script src="~/js/vendors/popper.min.js"></script>
