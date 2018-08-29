@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
+using CmsEngine.Data.AccessLayer;
 using CmsEngine.Data.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -15,15 +15,18 @@ namespace CmsEngine.Ui.Areas.Identity.Pages.Account.Manage
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly ILogger<ChangePasswordModel> _logger;
+        private readonly CmsService _service;
 
         public ChangePasswordModel(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
-            ILogger<ChangePasswordModel> logger)
+            ILogger<ChangePasswordModel> logger,
+            IUnitOfWork uow, IMapper mapper, IHttpContextAccessor hca)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _logger = logger;
+            _service = new CmsService(uow, mapper, hca, userManager);
         }
 
         [BindProperty]
@@ -53,6 +56,8 @@ namespace CmsEngine.Ui.Areas.Identity.Pages.Account.Manage
 
         public async Task<IActionResult> OnGetAsync()
         {
+            ViewData["CurrentUser"] = _service?.CurrentUser;
+
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
             {
@@ -70,6 +75,8 @@ namespace CmsEngine.Ui.Areas.Identity.Pages.Account.Manage
 
         public async Task<IActionResult> OnPostAsync()
         {
+            ViewData["CurrentUser"] = _service?.CurrentUser;
+
             if (!ModelState.IsValid)
             {
                 return Page();
