@@ -92,6 +92,8 @@ namespace CmsEngine.Ui.Areas.Identity.Pages.Account.Manage
 
         public async Task<IActionResult> OnPostAsync()
         {
+            ViewData["CurrentUser"] = _service?.CurrentUser;
+
             if (!ModelState.IsValid)
             {
                 return Page();
