@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using System.Web;
 using System.Xml.Linq;
 using AutoMapper;
 using CmsEngine.Attributes;
@@ -323,7 +324,7 @@ namespace CmsEngine
 
         private string PrepareProperty(IViewModel item, PropertyInfo property)
         {
-            var propertyValue = item.GetType().GetProperty(property.Name).GetValue(item)?.ToString() ?? "";
+            var propertyValue = HttpUtility.HtmlEncode(item.GetType().GetProperty(property.Name).GetValue(item)?.ToString()) ?? "";
 
             if (property.PropertyType.Name == "DocumentStatus")
             {
