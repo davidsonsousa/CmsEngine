@@ -323,26 +323,35 @@ namespace CmsEngine
 
         private string PrepareProperty(IViewModel item, PropertyInfo property)
         {
-            var propertyValue = item.GetType().GetProperty(property.Name).GetValue(item)?.ToString() ?? "";
+            string propertyValue;
 
-            if (property.PropertyType.Name == "DocumentStatus")
+            switch (property.PropertyType.Name)
             {
-                GeneralStatus generalStatus;
-                switch (propertyValue)
-                {
-                    case "Published":
-                        generalStatus = GeneralStatus.Success;
-                        break;
-                    case "PendingApproval":
-                        generalStatus = GeneralStatus.Warning;
-                        break;
-                    case "Draft":
-                    default:
-                        generalStatus = GeneralStatus.Info;
-                        break;
-                }
+                case "DocumentStatus":
+                    GeneralStatus generalStatus;
+                    string documentStatus = item.GetType().GetProperty(property.Name).GetValue(item)?.ToString() ?? "";
+                    switch (documentStatus)
+                    {
+                        case "Published":
+                            generalStatus = GeneralStatus.Success;
+                            break;
+                        case "PendingApproval":
+                            generalStatus = GeneralStatus.Warning;
+                            break;
+                        default:
+                            generalStatus = GeneralStatus.Info;
+                            break;
+                    }
 
-                propertyValue = $"<span class=\"label label-{generalStatus.ToString().ToLowerInvariant()}\">{propertyValue.ToEnum<DocumentStatus>().GetName()}</status-label>" ?? "";
+                    propertyValue = $"<span class=\"label label-{generalStatus.ToString().ToLowerInvariant()}\">{documentStatus.ToEnum<DocumentStatus>().GetName()}</status-label>";
+                    break;
+                case "UserViewModel":
+                    var author = ((UserViewModel)item.GetType().GetProperty(property.Name).GetValue(item));
+                    propertyValue = author?.FullName ?? "";
+                    break;
+                default:
+                    propertyValue = item.GetType().GetProperty(property.Name).GetValue(item)?.ToString() ?? "";
+                    break;
             }
 
             return propertyValue;
