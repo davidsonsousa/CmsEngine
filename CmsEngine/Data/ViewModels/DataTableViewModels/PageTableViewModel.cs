@@ -17,7 +17,7 @@ namespace CmsEngine.Data.ViewModels.DataTableViewModels
         public string DocumentContent { get; set; }
 
         [Searchable, Orderable, ShowOnDataTable(3)]
-        public string Author { get; set; }
+        public UserViewModel Author { get; set; }
 
         [Orderable, ShowOnDataTable(5)]
         public DocumentStatus Status { get; set; }
