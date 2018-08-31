@@ -94,13 +94,6 @@ namespace CmsEngine.Data.Models
             //b.Property(model => model.DocumentContent)
             //    .IsRequired();
 
-            b.Property(model => model.AuthorId)
-                .HasMaxLength(36)
-                .IsRequired();
-
-            b.Property(model => model.Author)
-                .IsRequired();
-
             b.Property(model => model.PublishedOn)
                 .IsRequired();
 
@@ -145,9 +138,6 @@ namespace CmsEngine.Data.Models
             //b.Property(model => model.DocumentContent)
             //    .IsRequired();
 
-            b.Property(model => model.Author)
-                .HasMaxLength(20)
-                .IsRequired();
 
             b.Property(model => model.PublishedOn)
                 .IsRequired();
@@ -242,6 +232,32 @@ namespace CmsEngine.Data.Models
             b.HasOne(model => model.Tag)
                 .WithMany(c => c.PostTags)
                 .HasForeignKey(model => model.TagId);
+        }
+
+        public static void ConfigurePostApplicationUser(EntityTypeBuilder<PostApplicationUser> b)
+        {
+            b.HasKey(model => new { model.PostId, model.ApplicationUserId });
+
+            b.HasOne(model => model.Post)
+                .WithMany(p => p.PostApplicationUsers)
+                .HasForeignKey(model => model.PostId);
+
+            b.HasOne(model => model.ApplicationUser)
+                .WithMany(c => c.PostApplicationUsers)
+                .HasForeignKey(model => model.ApplicationUserId);
+        }
+
+        public static void ConfigurePageApplicationUser(EntityTypeBuilder<PageApplicationUser> b)
+        {
+            b.HasKey(model => new { model.PageId, model.ApplicationUserId });
+
+            b.HasOne(model => model.Page)
+                .WithMany(p => p.PageApplicationUsers)
+                .HasForeignKey(model => model.PageId);
+
+            b.HasOne(model => model.ApplicationUser)
+                .WithMany(c => c.PageApplicationUsers)
+                .HasForeignKey(model => model.ApplicationUserId);
         }
     }
 }
