@@ -25,8 +25,10 @@
                         <h1>@selectedPost.Title<a href="#"><i class="fa fa-bookmark-o"></i></a></h1>
                         <div class="post-footer d-flex align-items-center flex-column flex-sm-row">
                             <a href="#" class="author d-flex align-items-center flex-wrap">
-                                <div class="avatar"><img src="https://placeimg.com/100/100/people" alt="@selectedPost.Author" class="img-fluid"></div>
-                                <div class="title"><span>@selectedPost.Author</span></div>
+                                <div class="avatar">
+                                    <gravatar email-address="@selectedPost.Author.Email" image-size="40" additional-css-classes="img-avatar"></gravatar>
+                                </div>
+                                <div class="title"><span>@selectedPost.Author.FullName</span></div>
                             </a>
                             <div class="d-flex align-items-center flex-wrap">
                                 <div class="date"><i class="icon-clock"></i> @selectedPost.PublishedOn.ToShortDateString()</div>

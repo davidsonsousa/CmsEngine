@@ -201,12 +201,6 @@ namespace CmsEngine
 
             var pageEditModel = (PageEditModel)editModel;
 
-            // The field is varchar(20)
-            pageEditModel.Author = CurrentUser.FullName.Length > 20
-                                   ? CurrentUser.FullName.Substring(0, 20)
-                                   : CurrentUser.FullName;
-            pageEditModel.AuthorId = CurrentUser.VanityId.ToString();
-
             if (editModel.IsNew)
             {
                 page = _mapper.Map<PageEditModel, Page>((PageEditModel)editModel);
@@ -221,6 +215,25 @@ namespace CmsEngine
                 page.WebsiteId = Instance.Id;
 
                 _unitOfWork.Pages.Update(page);
+            }
+
+            PrepareRelatedAuthorsForPage(page);
+        }
+
+        private void PrepareRelatedAuthorsForPage(Page page)
+        {
+            // TODO: Improve the logic of this method
+
+            if (page.PageApplicationUsers == null || page.PageApplicationUsers.Count == 0)
+            {
+                _unitOfWork.GetRepositoryMany<PageApplicationUser>()
+                           .InsertMany(new List<PageApplicationUser>
+                           {
+                               new PageApplicationUser {
+                                   ApplicationUserId = CurrentUser.VanityId.ToString(),
+                                   Page = page
+                               }
+                           });
             }
         }
 

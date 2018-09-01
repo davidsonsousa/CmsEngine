@@ -74,7 +74,7 @@ namespace CmsEngine.Migrations
                     b.ToTable("AspNetUsers");
 
                     b.HasData(
-                        new { Id = "55e64a12-a18c-4585-b82a-9bf94777a939", AccessFailedCount = 0, ConcurrencyStamp = "6b027369-fa6a-48fb-b7be-fc4c5b5e561d", Email = "john@doe.com", EmailConfirmed = true, LockoutEnabled = false, Name = "John", NormalizedEmail = "JOHN@DOE.COM", NormalizedUserName = "JOHN@DOE.COM", PasswordHash = "AQAAAAEAACcQAAAAEGIUaLe7RWZGw8Tr5/xoUMOooAzJsLFw550fDqZkrbk8CD+urHQzYjK1xY8vcDMekw==", PhoneNumberConfirmed = false, SecurityStamp = "NBTDBYKTNLGHKQ3HI7YFEHPQN5YRXWQC", Surname = "Doe", TwoFactorEnabled = false, UserName = "john@doe.com" }
+                        new { Id = "0dca330d-37a1-44e9-af4f-db9f976ee2ae", AccessFailedCount = 0, ConcurrencyStamp = "0e2523ab-868d-43c6-bc0d-e695786d8809", Email = "john@doe.com", EmailConfirmed = true, LockoutEnabled = false, Name = "John", NormalizedEmail = "JOHN@DOE.COM", NormalizedUserName = "JOHN@DOE.COM", PasswordHash = "AQAAAAEAACcQAAAAEGIUaLe7RWZGw8Tr5/xoUMOooAzJsLFw550fDqZkrbk8CD+urHQzYjK1xY8vcDMekw==", PhoneNumberConfirmed = false, SecurityStamp = "NBTDBYKTNLGHKQ3HI7YFEHPQN5YRXWQC", Surname = "Doe", TwoFactorEnabled = false, UserName = "john@doe.com" }
                     );
                 });
 
@@ -120,7 +120,7 @@ namespace CmsEngine.Migrations
                     b.ToTable("Categories");
 
                     b.HasData(
-                        new { Id = 1, DateCreated = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), DateModified = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), IsDeleted = false, Name = "Category example", Slug = "category-example", VanityId = new Guid("3b552d79-c6c6-42dd-ad42-b104fa895a3b"), WebsiteId = 1 }
+                        new { Id = 1, DateCreated = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), DateModified = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), IsDeleted = false, Name = "Category example", Slug = "category-example", VanityId = new Guid("1e6229ee-e0e4-4bfc-8e9e-d332c2a4bdb0"), WebsiteId = 1 }
                     );
                 });
 
@@ -129,14 +129,6 @@ namespace CmsEngine.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Author")
-                        .IsRequired()
-                        .HasMaxLength(50);
-
-                    b.Property<string>("AuthorId")
-                        .IsRequired()
-                        .HasMaxLength(36);
 
                     b.Property<DateTime>("DateCreated");
 
@@ -181,11 +173,28 @@ namespace CmsEngine.Migrations
                     b.ToTable("Pages");
 
                     b.HasData(
-                        new { Id = 1, Author = "john@doe.com", AuthorId = "55e64a12-a18c-4585-b82a-9bf94777a939", DateCreated = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), DateModified = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), Description = "This is a sample page from a sample website", DocumentContent = @"<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed risus libero, egestas vel tempus id, venenatis nec tellus. Nullam hendrerit id magna quis venenatis. Pellentesque rhoncus leo vitae turpis tristique, nec placerat tellus scelerisque. Aenean vitae rhoncus urna, non posuere elit. Nullam quam libero, porttitor in lectus convallis, pellentesque finibus libero. Suspendisse potenti. Fusce quis purus egestas, malesuada massa sed, dignissim purus. Curabitur vitae rhoncus nulla, sit amet dignissim quam.</p>
+                        new { Id = 1, DateCreated = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), DateModified = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), Description = "This is a sample page from a sample website", DocumentContent = @"<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed risus libero, egestas vel tempus id, venenatis nec tellus. Nullam hendrerit id magna quis venenatis. Pellentesque rhoncus leo vitae turpis tristique, nec placerat tellus scelerisque. Aenean vitae rhoncus urna, non posuere elit. Nullam quam libero, porttitor in lectus convallis, pellentesque finibus libero. Suspendisse potenti. Fusce quis purus egestas, malesuada massa sed, dignissim purus. Curabitur vitae rhoncus nulla, sit amet dignissim quam.</p>
                                        <p>Mauris lorem urna, convallis in enim nec, tristique ullamcorper nisl. Fusce nec tellus et arcu imperdiet ullamcorper vestibulum vitae mi. Sed bibendum molestie dolor sit amet rhoncus.Duis consectetur convallis auctor. In hac habitasse platea dictumst.Duis lorem nibh, mattis ut purus interdum, scelerisque molestie est. Nullam molestie a est vel ornare. Maecenas rhoncus accumsan ligula, at pretium purus tempus ut. Aliquam erat nulla, pretium vel eros vitae, blandit aliquam nibh. Nulla tincidunt, justo et ullamcorper dictum, augue lectus dictum ligula, eget rutrum sem nibh non felis.Aenean elementum, sem sit amet pulvinar tempus, neque eros faucibus turpis, quis molestie nisi libero quis purus.</p>
                                        <p>Donec quam massa, tincidunt eu lacus in, lacinia hendrerit urna. Pellentesque pretium orci a felis tincidunt, sit amet volutpat est dapibus. Donec laoreet, massa in imperdiet laoreet, enim ligula auctor est, non imperdiet nisi diam vitae quam. Integer nec porttitor ante. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.Morbi non pretium risus, a lobortis eros. Etiam blandit diam tortor. Ut feugiat eros id erat auctor, ut vehicula odio vestibulum.</p>
                                        <p>Nunc sed ex sed diam euismod eleifend. Proin blandit lorem sed placerat fermentum. Curabitur non gravida felis, ac sollicitudin nibh. Morbi ornare sapien vitae nisl condimentum cursus.Vivamus bibendum condimentum metus, ut gravida orci bibendum maximus. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.Duis varius, tortor ac placerat faucibus, lectus mauris bibendum elit, id eleifend leo diam ac nulla.Aenean egestas urna facilisis purus ullamcorper vestibulum.Etiam commodo suscipit turpis, quis lobortis metus posuere sed.</p>
-                                       <p>Praesent in augue sit amet tortor ultricies maximus eu ac dui.Pellentesque et congue elit. Suspendisse potenti. Donec facilisis eu magna nec bibendum. Nullam in dignissim elit. Integer laoreet odio massa, vel vestibulum mauris varius et. Ut non ex sit amet nisl mollis laoreet. </p> ", IsDeleted = false, PublishedOn = new DateTime(2018, 8, 25, 14, 55, 36, 337, DateTimeKind.Local), Slug = "sample-page", Status = 0, Title = "Sample page", VanityId = new Guid("d9e69e30-8822-4b17-8015-eb007cef4400"), WebsiteId = 1 }
+                                       <p>Praesent in augue sit amet tortor ultricies maximus eu ac dui.Pellentesque et congue elit. Suspendisse potenti. Donec facilisis eu magna nec bibendum. Nullam in dignissim elit. Integer laoreet odio massa, vel vestibulum mauris varius et. Ut non ex sit amet nisl mollis laoreet. </p> ", IsDeleted = false, PublishedOn = new DateTime(2018, 9, 1, 18, 2, 43, 318, DateTimeKind.Local), Slug = "sample-page", Status = 0, Title = "Sample page", VanityId = new Guid("88efcb57-6af9-4766-879e-beefff98dd05"), WebsiteId = 1 }
+                    );
+                });
+
+            modelBuilder.Entity("CmsEngine.Data.Models.PageApplicationUser", b =>
+                {
+                    b.Property<int>("PageId");
+
+                    b.Property<string>("ApplicationUserId");
+
+                    b.HasKey("PageId", "ApplicationUserId");
+
+                    b.HasIndex("ApplicationUserId");
+
+                    b.ToTable("PageAspNetUser");
+
+                    b.HasData(
+                        new { PageId = 1, ApplicationUserId = "0dca330d-37a1-44e9-af4f-db9f976ee2ae" }
                     );
                 });
 
@@ -194,12 +203,6 @@ namespace CmsEngine.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Author")
-                        .IsRequired()
-                        .HasMaxLength(20);
-
-                    b.Property<string>("AuthorId");
 
                     b.Property<DateTime>("DateCreated");
 
@@ -244,11 +247,28 @@ namespace CmsEngine.Migrations
                     b.ToTable("Posts");
 
                     b.HasData(
-                        new { Id = 1, Author = "john@doe.com", AuthorId = "55e64a12-a18c-4585-b82a-9bf94777a939", DateCreated = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), DateModified = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), Description = "Lorem ipsum dolor sit amet", DocumentContent = @"<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed risus libero, egestas vel tempus id, venenatis nec tellus. Nullam hendrerit id magna quis venenatis. Pellentesque rhoncus leo vitae turpis tristique, nec placerat tellus scelerisque. Aenean vitae rhoncus urna, non posuere elit. Nullam quam libero, porttitor in lectus convallis, pellentesque finibus libero. Suspendisse potenti. Fusce quis purus egestas, malesuada massa sed, dignissim purus. Curabitur vitae rhoncus nulla, sit amet dignissim quam.</p>
+                        new { Id = 1, DateCreated = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), DateModified = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), Description = "Lorem ipsum dolor sit amet", DocumentContent = @"<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed risus libero, egestas vel tempus id, venenatis nec tellus. Nullam hendrerit id magna quis venenatis. Pellentesque rhoncus leo vitae turpis tristique, nec placerat tellus scelerisque. Aenean vitae rhoncus urna, non posuere elit. Nullam quam libero, porttitor in lectus convallis, pellentesque finibus libero. Suspendisse potenti. Fusce quis purus egestas, malesuada massa sed, dignissim purus. Curabitur vitae rhoncus nulla, sit amet dignissim quam.</p>
                                        <p>Mauris lorem urna, convallis in enim nec, tristique ullamcorper nisl. Fusce nec tellus et arcu imperdiet ullamcorper vestibulum vitae mi. Sed bibendum molestie dolor sit amet rhoncus.Duis consectetur convallis auctor. In hac habitasse platea dictumst.Duis lorem nibh, mattis ut purus interdum, scelerisque molestie est. Nullam molestie a est vel ornare. Maecenas rhoncus accumsan ligula, at pretium purus tempus ut. Aliquam erat nulla, pretium vel eros vitae, blandit aliquam nibh. Nulla tincidunt, justo et ullamcorper dictum, augue lectus dictum ligula, eget rutrum sem nibh non felis.Aenean elementum, sem sit amet pulvinar tempus, neque eros faucibus turpis, quis molestie nisi libero quis purus.</p>
                                        <p>Donec quam massa, tincidunt eu lacus in, lacinia hendrerit urna. Pellentesque pretium orci a felis tincidunt, sit amet volutpat est dapibus. Donec laoreet, massa in imperdiet laoreet, enim ligula auctor est, non imperdiet nisi diam vitae quam. Integer nec porttitor ante. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.Morbi non pretium risus, a lobortis eros. Etiam blandit diam tortor. Ut feugiat eros id erat auctor, ut vehicula odio vestibulum.</p>
                                        <p>Nunc sed ex sed diam euismod eleifend. Proin blandit lorem sed placerat fermentum. Curabitur non gravida felis, ac sollicitudin nibh. Morbi ornare sapien vitae nisl condimentum cursus.Vivamus bibendum condimentum metus, ut gravida orci bibendum maximus. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.Duis varius, tortor ac placerat faucibus, lectus mauris bibendum elit, id eleifend leo diam ac nulla.Aenean egestas urna facilisis purus ullamcorper vestibulum.Etiam commodo suscipit turpis, quis lobortis metus posuere sed.</p>
-                                       <p>Praesent in augue sit amet tortor ultricies maximus eu ac dui.Pellentesque et congue elit. Suspendisse potenti. Donec facilisis eu magna nec bibendum. Nullam in dignissim elit. Integer laoreet odio massa, vel vestibulum mauris varius et. Ut non ex sit amet nisl mollis laoreet. </p> ", IsDeleted = false, PublishedOn = new DateTime(2018, 8, 25, 14, 55, 36, 338, DateTimeKind.Local), Slug = "lorem-ipsum", Status = 0, Title = "Lorem Ipsum", VanityId = new Guid("019793bf-9da3-4273-9b00-4f7a8d8ca2d8"), WebsiteId = 1 }
+                                       <p>Praesent in augue sit amet tortor ultricies maximus eu ac dui.Pellentesque et congue elit. Suspendisse potenti. Donec facilisis eu magna nec bibendum. Nullam in dignissim elit. Integer laoreet odio massa, vel vestibulum mauris varius et. Ut non ex sit amet nisl mollis laoreet. </p> ", IsDeleted = false, PublishedOn = new DateTime(2018, 9, 1, 18, 2, 43, 318, DateTimeKind.Local), Slug = "lorem-ipsum", Status = 0, Title = "Lorem Ipsum", VanityId = new Guid("3c2c179d-61bb-46fb-bbc4-f7deeb91d151"), WebsiteId = 1 }
+                    );
+                });
+
+            modelBuilder.Entity("CmsEngine.Data.Models.PostApplicationUser", b =>
+                {
+                    b.Property<int>("PostId");
+
+                    b.Property<string>("ApplicationUserId");
+
+                    b.HasKey("PostId", "ApplicationUserId");
+
+                    b.HasIndex("ApplicationUserId");
+
+                    b.ToTable("PostAspNetUser");
+
+                    b.HasData(
+                        new { PostId = 1, ApplicationUserId = "0dca330d-37a1-44e9-af4f-db9f976ee2ae" }
                     );
                 });
 
@@ -394,7 +414,7 @@ namespace CmsEngine.Migrations
                     b.ToTable("Websites");
 
                     b.HasData(
-                        new { Id = 1, ArticleLimit = 10, Culture = "en-US", DateCreated = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), DateFormat = "MM/dd/yyyy", DateModified = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), Description = "This is a sample website", IsDeleted = false, Name = "Sample Website", SiteUrl = "cmsengine.test", UrlFormat = "http://[site_url]/[type]/[slug]", VanityId = new Guid("15f2a3eb-1bff-4ee4-92ef-a83dfd6df086") }
+                        new { Id = 1, ArticleLimit = 10, Culture = "en-US", DateCreated = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), DateFormat = "MM/dd/yyyy", DateModified = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), Description = "This is a sample website", IsDeleted = false, Name = "Sample Website", SiteUrl = "cmsengine.test", UrlFormat = "http://[site_url]/[type]/[slug]", VanityId = new Guid("446952de-3e52-4bfa-8481-a19be00782b7") }
                     );
                 });
 
@@ -464,11 +484,9 @@ namespace CmsEngine.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.Property<string>("LoginProvider")
-                        .HasMaxLength(128);
+                    b.Property<string>("LoginProvider");
 
-                    b.Property<string>("ProviderKey")
-                        .HasMaxLength(128);
+                    b.Property<string>("ProviderKey");
 
                     b.Property<string>("ProviderDisplayName");
 
@@ -499,11 +517,9 @@ namespace CmsEngine.Migrations
                 {
                     b.Property<string>("UserId");
 
-                    b.Property<string>("LoginProvider")
-                        .HasMaxLength(128);
+                    b.Property<string>("LoginProvider");
 
-                    b.Property<string>("Name")
-                        .HasMaxLength(128);
+                    b.Property<string>("Name");
 
                     b.Property<string>("Value");
 
@@ -528,11 +544,37 @@ namespace CmsEngine.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
+            modelBuilder.Entity("CmsEngine.Data.Models.PageApplicationUser", b =>
+                {
+                    b.HasOne("CmsEngine.Data.Models.ApplicationUser", "ApplicationUser")
+                        .WithMany("PageApplicationUsers")
+                        .HasForeignKey("ApplicationUserId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("CmsEngine.Data.Models.Page", "Page")
+                        .WithMany("PageApplicationUsers")
+                        .HasForeignKey("PageId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
             modelBuilder.Entity("CmsEngine.Data.Models.Post", b =>
                 {
                     b.HasOne("CmsEngine.Data.Models.Website", "Website")
                         .WithMany("Posts")
                         .HasForeignKey("WebsiteId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("CmsEngine.Data.Models.PostApplicationUser", b =>
+                {
+                    b.HasOne("CmsEngine.Data.Models.ApplicationUser", "ApplicationUser")
+                        .WithMany("PostApplicationUsers")
+                        .HasForeignKey("ApplicationUserId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("CmsEngine.Data.Models.Post", "Post")
+                        .WithMany("PostApplicationUsers")
+                        .HasForeignKey("PostId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

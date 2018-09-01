@@ -54,8 +54,6 @@ namespace CmsEngine.Extensions
                 Status = DocumentStatus.Published,
                 PublishedOn = DateTime.Now,
                 DocumentContent = documentContent,
-                Author = applicationUser.UserName,
-                AuthorId = applicationUser.Id,
                 WebsiteId = website.Id
             };
 
@@ -69,8 +67,6 @@ namespace CmsEngine.Extensions
                 Status = DocumentStatus.Published,
                 PublishedOn = DateTime.Now,
                 DocumentContent = documentContent,
-                Author = applicationUser.UserName,
-                AuthorId = applicationUser.Id,
                 WebsiteId = website.Id
             };
 
@@ -89,12 +85,26 @@ namespace CmsEngine.Extensions
                 PostId = post.Id
             };
 
+            var postApplicationUser = new PostApplicationUser
+            {
+                ApplicationUserId = applicationUser.Id,
+                PostId = post.Id
+            };
+
+            var pageApplicationUser = new PageApplicationUser
+            {
+                ApplicationUserId = applicationUser.Id,
+                PageId = post.Id
+            };
+
             builder.Entity<Website>().HasData(website);
             builder.Entity<Page>().HasData(page);
             builder.Entity<Post>().HasData(post);
             builder.Entity<Category>().HasData(category);
             builder.Entity<PostCategory>().HasData(postCategory);
             builder.Entity<ApplicationUser>().HasData(applicationUser);
+            builder.Entity<PostApplicationUser>().HasData(postApplicationUser);
+            builder.Entity<PageApplicationUser>().HasData(pageApplicationUser);
         }
     }
 }
