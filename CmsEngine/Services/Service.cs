@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
-using System.Web;
 using System.Xml.Linq;
 using AutoMapper;
 using CmsEngine.Attributes;
@@ -18,6 +17,7 @@ using CmsEngine.Utils;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using static System.Web.HttpUtility;
 
 namespace CmsEngine
 {
@@ -348,10 +348,10 @@ namespace CmsEngine
                     break;
                 case "UserViewModel":
                     var author = ((UserViewModel)item.GetType().GetProperty(property.Name).GetValue(item));
-                    propertyValue = author?.FullName ?? "";
+                    propertyValue = HtmlEncode(author?.FullName) ?? "";
                     break;
                 default:
-                    propertyValue = item.GetType().GetProperty(property.Name).GetValue(item)?.ToString() ?? "";
+                    propertyValue = HtmlEncode(item.GetType().GetProperty(property.Name).GetValue(item)?.ToString()) ?? "";
                     break;
             }
 
