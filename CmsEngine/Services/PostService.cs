@@ -256,12 +256,6 @@ namespace CmsEngine
             Post post;
             var postEditModel = (PostEditModel)editModel;
 
-            // The field is varchar(20)
-            postEditModel.Author = CurrentUser.FullName.Length > 20
-                                   ? CurrentUser.FullName.Substring(0, 20)
-                                   : CurrentUser.FullName;
-            postEditModel.AuthorId = CurrentUser.VanityId.ToString();
-
             if (editModel.IsNew)
             {
                 post = _mapper.Map<PostEditModel, Post>(postEditModel);
@@ -277,8 +271,26 @@ namespace CmsEngine
                 _unitOfWork.Posts.Update(post);
             }
 
+            PrepareRelatedAuthorsForPost(post);
             PrepareRelatedCategories(post, postEditModel);
             PrepareRelatedTags(post, postEditModel);
+        }
+
+        private void PrepareRelatedAuthorsForPost(Post post)
+        {
+            // TODO: Improve the logic of this method
+
+            if (post.PostApplicationUsers == null || post.PostApplicationUsers.Count == 0)
+            {
+                _unitOfWork.GetRepositoryMany<PostApplicationUser>()
+                           .InsertMany(new List<PostApplicationUser>
+                           {
+                               new PostApplicationUser{
+                                   ApplicationUserId = CurrentUser.VanityId.ToString(),
+                                   Post = post
+                               }
+                           });
+            }
         }
 
         private void PrepareRelatedCategories(Post post, PostEditModel postEditModel)
