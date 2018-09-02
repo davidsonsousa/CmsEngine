@@ -17,12 +17,12 @@ namespace CmsEngine.Data.ViewModels.DataTableViewModels
         public string DocumentContent { get; set; }
 
         [Searchable, Orderable, ShowOnDataTable(3)]
-        public string Author { get; set; }
+        public UserViewModel Author { get; set; }
 
-        [Searchable, Orderable, ShowOnDataTable(5)]
+        [Orderable, ShowOnDataTable(5)]
         public DocumentStatus Status { get; set; }
 
-        [Searchable, Orderable, ShowOnDataTable(4)]
+        [Orderable, ShowOnDataTable(4)]
         public DateTime PublishedOn { get; set; }
     }
 }

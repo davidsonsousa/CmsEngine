@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 
 namespace CmsEngine.Data.Models
 {
@@ -12,6 +12,8 @@ namespace CmsEngine.Data.Models
         public virtual ICollection<PostCategory> PostCategories { get; set; }
 
         public virtual ICollection<PostTag> PostTags { get; set; }
+
+        public virtual ICollection<PostApplicationUser> PostApplicationUsers { get; set; }
 
         #endregion
 

@@ -35,6 +35,8 @@ namespace CmsEngine.Data
             builder.Entity<Category>(ModelConfiguration.ConfigureCategory);
             builder.Entity<PostCategory>(ModelConfiguration.ConfigurePostCategory);
             builder.Entity<PostTag>(ModelConfiguration.ConfigurePostTag);
+            builder.Entity<PostApplicationUser>(ModelConfiguration.ConfigurePostApplicationUser);
+            builder.Entity<PageApplicationUser>(ModelConfiguration.ConfigurePageApplicationUser);
 
             builder.Seed();
 

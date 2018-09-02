@@ -17,6 +17,7 @@ using CmsEngine.Utils;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using static System.Web.HttpUtility;
 
 namespace CmsEngine
 {
@@ -172,11 +173,11 @@ namespace CmsEngine
             return returnValue;
         }
 
-        public TableViewModel BuildDataTable<T>(IEnumerable<IViewModel> listItems) where T : BaseModel
+        public TableViewModel BuildDataTable<T>(IEnumerable<IViewModel> listItems, int start, int size) where T : BaseModel
         {
             var listString = new List<List<string>>();
 
-            foreach (var item in listItems)
+            foreach (var item in listItems.Skip(start).Take(size))
             {
                 // Get the properties which should appear in the DataTable
                 var itemProperties = item.GetType()
@@ -323,26 +324,35 @@ namespace CmsEngine
 
         private string PrepareProperty(IViewModel item, PropertyInfo property)
         {
-            var propertyValue = item.GetType().GetProperty(property.Name).GetValue(item)?.ToString() ?? "";
+            string propertyValue;
 
-            if (property.PropertyType.Name == "DocumentStatus")
+            switch (property.PropertyType.Name)
             {
-                GeneralStatus generalStatus;
-                switch (propertyValue)
-                {
-                    case "Published":
-                        generalStatus = GeneralStatus.Success;
-                        break;
-                    case "PendingApproval":
-                        generalStatus = GeneralStatus.Warning;
-                        break;
-                    case "Draft":
-                    default:
-                        generalStatus = GeneralStatus.Info;
-                        break;
-                }
+                case "DocumentStatus":
+                    GeneralStatus generalStatus;
+                    string documentStatus = item.GetType().GetProperty(property.Name).GetValue(item)?.ToString() ?? "";
+                    switch (documentStatus)
+                    {
+                        case "Published":
+                            generalStatus = GeneralStatus.Success;
+                            break;
+                        case "PendingApproval":
+                            generalStatus = GeneralStatus.Warning;
+                            break;
+                        default:
+                            generalStatus = GeneralStatus.Info;
+                            break;
+                    }
 
-                propertyValue = $"<span class=\"label label-{generalStatus.ToString().ToLowerInvariant()}\">{propertyValue.ToEnum<DocumentStatus>().GetName()}</status-label>" ?? "";
+                    propertyValue = $"<span class=\"label label-{generalStatus.ToString().ToLowerInvariant()}\">{documentStatus.ToEnum<DocumentStatus>().GetName()}</status-label>";
+                    break;
+                case "UserViewModel":
+                    var author = ((UserViewModel)item.GetType().GetProperty(property.Name).GetValue(item));
+                    propertyValue = HtmlEncode(author?.FullName) ?? "";
+                    break;
+                default:
+                    propertyValue = HtmlEncode(item.GetType().GetProperty(property.Name).GetValue(item)?.ToString()) ?? "";
+                    break;
             }
 
             return propertyValue;
