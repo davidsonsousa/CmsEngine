@@ -90,7 +90,7 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
             var filteredItems = service.FilterWebsite(parameters.Search.Value, service.GetAllWebsitesReadOnly<WebsiteTableViewModel>());
             var orderedItems = service.OrderWebsite(parameters.Order[0].Column, parameters.Order[0].Dir, filteredItems);
 
-            var dataTable = service.BuildDataTable<Website>(orderedItems);
+            var dataTable = service.BuildDataTable<Website>(orderedItems, parameters.Start, parameters.Length);
             dataTable.Draw = parameters.Draw;
 
             return Ok(dataTable);
