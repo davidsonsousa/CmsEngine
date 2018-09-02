@@ -90,7 +90,7 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
             var filteredItems = service.FilterTag(parameters.Search.Value, service.GetAllTagsReadOnly<TagTableViewModel>());
             var orderedItems = service.OrderTag(parameters.Order[0].Column, parameters.Order[0].Dir, filteredItems);
 
-            var dataTable = service.BuildDataTable<Tag>(orderedItems);
+            var dataTable = service.BuildDataTable<Tag>(orderedItems, parameters.Start, parameters.Length);
             dataTable.Draw = parameters.Draw;
 
             return Ok(dataTable);

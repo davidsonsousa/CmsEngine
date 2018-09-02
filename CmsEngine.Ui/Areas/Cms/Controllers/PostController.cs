@@ -90,7 +90,7 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
             var filteredItems = service.FilterPost(parameters.Search.Value, service.GetAllPostsReadOnly<PostTableViewModel>());
             var orderedItems = service.OrderPost(parameters.Order[0].Column, parameters.Order[0].Dir, filteredItems);
 
-            var dataTable = service.BuildDataTable<Post>(orderedItems);
+            var dataTable = service.BuildDataTable<Post>(orderedItems, parameters.Start, parameters.Length);
             dataTable.Draw = parameters.Draw;
 
             return Ok(dataTable);

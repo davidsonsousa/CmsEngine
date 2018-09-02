@@ -173,11 +173,11 @@ namespace CmsEngine
             return returnValue;
         }
 
-        public TableViewModel BuildDataTable<T>(IEnumerable<IViewModel> listItems) where T : BaseModel
+        public TableViewModel BuildDataTable<T>(IEnumerable<IViewModel> listItems, int start, int size) where T : BaseModel
         {
             var listString = new List<List<string>>();
 
-            foreach (var item in listItems)
+            foreach (var item in listItems.Skip(start).Take(size))
             {
                 // Get the properties which should appear in the DataTable
                 var itemProperties = item.GetType()
