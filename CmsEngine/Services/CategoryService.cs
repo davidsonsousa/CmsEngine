@@ -22,7 +22,11 @@ namespace CmsEngine
 
         public IEnumerable<T> GetCategoriesWithPostCount<T>() where T : IViewModel
         {
-            IEnumerable<Category> listItems = _unitOfWork.Categories.Get().OrderBy(o => o.Name).ToList();
+            IEnumerable<Category> listItems = _unitOfWork.Categories
+                                                            .Get(q => q.PostCategories.Any(pc => pc.Post.Status == DocumentStatus.Published
+                                                                                              && pc.Post.IsDeleted == false))
+                                                            .OrderBy(o => o.Name)
+                                                            .ToList();
 
             return _mapper.Map<IEnumerable<Category>, IEnumerable<T>>(listItems);
         }
