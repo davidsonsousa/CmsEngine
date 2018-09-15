@@ -51,7 +51,7 @@
                         }
 
                         @*
-                                <div class="posts-nav d-flex justify-content-between align-items-stretch flex-column flex-md-row">
+                            <div class="posts-nav d-flex justify-content-between align-items-stretch flex-column flex-md-row">
                                 <a href="#" class="prev-post text-left d-flex align-items-center">
                                     <div class="icon prev"><i class="fa fa-angle-left"></i></div>
                                     <div class="text">
@@ -68,11 +68,14 @@
                             </div>
                         *@
 
-                        <div class="fb-comments"
-                             data-href="@Url.Link("blogRoute", new {Controller = "Blog", Action = "Post", Slug = selectedPost.Slug })"
-                             data-width="100%"
-                             data-numposts="5">
-                        </div>
+                        @if (Model.ApiDetails.HasFacebookDetails)
+                        {
+                            <div class="fb-comments"
+                                 data-href="@Url.Link("blogRoute", new {Controller = "Blog", Action = "Post", Slug = selectedPost.Slug })"
+                                 data-width="100%"
+                                 data-numposts="5">
+                            </div>
+                        }
 
                     </div>
                 </div>
