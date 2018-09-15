@@ -32,7 +32,6 @@
                             </a>
                             <div class="d-flex align-items-center flex-wrap">
                                 <div class="date"><i class="icon-clock"></i> @selectedPost.PublishedOn.ToShortDateString()</div>
-                                <div class="views"><i class="icon-eye"></i> 500</div>
                                 <div class="comments meta-last">
                                     <i class="icon-comment"></i>
                                     <span class="fb-comments-count" data-href="@Url.Link("blogRoute", new {Controller = "Blog", Action = "Post", Slug = selectedPost.Slug })"></span>
