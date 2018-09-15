@@ -72,6 +72,11 @@ namespace CmsEngine
                                     Twitter = website.Twitter,
                                     Instagram = website.Instagram,
                                     LinkedIn = website.LinkedIn
+                                },
+                                ApiDetails = new ApiDetailsViewModel
+                                {
+                                    FacebookAppId = website.FacebookAppId,
+                                    FacebookApiVersion = website.FacebookApiVersion
                                 }
                             };
                         }

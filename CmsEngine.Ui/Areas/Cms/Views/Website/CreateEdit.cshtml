@@ -123,6 +123,20 @@
                             <span asp-validation-for="LinkedIn" class="text-danger"></span>
                         </div>
                     </div>
+                    <div class="form-group row">
+                        <label asp-for="FacebookAppId" class="col-md-3 form-control-label"></label>
+                        <div class="col-md-9">
+                            <input asp-for="FacebookAppId" class="form-control" />
+                            <span asp-validation-for="FacebookAppId" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label asp-for="FacebookApiVersion" class="col-md-3 form-control-label"></label>
+                        <div class="col-md-9">
+                            <input asp-for="FacebookApiVersion" class="form-control" />
+                            <span asp-validation-for="FacebookApiVersion" class="text-danger"></span>
+                        </div>
+                    </div>
                 </div>
                 <div class="card-footer">
                     <button type="submit" class="btn btn-primary"><i class="fa fa-dot-circle-o"></i> Save</button>

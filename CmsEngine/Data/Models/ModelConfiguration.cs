@@ -57,6 +57,12 @@ namespace CmsEngine.Data.Models
             b.Property(model => model.LinkedIn)
                 .HasMaxLength(20);
 
+            b.Property(model => model.FacebookAppId)
+                .HasMaxLength(30);
+
+            b.Property(model => model.FacebookApiVersion)
+                .HasMaxLength(10);
+
             b.Property(model => model.UserCreated)
                 .HasMaxLength(20);
 
@@ -84,7 +90,7 @@ namespace CmsEngine.Data.Models
                 .IsRequired();
 
             b.Property(model => model.Slug)
-                .HasMaxLength(25)
+                .HasMaxLength(100)
                 .IsRequired();
 
             b.Property(model => model.Description)
@@ -128,7 +134,7 @@ namespace CmsEngine.Data.Models
                 .IsRequired();
 
             b.Property(model => model.Slug)
-                .HasMaxLength(25)
+                .HasMaxLength(100)
                 .IsRequired();
 
             b.Property(model => model.Description)
