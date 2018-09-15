@@ -29,5 +29,9 @@ namespace CmsEngine.Data.Models
         public string Twitter { get; set; }
         public string Instagram { get; set; }
         public string LinkedIn { get; set; }
+
+        // Api configuration
+        public string FacebookAppId { get; set; }
+        public string FacebookApiVersion { get; set; }
     }
 }

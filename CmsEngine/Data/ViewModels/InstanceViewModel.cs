@@ -14,6 +14,7 @@ namespace CmsEngine.Data.ViewModels
         public string SiteUrl { get; set; }
         public int ArticleLimit { get; set; }
         public ContactDetailsViewModel ContactDetails { get; set; }
+        public ApiDetailsViewModel ApiDetails { get; set; }
         public PostViewModel SelectedPost { get; set; }
         public ContactForm ContactForm { get; set; }
 
