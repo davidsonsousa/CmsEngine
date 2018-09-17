@@ -1,7 +1,8 @@
 @model CmsEngine.Data.EditModels.WebsiteEditModel
-@*@section styles{
 
-    }*@
+@section PageHead{
+    <script src="~/js/vendors/tinymce/tinymce.min.js"></script>
+}
 
 @section Breadcrumb {
     <ol class="breadcrumb">
@@ -12,7 +13,7 @@
 }
 
 <div class="row">
-    <div class="col-md-6">
+    <div class="col-sm-12 col-md-12 col-lg-10 col-xl-8">
         <div class="card">
             <div class="card-header">
                 <strong>@ViewBag.PanelTitle</strong>
@@ -26,101 +27,115 @@
 
                     <div asp-validation-summary="All" class="text-danger"></div>
                     <div class="form-group row">
-                        <label asp-for="Name" class="col-md-3 form-control-label"></label>
-                        <div class="col-md-9">
+                        <label asp-for="Name" class="col-md-2 form-control-label"></label>
+                        <div class="col-md-10">
                             <input asp-for="Name" class="form-control" />
                             <span asp-validation-for="Name" class="text-danger"></span>
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label asp-for="Description" class="col-md-3 form-control-label"></label>
-                        <div class="col-md-9">
+                        <label asp-for="Description" class="col-md-2 form-control-label"></label>
+                        <div class="col-md-10">
                             <textarea asp-for="Description" class="form-control"></textarea>
                             <span asp-validation-for="Description" class="text-danger"></span>
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label asp-for="Culture" class="col-md-3 form-control-label"></label>
-                        <div class="col-md-9">
+                        <label asp-for="Culture" class="col-md-2 form-control-label"></label>
+                        <div class="col-md-10">
                             <input asp-for="Culture" class="form-control" />
                             <span asp-validation-for="Culture" class="text-danger"></span>
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label asp-for="UrlFormat" class="col-md-3 form-control-label"></label>
-                        <div class="col-md-9">
+                        <label asp-for="UrlFormat" class="col-md-2 form-control-label"></label>
+                        <div class="col-md-10">
                             <input asp-for="UrlFormat" class="form-control" />
                             <span asp-validation-for="UrlFormat" class="text-danger"></span>
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label asp-for="DateFormat" class="col-md-3 form-control-label"></label>
-                        <div class="col-md-9">
+                        <label asp-for="DateFormat" class="col-md-2 form-control-label"></label>
+                        <div class="col-md-10">
                             <input asp-for="DateFormat" class="form-control" />
                             <span asp-validation-for="DateFormat" class="text-danger"></span>
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label asp-for="SiteUrl" class="col-md-3 form-control-label"></label>
-                        <div class="col-md-9">
+                        <label asp-for="SiteUrl" class="col-md-2 form-control-label"></label>
+                        <div class="col-md-10">
                             <input asp-for="SiteUrl" class="form-control" />
                             <span asp-validation-for="SiteUrl" class="text-danger"></span>
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label asp-for="ArticleLimit" class="col-md-3 form-control-label"></label>
-                        <div class="col-md-9">
+                        <label asp-for="ArticleLimit" class="col-md-2 form-control-label"></label>
+                        <div class="col-md-10">
                             <input asp-for="ArticleLimit" class="form-control" />
                             <span asp-validation-for="ArticleLimit" class="text-danger"></span>
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label asp-for="Address" class="col-md-3 form-control-label"></label>
-                        <div class="col-md-9">
+                        <label asp-for="Address" class="col-md-2 form-control-label"></label>
+                        <div class="col-md-10">
                             <input asp-for="Address" class="form-control" />
                             <span asp-validation-for="Address" class="text-danger"></span>
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label asp-for="Phone" class="col-md-3 form-control-label"></label>
-                        <div class="col-md-9">
+                        <label asp-for="Phone" class="col-md-2 form-control-label"></label>
+                        <div class="col-md-10">
                             <input asp-for="Phone" class="form-control" />
                             <span asp-validation-for="Phone" class="text-danger"></span>
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label asp-for="Email" class="col-md-3 form-control-label"></label>
-                        <div class="col-md-9">
+                        <label asp-for="Email" class="col-md-2 form-control-label"></label>
+                        <div class="col-md-10">
                             <input asp-for="Email" class="form-control" />
                             <span asp-validation-for="Email" class="text-danger"></span>
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label asp-for="Facebook" class="col-md-3 form-control-label"></label>
-                        <div class="col-md-9">
+                        <label asp-for="Facebook" class="col-md-2 form-control-label"></label>
+                        <div class="col-md-10">
                             <input asp-for="Facebook" class="form-control" />
                             <span asp-validation-for="Facebook" class="text-danger"></span>
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label asp-for="Twitter" class="col-md-3 form-control-label"></label>
-                        <div class="col-md-9">
+                        <label asp-for="Twitter" class="col-md-2 form-control-label"></label>
+                        <div class="col-md-10">
                             <input asp-for="Twitter" class="form-control" />
                             <span asp-validation-for="Twitter" class="text-danger"></span>
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label asp-for="Instagram" class="col-md-3 form-control-label"></label>
-                        <div class="col-md-9">
+                        <label asp-for="Instagram" class="col-md-2 form-control-label"></label>
+                        <div class="col-md-10">
                             <input asp-for="Instagram" class="form-control" />
                             <span asp-validation-for="Instagram" class="text-danger"></span>
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label asp-for="LinkedIn" class="col-md-3 form-control-label"></label>
-                        <div class="col-md-9">
+                        <label asp-for="LinkedIn" class="col-md-2 form-control-label"></label>
+                        <div class="col-md-10">
                             <input asp-for="LinkedIn" class="form-control" />
                             <span asp-validation-for="LinkedIn" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label asp-for="FacebookAppId" class="col-md-2 form-control-label"></label>
+                        <div class="col-md-10">
+                            <input asp-for="FacebookAppId" class="form-control" />
+                            <span asp-validation-for="FacebookAppId" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label asp-for="FacebookApiVersion" class="col-md-2 form-control-label"></label>
+                        <div class="col-md-10">
+                            <input asp-for="FacebookApiVersion" class="form-control" />
+                            <span asp-validation-for="FacebookApiVersion" class="text-danger"></span>
                         </div>
                     </div>
                 </div>
@@ -134,4 +149,10 @@
 
 @section scripts{
     @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+
+    <script>
+        $(function () {
+            tinymce.init({ selector: 'textarea', height: 150 });
+        });
+    </script>
 }

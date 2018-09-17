@@ -74,7 +74,9 @@ namespace CmsEngine.Migrations
                     Facebook = table.Column<string>(maxLength: 20, nullable: true),
                     Twitter = table.Column<string>(maxLength: 20, nullable: true),
                     Instagram = table.Column<string>(maxLength: 20, nullable: true),
-                    LinkedIn = table.Column<string>(maxLength: 20, nullable: true)
+                    LinkedIn = table.Column<string>(maxLength: 20, nullable: true),
+                    FacebookAppId = table.Column<string>(maxLength: 30, nullable: true),
+                    FacebookApiVersion = table.Column<string>(maxLength: 10, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -127,8 +129,8 @@ namespace CmsEngine.Migrations
                 name: "AspNetUserLogins",
                 columns: table => new
                 {
-                    LoginProvider = table.Column<string>(maxLength: 128, nullable: false),
-                    ProviderKey = table.Column<string>(maxLength: 128, nullable: false),
+                    LoginProvider = table.Column<string>(nullable: false),
+                    ProviderKey = table.Column<string>(nullable: false),
                     ProviderDisplayName = table.Column<string>(nullable: true),
                     UserId = table.Column<string>(nullable: false)
                 },
@@ -172,8 +174,8 @@ namespace CmsEngine.Migrations
                 columns: table => new
                 {
                     UserId = table.Column<string>(nullable: false),
-                    LoginProvider = table.Column<string>(maxLength: 128, nullable: false),
-                    Name = table.Column<string>(maxLength: 128, nullable: false),
+                    LoginProvider = table.Column<string>(nullable: false),
+                    Name = table.Column<string>(nullable: false),
                     Value = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
@@ -228,11 +230,9 @@ namespace CmsEngine.Migrations
                     UserCreated = table.Column<string>(maxLength: 20, nullable: true),
                     UserModified = table.Column<string>(maxLength: 20, nullable: true),
                     Title = table.Column<string>(maxLength: 100, nullable: false),
-                    Slug = table.Column<string>(maxLength: 25, nullable: false),
+                    Slug = table.Column<string>(maxLength: 100, nullable: false),
                     Description = table.Column<string>(maxLength: 150, nullable: false),
                     DocumentContent = table.Column<string>(nullable: true),
-                    AuthorId = table.Column<string>(maxLength: 36, nullable: false),
-                    Author = table.Column<string>(maxLength: 50, nullable: false),
                     Status = table.Column<int>(nullable: false),
                     PublishedOn = table.Column<DateTime>(nullable: false),
                     WebsiteId = table.Column<int>(nullable: false)
@@ -261,11 +261,9 @@ namespace CmsEngine.Migrations
                     UserCreated = table.Column<string>(maxLength: 20, nullable: true),
                     UserModified = table.Column<string>(maxLength: 20, nullable: true),
                     Title = table.Column<string>(maxLength: 100, nullable: false),
-                    Slug = table.Column<string>(maxLength: 25, nullable: false),
+                    Slug = table.Column<string>(maxLength: 100, nullable: false),
                     Description = table.Column<string>(maxLength: 150, nullable: false),
                     DocumentContent = table.Column<string>(nullable: true),
-                    AuthorId = table.Column<string>(nullable: true),
-                    Author = table.Column<string>(maxLength: 20, nullable: false),
                     Status = table.Column<int>(nullable: false),
                     PublishedOn = table.Column<DateTime>(nullable: false),
                     WebsiteId = table.Column<int>(nullable: false)
@@ -306,6 +304,54 @@ namespace CmsEngine.Migrations
                         principalTable: "Websites",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "PageAspNetUser",
+                columns: table => new
+                {
+                    PageId = table.Column<int>(nullable: false),
+                    ApplicationUserId = table.Column<string>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PageAspNetUser", x => new { x.PageId, x.ApplicationUserId });
+                    table.ForeignKey(
+                        name: "FK_PageAspNetUser_AspNetUsers_ApplicationUserId",
+                        column: x => x.ApplicationUserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.NoAction);
+                    table.ForeignKey(
+                        name: "FK_PageAspNetUser_Pages_PageId",
+                        column: x => x.PageId,
+                        principalTable: "Pages",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.NoAction);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "PostAspNetUser",
+                columns: table => new
+                {
+                    PostId = table.Column<int>(nullable: false),
+                    ApplicationUserId = table.Column<string>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PostAspNetUser", x => new { x.PostId, x.ApplicationUserId });
+                    table.ForeignKey(
+                        name: "FK_PostAspNetUser_AspNetUsers_ApplicationUserId",
+                        column: x => x.ApplicationUserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.NoAction);
+                    table.ForeignKey(
+                        name: "FK_PostAspNetUser_Posts_PostId",
+                        column: x => x.PostId,
+                        principalTable: "Posts",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.NoAction);
                 });
 
             migrationBuilder.CreateTable(
@@ -359,35 +405,45 @@ namespace CmsEngine.Migrations
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "LockoutEnabled", "LockoutEnd", "Name", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "Surname", "TwoFactorEnabled", "UserName" },
-                values: new object[] { "55e64a12-a18c-4585-b82a-9bf94777a939", 0, "6b027369-fa6a-48fb-b7be-fc4c5b5e561d", "john@doe.com", true, false, null, "John", "JOHN@DOE.COM", "JOHN@DOE.COM", "AQAAAAEAACcQAAAAEGIUaLe7RWZGw8Tr5/xoUMOooAzJsLFw550fDqZkrbk8CD+urHQzYjK1xY8vcDMekw==", null, false, "NBTDBYKTNLGHKQ3HI7YFEHPQN5YRXWQC", "Doe", false, "john@doe.com" });
+                values: new object[] { "f5469762-58c5-4caa-a58f-45bb98e887ca", 0, "a31d7ea4-a881-4101-8b22-a41656cdde5f", "john@doe.com", true, false, null, "John", "JOHN@DOE.COM", "JOHN@DOE.COM", "AQAAAAEAACcQAAAAEGIUaLe7RWZGw8Tr5/xoUMOooAzJsLFw550fDqZkrbk8CD+urHQzYjK1xY8vcDMekw==", null, false, "NBTDBYKTNLGHKQ3HI7YFEHPQN5YRXWQC", "Doe", false, "john@doe.com" });
 
             migrationBuilder.InsertData(
                 table: "Websites",
-                columns: new[] { "Id", "Address", "ArticleLimit", "Culture", "DateCreated", "DateFormat", "DateModified", "Description", "Email", "Facebook", "Instagram", "IsDeleted", "LinkedIn", "Name", "Phone", "SiteUrl", "Twitter", "UrlFormat", "UserCreated", "UserModified", "VanityId" },
-                values: new object[] { 1, null, 10, "en-US", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "MM/dd/yyyy", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "This is a sample website", null, null, null, false, null, "Sample Website", null, "cmsengine.test", null, "http://[site_url]/[type]/[slug]", null, null, new Guid("15f2a3eb-1bff-4ee4-92ef-a83dfd6df086") });
+                columns: new[] { "Id", "Address", "ArticleLimit", "Culture", "DateCreated", "DateFormat", "DateModified", "Description", "Email", "Facebook", "FacebookApiVersion", "FacebookAppId", "Instagram", "IsDeleted", "LinkedIn", "Name", "Phone", "SiteUrl", "Twitter", "UrlFormat", "UserCreated", "UserModified", "VanityId" },
+                values: new object[] { 1, null, 10, "en-US", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "MM/dd/yyyy", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "This is a sample website", null, null, null, null, null, false, null, "Sample Website", null, "cmsengine.test", null, "http://[site_url]/[type]/[slug]", null, null, new Guid("f9990443-65c0-48ba-8f7d-8be14cfb28a9") });
 
             migrationBuilder.InsertData(
                 table: "Categories",
                 columns: new[] { "Id", "DateCreated", "DateModified", "Description", "IsDeleted", "Name", "Slug", "UserCreated", "UserModified", "VanityId", "WebsiteId" },
-                values: new object[] { 1, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, false, "Category example", "category-example", null, null, new Guid("3b552d79-c6c6-42dd-ad42-b104fa895a3b"), 1 });
+                values: new object[] { 1, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, false, "Category example", "category-example", null, null, new Guid("d103990c-2edd-4fa2-a433-fbf7d86c5792"), 1 });
 
             migrationBuilder.InsertData(
                 table: "Pages",
-                columns: new[] { "Id", "Author", "AuthorId", "DateCreated", "DateModified", "Description", "DocumentContent", "IsDeleted", "PublishedOn", "Slug", "Status", "Title", "UserCreated", "UserModified", "VanityId", "WebsiteId" },
-                values: new object[] { 1, "john@doe.com", "55e64a12-a18c-4585-b82a-9bf94777a939", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "This is a sample page from a sample website", @"<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed risus libero, egestas vel tempus id, venenatis nec tellus. Nullam hendrerit id magna quis venenatis. Pellentesque rhoncus leo vitae turpis tristique, nec placerat tellus scelerisque. Aenean vitae rhoncus urna, non posuere elit. Nullam quam libero, porttitor in lectus convallis, pellentesque finibus libero. Suspendisse potenti. Fusce quis purus egestas, malesuada massa sed, dignissim purus. Curabitur vitae rhoncus nulla, sit amet dignissim quam.</p>
+                columns: new[] { "Id", "DateCreated", "DateModified", "Description", "DocumentContent", "IsDeleted", "PublishedOn", "Slug", "Status", "Title", "UserCreated", "UserModified", "VanityId", "WebsiteId" },
+                values: new object[] { 1, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "This is a sample page from a sample website", @"<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed risus libero, egestas vel tempus id, venenatis nec tellus. Nullam hendrerit id magna quis venenatis. Pellentesque rhoncus leo vitae turpis tristique, nec placerat tellus scelerisque. Aenean vitae rhoncus urna, non posuere elit. Nullam quam libero, porttitor in lectus convallis, pellentesque finibus libero. Suspendisse potenti. Fusce quis purus egestas, malesuada massa sed, dignissim purus. Curabitur vitae rhoncus nulla, sit amet dignissim quam.</p>
                                        <p>Mauris lorem urna, convallis in enim nec, tristique ullamcorper nisl. Fusce nec tellus et arcu imperdiet ullamcorper vestibulum vitae mi. Sed bibendum molestie dolor sit amet rhoncus.Duis consectetur convallis auctor. In hac habitasse platea dictumst.Duis lorem nibh, mattis ut purus interdum, scelerisque molestie est. Nullam molestie a est vel ornare. Maecenas rhoncus accumsan ligula, at pretium purus tempus ut. Aliquam erat nulla, pretium vel eros vitae, blandit aliquam nibh. Nulla tincidunt, justo et ullamcorper dictum, augue lectus dictum ligula, eget rutrum sem nibh non felis.Aenean elementum, sem sit amet pulvinar tempus, neque eros faucibus turpis, quis molestie nisi libero quis purus.</p>
                                        <p>Donec quam massa, tincidunt eu lacus in, lacinia hendrerit urna. Pellentesque pretium orci a felis tincidunt, sit amet volutpat est dapibus. Donec laoreet, massa in imperdiet laoreet, enim ligula auctor est, non imperdiet nisi diam vitae quam. Integer nec porttitor ante. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.Morbi non pretium risus, a lobortis eros. Etiam blandit diam tortor. Ut feugiat eros id erat auctor, ut vehicula odio vestibulum.</p>
                                        <p>Nunc sed ex sed diam euismod eleifend. Proin blandit lorem sed placerat fermentum. Curabitur non gravida felis, ac sollicitudin nibh. Morbi ornare sapien vitae nisl condimentum cursus.Vivamus bibendum condimentum metus, ut gravida orci bibendum maximus. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.Duis varius, tortor ac placerat faucibus, lectus mauris bibendum elit, id eleifend leo diam ac nulla.Aenean egestas urna facilisis purus ullamcorper vestibulum.Etiam commodo suscipit turpis, quis lobortis metus posuere sed.</p>
-                                       <p>Praesent in augue sit amet tortor ultricies maximus eu ac dui.Pellentesque et congue elit. Suspendisse potenti. Donec facilisis eu magna nec bibendum. Nullam in dignissim elit. Integer laoreet odio massa, vel vestibulum mauris varius et. Ut non ex sit amet nisl mollis laoreet. </p> ", false, new DateTime(2018, 8, 25, 14, 55, 36, 337, DateTimeKind.Local), "sample-page", 0, "Sample page", null, null, new Guid("d9e69e30-8822-4b17-8015-eb007cef4400"), 1 });
+                                       <p>Praesent in augue sit amet tortor ultricies maximus eu ac dui.Pellentesque et congue elit. Suspendisse potenti. Donec facilisis eu magna nec bibendum. Nullam in dignissim elit. Integer laoreet odio massa, vel vestibulum mauris varius et. Ut non ex sit amet nisl mollis laoreet. </p> ", false, new DateTime(2018, 9, 15, 15, 50, 39, 302, DateTimeKind.Local), "sample-page", 0, "Sample page", null, null, new Guid("5d2de831-3810-4606-8235-7f3d7a07b3fb"), 1 });
 
             migrationBuilder.InsertData(
                 table: "Posts",
-                columns: new[] { "Id", "Author", "AuthorId", "DateCreated", "DateModified", "Description", "DocumentContent", "IsDeleted", "PublishedOn", "Slug", "Status", "Title", "UserCreated", "UserModified", "VanityId", "WebsiteId" },
-                values: new object[] { 1, "john@doe.com", "55e64a12-a18c-4585-b82a-9bf94777a939", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Lorem ipsum dolor sit amet", @"<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed risus libero, egestas vel tempus id, venenatis nec tellus. Nullam hendrerit id magna quis venenatis. Pellentesque rhoncus leo vitae turpis tristique, nec placerat tellus scelerisque. Aenean vitae rhoncus urna, non posuere elit. Nullam quam libero, porttitor in lectus convallis, pellentesque finibus libero. Suspendisse potenti. Fusce quis purus egestas, malesuada massa sed, dignissim purus. Curabitur vitae rhoncus nulla, sit amet dignissim quam.</p>
+                columns: new[] { "Id", "DateCreated", "DateModified", "Description", "DocumentContent", "IsDeleted", "PublishedOn", "Slug", "Status", "Title", "UserCreated", "UserModified", "VanityId", "WebsiteId" },
+                values: new object[] { 1, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Lorem ipsum dolor sit amet", @"<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed risus libero, egestas vel tempus id, venenatis nec tellus. Nullam hendrerit id magna quis venenatis. Pellentesque rhoncus leo vitae turpis tristique, nec placerat tellus scelerisque. Aenean vitae rhoncus urna, non posuere elit. Nullam quam libero, porttitor in lectus convallis, pellentesque finibus libero. Suspendisse potenti. Fusce quis purus egestas, malesuada massa sed, dignissim purus. Curabitur vitae rhoncus nulla, sit amet dignissim quam.</p>
                                        <p>Mauris lorem urna, convallis in enim nec, tristique ullamcorper nisl. Fusce nec tellus et arcu imperdiet ullamcorper vestibulum vitae mi. Sed bibendum molestie dolor sit amet rhoncus.Duis consectetur convallis auctor. In hac habitasse platea dictumst.Duis lorem nibh, mattis ut purus interdum, scelerisque molestie est. Nullam molestie a est vel ornare. Maecenas rhoncus accumsan ligula, at pretium purus tempus ut. Aliquam erat nulla, pretium vel eros vitae, blandit aliquam nibh. Nulla tincidunt, justo et ullamcorper dictum, augue lectus dictum ligula, eget rutrum sem nibh non felis.Aenean elementum, sem sit amet pulvinar tempus, neque eros faucibus turpis, quis molestie nisi libero quis purus.</p>
                                        <p>Donec quam massa, tincidunt eu lacus in, lacinia hendrerit urna. Pellentesque pretium orci a felis tincidunt, sit amet volutpat est dapibus. Donec laoreet, massa in imperdiet laoreet, enim ligula auctor est, non imperdiet nisi diam vitae quam. Integer nec porttitor ante. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.Morbi non pretium risus, a lobortis eros. Etiam blandit diam tortor. Ut feugiat eros id erat auctor, ut vehicula odio vestibulum.</p>
                                        <p>Nunc sed ex sed diam euismod eleifend. Proin blandit lorem sed placerat fermentum. Curabitur non gravida felis, ac sollicitudin nibh. Morbi ornare sapien vitae nisl condimentum cursus.Vivamus bibendum condimentum metus, ut gravida orci bibendum maximus. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.Duis varius, tortor ac placerat faucibus, lectus mauris bibendum elit, id eleifend leo diam ac nulla.Aenean egestas urna facilisis purus ullamcorper vestibulum.Etiam commodo suscipit turpis, quis lobortis metus posuere sed.</p>
-                                       <p>Praesent in augue sit amet tortor ultricies maximus eu ac dui.Pellentesque et congue elit. Suspendisse potenti. Donec facilisis eu magna nec bibendum. Nullam in dignissim elit. Integer laoreet odio massa, vel vestibulum mauris varius et. Ut non ex sit amet nisl mollis laoreet. </p> ", false, new DateTime(2018, 8, 25, 14, 55, 36, 338, DateTimeKind.Local), "lorem-ipsum", 0, "Lorem Ipsum", null, null, new Guid("019793bf-9da3-4273-9b00-4f7a8d8ca2d8"), 1 });
+                                       <p>Praesent in augue sit amet tortor ultricies maximus eu ac dui.Pellentesque et congue elit. Suspendisse potenti. Donec facilisis eu magna nec bibendum. Nullam in dignissim elit. Integer laoreet odio massa, vel vestibulum mauris varius et. Ut non ex sit amet nisl mollis laoreet. </p> ", false, new DateTime(2018, 9, 15, 15, 50, 39, 302, DateTimeKind.Local), "lorem-ipsum", 0, "Lorem Ipsum", null, null, new Guid("3a2ae072-5370-49c9-828e-626eb70873a1"), 1 });
+
+            migrationBuilder.InsertData(
+                table: "PageAspNetUser",
+                columns: new[] { "PageId", "ApplicationUserId" },
+                values: new object[] { 1, "f5469762-58c5-4caa-a58f-45bb98e887ca" });
+
+            migrationBuilder.InsertData(
+                table: "PostAspNetUser",
+                columns: new[] { "PostId", "ApplicationUserId" },
+                values: new object[] { 1, "f5469762-58c5-4caa-a58f-45bb98e887ca" });
 
             migrationBuilder.InsertData(
                 table: "PostCategory",
@@ -439,9 +495,19 @@ namespace CmsEngine.Migrations
                 column: "WebsiteId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_PageAspNetUser_ApplicationUserId",
+                table: "PageAspNetUser",
+                column: "ApplicationUserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Pages_WebsiteId",
                 table: "Pages",
                 column: "WebsiteId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PostAspNetUser_ApplicationUserId",
+                table: "PostAspNetUser",
+                column: "ApplicationUserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_PostCategory_CategoryId",
@@ -482,7 +548,10 @@ namespace CmsEngine.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "Pages");
+                name: "PageAspNetUser");
+
+            migrationBuilder.DropTable(
+                name: "PostAspNetUser");
 
             migrationBuilder.DropTable(
                 name: "PostCategory");
@@ -492,6 +561,9 @@ namespace CmsEngine.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
+
+            migrationBuilder.DropTable(
+                name: "Pages");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");

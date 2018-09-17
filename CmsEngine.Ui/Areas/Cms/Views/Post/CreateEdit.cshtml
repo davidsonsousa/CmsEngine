@@ -15,7 +15,7 @@
 }
 
 <div class="row">
-    <div class="col-md-6">
+    <div class="col-sm-12 col-md-12 col-lg-10 col-xl-8">
         <div class="card">
             <div class="card-header">
                 <strong>@ViewBag.PanelTitle</strong>
@@ -29,22 +29,22 @@
 
                     <div asp-validation-summary="All" class="text-danger"></div>
                     <div class="form-group row">
-                        <label asp-for="Title" class="col-md-3 form-control-label"></label>
-                        <div class="col-md-9">
+                        <label asp-for="Title" class="col-md-2 form-control-label"></label>
+                        <div class="col-md-10">
                             <input asp-for="Title" class="form-control" />
                             <span asp-validation-for="Title" class="text-danger"></span>
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label asp-for="Slug" class="col-md-3 form-control-label"></label>
-                        <div class="col-md-9">
+                        <label asp-for="Slug" class="col-md-2 form-control-label"></label>
+                        <div class="col-md-10">
                             <input asp-for="Slug" class="form-control" />
                             <span asp-validation-for="Slug" class="text-danger"></span>
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label asp-for="Description" class="col-md-3 form-control-label"></label>
-                        <div class="col-md-9">
+                        <label asp-for="Description" class="col-md-2 form-control-label"></label>
+                        <div class="col-md-10">
                             <input asp-for="Description" class="form-control" />
                             <span asp-validation-for="Description" class="text-danger"></span>
                         </div>
@@ -56,7 +56,7 @@
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label asp-for="Categories" class="col-md-3 form-control-label"></label>
+                        <label asp-for="Categories" class="col-md-2 form-control-label"></label>
                         <checkbox-list name="SelectedCategories" items="Model.Categories"
                                        outer-container-class="col-md-9"
                                        inner-container-class="form-check"
@@ -65,20 +65,20 @@
                         </checkbox-list>
                     </div>
                     <div class="form-group row">
-                        <label asp-for="Tags" class="col-md-3 form-control-label"></label>
-                        <div class="col-md-9">
+                        <label asp-for="Tags" class="col-md-2 form-control-label"></label>
+                        <div class="col-md-10">
                             <select asp-for="SelectedTags" asp-items="Model.Tags" name="SelectedTags" class="select-tags"></select>
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label asp-for="Status" class="col-md-3 form-control-label"></label>
-                        <div class="col-md-9">
+                        <label asp-for="Status" class="col-md-2 form-control-label"></label>
+                        <div class="col-md-10">
                             <select asp-for="Status" asp-items="Html.GetEnumSelectList<DocumentStatus>()" class="form-control"></select>
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label asp-for="PublishedOn" class="col-md-3 form-control-label"></label>
-                        <div class="col-md-9">
+                        <label asp-for="PublishedOn" class="col-md-2 form-control-label"></label>
+                        <div class="col-md-10">
                             @Html.EditorFor(m => m.PublishedOn, new { htmlAttributes = new { @class = "form-control", containerId = "published-on" } })
                             <span asp-validation-for="PublishedOn" class="text-danger"></span>
                         </div>
@@ -102,7 +102,7 @@
     <script>
         $(function () {
             CmsEngine.Configure.DateTimePicker('#published-on');
-            tinymce.init({ selector: 'textarea' });
+            tinymce.init({ selector: 'textarea', height: 600 });
             $('.select-tags').select2({
                 placeholder: 'Select a tag'
             });

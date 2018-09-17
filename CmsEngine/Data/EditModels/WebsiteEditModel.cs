@@ -52,5 +52,11 @@ namespace CmsEngine.Data.EditModels
 
         [MaxLength(20)]
         public string LinkedIn { get; set; }
+
+        [MaxLength(30)]
+        public string FacebookAppId { get; set; }
+
+        [MaxLength(10)]
+        public string FacebookApiVersion { get; set; }
     }
 }

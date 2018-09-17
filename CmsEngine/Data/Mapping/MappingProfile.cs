@@ -45,12 +45,20 @@ namespace CmsEngine.Data.Mapper
                 .ForMember(
                     dst => dst.Tags,
                     opt => opt.MapFrom(src => src.PostTags.Select(pt => pt.Tag))
+                )
+                .ForMember(
+                    dst => dst.Author,
+                    opt => opt.MapFrom(src => src.PostApplicationUsers.Select(pau => pau.ApplicationUser).FirstOrDefault())
                 );
 
             CreateMap<PostViewModel, Post>();
 
             // Table view model
-            CreateMap<Post, PostTableViewModel>();
+            CreateMap<Post, PostTableViewModel>()
+                .ForMember(
+                    dst => dst.Author,
+                    opt => opt.MapFrom(src => src.PostApplicationUsers.Select(pau => pau.ApplicationUser).FirstOrDefault())
+                );
             CreateMap<PostTableViewModel, Post>();
         }
 
@@ -63,11 +71,20 @@ namespace CmsEngine.Data.Mapper
                 .ForMember(dst => dst.VanityId, opt => opt.Ignore());
 
             // View model
-            CreateMap<Page, PageViewModel>();
+            CreateMap<Page, PageViewModel>()
+                .ForMember(
+                    dst => dst.Author,
+                    opt => opt.MapFrom(src => src.PageApplicationUsers.Select(pau => pau.ApplicationUser).FirstOrDefault())
+                );
+
             CreateMap<PageViewModel, Page>();
 
             // Table view model
-            CreateMap<Page, PageTableViewModel>();
+            CreateMap<Page, PageTableViewModel>()
+                .ForMember(
+                    dst => dst.Author,
+                    opt => opt.MapFrom(src => src.PageApplicationUsers.Select(pau => pau.ApplicationUser).FirstOrDefault())
+                );
             CreateMap<PageTableViewModel, Page>();
         }
 
