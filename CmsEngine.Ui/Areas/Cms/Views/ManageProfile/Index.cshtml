@@ -8,7 +8,7 @@
 }
 
 <div class="row">
-    <div class="col-md-6">
+    <div class="col-sm-12 col-md-12 col-lg-10 col-xl-8">
         <div class="card">
             <div class="card-header">
                 <strong>@ViewBag.PanelTitle</strong>
@@ -25,28 +25,28 @@
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label asp-for="Username" class="col-md-3 form-control-label"></label>
-                        <div class="col-md-9">
+                        <label asp-for="Username" class="col-md-2 form-control-label"></label>
+                        <div class="col-md-10">
                             <input asp-for="Username" class="form-control" disabled />
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label asp-for="Name" class="col-md-3 form-control-label"></label>
-                        <div class="col-md-9">
+                        <label asp-for="Name" class="col-md-2 form-control-label"></label>
+                        <div class="col-md-10">
                             <input asp-for="Name" class="form-control" />
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label asp-for="Surname" class="col-md-3 form-control-label"></label>
-                        <div class="col-md-9">
+                        <label asp-for="Surname" class="col-md-2 form-control-label"></label>
+                        <div class="col-md-10">
                             <input asp-for="Surname" class="form-control" />
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label asp-for="Email" class="col-md-3 form-control-label"></label>
+                        <label asp-for="Email" class="col-md-2 form-control-label"></label>
                         @if (Model.IsEmailConfirmed)
                         {
-                            <div class="col-md-9">
+                            <div class="col-md-10">
                                 <div class="input-group">
                                     <input asp-for="Email" class="form-control" />
                                     <span class="input-group-addon" aria-hidden="true"><span class="fa fa-check-circle text-success"></span></span>
@@ -55,7 +55,7 @@
                         }
                         else
                         {
-                            <div class="col-md-9">
+                            <div class="col-md-10">
                                 <input asp-for="Email" class="form-control" />
                                 <button asp-action="SendVerificationEmail" class="btn btn-link">Send verification email</button>
                             </div>
@@ -63,8 +63,8 @@
                         <span asp-validation-for="Email" class="text-danger"></span>
                     </div>
                     <div class="form-group row">
-                        <label asp-for="PhoneNumber" class="col-md-3 form-control-label"></label>
-                        <div class="col-md-9">
+                        <label asp-for="PhoneNumber" class="col-md-2 form-control-label"></label>
+                        <div class="col-md-10">
                             <input asp-for="PhoneNumber" class="form-control" />
                             <span asp-validation-for="PhoneNumber" class="text-danger"></span>
                         </div>
