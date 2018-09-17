@@ -1,7 +1,8 @@
 @model CmsEngine.Data.EditModels.WebsiteEditModel
-@*@section styles{
 
-    }*@
+@section PageHead{
+    <script src="~/js/vendors/tinymce/tinymce.min.js"></script>
+}
 
 @section Breadcrumb {
     <ol class="breadcrumb">
@@ -148,4 +149,10 @@
 
 @section scripts{
     @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+
+    <script>
+        $(function () {
+            tinymce.init({ selector: 'textarea', height: 150 });
+        });
+    </script>
 }
