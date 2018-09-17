@@ -12,7 +12,7 @@
 }
 
 <div class="row">
-  <div class="col-md-6">
+  <div class="col-sm-12 col-md-12 col-lg-10 col-xl-8">
     <div class="card">
       <div class="card-header">
         <strong>@ViewBag.PanelTitle</strong>
@@ -26,22 +26,22 @@
 
           <div asp-validation-summary="All" class="text-danger"></div>
           <div class="form-group row">
-            <label asp-for="Name" class="col-md-3 form-control-label"></label>
-            <div class="col-md-9">
+            <label asp-for="Name" class="col-md-2 form-control-label"></label>
+            <div class="col-md-10">
               <input asp-for="Name" class="form-control" />
               <span asp-validation-for="Name" class="text-danger"></span>
             </div>
           </div>
           <div class="form-group row">
-            <label asp-for="Slug" class="col-md-3 form-control-label"></label>
-            <div class="col-md-9">
+            <label asp-for="Slug" class="col-md-2 form-control-label"></label>
+            <div class="col-md-10">
               <input asp-for="Slug" class="form-control" />
               <span asp-validation-for="Slug" class="text-danger"></span>
             </div>
           </div>
           <div class="form-group row">
-            <label asp-for="Description" class="col-md-3 form-control-label"></label>
-            <div class="col-md-9">
+            <label asp-for="Description" class="col-md-2 form-control-label"></label>
+            <div class="col-md-10">
               <textarea asp-for="Description" class="form-control"></textarea>
               <span asp-validation-for="Description" class="text-danger"></span>
             </div>
