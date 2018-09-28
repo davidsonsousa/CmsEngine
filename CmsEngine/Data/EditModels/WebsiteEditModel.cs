@@ -9,7 +9,11 @@ namespace CmsEngine.Data.EditModels
         public string Name { get; set; }
 
         [MaxLength(200)]
+        public string Tagline { get; set; }
+
         public string Description { get; set; }
+
+        public string HeaderImagePath { get; set; }
 
         [Required]
         [MaxLength(5)]
