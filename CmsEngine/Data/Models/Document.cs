@@ -17,6 +17,8 @@ namespace CmsEngine.Data.Models
 
         public string Slug { get; set; }
 
+        public string HeaderImagePath { get; set; }
+
         [Required]
         [MaxLength(150, ErrorMessage = "The description must have less than 150 characters")]
         public string Description { get; set; }
