@@ -34,6 +34,13 @@
                         </div>
                     </div>
                     <div class="form-group row">
+                        <label asp-for="Tagline" class="col-md-2 form-control-label"></label>
+                        <div class="col-md-10">
+                            <input asp-for="Tagline" class="form-control" />
+                            <span asp-validation-for="Tagline" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
                         <label asp-for="Description" class="col-md-2 form-control-label"></label>
                         <div class="col-md-10">
                             <textarea asp-for="Description" class="form-control"></textarea>
