@@ -5,6 +5,7 @@ using CmsEngine.Data.AccessLayer;
 using CmsEngine.Data.EditModels;
 using CmsEngine.Data.Models;
 using CmsEngine.Data.ViewModels.DataTableViewModels;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -14,7 +15,9 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
     [Area("Cms")]
     public class WebsiteController : BaseController
     {
-        public WebsiteController(IUnitOfWork uow, IMapper mapper, IHttpContextAccessor hca, UserManager<ApplicationUser> userManager) : base(uow, mapper, hca, userManager) { }
+        public WebsiteController(IUnitOfWork uow, IMapper mapper, IHttpContextAccessor hca,
+                                 UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment)
+            : base(uow, mapper, hca, userManager, hostingEnvironment) { }
 
         public IActionResult Index()
         {
@@ -94,6 +97,13 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
             dataTable.Draw = parameters.Draw;
 
             return Ok(dataTable);
+        }
+
+        [HttpPost]
+        public override async Task<ContentResult> UploadFiles()
+        {
+            filePath = "Website";
+            return await base.UploadFiles();
         }
 
         #region Helpers
