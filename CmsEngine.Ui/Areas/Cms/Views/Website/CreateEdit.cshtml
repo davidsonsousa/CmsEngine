@@ -32,7 +32,7 @@
                             <span class="btn btn-success fileinput-button">
                                 <i class="glyphicon glyphicon-plus"></i>
                                 <span>Header image</span>
-                                <input id="uploadHeadImage" type="file" name="files" data-url="">
+                                <input id="uploadHeadImage" type="file" name="files" data-url="/cms/website/uploadfiles">
                             </span>
 
                             <div id="progress">
@@ -185,7 +185,7 @@
                 },
                 progressall: function (e, data) {
                     var progress = parseInt(data.loaded / data.total * 100, 10);
-                    $('#progress .bar').css(
+                    $('#progress .progress-bar').css(
                         'width',
                         progress + '%'
                     );
