@@ -104,7 +104,7 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
         }
 
         [HttpPost]
-        public async Task<ContentResult> UploadFiles()
+        public async Task<IActionResult> UploadFiles()
         {
             return await this.UploadFiles(_hostingEnvironment.WebRootPath, "Website");
         }
