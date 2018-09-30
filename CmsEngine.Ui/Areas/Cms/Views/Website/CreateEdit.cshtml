@@ -29,10 +29,11 @@
                     <div asp-validation-summary="All" class="text-danger"></div>
                     <div class="form-group row">
                         <div class="col-md-12">
+                            <div class="header-preview"></div>
                             <span class="btn btn-success fileinput-button">
                                 <i class="glyphicon glyphicon-plus"></i>
                                 <span>Header image</span>
-                                <input id="uploadHeadImage" type="file" name="files" data-url="/cms/website/uploadfiles">
+                                <input id="uploadHeadImage" type="file" name="files">
                             </span>
 
                             <div id="progress">
@@ -176,12 +177,13 @@
     <script>
         $(function () {
             tinymce.init({ selector: 'textarea', height: 150 });
+
             $('#uploadHeadImage').fileupload({
                 dataType: 'json',
+                url: '@Url.Action("uploadfiles")',
+                autoUpload: true,
                 done: function (e, data) {
-                    $.each(data.result.files, function (index, file) {
-                        $('<p/>').text(file.name).appendTo(document.body);
-                    });
+                    $('.header-preview').html('<img src="' + data.result[0].path + data.result[0].thumbnailname + '" />');
                 },
                 progressall: function (e, data) {
                     var progress = parseInt(data.loaded / data.total * 100, 10);
