@@ -15,12 +15,12 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
     [Area("Cms")]
     public class WebsiteController : BaseController
     {
-        private readonly IHostingEnvironment _hostingEnvironment;
+        private readonly IHostingEnvironment _env;
 
         public WebsiteController(IUnitOfWork uow, IMapper mapper, IHttpContextAccessor hca, UserManager<ApplicationUser> userManager,
-                                 IHostingEnvironment hostingEnvironment) : base(uow, mapper, hca, userManager)
+                                 IHostingEnvironment env) : base(uow, mapper, hca, userManager)
         {
-            _hostingEnvironment = hostingEnvironment;
+            _env = env;
         }
 
         public IActionResult Index()
@@ -106,7 +106,7 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
         [HttpPost]
         public async Task<IActionResult> UploadFiles()
         {
-            return await this.UploadFiles(_hostingEnvironment.WebRootPath, "Website");
+            return await this.UploadFiles(_env.WebRootPath, "Website");
         }
 
         #region Helpers
