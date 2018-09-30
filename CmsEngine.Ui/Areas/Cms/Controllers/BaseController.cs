@@ -7,7 +7,6 @@ using CmsEngine.Data.Models;
 using CmsEngine.Helpers;
 using CmsEngine.Utils;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -20,9 +19,7 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
     public class BaseController : Controller
     {
         protected readonly CmsService service;
-        protected string filePath;
         protected List<UploadFilesResult> fileList;
-        private readonly IHostingEnvironment _hostingEnvironment;
 
         public BaseController()
         {
@@ -32,13 +29,6 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
         public BaseController(IUnitOfWork uow, IMapper mapper, IHttpContextAccessor hca, UserManager<ApplicationUser> userManager)
         {
             service = new CmsService(uow, mapper, hca, userManager);
-        }
-
-        public BaseController(IUnitOfWork uow, IMapper mapper, IHttpContextAccessor hca,
-                              UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment)
-        {
-            service = new CmsService(uow, mapper, hca, userManager);
-            _hostingEnvironment = hostingEnvironment;
         }
 
         public override void OnActionExecuting(ActionExecutingContext context)
@@ -71,10 +61,9 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
             TempData["DangerMessage"] = generalError;
         }
 
-        [HttpPost]
-        public async virtual Task<ContentResult> UploadFiles()
+        protected async Task<ContentResult> UploadFiles(string webrootPath, string folderName)
         {
-            string folder = Path.Combine(_hostingEnvironment.WebRootPath, "UploadedFiles", filePath);
+            string folder = Path.Combine(webrootPath, "UploadedFiles", folderName);
 
             if (!Directory.Exists(folder))
             {
@@ -108,11 +97,11 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
                     string thumbnailFileName = Path.Combine(folder, "tn_" + formFile.FileName);
                     FileHelper.ResizeImage(savedFileName, thumbnailFileName, 316, 198, true);
 
-                    pathUrl = $"/image/{filePath}/";
+                    pathUrl = $"/image/{folderName}/";
                 }
                 else
                 {
-                    pathUrl = $"/file/{filePath}/";
+                    pathUrl = $"/file/{folderName}/";
                 }
 
                 fileList.Add(new UploadFilesResult()
