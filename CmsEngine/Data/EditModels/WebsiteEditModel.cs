@@ -15,6 +15,8 @@ namespace CmsEngine.Data.EditModels
 
         public string HeaderImagePath { get; set; }
 
+        public string HeaderImagePathThumb { get; set; }
+
         [Required]
         [MaxLength(5)]
         public string Culture { get; set; }
