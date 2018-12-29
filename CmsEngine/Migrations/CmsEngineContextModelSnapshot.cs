@@ -74,7 +74,7 @@ namespace CmsEngine.Migrations
                     b.ToTable("AspNetUsers");
 
                     b.HasData(
-                        new { Id = "5e23f060-3750-4205-99d9-894a8b5d02a9", AccessFailedCount = 0, ConcurrencyStamp = "4cd41732-6a24-4a0a-934e-21296da485bb", Email = "john@doe.com", EmailConfirmed = true, LockoutEnabled = false, Name = "John", NormalizedEmail = "JOHN@DOE.COM", NormalizedUserName = "JOHN@DOE.COM", PasswordHash = "AQAAAAEAACcQAAAAEGIUaLe7RWZGw8Tr5/xoUMOooAzJsLFw550fDqZkrbk8CD+urHQzYjK1xY8vcDMekw==", PhoneNumberConfirmed = false, SecurityStamp = "NBTDBYKTNLGHKQ3HI7YFEHPQN5YRXWQC", Surname = "Doe", TwoFactorEnabled = false, UserName = "john@doe.com" }
+                        new { Id = "2be0d553-bc1d-4074-872d-846c60a24863", AccessFailedCount = 0, ConcurrencyStamp = "96244ec4-bd54-492b-922e-873e774611cd", Email = "john@doe.com", EmailConfirmed = true, LockoutEnabled = false, Name = "John", NormalizedEmail = "JOHN@DOE.COM", NormalizedUserName = "JOHN@DOE.COM", PasswordHash = "AQAAAAEAACcQAAAAEGIUaLe7RWZGw8Tr5/xoUMOooAzJsLFw550fDqZkrbk8CD+urHQzYjK1xY8vcDMekw==", PhoneNumberConfirmed = false, SecurityStamp = "NBTDBYKTNLGHKQ3HI7YFEHPQN5YRXWQC", Surname = "Doe", TwoFactorEnabled = false, UserName = "john@doe.com" }
                     );
                 });
 
@@ -120,7 +120,7 @@ namespace CmsEngine.Migrations
                     b.ToTable("Categories");
 
                     b.HasData(
-                        new { Id = 1, DateCreated = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), DateModified = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), IsDeleted = false, Name = "Category example", Slug = "category-example", VanityId = new Guid("13247bbd-36bd-44b7-9b3f-9d67602c4791"), WebsiteId = 1 }
+                        new { Id = 1, DateCreated = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), DateModified = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), IsDeleted = false, Name = "Category example", Slug = "category-example", VanityId = new Guid("93313739-ef6f-4a08-8866-67dcf70c89e7"), WebsiteId = 1 }
                     );
                 });
 
@@ -141,6 +141,8 @@ namespace CmsEngine.Migrations
                     b.Property<string>("DocumentContent");
 
                     b.Property<string>("HeaderImagePath");
+
+                    b.Property<string>("HeaderImagePathThumb");
 
                     b.Property<bool>("IsDeleted");
 
@@ -179,7 +181,7 @@ namespace CmsEngine.Migrations
                                        <p>Mauris lorem urna, convallis in enim nec, tristique ullamcorper nisl. Fusce nec tellus et arcu imperdiet ullamcorper vestibulum vitae mi. Sed bibendum molestie dolor sit amet rhoncus.Duis consectetur convallis auctor. In hac habitasse platea dictumst.Duis lorem nibh, mattis ut purus interdum, scelerisque molestie est. Nullam molestie a est vel ornare. Maecenas rhoncus accumsan ligula, at pretium purus tempus ut. Aliquam erat nulla, pretium vel eros vitae, blandit aliquam nibh. Nulla tincidunt, justo et ullamcorper dictum, augue lectus dictum ligula, eget rutrum sem nibh non felis.Aenean elementum, sem sit amet pulvinar tempus, neque eros faucibus turpis, quis molestie nisi libero quis purus.</p>
                                        <p>Donec quam massa, tincidunt eu lacus in, lacinia hendrerit urna. Pellentesque pretium orci a felis tincidunt, sit amet volutpat est dapibus. Donec laoreet, massa in imperdiet laoreet, enim ligula auctor est, non imperdiet nisi diam vitae quam. Integer nec porttitor ante. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.Morbi non pretium risus, a lobortis eros. Etiam blandit diam tortor. Ut feugiat eros id erat auctor, ut vehicula odio vestibulum.</p>
                                        <p>Nunc sed ex sed diam euismod eleifend. Proin blandit lorem sed placerat fermentum. Curabitur non gravida felis, ac sollicitudin nibh. Morbi ornare sapien vitae nisl condimentum cursus.Vivamus bibendum condimentum metus, ut gravida orci bibendum maximus. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.Duis varius, tortor ac placerat faucibus, lectus mauris bibendum elit, id eleifend leo diam ac nulla.Aenean egestas urna facilisis purus ullamcorper vestibulum.Etiam commodo suscipit turpis, quis lobortis metus posuere sed.</p>
-                                       <p>Praesent in augue sit amet tortor ultricies maximus eu ac dui.Pellentesque et congue elit. Suspendisse potenti. Donec facilisis eu magna nec bibendum. Nullam in dignissim elit. Integer laoreet odio massa, vel vestibulum mauris varius et. Ut non ex sit amet nisl mollis laoreet. </p> ", IsDeleted = false, PublishedOn = new DateTime(2018, 12, 19, 1, 10, 22, 360, DateTimeKind.Local), Slug = "sample-page", Status = 0, Title = "Sample page", VanityId = new Guid("3936111a-9182-4f8b-851a-de41ab67cb51"), WebsiteId = 1 }
+                                       <p>Praesent in augue sit amet tortor ultricies maximus eu ac dui.Pellentesque et congue elit. Suspendisse potenti. Donec facilisis eu magna nec bibendum. Nullam in dignissim elit. Integer laoreet odio massa, vel vestibulum mauris varius et. Ut non ex sit amet nisl mollis laoreet. </p> ", IsDeleted = false, PublishedOn = new DateTime(2018, 12, 29, 18, 49, 52, 930, DateTimeKind.Local), Slug = "sample-page", Status = 0, Title = "Sample page", VanityId = new Guid("fb747abc-0700-4066-9c01-19dface272d3"), WebsiteId = 1 }
                     );
                 });
 
@@ -196,7 +198,7 @@ namespace CmsEngine.Migrations
                     b.ToTable("PageAspNetUser");
 
                     b.HasData(
-                        new { PageId = 1, ApplicationUserId = "5e23f060-3750-4205-99d9-894a8b5d02a9" }
+                        new { PageId = 1, ApplicationUserId = "2be0d553-bc1d-4074-872d-846c60a24863" }
                     );
                 });
 
@@ -217,6 +219,8 @@ namespace CmsEngine.Migrations
                     b.Property<string>("DocumentContent");
 
                     b.Property<string>("HeaderImagePath");
+
+                    b.Property<string>("HeaderImagePathThumb");
 
                     b.Property<bool>("IsDeleted");
 
@@ -255,7 +259,7 @@ namespace CmsEngine.Migrations
                                        <p>Mauris lorem urna, convallis in enim nec, tristique ullamcorper nisl. Fusce nec tellus et arcu imperdiet ullamcorper vestibulum vitae mi. Sed bibendum molestie dolor sit amet rhoncus.Duis consectetur convallis auctor. In hac habitasse platea dictumst.Duis lorem nibh, mattis ut purus interdum, scelerisque molestie est. Nullam molestie a est vel ornare. Maecenas rhoncus accumsan ligula, at pretium purus tempus ut. Aliquam erat nulla, pretium vel eros vitae, blandit aliquam nibh. Nulla tincidunt, justo et ullamcorper dictum, augue lectus dictum ligula, eget rutrum sem nibh non felis.Aenean elementum, sem sit amet pulvinar tempus, neque eros faucibus turpis, quis molestie nisi libero quis purus.</p>
                                        <p>Donec quam massa, tincidunt eu lacus in, lacinia hendrerit urna. Pellentesque pretium orci a felis tincidunt, sit amet volutpat est dapibus. Donec laoreet, massa in imperdiet laoreet, enim ligula auctor est, non imperdiet nisi diam vitae quam. Integer nec porttitor ante. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.Morbi non pretium risus, a lobortis eros. Etiam blandit diam tortor. Ut feugiat eros id erat auctor, ut vehicula odio vestibulum.</p>
                                        <p>Nunc sed ex sed diam euismod eleifend. Proin blandit lorem sed placerat fermentum. Curabitur non gravida felis, ac sollicitudin nibh. Morbi ornare sapien vitae nisl condimentum cursus.Vivamus bibendum condimentum metus, ut gravida orci bibendum maximus. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.Duis varius, tortor ac placerat faucibus, lectus mauris bibendum elit, id eleifend leo diam ac nulla.Aenean egestas urna facilisis purus ullamcorper vestibulum.Etiam commodo suscipit turpis, quis lobortis metus posuere sed.</p>
-                                       <p>Praesent in augue sit amet tortor ultricies maximus eu ac dui.Pellentesque et congue elit. Suspendisse potenti. Donec facilisis eu magna nec bibendum. Nullam in dignissim elit. Integer laoreet odio massa, vel vestibulum mauris varius et. Ut non ex sit amet nisl mollis laoreet. </p> ", IsDeleted = false, PublishedOn = new DateTime(2018, 12, 19, 1, 10, 22, 360, DateTimeKind.Local), Slug = "lorem-ipsum", Status = 0, Title = "Lorem Ipsum", VanityId = new Guid("aff2e0cf-2f45-4c70-a8e5-a267a3202344"), WebsiteId = 1 }
+                                       <p>Praesent in augue sit amet tortor ultricies maximus eu ac dui.Pellentesque et congue elit. Suspendisse potenti. Donec facilisis eu magna nec bibendum. Nullam in dignissim elit. Integer laoreet odio massa, vel vestibulum mauris varius et. Ut non ex sit amet nisl mollis laoreet. </p> ", IsDeleted = false, PublishedOn = new DateTime(2018, 12, 29, 18, 49, 52, 931, DateTimeKind.Local), Slug = "lorem-ipsum", Status = 0, Title = "Lorem Ipsum", VanityId = new Guid("1aabfb13-b246-42e9-ae34-02c25e8859a5"), WebsiteId = 1 }
                     );
                 });
 
@@ -272,7 +276,7 @@ namespace CmsEngine.Migrations
                     b.ToTable("PostAspNetUser");
 
                     b.HasData(
-                        new { PostId = 1, ApplicationUserId = "5e23f060-3750-4205-99d9-894a8b5d02a9" }
+                        new { PostId = 1, ApplicationUserId = "2be0d553-bc1d-4074-872d-846c60a24863" }
                     );
                 });
 
@@ -430,7 +434,7 @@ namespace CmsEngine.Migrations
                     b.ToTable("Websites");
 
                     b.HasData(
-                        new { Id = 1, ArticleLimit = 10, Culture = "en-US", DateCreated = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), DateFormat = "MM/dd/yyyy", DateModified = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), Description = "This is a sample website", IsDeleted = false, Name = "Sample Website", SiteUrl = "cmsengine.test", UrlFormat = "http://[site_url]/[type]/[slug]", VanityId = new Guid("740da84d-ff21-4e82-b897-bf68e60ad798") }
+                        new { Id = 1, ArticleLimit = 10, Culture = "en-US", DateCreated = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), DateFormat = "MM/dd/yyyy", DateModified = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), Description = "This is a sample website", IsDeleted = false, Name = "Sample Website", SiteUrl = "cmsengine.test", UrlFormat = "http://[site_url]/[type]/[slug]", VanityId = new Guid("fcac06d3-c2ba-4e0a-8876-23c14d80eb98") }
                     );
                 });
 
