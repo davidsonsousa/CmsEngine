@@ -2,7 +2,12 @@
 <div class="post col-xl-6">
     <div class="post-thumbnail">
         <a asp-controller="Blog" asp-action="Post" asp-route-slug="@Model.Slug">
-            <img src="https://placeimg.com/640/426/any" alt="@Model.Title" class="img-fluid">
+            @{
+                string imagePath = !string.IsNullOrWhiteSpace(Model.HeaderImagePath) && !string.IsNullOrWhiteSpace(Model.HeaderImagePathThumb)
+                                   ? imagePath = Model.HeaderImagePathThumb
+                                   : "https://placeimg.com/640/426/any";
+            }
+            <img src="@imagePath" alt="@Model.Title" title="@Model.Title" class="img-fluid" />
         </a>
     </div>
     <div class="post-details">
