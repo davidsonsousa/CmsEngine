@@ -18,6 +18,7 @@ namespace CmsEngine.Data.EditModels
         public string Slug { get; set; }
 
         public string HeaderImagePath { get; set; }
+        public string HeaderImagePathThumb { get; set; }
 
         [Required]
         [MaxLength(150, ErrorMessage = "The description must have less than 150 characters")]
