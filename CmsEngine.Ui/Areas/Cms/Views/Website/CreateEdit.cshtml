@@ -188,33 +188,8 @@
     <script>
         $(function () {
             tinymce.init({ selector: 'textarea', height: 150 });
-
-            $('#uploadHeadImage').fileupload({
-                dataType: 'json',
-                url: '@Url.Action("uploadfiles")',
-                autoUpload: true,
-                done: function (e, data) {
-                    $('.header-preview').html('<img src="' + data.result[0].path + data.result[0].thumbnailname + '" />');
-                    $('#HeaderImagePath').val(data.result[0].path + data.result[0].filename);
-                    $('#HeaderImagePathThumb').val(data.result[0].path + data.result[0].thumbnailname);
-                },
-                progressall: function (e, data) {
-                    var progress = parseInt(data.loaded / data.total * 100, 10);
-                    $('#progress .progress-bar').css(
-                        'width',
-                        progress + '%'
-                    );
-                }
-            });
-
-            $('#removeHeadImage').on('click', function (e) {
-                e.preventDefault();
-                $('.header-preview').html('');
-                $('#HeaderImagePath').val('');
-                $('#HeaderImagePathThumb').val('');
-
-                // TODO: Delete image if exists
-            });
+            CmsEngine.FileUpload.Upload('#uploadHeadImage', '@Url.Action("uploadfiles")', '.header-preview', '#HeaderImagePath', '#HeaderImagePathThumb');
+            CmsEngine.FileUpload.Remove('#removeHeadImage', '.header-preview', '#HeaderImagePath', '#HeaderImagePathThumb');
         });
     </script>
 }
