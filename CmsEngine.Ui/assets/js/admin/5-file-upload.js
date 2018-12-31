@@ -1,5 +1,5 @@
 // File upload
-CmsEngine.FileUpload.UploadHeader = function (fileInput, urlAction, preview, inputPath, inputPathThumb) {
+CmsEngine.FileUpload.UploadHeader = function (fileInput, urlAction, preview, inputPath) {
   $(fileInput).fileupload({
     dataType: 'json',
     url: urlAction,
@@ -58,12 +58,11 @@ CmsEngine.FileUpload.UploadFilesToEditor = function (fileInput, urlAction) {
   });
 };
 
-CmsEngine.FileUpload.Remove = function (button, preview, inputPath, inputPathThumb) {
+CmsEngine.FileUpload.Remove = function (button, preview, inputPath) {
   $(button).on('click', function (e) {
     e.preventDefault();
     $(preview).html('');
     $(inputPath).val('');
-    $(inputPathThumb).val('');
 
     // TODO: Delete image if exists
   });
