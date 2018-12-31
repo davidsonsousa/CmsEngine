@@ -42,8 +42,7 @@ var vendorsCSS = [
     'node_modules/simple-line-icons/css/simple-line-icons.css',
     'node_modules/spinkit/css/spinkit.css',
     'node_modules/fancybox/dist/css/jquery.fancybox.css',
-    'node_modules/select2/dist/css/select2.css',
-    'node_modules/blueimp-file-upload/css/jquery.fileupload.css'
+    'node_modules/select2/dist/css/select2.css'
 ];
 
 gulp.task('node-vendors:copyCSS', function () {
@@ -96,7 +95,7 @@ var vendorsJS = [
     'node_modules/jquery/dist/jquery.min.map',
     'node_modules/jquery-ui-dist/jquery-ui.min.js',
     'node_modules/jquery-validation/dist/jquery.validate.min.js',
-    'node_modules/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.js',
+    'node_modules/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js',
     'node_modules/jquery.maskedinput/src/jquery.maskedinput.js',
     'node_modules/ladda/dist/ladda.min.js',
     'node_modules/ladda/dist/spin.min.js',
@@ -110,9 +109,7 @@ var vendorsJS = [
     'node_modules/toastr/toastr.js',
     'node_modules/fancybox/dist/js/jquery.fancybox.js',
     'node_modules/jquery.cookie/jquery.cookie.js',
-    'node_modules/select2/js/select2.js',
-    'node_modules/blueimp-file-upload/js/vendor/jquery.ui.widget.js',
-    'node_modules/blueimp-file-upload/js/jquery.fileupload.js'
+    'node_modules/select2/js/select2.js'
 ];
 
 gulp.task('node-vendors:copyJS', function () {
