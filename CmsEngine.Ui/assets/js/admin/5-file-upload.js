@@ -5,9 +5,8 @@ CmsEngine.FileUpload.UploadHeader = function (fileInput, urlAction, preview, inp
     url: urlAction,
     autoUpload: true,
     done: function (e, data) {
-      $(preview).html('<img src="' + data.result[0].path + data.result[0].thumbnailname + '" />');
-      $(inputPath).val(data.result[0].path + data.result[0].filename);
-      $(inputPathThumb).val(data.result[0].path + data.result[0].thumbnailname);
+      $(preview).html('<img src="' + data.result[0].path + '320x213_' + data.result[0].filename + '" />');
+      $(inputPath).val(data.result[0].filename);
     },
     progressall: function (e, data) {
       var progress = parseInt(data.loaded / data.total * 100, 10);
