@@ -148,17 +148,17 @@ namespace CmsEngine.Data.Mapper
         {
             // Edit model
             CreateMap<ApplicationUser, UserEditModel>()
-                .ForMember(dest => dest.VanityId, opt => opt.ResolveUsing<UsersStringToGuidResolver>())
+                .ForMember(dest => dest.VanityId, opt => opt.MapFrom<UsersStringToGuidResolver>())
                 .ForMember(dest => dest.Id, opt => opt.Ignore());
             CreateMap<UserEditModel, ApplicationUser>()
-                .ForMember(dest => dest.Id, opt => opt.ResolveUsing<UsersGuidToStringResolver>());
+                .ForMember(dest => dest.Id, opt => opt.MapFrom<UsersGuidToStringResolver>());
 
             // View model
             CreateMap<ApplicationUser, UserViewModel>()
-                .ForMember(dest => dest.VanityId, opt => opt.ResolveUsing<UsersStringToGuidResolver>())
+                .ForMember(dest => dest.VanityId, opt => opt.MapFrom<UsersStringToGuidResolver>())
                 .ForMember(dest => dest.Id, opt => opt.Ignore());
             CreateMap<UserViewModel, ApplicationUser>()
-                .ForMember(dest => dest.Id, opt => opt.ResolveUsing<UsersGuidToStringResolver>());
+                .ForMember(dest => dest.Id, opt => opt.MapFrom<UsersGuidToStringResolver>());
         }
     }
 }
