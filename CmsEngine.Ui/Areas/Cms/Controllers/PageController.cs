@@ -5,7 +5,6 @@ using CmsEngine.Data.AccessLayer;
 using CmsEngine.Data.EditModels;
 using CmsEngine.Data.Models;
 using CmsEngine.Data.ViewModels.DataTableViewModels;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -15,13 +14,7 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
     [Area("Cms")]
     public class PageController : BaseController
     {
-        private readonly IHostingEnvironment _env;
-
-        public PageController(IUnitOfWork uow, IMapper mapper, IHttpContextAccessor hca, UserManager<ApplicationUser> userManager,
-                              IHostingEnvironment env) : base(uow, mapper, hca, userManager)
-        {
-            _env = env;
-        }
+        public PageController(IUnitOfWork uow, IMapper mapper, IHttpContextAccessor hca, UserManager<ApplicationUser> userManager) : base(uow, mapper, hca, userManager) { }
 
         public IActionResult Index()
         {
@@ -101,12 +94,6 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
             dataTable.Draw = parameters.Draw;
 
             return Ok(dataTable);
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> UploadFiles()
-        {
-            return await this.PrepareAndUploadFiles(_env.WebRootPath, "Page");
         }
 
         #region Helpers

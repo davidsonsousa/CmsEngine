@@ -1,4 +1,3 @@
-using System.IO;
 using AutoMapper;
 using CmsEngine.Data;
 using CmsEngine.Data.AccessLayer;
@@ -13,7 +12,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Console;
 
@@ -99,18 +97,6 @@ namespace CmsEngine.Ui
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-
-            string uploadPath = Path.Combine(env.WebRootPath, "UploadedFiles");
-            if (!Directory.Exists(uploadPath))
-            {
-                Directory.CreateDirectory(uploadPath);
-            }
-
-            app.UseStaticFiles(new StaticFileOptions
-            {
-                FileProvider = new PhysicalFileProvider(Path.Combine(env.WebRootPath, "UploadedFiles")),
-                RequestPath = "/image"
-            });
             app.UseCookiePolicy();
 
             app.UseAuthentication();
