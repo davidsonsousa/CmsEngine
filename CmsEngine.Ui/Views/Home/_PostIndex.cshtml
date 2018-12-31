@@ -1,0 +1,36 @@
+@model PostViewModel
+
+<div class="text col-lg-7">
+    <div class="text-inner d-flex align-items-center">
+        <div class="content">
+            <header class="post-header">
+                <div class="category">
+                    @if (Model.Categories.Count() > 0)
+                    {
+                        var category = Model.Categories.First();
+                        <a asp-controller="Blog" asp-action="Category" asp-route-slug="@category.Slug">@category.Name</a>
+                    }
+                </div>
+                <a asp-controller="Blog" asp-action="Post" asp-route-slug="@Model.Slug">
+                    <h2 class="h4">@Model.Title</h2>
+                </a>
+            </header>
+            <p>@Model.Description</p>
+            <footer class="post-footer d-flex align-items-center">
+                <a href="#" class="author d-flex align-items-center flex-wrap">
+                    <div class="avatar">
+                        <gravatar email-address="@Model.Author.Email" image-size="40" additional-css-classes="img-avatar"></gravatar>
+                    </div>
+                    <div class="title">
+                        <span>@Model.Author.FullName</span>
+                    </div>
+                </a>
+                <div class="date"><i class="icon-clock"></i> @Model.PublishedOn.ToShortDateString()</div>
+                <div class="comments">
+                    <i class="icon-comment"></i>
+                    <span class="fb-comments-count" data-href="@Url.Link("blogRoute", new {Controller = "Blog", Action = "Post", Slug = Model.Slug })"></span>
+                </div>
+            </footer>
+        </div>
+    </div>
+</div>
