@@ -13,9 +13,7 @@ namespace CmsEngine.Data.EditModels
 
         public string Description { get; set; }
 
-        public string HeaderImagePath { get; set; }
-
-        public string HeaderImagePathThumb { get; set; }
+        public string HeaderImage { get; set; }
 
         [Required]
         [MaxLength(5)]
