@@ -1,4 +1,4 @@
-@model CmsEngine.Data.EditModels.PostEditModel
+@model PostEditModel
 
 @section PageHead{
     <script src="~/js/vendors/tinymce/tinymce.min.js"></script>
@@ -40,13 +40,12 @@
                             <button class="btn btn-outline-danger" id="removeHeadImage">Remove image</button>
 
                             <div class="header-preview">
-                                @if (!string.IsNullOrWhiteSpace(Model.HeaderImagePath) && !string.IsNullOrWhiteSpace(Model.HeaderImagePathThumb))
+                                @if (!string.IsNullOrWhiteSpace(Model.HeaderImage))
                                 {
-                                    <img src="@Model.HeaderImagePathThumb" alt="Image preview" title="Image preview" />
+                                    <img src="@string.Format(Constants.Image320Path, "website", Model.HeaderImage)" alt="Image preview" title="Image preview" />
                                 }
                             </div>
-                            <input asp-for="HeaderImagePath" type="hidden" />
-                            <input asp-for="HeaderImagePathThumb" type="hidden" />
+                            <input asp-for="HeaderImage" type="hidden" />
 
                             <div id="progress">
                                 <div class="progress-bar" style="width: 0%;"></div>
@@ -146,10 +145,10 @@
                 placeholder: 'Select a tag'
             });
 
-            CmsEngine.FileUpload.UploadHeader('#uploadHeadImage', '@Url.Action("uploadfiles")', '.header-preview', '#HeaderImagePath', '#HeaderImagePathThumb');
+            CmsEngine.FileUpload.UploadHeader('#uploadHeadImage', '@Url.Action("uploadfiles")', '.header-preview', '#HeaderImage');
             CmsEngine.FileUpload.UploadImagesToEditor('#uploadEditorImages', '@Url.Action("uploadfiles")');
             CmsEngine.FileUpload.UploadFilesToEditor('#uploadEditorFiles', '@Url.Action("uploadfiles")');
-            CmsEngine.FileUpload.Remove('#removeHeadImage', '.header-preview', '#HeaderImagePath', '#HeaderImagePathThumb');
+            CmsEngine.FileUpload.Remove('#removeHeadImage', '.header-preview', '#HeaderImage');
         });
     </script>
 }
