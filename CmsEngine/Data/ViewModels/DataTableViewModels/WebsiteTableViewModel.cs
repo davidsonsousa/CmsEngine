@@ -8,7 +8,7 @@ namespace CmsEngine.Data.ViewModels.DataTableViewModels
         public string Name { get; set; }
 
         [Searchable, Orderable, ShowOnDataTable(1)]
-        public string Tagline { get; set; }
+        public string Description { get; set; }
 
         [Searchable, Orderable, ShowOnDataTable(2)]
         public string Culture { get; set; }

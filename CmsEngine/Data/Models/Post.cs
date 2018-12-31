@@ -16,5 +16,6 @@ namespace CmsEngine.Data.Models
         public virtual ICollection<PostApplicationUser> PostApplicationUsers { get; set; }
 
         #endregion
+
     }
 }
