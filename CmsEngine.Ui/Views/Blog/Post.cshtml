@@ -11,8 +11,8 @@
                 <div class="post-single">
                     <div class="post-thumbnail">
                         @{
-                            string imagePath = !string.IsNullOrWhiteSpace(selectedPost.HeaderImagePath) && !string.IsNullOrWhiteSpace(selectedPost.HeaderImagePathThumb)
-                                               ? imagePath = selectedPost.HeaderImagePath
+                            string imagePath = !string.IsNullOrWhiteSpace(selectedPost.HeaderImage)
+                                               ? imagePath = string.Format(Constants.ImagePath, "post", selectedPost.HeaderImage)
                                                : "https://placeimg.com/640/426/any";
                         }
                         <img src="@imagePath" alt="@selectedPost.Title" title="@selectedPost.Title" class="img-fluid">
