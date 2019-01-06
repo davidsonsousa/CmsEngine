@@ -1,7 +1,7 @@
 # CmsEngine
 
 ## Build status
-![Build status](https://davidsonsousa.visualstudio.com/CMSEngine/_apis/build/status/CMSEngine%20CI%20develop "Build status")
+![Build status](https://davidsonsousa.visualstudio.com/CMSEngine/_apis/build/status/CMSEngine%20CI%20master "Build status")
 
 ## What is it?
 This the new code-base of the CMS I am using in my website [http://davidsonsousa.net](http://davidsonsousa.net "my website")
