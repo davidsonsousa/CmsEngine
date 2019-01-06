@@ -1,6 +1,6 @@
 namespace CmsEngine
 {
-    public static class Constants
+    internal static class Constants
     {
         internal const string SiteUrl = "[site_url]";
 
@@ -11,11 +11,5 @@ namespace CmsEngine
         internal const string Type = "[type]";
 
         internal const string Slug = "[slug]";
-
-        // Image paths
-        public const string ImagePath = "/image/{0}/{1}";
-        public const string Image640Path = "/image/{0}/620x426_{1}";
-        public const string Image320Path = "/image/{0}/320x213_{1}";
-        public const string Image120Path = "/image/{0}/120x120_{1}";
     }
 }
