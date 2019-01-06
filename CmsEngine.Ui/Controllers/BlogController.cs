@@ -23,8 +23,8 @@ namespace CmsEngine.Ui.Controllers
 
         public IActionResult Post(string slug)
         {
-            instance.SelectedPost = (PostViewModel)service.GetPostBySlug(slug);
-            instance.PageTitle = $"{instance.SelectedPost.Title} - {instance.Name}";
+            instance.SelectedDocument = (PostViewModel)service.GetPostBySlug(slug);
+            instance.PageTitle = $"{instance.SelectedDocument.Title} - {instance.Name}";
             return View(instance);
         }
 

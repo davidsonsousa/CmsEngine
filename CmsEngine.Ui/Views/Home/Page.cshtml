@@ -1,0 +1,47 @@
+@model InstanceViewModel
+@{
+    var selectedPage = (PageViewModel)Model.SelectedDocument;
+}
+
+<div class="container">
+    <div class="row">
+        <!-- Latest Posts -->
+        <main class="post blog-post col-lg-8">
+            <div class="container">
+                <div class="post-single">
+                    <div class="post-thumbnail">
+                        @{
+                            string imagePath = !string.IsNullOrWhiteSpace(selectedPage.HeaderImage)
+                                               ? imagePath = string.Format(Constants.ImagePath, "post", selectedPage.HeaderImage)
+                                               : "https://placeimg.com/640/426/any";
+                        }
+                        <img src="@imagePath" alt="@selectedPage.Title" title="@selectedPage.Title" class="img-fluid">
+                    </div>
+                    <div class="post-details">
+                        <h1>@selectedPage.Title</h1>
+                        <div class="post-footer d-flex align-items-center flex-column flex-sm-row">
+                            <a href="#" class="author d-flex align-items-center flex-wrap">
+                                <div class="avatar">
+                                    <gravatar email-address="@selectedPage.Author.Email" image-size="40" additional-css-classes="img-avatar"></gravatar>
+                                </div>
+                                <div class="title"><span>@selectedPage.Author.FullName</span></div>
+                            </a>
+                            <div class="d-flex align-items-center flex-wrap">
+                                <div class="date"><i class="icon-clock"></i> @selectedPage.PublishedOn.ToShortDateString()</div>
+                                <div class="comments meta-last">
+                                    <i class="icon-comment"></i>
+                                    <span class="fb-comments-count" data-href="@Url.Link("blogRoute", new {Controller = "Blog", Action = "Post", Slug = selectedPage.Slug })"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="post-body">
+                            <p class="lead">@selectedPage.Description</p>
+                            @Html.Raw(selectedPage.DocumentContent)
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+        @await Html.PartialAsync("_Sidebar", Model)
+    </div>
+</div>

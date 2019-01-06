@@ -62,9 +62,7 @@ namespace CmsEngine.Migrations
                     UserCreated = table.Column<string>(maxLength: 20, nullable: true),
                     UserModified = table.Column<string>(maxLength: 20, nullable: true),
                     Name = table.Column<string>(maxLength: 200, nullable: false),
-                    Tagline = table.Column<string>(maxLength: 200, nullable: true),
-                    Description = table.Column<string>(nullable: true),
-                    HeaderImage = table.Column<string>(nullable: true),
+                    Description = table.Column<string>(maxLength: 200, nullable: true),
                     Culture = table.Column<string>(maxLength: 5, nullable: false),
                     UrlFormat = table.Column<string>(maxLength: 100, nullable: false),
                     DateFormat = table.Column<string>(maxLength: 10, nullable: false),
@@ -233,7 +231,6 @@ namespace CmsEngine.Migrations
                     UserModified = table.Column<string>(maxLength: 20, nullable: true),
                     Title = table.Column<string>(maxLength: 100, nullable: false),
                     Slug = table.Column<string>(maxLength: 100, nullable: false),
-                    HeaderImage = table.Column<string>(nullable: true),
                     Description = table.Column<string>(maxLength: 150, nullable: false),
                     DocumentContent = table.Column<string>(nullable: true),
                     Status = table.Column<int>(nullable: false),
@@ -265,7 +262,6 @@ namespace CmsEngine.Migrations
                     UserModified = table.Column<string>(maxLength: 20, nullable: true),
                     Title = table.Column<string>(maxLength: 100, nullable: false),
                     Slug = table.Column<string>(maxLength: 100, nullable: false),
-                    HeaderImage = table.Column<string>(nullable: true),
                     Description = table.Column<string>(maxLength: 150, nullable: false),
                     DocumentContent = table.Column<string>(nullable: true),
                     Status = table.Column<int>(nullable: false),
@@ -325,13 +321,13 @@ namespace CmsEngine.Migrations
                         column: x => x.ApplicationUserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.NoAction);
                     table.ForeignKey(
                         name: "FK_PageAspNetUser_Pages_PageId",
                         column: x => x.PageId,
                         principalTable: "Pages",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.NoAction);
                 });
 
             migrationBuilder.CreateTable(
@@ -349,13 +345,13 @@ namespace CmsEngine.Migrations
                         column: x => x.ApplicationUserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.NoAction);
                     table.ForeignKey(
                         name: "FK_PostAspNetUser_Posts_PostId",
                         column: x => x.PostId,
                         principalTable: "Posts",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.NoAction);
                 });
 
             migrationBuilder.CreateTable(
@@ -409,45 +405,45 @@ namespace CmsEngine.Migrations
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "LockoutEnabled", "LockoutEnd", "Name", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "Surname", "TwoFactorEnabled", "UserName" },
-                values: new object[] { "44ee54c0-3b92-4a91-93b5-a23cdf6a13c3", 0, "f4941528-c244-4333-bdaa-d24ba24c5472", "john@doe.com", true, false, null, "John", "JOHN@DOE.COM", "JOHN@DOE.COM", "AQAAAAEAACcQAAAAEGIUaLe7RWZGw8Tr5/xoUMOooAzJsLFw550fDqZkrbk8CD+urHQzYjK1xY8vcDMekw==", null, false, "NBTDBYKTNLGHKQ3HI7YFEHPQN5YRXWQC", "Doe", false, "john@doe.com" });
+                values: new object[] { "f5469762-58c5-4caa-a58f-45bb98e887ca", 0, "a31d7ea4-a881-4101-8b22-a41656cdde5f", "john@doe.com", true, false, null, "John", "JOHN@DOE.COM", "JOHN@DOE.COM", "AQAAAAEAACcQAAAAEGIUaLe7RWZGw8Tr5/xoUMOooAzJsLFw550fDqZkrbk8CD+urHQzYjK1xY8vcDMekw==", null, false, "NBTDBYKTNLGHKQ3HI7YFEHPQN5YRXWQC", "Doe", false, "john@doe.com" });
 
             migrationBuilder.InsertData(
                 table: "Websites",
-                columns: new[] { "Id", "Address", "ArticleLimit", "Culture", "DateCreated", "DateFormat", "DateModified", "Description", "Email", "Facebook", "FacebookApiVersion", "FacebookAppId", "HeaderImage", "Instagram", "IsDeleted", "LinkedIn", "Name", "Phone", "SiteUrl", "Tagline", "Twitter", "UrlFormat", "UserCreated", "UserModified", "VanityId" },
-                values: new object[] { 1, null, 10, "en-US", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "MM/dd/yyyy", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "This is a sample website", null, null, null, null, null, null, false, null, "Sample Website", null, "cmsengine.test", null, null, "http://[site_url]/[type]/[slug]", null, null, new Guid("76b8a9d6-3267-48f6-a692-56a42ec987a5") });
+                columns: new[] { "Id", "Address", "ArticleLimit", "Culture", "DateCreated", "DateFormat", "DateModified", "Description", "Email", "Facebook", "FacebookApiVersion", "FacebookAppId", "Instagram", "IsDeleted", "LinkedIn", "Name", "Phone", "SiteUrl", "Twitter", "UrlFormat", "UserCreated", "UserModified", "VanityId" },
+                values: new object[] { 1, null, 10, "en-US", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "MM/dd/yyyy", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "This is a sample website", null, null, null, null, null, false, null, "Sample Website", null, "cmsengine.test", null, "http://[site_url]/[type]/[slug]", null, null, new Guid("f9990443-65c0-48ba-8f7d-8be14cfb28a9") });
 
             migrationBuilder.InsertData(
                 table: "Categories",
                 columns: new[] { "Id", "DateCreated", "DateModified", "Description", "IsDeleted", "Name", "Slug", "UserCreated", "UserModified", "VanityId", "WebsiteId" },
-                values: new object[] { 1, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, false, "Category example", "category-example", null, null, new Guid("48f9fef2-cabe-4a3d-a492-380634006017"), 1 });
+                values: new object[] { 1, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, false, "Category example", "category-example", null, null, new Guid("d103990c-2edd-4fa2-a433-fbf7d86c5792"), 1 });
 
             migrationBuilder.InsertData(
                 table: "Pages",
-                columns: new[] { "Id", "DateCreated", "DateModified", "Description", "DocumentContent", "HeaderImage", "IsDeleted", "PublishedOn", "Slug", "Status", "Title", "UserCreated", "UserModified", "VanityId", "WebsiteId" },
+                columns: new[] { "Id", "DateCreated", "DateModified", "Description", "DocumentContent", "IsDeleted", "PublishedOn", "Slug", "Status", "Title", "UserCreated", "UserModified", "VanityId", "WebsiteId" },
                 values: new object[] { 1, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "This is a sample page from a sample website", @"<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed risus libero, egestas vel tempus id, venenatis nec tellus. Nullam hendrerit id magna quis venenatis. Pellentesque rhoncus leo vitae turpis tristique, nec placerat tellus scelerisque. Aenean vitae rhoncus urna, non posuere elit. Nullam quam libero, porttitor in lectus convallis, pellentesque finibus libero. Suspendisse potenti. Fusce quis purus egestas, malesuada massa sed, dignissim purus. Curabitur vitae rhoncus nulla, sit amet dignissim quam.</p>
                                        <p>Mauris lorem urna, convallis in enim nec, tristique ullamcorper nisl. Fusce nec tellus et arcu imperdiet ullamcorper vestibulum vitae mi. Sed bibendum molestie dolor sit amet rhoncus.Duis consectetur convallis auctor. In hac habitasse platea dictumst.Duis lorem nibh, mattis ut purus interdum, scelerisque molestie est. Nullam molestie a est vel ornare. Maecenas rhoncus accumsan ligula, at pretium purus tempus ut. Aliquam erat nulla, pretium vel eros vitae, blandit aliquam nibh. Nulla tincidunt, justo et ullamcorper dictum, augue lectus dictum ligula, eget rutrum sem nibh non felis.Aenean elementum, sem sit amet pulvinar tempus, neque eros faucibus turpis, quis molestie nisi libero quis purus.</p>
                                        <p>Donec quam massa, tincidunt eu lacus in, lacinia hendrerit urna. Pellentesque pretium orci a felis tincidunt, sit amet volutpat est dapibus. Donec laoreet, massa in imperdiet laoreet, enim ligula auctor est, non imperdiet nisi diam vitae quam. Integer nec porttitor ante. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.Morbi non pretium risus, a lobortis eros. Etiam blandit diam tortor. Ut feugiat eros id erat auctor, ut vehicula odio vestibulum.</p>
                                        <p>Nunc sed ex sed diam euismod eleifend. Proin blandit lorem sed placerat fermentum. Curabitur non gravida felis, ac sollicitudin nibh. Morbi ornare sapien vitae nisl condimentum cursus.Vivamus bibendum condimentum metus, ut gravida orci bibendum maximus. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.Duis varius, tortor ac placerat faucibus, lectus mauris bibendum elit, id eleifend leo diam ac nulla.Aenean egestas urna facilisis purus ullamcorper vestibulum.Etiam commodo suscipit turpis, quis lobortis metus posuere sed.</p>
-                                       <p>Praesent in augue sit amet tortor ultricies maximus eu ac dui.Pellentesque et congue elit. Suspendisse potenti. Donec facilisis eu magna nec bibendum. Nullam in dignissim elit. Integer laoreet odio massa, vel vestibulum mauris varius et. Ut non ex sit amet nisl mollis laoreet. </p> ", null, false, new DateTime(2018, 12, 31, 16, 1, 8, 455, DateTimeKind.Local), "sample-page", 0, "Sample page", null, null, new Guid("bc9fa202-e83f-4e2a-894f-e62ab743fbe1"), 1 });
+                                       <p>Praesent in augue sit amet tortor ultricies maximus eu ac dui.Pellentesque et congue elit. Suspendisse potenti. Donec facilisis eu magna nec bibendum. Nullam in dignissim elit. Integer laoreet odio massa, vel vestibulum mauris varius et. Ut non ex sit amet nisl mollis laoreet. </p> ", false, new DateTime(2018, 9, 15, 15, 50, 39, 302, DateTimeKind.Local), "sample-page", 0, "Sample page", null, null, new Guid("5d2de831-3810-4606-8235-7f3d7a07b3fb"), 1 });
 
             migrationBuilder.InsertData(
                 table: "Posts",
-                columns: new[] { "Id", "DateCreated", "DateModified", "Description", "DocumentContent", "HeaderImage", "IsDeleted", "PublishedOn", "Slug", "Status", "Title", "UserCreated", "UserModified", "VanityId", "WebsiteId" },
+                columns: new[] { "Id", "DateCreated", "DateModified", "Description", "DocumentContent", "IsDeleted", "PublishedOn", "Slug", "Status", "Title", "UserCreated", "UserModified", "VanityId", "WebsiteId" },
                 values: new object[] { 1, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Lorem ipsum dolor sit amet", @"<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed risus libero, egestas vel tempus id, venenatis nec tellus. Nullam hendrerit id magna quis venenatis. Pellentesque rhoncus leo vitae turpis tristique, nec placerat tellus scelerisque. Aenean vitae rhoncus urna, non posuere elit. Nullam quam libero, porttitor in lectus convallis, pellentesque finibus libero. Suspendisse potenti. Fusce quis purus egestas, malesuada massa sed, dignissim purus. Curabitur vitae rhoncus nulla, sit amet dignissim quam.</p>
                                        <p>Mauris lorem urna, convallis in enim nec, tristique ullamcorper nisl. Fusce nec tellus et arcu imperdiet ullamcorper vestibulum vitae mi. Sed bibendum molestie dolor sit amet rhoncus.Duis consectetur convallis auctor. In hac habitasse platea dictumst.Duis lorem nibh, mattis ut purus interdum, scelerisque molestie est. Nullam molestie a est vel ornare. Maecenas rhoncus accumsan ligula, at pretium purus tempus ut. Aliquam erat nulla, pretium vel eros vitae, blandit aliquam nibh. Nulla tincidunt, justo et ullamcorper dictum, augue lectus dictum ligula, eget rutrum sem nibh non felis.Aenean elementum, sem sit amet pulvinar tempus, neque eros faucibus turpis, quis molestie nisi libero quis purus.</p>
                                        <p>Donec quam massa, tincidunt eu lacus in, lacinia hendrerit urna. Pellentesque pretium orci a felis tincidunt, sit amet volutpat est dapibus. Donec laoreet, massa in imperdiet laoreet, enim ligula auctor est, non imperdiet nisi diam vitae quam. Integer nec porttitor ante. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.Morbi non pretium risus, a lobortis eros. Etiam blandit diam tortor. Ut feugiat eros id erat auctor, ut vehicula odio vestibulum.</p>
                                        <p>Nunc sed ex sed diam euismod eleifend. Proin blandit lorem sed placerat fermentum. Curabitur non gravida felis, ac sollicitudin nibh. Morbi ornare sapien vitae nisl condimentum cursus.Vivamus bibendum condimentum metus, ut gravida orci bibendum maximus. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.Duis varius, tortor ac placerat faucibus, lectus mauris bibendum elit, id eleifend leo diam ac nulla.Aenean egestas urna facilisis purus ullamcorper vestibulum.Etiam commodo suscipit turpis, quis lobortis metus posuere sed.</p>
-                                       <p>Praesent in augue sit amet tortor ultricies maximus eu ac dui.Pellentesque et congue elit. Suspendisse potenti. Donec facilisis eu magna nec bibendum. Nullam in dignissim elit. Integer laoreet odio massa, vel vestibulum mauris varius et. Ut non ex sit amet nisl mollis laoreet. </p> ", null, false, new DateTime(2018, 12, 31, 16, 1, 8, 455, DateTimeKind.Local), "lorem-ipsum", 0, "Lorem Ipsum", null, null, new Guid("487996f4-a7d4-4fef-87ac-99d0f1acc06e"), 1 });
+                                       <p>Praesent in augue sit amet tortor ultricies maximus eu ac dui.Pellentesque et congue elit. Suspendisse potenti. Donec facilisis eu magna nec bibendum. Nullam in dignissim elit. Integer laoreet odio massa, vel vestibulum mauris varius et. Ut non ex sit amet nisl mollis laoreet. </p> ", false, new DateTime(2018, 9, 15, 15, 50, 39, 302, DateTimeKind.Local), "lorem-ipsum", 0, "Lorem Ipsum", null, null, new Guid("3a2ae072-5370-49c9-828e-626eb70873a1"), 1 });
 
             migrationBuilder.InsertData(
                 table: "PageAspNetUser",
                 columns: new[] { "PageId", "ApplicationUserId" },
-                values: new object[] { 1, "44ee54c0-3b92-4a91-93b5-a23cdf6a13c3" });
+                values: new object[] { 1, "f5469762-58c5-4caa-a58f-45bb98e887ca" });
 
             migrationBuilder.InsertData(
                 table: "PostAspNetUser",
                 columns: new[] { "PostId", "ApplicationUserId" },
-                values: new object[] { 1, "44ee54c0-3b92-4a91-93b5-a23cdf6a13c3" });
+                values: new object[] { 1, "f5469762-58c5-4caa-a58f-45bb98e887ca" });
 
             migrationBuilder.InsertData(
                 table: "PostCategory",

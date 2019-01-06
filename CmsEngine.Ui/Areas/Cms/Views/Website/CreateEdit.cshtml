@@ -1,7 +1,6 @@
-@model WebsiteEditModel
+@model CmsEngine.Data.EditModels.WebsiteEditModel
 
 @section PageHead{
-    <link href="~/css/vendors/jquery.fileupload.min.css" rel="stylesheet" />
     <script src="~/js/vendors/tinymce/tinymce.min.js"></script>
 }
 
@@ -28,29 +27,6 @@
 
                     <div asp-validation-summary="All" class="text-danger"></div>
                     <div class="form-group row">
-                        <div class="col-md-12">
-                            <span class="btn btn-success fileinput-button">
-                                <i class="glyphicon glyphicon-plus"></i>
-                                <span>Header image</span>
-                                <input id="uploadHeadImage" type="file" name="files">
-                            </span>
-
-                            <button class="btn btn-outline-danger" id="removeHeadImage">Remove image</button>
-
-                            <div class="header-preview">
-                                @if (!string.IsNullOrWhiteSpace(Model.HeaderImage))
-                                {
-                                    <img src="@string.Format(Constants.Image320Path, "website", Model.HeaderImage)" alt="Image preview" title="Image preview" />
-                                }
-                            </div>
-                            <input asp-for="HeaderImage" type="hidden" />
-
-                            <div id="progress">
-                                <div class="progress-bar" style="width: 0%;"></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group row">
                         <label asp-for="Name" class="col-md-2 form-control-label"></label>
                         <div class="col-md-10">
                             <input asp-for="Name" class="form-control" />
@@ -58,26 +34,10 @@
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label asp-for="Tagline" class="col-md-2 form-control-label"></label>
-                        <div class="col-md-10">
-                            <input asp-for="Tagline" class="form-control" />
-                            <span asp-validation-for="Tagline" class="text-danger"></span>
-                        </div>
-                    </div>
-                    <div class="form-group row">
                         <label asp-for="Description" class="col-md-2 form-control-label"></label>
                         <div class="col-md-10">
                             <textarea asp-for="Description" class="form-control"></textarea>
-                            <span class="btn btn-success fileinput-button float-right">
-                                <i class="glyphicon glyphicon-plus"></i>
-                                <span>Upload images</span>
-                                <input id="uploadEditorImages" type="file" name="editorImage" multiple>
-                            </span>
-                            <span class="btn btn-success fileinput-button float-right">
-                                <i class="glyphicon glyphicon-plus"></i>
-                                <span>Upload files</span>
-                                <input id="uploadEditorFiles" type="file" name="editorFile" multiple>
-                            </span>
+                            <span asp-validation-for="Description" class="text-danger"></span>
                         </div>
                     </div>
                     <div class="form-group row">
@@ -190,11 +150,9 @@
 @section scripts{
     @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
 
-    <script src="~/js/vendors/jquery.ui.widget.min.js"></script>
-    <script src="~/js/vendors/jquery.fileupload.min.js"></script>
     <script>
         $(function () {
-            tinymce.init({ selector: 'textarea', height: 150 });
+            CmsEngine.Configure.TinyMCE('textarea', 500);
             CmsEngine.FileUpload.UploadHeader('#uploadHeadImage', '@Url.Action("uploadfiles")', '.header-preview', '#HeaderImage');
             CmsEngine.FileUpload.UploadImagesToEditor('#uploadEditorImages', '@Url.Action("uploadfiles")');
             CmsEngine.FileUpload.UploadFilesToEditor('#uploadEditorFiles', '@Url.Action("uploadfiles")');

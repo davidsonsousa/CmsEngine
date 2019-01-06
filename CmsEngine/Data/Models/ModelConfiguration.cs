@@ -14,7 +14,7 @@ namespace CmsEngine.Data.Models
                 .HasMaxLength(200)
                 .IsRequired();
 
-            b.Property(model => model.Tagline)
+            b.Property(model => model.Description)
                 .HasMaxLength(200);
 
             b.Property(model => model.Culture)

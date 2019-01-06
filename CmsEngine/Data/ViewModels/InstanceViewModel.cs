@@ -7,9 +7,7 @@ namespace CmsEngine.Data.ViewModels
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public string Tagline { get; set; }
         public string Description { get; set; }
-        public string HeaderImage { get; set; }
         public string Culture { get; set; }
         public string UrlFormat { get; set; }
         public string DateFormat { get; set; }
@@ -17,7 +15,7 @@ namespace CmsEngine.Data.ViewModels
         public int ArticleLimit { get; set; }
         public ContactDetailsViewModel ContactDetails { get; set; }
         public ApiDetailsViewModel ApiDetails { get; set; }
-        public PostViewModel SelectedPost { get; set; }
+        public DocumentViewModel SelectedDocument { get; set; }
         public ContactForm ContactForm { get; set; }
 
         public string PageTitle { get; set; }

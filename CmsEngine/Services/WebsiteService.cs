@@ -175,7 +175,7 @@ namespace CmsEngine
                         listItems = orderDirection == "asc" ? listWebsites.OrderBy(o => o.Culture) : listWebsites.OrderByDescending(o => o.Culture);
                         break;
                     case 2:
-                        listItems = orderDirection == "asc" ? listWebsites.OrderBy(o => o.Tagline) : listWebsites.OrderByDescending(o => o.Tagline);
+                        listItems = orderDirection == "asc" ? listWebsites.OrderBy(o => o.Description) : listWebsites.OrderByDescending(o => o.Description);
                         break;
                     case 1:
                     case 0:

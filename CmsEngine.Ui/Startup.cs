@@ -1,4 +1,3 @@
-using System.IO;
 using AutoMapper;
 using CmsEngine.Data;
 using CmsEngine.Data.AccessLayer;
@@ -13,7 +12,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Console;
 
@@ -99,18 +97,6 @@ namespace CmsEngine.Ui
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-
-            string uploadPath = Path.Combine(env.WebRootPath, "UploadedFiles");
-            if (!Directory.Exists(uploadPath))
-            {
-                Directory.CreateDirectory(uploadPath);
-            }
-
-            app.UseStaticFiles(new StaticFileOptions
-            {
-                FileProvider = new PhysicalFileProvider(Path.Combine(env.WebRootPath, "UploadedFiles")),
-                RequestPath = "/image"
-            });
             app.UseCookiePolicy();
 
             app.UseAuthentication();
@@ -122,8 +108,19 @@ namespace CmsEngine.Ui
                     template: "{area:exists}/{controller=Home}/{action=Index}/{vanityId?}");
 
                 routes.MapRoute(
-                    name: "blogRoute",
-                    template: "{controller=Home}/{action=Index}/{slug?}");
+                    name: "blog",
+                    template: "blog/{action}/{slug?}",
+                    defaults: new { controller = "Blog", action = "Index" });
+
+                routes.MapRoute(
+                    name: "main",
+                    template: "",
+                    defaults: new { controller = "Home", action = "Index" });
+
+                routes.MapRoute(
+                    name: "page",
+                    template: "{slug}",
+                    defaults: new { controller = "Home", action = "Page" });
 
                 routes.MapRoute(
                     name: "default",

@@ -3,7 +3,6 @@ CmsEngine.Events = CmsEngine.Events || {};
 CmsEngine.Configure = CmsEngine.Configure || {};
 CmsEngine.Dialog = CmsEngine.Dialog || {};
 CmsEngine.Dialog.Events = CmsEngine.Dialog.Events || {};
-CmsEngine.FileUpload = CmsEngine.FileUpload || {};
 CmsEngine.Utils = CmsEngine.Utils || {};
 CmsEngine.Navigation = CmsEngine.Navigation || {};
 
@@ -109,4 +108,29 @@ CmsEngine.Configure.Dialog = function (dialogId, dialogType, title, body, cancel
   //	create: false,
   //	sortField: 'text'
   //});
+};
+
+CmsEngine.Configure.TinyMCE = function (selector, height) {
+  tinymce.init({
+    selector: selector,
+    height: height,
+    content_css: "",
+    //encoding: "xml",
+    //entity_encoding: "raw",
+    relative_urls: false,
+    remove_script_host: true,
+    document_base_url: "/",
+    convert_urls: true,
+    plugins: [
+      "advlist autolink lists link image charmap print preview anchor",
+      "searchreplace visualblocks code fullscreen",
+      "insertdatetime media table contextmenu paste"
+    ],
+    setup: function (editor) {
+      editor.on('SaveContent', function (e) {
+        e.content = e.content.replace(/&#39/g, "&apos");
+      });
+    },
+    toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image"
+  });
 };

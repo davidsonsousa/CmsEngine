@@ -57,8 +57,6 @@ namespace CmsEngine
                                 Id = website.Id,
                                 Name = website.Name,
                                 Description = website.Description,
-                                Tagline = website.Tagline,
-                                HeaderImage = website.HeaderImage,
                                 Culture = website.Culture,
                                 UrlFormat = website.UrlFormat,
                                 DateFormat = website.DateFormat,
