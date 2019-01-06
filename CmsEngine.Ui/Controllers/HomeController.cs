@@ -25,10 +25,10 @@ namespace CmsEngine.Ui.Controllers
             return View(instance);
         }
 
-        public IActionResult About()
+        public IActionResult Page(string slug)
         {
-            ViewData["Message"] = "Your application description page.";
-            instance.PageTitle = $"About - {instance.Name}";
+            instance.SelectedDocument = (PageViewModel)service.GetPageBySlug(slug);
+            instance.PageTitle = $"{instance.SelectedDocument.Title} - {instance.Name}";
             return View(instance);
         }
 

@@ -38,6 +38,13 @@ namespace CmsEngine
             return _mapper.Map<Page, PageViewModel>(item);
         }
 
+        public IViewModel GetPageBySlug(string slug)
+        {
+            var item = _unitOfWork.Pages.Get(q => q.Slug == slug)
+                       .SingleOrDefault();
+            return _mapper.Map<Page, PageViewModel>(item);
+        }
+
         #endregion
 
         #region Setup
