@@ -12,8 +12,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Console;
 
 namespace CmsEngine.Ui
 {
@@ -25,11 +23,6 @@ namespace CmsEngine.Ui
         }
 
         public IConfiguration Configuration { get; }
-
-        public static readonly LoggerFactory loggerFactory = new LoggerFactory(new[] {
-                                                                new ConsoleLoggerProvider((category, level) =>
-                                                                                    category == DbLoggerCategory.Database.Command.Name
-                                                                                 && level == LogLevel.Information, true) });
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -44,7 +37,6 @@ namespace CmsEngine.Ui
             // Add CmsEngineContext
             services.AddDbContextPool<CmsEngineContext>(options =>
                 options.UseLazyLoadingProxies()
-                       .UseLoggerFactory(loggerFactory)
                        .EnableSensitiveDataLogging(true) // TODO: Perhaps use a flag from appsettings instead of a hard-coded value
                        .UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
