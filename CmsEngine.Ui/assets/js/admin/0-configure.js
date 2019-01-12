@@ -3,6 +3,7 @@ CmsEngine.Events = CmsEngine.Events || {};
 CmsEngine.Configure = CmsEngine.Configure || {};
 CmsEngine.Dialog = CmsEngine.Dialog || {};
 CmsEngine.Dialog.Events = CmsEngine.Dialog.Events || {};
+CmsEngine.FileUpload = CmsEngine.FileUpload || {};
 CmsEngine.Utils = CmsEngine.Utils || {};
 CmsEngine.Navigation = CmsEngine.Navigation || {};
 
