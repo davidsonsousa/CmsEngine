@@ -7,6 +7,7 @@ using CmsEngine.Data.Models;
 using CmsEngine.Data.ViewModels;
 using CmsEngine.Data.ViewModels.DataTableViewModels;
 using CmsEngine.Utils;
+using Microsoft.Extensions.Logging;
 
 namespace CmsEngine
 {
@@ -17,6 +18,10 @@ namespace CmsEngine
         public IEnumerable<T> GetAllCategoriesReadOnly<T>(int count = 0) where T : IViewModel
         {
             IEnumerable<Category> listItems = GetAllReadOnly<Category>(count);
+
+            _logger.LogInformation("CmsService > GetAllCategoriesReadOnly(count: {0})", count);
+            _logger.LogInformation("Categories loaded: {0}", listItems.Count());
+
             return _mapper.Map<IEnumerable<Category>, IEnumerable<T>>(listItems);
         }
 
@@ -28,24 +33,39 @@ namespace CmsEngine
                                                             .OrderBy(o => o.Name)
                                                             .ToList();
 
+            _logger.LogInformation("CmsService > GetCategoriesWithPostCount()");
+            _logger.LogInformation("Categories loaded: {0}", listItems.Count());
+
             return _mapper.Map<IEnumerable<Category>, IEnumerable<T>>(listItems);
         }
 
         public IViewModel GetCategoryById(int id)
         {
             var item = _unitOfWork.Categories.GetById(id);
+
+            _logger.LogInformation("CmsService > GetCategoryById(id: {0})", id);
+            _logger.LogInformation("Category: {0}", SerializeObjectForLog(item));
+
             return _mapper.Map<Category, CategoryViewModel>(item);
         }
 
         public IViewModel GetCategoryById(Guid id)
         {
             var item = _unitOfWork.Categories.GetById(id);
+
+            _logger.LogInformation("CmsService > GetCategoryById(id: {0})", id);
+            _logger.LogInformation("Category: {0}", SerializeObjectForLog(item));
+
             return _mapper.Map<Category, CategoryViewModel>(item);
         }
 
         public IViewModel GetCategoryBySlug(string slug)
         {
             var item = _unitOfWork.Categories.Get(q => q.Slug == slug).SingleOrDefault();
+
+            _logger.LogInformation("CmsService > GetCategoryBySlug(slug: {0})", slug);
+            _logger.LogInformation("Category: {0}", SerializeObjectForLog(item));
+
             return _mapper.Map<Category, CategoryViewModel>(item);
         }
 
@@ -55,18 +75,27 @@ namespace CmsEngine
 
         public IEditModel SetupCategoryEditModel()
         {
+            _logger.LogInformation("CmsService > SetupCategoryEditModel()");
             return new CategoryEditModel();
         }
 
         public IEditModel SetupCategoryEditModel(int id)
         {
             var item = _unitOfWork.Categories.GetById(id);
+
+            _logger.LogInformation("CmsService > SetupCategoryEditModel(id: {0})", id);
+            _logger.LogInformation("Category: {0}", SerializeObjectForLog(item));
+
             return _mapper.Map<Category, CategoryEditModel>(item);
         }
 
         public IEditModel SetupCategoryEditModel(Guid id)
         {
             var item = _unitOfWork.Categories.GetById(id);
+
+            _logger.LogInformation("CmsService > SetupCategoryEditModel(id: {0})", id);
+            _logger.LogInformation("Category: {0}", SerializeObjectForLog(item));
+
             return _mapper.Map<Category, CategoryEditModel>(item);
         }
 
@@ -76,6 +105,8 @@ namespace CmsEngine
 
         public ReturnValue SaveCategory(IEditModel editModel)
         {
+            _logger.LogInformation("CmsService > SaveCategory(editModel: {0})", SerializeObjectForLog(editModel));
+
             var returnValue = new ReturnValue
             {
                 IsError = false,
@@ -87,9 +118,12 @@ namespace CmsEngine
                 PrepareCategoryForSaving(editModel);
 
                 _unitOfWork.Save();
+                _logger.LogInformation("Category saved");
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex, "Error when saving category {0}", SerializeObjectForLog(editModel));
+
                 returnValue.IsError = true;
                 returnValue.Message = "An error has occurred while saving the category";
                 returnValue.Exception = ex.Message;
@@ -105,37 +139,19 @@ namespace CmsEngine
 
         public ReturnValue DeleteCategory(Guid id)
         {
-            var returnValue = new ReturnValue();
-            try
-            {
-                var category = _unitOfWork.Categories.GetById(id);
-                returnValue = this.Delete(category);
-
-                if (!returnValue.IsError)
-                {
-                    returnValue.Message = $"Category '{category.Name}' deleted at {DateTime.Now.ToString("T")}.";
-                }
-                else
-                {
-                    returnValue.Message = "An error has occurred while deleting the category";
-                }
-            }
-            catch
-            {
-                returnValue.IsError = true;
-                returnValue.Message = "An error has occurred while deleting the category";
-                throw;
-            }
-
-            return returnValue;
+            return this.DeleteCategory(_unitOfWork.Categories.GetById(id));
         }
 
         public ReturnValue DeleteCategory(int id)
         {
+            return this.DeleteCategory(_unitOfWork.Categories.GetById(id));
+        }
+
+        private ReturnValue DeleteCategory(Category category)
+        {
             var returnValue = new ReturnValue();
             try
             {
-                var category = _unitOfWork.Categories.GetById(id);
                 returnValue = this.Delete(category);
 
                 if (!returnValue.IsError)
@@ -212,6 +228,8 @@ namespace CmsEngine
 
             if (editModel.IsNew)
             {
+                _logger.LogInformation("New category");
+
                 category = _mapper.Map<CategoryEditModel, Category>((CategoryEditModel)editModel);
                 category.WebsiteId = Instance.Id;
 
@@ -219,6 +237,8 @@ namespace CmsEngine
             }
             else
             {
+                _logger.LogInformation("Update category");
+
                 category = _unitOfWork.Categories.GetById(editModel.VanityId);
                 _mapper.Map((CategoryEditModel)editModel, category);
                 category.WebsiteId = Instance.Id;
