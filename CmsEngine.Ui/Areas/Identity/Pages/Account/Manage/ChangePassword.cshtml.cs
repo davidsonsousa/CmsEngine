@@ -26,7 +26,7 @@ namespace CmsEngine.Ui.Areas.Identity.Pages.Account.Manage
             _userManager = userManager;
             _signInManager = signInManager;
             _logger = logger;
-            _service = new CmsService(uow, mapper, hca, userManager);
+            _service = new CmsService(uow, mapper, hca, userManager, logger);
         }
 
         [BindProperty]

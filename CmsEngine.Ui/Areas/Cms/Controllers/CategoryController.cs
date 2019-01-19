@@ -8,13 +8,16 @@ using CmsEngine.Data.ViewModels.DataTableViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 namespace CmsEngine.Ui.Areas.Cms.Controllers
 {
     [Area("Cms")]
     public class CategoryController : BaseController
     {
-        public CategoryController(IUnitOfWork uow, IMapper mapper, IHttpContextAccessor hca, UserManager<ApplicationUser> userManager) : base(uow, mapper, hca, userManager) { }
+        public CategoryController(IUnitOfWork uow, IMapper mapper, IHttpContextAccessor hca, UserManager<ApplicationUser> userManager,
+                                  ILogger<CategoryController> logger)
+                           : base(uow, mapper, hca, userManager, logger) { }
 
         public IActionResult Index()
         {

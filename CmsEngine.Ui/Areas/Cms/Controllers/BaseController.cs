@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
 namespace CmsEngine.Ui.Areas.Cms.Controllers
@@ -20,15 +21,17 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
     {
         protected readonly CmsService service;
         protected List<UploadFilesResult> fileList;
+        protected readonly ILogger logger;
 
-        public BaseController()
+        public BaseController(ILogger logger)
         {
-
+            this.logger = logger;
         }
 
-        public BaseController(IUnitOfWork uow, IMapper mapper, IHttpContextAccessor hca, UserManager<ApplicationUser> userManager)
+        public BaseController(IUnitOfWork uow, IMapper mapper, IHttpContextAccessor hca, UserManager<ApplicationUser> userManager, ILogger logger)
         {
-            service = new CmsService(uow, mapper, hca, userManager);
+            service = new CmsService(uow, mapper, hca, userManager, logger);
+            this.logger = logger;
         }
 
         public override void OnActionExecuting(ActionExecutingContext context)

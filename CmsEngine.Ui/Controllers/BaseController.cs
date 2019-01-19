@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.Extensions.Logging;
 
 namespace CmsEngine.Ui.Controllers
 {
@@ -13,11 +14,13 @@ namespace CmsEngine.Ui.Controllers
     {
         protected readonly CmsService service;
         protected readonly InstanceViewModel instance;
+        protected readonly ILogger logger;
 
-        public BaseController(IUnitOfWork uow, IMapper mapper, IHttpContextAccessor hca, UserManager<ApplicationUser> userManager)
+        public BaseController(IUnitOfWork uow, IMapper mapper, IHttpContextAccessor hca, UserManager<ApplicationUser> userManager, ILogger logger)
         {
-            service = new CmsService(uow, mapper, hca, userManager);
+            service = new CmsService(uow, mapper, hca, userManager, logger);
             instance = service.Instance;
+            this.logger = logger;
         }
 
         public override void OnActionExecuting(ActionExecutingContext context)

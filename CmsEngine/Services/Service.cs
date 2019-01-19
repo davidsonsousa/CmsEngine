@@ -17,6 +17,7 @@ using CmsEngine.Utils;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Extensions.Logging;
 using static System.Web.HttpUtility;
 
 namespace CmsEngine
@@ -27,6 +28,7 @@ namespace CmsEngine
         private readonly IMapper _mapper;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly ILogger _logger;
 
         private InstanceViewModel _instance;
 
@@ -95,12 +97,13 @@ namespace CmsEngine
 
         #endregion
 
-        public CmsService(IUnitOfWork uow, IMapper mapper, IHttpContextAccessor hca, UserManager<ApplicationUser> userManager)
+        public CmsService(IUnitOfWork uow, IMapper mapper, IHttpContextAccessor hca, UserManager<ApplicationUser> userManager, ILogger logger)
         {
             _unitOfWork = uow;
             _mapper = mapper;
             _httpContextAccessor = hca;
             _userManager = userManager;
+            _logger = logger;
         }
 
         private IQueryable<TModel> GetDocumentsByStatus<TModel>(DocumentStatus documentStatus, int count = 0) where TModel : Document

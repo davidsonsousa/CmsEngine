@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 namespace CmsEngine.Ui.Areas.Cms.Controllers
 {
@@ -18,7 +19,7 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
         private readonly IHostingEnvironment _env;
 
         public PostController(IUnitOfWork uow, IMapper mapper, IHttpContextAccessor hca, UserManager<ApplicationUser> userManager,
-                              IHostingEnvironment env) : base(uow, mapper, hca, userManager)
+                              IHostingEnvironment env, ILogger<PostController> logger) : base(uow, mapper, hca, userManager, logger)
         {
             _env = env;
         }

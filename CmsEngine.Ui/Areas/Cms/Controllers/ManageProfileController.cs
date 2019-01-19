@@ -35,7 +35,7 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
                                      , SignInManager<ApplicationUser> signInManager
                                      , IEmailSender emailSender
                                      , ILogger<ManageProfileController> logger
-                                     , UrlEncoder urlEncoder) : base(uow, mapper, hca, userManager)
+                                     , UrlEncoder urlEncoder) : base(uow, mapper, hca, userManager, logger)
         {
             _userManager = userManager;
             _signInManager = signInManager;
