@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.Extensions.Logging;
 
 namespace CmsEngine.Ui.Areas.Identity.Pages.Account.Manage
 {
@@ -25,12 +26,12 @@ namespace CmsEngine.Ui.Areas.Identity.Pages.Account.Manage
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
             IEmailSender emailSender,
-            IUnitOfWork uow, IMapper mapper, IHttpContextAccessor hca)
+            IUnitOfWork uow, IMapper mapper, IHttpContextAccessor hca, ILogger logger)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _emailSender = emailSender;
-            _service = new CmsService(uow, mapper, hca, userManager);
+            _service = new CmsService(uow, mapper, hca, userManager, logger);
         }
 
         public string Username { get; set; }

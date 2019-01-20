@@ -6,13 +6,15 @@ using CmsEngine.Data.ViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 namespace CmsEngine.Ui.Controllers
 {
     public class BlogController : BaseController
     {
-        public BlogController(IUnitOfWork uow, IMapper mapper, IHttpContextAccessor hca, UserManager<ApplicationUser> userManager)
-                       : base(uow, mapper, hca, userManager)
+        public BlogController(IUnitOfWork uow, IMapper mapper, IHttpContextAccessor hca, UserManager<ApplicationUser> userManager,
+                              ILogger<BlogController> logger)
+                       : base(uow, mapper, hca, userManager, logger)
         {
         }
 

@@ -1,3 +1,6 @@
+using System;
+using System.Security.Claims;
+using System.Threading.Tasks;
 using CmsEngine.Data.Models;
 using CmsEngine.Data.ViewModels.AccountViewModels;
 using CmsEngine.Extensions;
@@ -8,9 +11,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Security.Claims;
-using System.Threading.Tasks;
 
 namespace CmsEngine.Ui.Areas.Cms.Controllers
 {
@@ -27,7 +27,7 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
             IEmailSender emailSender,
-            ILogger<AccountController> logger)
+            ILogger<AccountController> logger) : base(logger)
         {
             _userManager = userManager;
             _signInManager = signInManager;

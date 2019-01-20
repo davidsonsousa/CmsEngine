@@ -7,6 +7,7 @@ using CmsEngine.Helpers.Email;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 namespace CmsEngine.Ui.Controllers
 {
@@ -14,8 +15,9 @@ namespace CmsEngine.Ui.Controllers
     {
         private readonly IEmailSender _emailSender;
 
-        public HomeController(IUnitOfWork uow, IMapper mapper, IHttpContextAccessor hca, UserManager<ApplicationUser> userManager, IEmailSender emailSender)
-                       : base(uow, mapper, hca, userManager)
+        public HomeController(IUnitOfWork uow, IMapper mapper, IHttpContextAccessor hca, UserManager<ApplicationUser> userManager,
+                              IEmailSender emailSender, ILogger<HomeController> logger)
+                       : base(uow, mapper, hca, userManager, logger)
         {
             _emailSender = emailSender;
         }
