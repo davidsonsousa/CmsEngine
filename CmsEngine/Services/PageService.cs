@@ -80,7 +80,7 @@ namespace CmsEngine
             var item = _unitOfWork.Pages.GetById(id);
 
             _logger.LogInformation("CmsService > SetupCategoryEditModel(id: {0})", id);
-            _logger.LogInformation("Category: {0}", SerializeObjectForLog(item));
+            _logger.LogInformation("Page: {0}", SerializeObjectForLog(item));
 
             return _mapper.Map<Page, PageEditModel>(item);
         }
@@ -90,7 +90,7 @@ namespace CmsEngine
             var item = _unitOfWork.Pages.GetById(id);
 
             _logger.LogInformation("CmsService > SetupCategoryEditModel(id: {0})", id);
-            _logger.LogInformation("Category: {0}", SerializeObjectForLog(item));
+            _logger.LogInformation("Page: {0}", SerializeObjectForLog(item));
 
             return _mapper.Map<Page, PageEditModel>(item);
         }
