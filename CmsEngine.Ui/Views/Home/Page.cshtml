@@ -13,7 +13,7 @@
                         @{
                             string imagePath = !string.IsNullOrWhiteSpace(selectedPage.HeaderImage)
                                                ? imagePath = string.Format(Constants.ImagePath, "post", selectedPage.HeaderImage)
-                                               : "https://placeimg.com/640/426/any";
+                                               : "/img/no-image.png";
                         }
                         <img src="@imagePath" alt="@selectedPage.Title" title="@selectedPage.Title" class="img-fluid">
                     </div>
