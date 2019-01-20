@@ -5,7 +5,7 @@
             @{
                 string imagePath = !string.IsNullOrWhiteSpace(Model.HeaderImage)
                                    ? imagePath = string.Format(Constants.ImagePath, "post", Model.HeaderImage)
-                                   : "https://placeimg.com/640/426/any";
+                                   : "/img/no-image.png";
             }
             <img src="@imagePath" alt="@Model.Title" title="@Model.Title" class="img-fluid" />
         </a>
