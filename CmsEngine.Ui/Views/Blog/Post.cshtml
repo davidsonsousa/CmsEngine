@@ -10,12 +10,11 @@
             <div class="container">
                 <div class="post-single">
                     <div class="post-thumbnail">
-                        @{
-                            string imagePath = !string.IsNullOrWhiteSpace(selectedPost.HeaderImage)
-                                               ? imagePath = string.Format(Constants.ImagePath, "post", selectedPost.HeaderImage)
-                                               : "https://placeimg.com/640/426/any";
+                        @if (!string.IsNullOrWhiteSpace(selectedPost.HeaderImage))
+                        {
+                            <img src="@string.Format(Constants.ImagePath, "post", selectedPost.HeaderImage)" alt="@selectedPost.Title" title="@selectedPost.Title" class="img-fluid">
                         }
-                        <img src="@imagePath" alt="@selectedPost.Title" title="@selectedPost.Title" class="img-fluid">
+
                     </div>
                     <div class="post-details">
                         <div class="post-meta d-flex justify-content-between">
