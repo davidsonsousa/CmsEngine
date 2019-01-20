@@ -7,6 +7,7 @@ using CmsEngine.Data.Models;
 using CmsEngine.Data.ViewModels;
 using CmsEngine.Data.ViewModels.DataTableViewModels;
 using CmsEngine.Utils;
+using Microsoft.Extensions.Logging;
 
 namespace CmsEngine
 {
@@ -17,31 +18,50 @@ namespace CmsEngine
         public IEnumerable<T> GetPagesByStatusReadOnly<T>(DocumentStatus documentStatus, int count = 0) where T : IViewModel
         {
             var items = this.GetDocumentsByStatus<Page>(documentStatus, count);
+
+            _logger.LogInformation("CmsService > GetPagesByStatusReadOnly(documentStatus: {0}, count: {1})", documentStatus, count);
+            _logger.LogInformation("Pages loaded: {0}", items.Count());
+
             return _mapper.Map<IEnumerable<Page>, IEnumerable<T>>(items);
         }
 
         public IEnumerable<T> GetAllPagesReadOnly<T>(int count = 0) where T : IViewModel
         {
             IEnumerable<Page> listItems = GetAllReadOnly<Page>(count);
+
+            _logger.LogInformation("CmsService > GetAllPagesReadOnly(count: {0})", count);
+            _logger.LogInformation("Pages loaded: {0}", listItems.Count());
+
             return _mapper.Map<IEnumerable<Page>, IEnumerable<T>>(listItems);
         }
 
         public IViewModel GetPageById(int id)
         {
             var item = _unitOfWork.Pages.GetById(id);
+
+            _logger.LogInformation("CmsService > GetPageById(id: {0})", id);
+            _logger.LogInformation("Page: {0}", SerializeObjectForLog(item));
+
             return _mapper.Map<Page, PageViewModel>(item);
         }
 
         public IViewModel GetPageById(Guid id)
         {
             var item = _unitOfWork.Pages.GetById(id);
+
+            _logger.LogInformation("CmsService > GetPageById(id: {0})", id);
+            _logger.LogInformation("Page: {0}", SerializeObjectForLog(item));
+
             return _mapper.Map<Page, PageViewModel>(item);
         }
 
         public IViewModel GetPageBySlug(string slug)
         {
-            var item = _unitOfWork.Pages.Get(q => q.Slug == slug)
-                       .SingleOrDefault();
+            var item = _unitOfWork.Pages.Get(q => q.Slug == slug).SingleOrDefault();
+
+            _logger.LogInformation("CmsService > GetPageBySlug(slug: {0})", slug);
+            _logger.LogInformation("Page: {0}", SerializeObjectForLog(item));
+
             return _mapper.Map<Page, PageViewModel>(item);
         }
 
@@ -51,18 +71,27 @@ namespace CmsEngine
 
         public IEditModel SetupPageEditModel()
         {
+            _logger.LogInformation("CmsService > SetupPageEditModel()");
             return new PageEditModel();
         }
 
         public IEditModel SetupPageEditModel(int id)
         {
             var item = _unitOfWork.Pages.GetById(id);
+
+            _logger.LogInformation("CmsService > SetupCategoryEditModel(id: {0})", id);
+            _logger.LogInformation("Category: {0}", SerializeObjectForLog(item));
+
             return _mapper.Map<Page, PageEditModel>(item);
         }
 
         public IEditModel SetupPageEditModel(Guid id)
         {
             var item = _unitOfWork.Pages.GetById(id);
+
+            _logger.LogInformation("CmsService > SetupCategoryEditModel(id: {0})", id);
+            _logger.LogInformation("Category: {0}", SerializeObjectForLog(item));
+
             return _mapper.Map<Page, PageEditModel>(item);
         }
 
@@ -72,6 +101,8 @@ namespace CmsEngine
 
         public ReturnValue SavePage(IEditModel editModel)
         {
+            _logger.LogInformation("CmsService > SavePage(editModel: {0})", SerializeObjectForLog(editModel));
+
             var returnValue = new ReturnValue
             {
                 IsError = false,
@@ -83,9 +114,12 @@ namespace CmsEngine
                 PreparePageForSaving(editModel);
 
                 _unitOfWork.Save();
+                _logger.LogInformation("Page saved");
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex, "Error when saving category {0}", SerializeObjectForLog(editModel));
+
                 returnValue.IsError = true;
                 returnValue.Message = "An error has occurred while saving the page";
                 returnValue.Exception = ex.Message;
@@ -210,6 +244,8 @@ namespace CmsEngine
 
             if (editModel.IsNew)
             {
+                _logger.LogInformation("New page");
+
                 page = _mapper.Map<PageEditModel, Page>((PageEditModel)editModel);
                 page.WebsiteId = Instance.Id;
 
@@ -217,6 +253,8 @@ namespace CmsEngine
             }
             else
             {
+                _logger.LogInformation("Update page");
+
                 page = _unitOfWork.Pages.GetById(editModel.VanityId);
                 _mapper.Map((PageEditModel)editModel, page);
                 page.WebsiteId = Instance.Id;
@@ -230,6 +268,8 @@ namespace CmsEngine
         private void PrepareRelatedAuthorsForPage(Page page)
         {
             // TODO: Improve the logic of this method
+
+            _logger.LogInformation("Prepare related authors for page");
 
             if (page.PageApplicationUsers == null || page.PageApplicationUsers.Count == 0)
             {
