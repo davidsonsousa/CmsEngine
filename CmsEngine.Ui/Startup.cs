@@ -1,14 +1,17 @@
 using System.IO;
+using System.Net;
 using AutoMapper;
 using CmsEngine.Data;
 using CmsEngine.Data.AccessLayer;
 using CmsEngine.Data.Models;
 using CmsEngine.Helpers.Email;
+using CmsEngine.Ui.Middleware.RewriteRules;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Rewrite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -54,6 +57,12 @@ namespace CmsEngine.Ui
             // Add Unit of Work
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
+            services.AddRouting(options =>
+            {
+                options.LowercaseUrls = true;
+                options.AppendTrailingSlash = false;
+            });
+
             services.AddMvc()
                     .SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
                     .AddRazorPagesOptions(options =>
@@ -89,8 +98,26 @@ namespace CmsEngine.Ui
                 app.UseHsts();
             }
 
-            app.UseHttpsRedirection();
+            using (var streamReader = File.OpenText("UrlRewrite.xml"))
+            {
+                const int http301 = (int)HttpStatusCode.MovedPermanently;
+
+                var rewriteOptions = new RewriteOptions().Add(new RedirectToNonWwwRule(http301))
+                                                         .AddRedirect("^en/(.*)", "blog/$1", http301)
+                                                         .AddRedirect("^pt/(.*)", "blog/$1", http301)
+                                                         .AddRedirectToHttps(http301);
+                app.UseRewriter(rewriteOptions);
+            }
+
+            // wwwroot
             app.UseStaticFiles();
+
+            // Uploaded images
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new PhysicalFileProvider(Path.Combine(env.WebRootPath, "UploadedFiles")),
+                RequestPath = "/image"
+            });
 
             string uploadPath = Path.Combine(env.WebRootPath, "UploadedFiles");
             if (!Directory.Exists(uploadPath))
@@ -98,11 +125,6 @@ namespace CmsEngine.Ui
                 Directory.CreateDirectory(uploadPath);
             }
 
-            app.UseStaticFiles(new StaticFileOptions
-            {
-                FileProvider = new PhysicalFileProvider(Path.Combine(env.WebRootPath, "UploadedFiles")),
-                RequestPath = "/image"
-            });
             app.UseCookiePolicy();
 
             app.UseAuthentication();
