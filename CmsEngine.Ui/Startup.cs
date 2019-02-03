@@ -98,16 +98,13 @@ namespace CmsEngine.Ui
                 app.UseHsts();
             }
 
-            using (var streamReader = File.OpenText("UrlRewrite.xml"))
-            {
-                const int http301 = (int)HttpStatusCode.MovedPermanently;
+            const int http301 = (int)HttpStatusCode.MovedPermanently;
 
-                var rewriteOptions = new RewriteOptions().Add(new RedirectToNonWwwRule(http301))
-                                                         .AddRedirect("^en/(.*)", "blog/$1", http301)
-                                                         .AddRedirect("^pt/(.*)", "blog/$1", http301)
-                                                         .AddRedirectToHttps(http301);
-                app.UseRewriter(rewriteOptions);
-            }
+            var rewriteOptions = new RewriteOptions().Add(new RedirectToNonWwwRule(http301))
+                                                     .AddRedirect("^en/(.*)", "blog/$1", http301)
+                                                     .AddRedirect("^pt/(.*)", "blog/$1", http301)
+                                                     .AddRedirectToHttps(http301);
+            app.UseRewriter(rewriteOptions);
 
             // wwwroot
             app.UseStaticFiles();
