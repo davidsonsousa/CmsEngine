@@ -76,7 +76,15 @@
                     {
                         <a asp-controller="Blog" asp-action="Post" asp-route-slug="@latestPost.Slug">
                             <div class="post d-flex align-items-center">
-                                <div class="image"><img src="https://placeimg.com/120/120/any" alt="@latestPost.Title" class="img-fluid"></div>
+                                <div class="image">
+                                    @{
+                                        string imagePath = !string.IsNullOrWhiteSpace(latestPost.HeaderImage)
+                                                           ? imagePath = string.Format(Constants.ImagePath, "post", latestPost.HeaderImage)
+                                                           : "/img/no-image.png";
+                                    }
+                                    <img src="@imagePath" alt="@latestPost.Title" title="@latestPost.Title" class="img-fluid">
+
+                                </div>
                                 <div class="title"><strong>@latestPost.Title</strong><span class="date last-meta">@latestPost.PublishedOn</span></div>
                             </div>
                         </a>

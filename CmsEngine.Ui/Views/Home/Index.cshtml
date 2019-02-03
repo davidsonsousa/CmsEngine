@@ -33,7 +33,12 @@
                 @if (i % 2 > 0)
                 {
                     <div class="image col-lg-5">
-                        <img src="https://placeimg.com/640/426/any" alt="@latestPost.Title" class="img-fluid">
+                        @{
+                            string imagePath = !string.IsNullOrWhiteSpace(latestPost.HeaderImage)
+                                               ? imagePath = string.Format(Constants.ImagePath, "post", latestPost.HeaderImage)
+                                               : "/img/no-image.png";
+                        }
+                        <img src="@imagePath" alt="@latestPost.Title" title="@latestPost.Title" class="img-fluid">
                     </div>
                 }
 
@@ -42,7 +47,12 @@
                 @if (i % 2 == 0)
                 {
                     <div class="image col-lg-5">
-                        <img src="https://placeimg.com/640/426/any" alt="@latestPost.Title" class="img-fluid">
+                        @{
+                            string imagePath = !string.IsNullOrWhiteSpace(latestPost.HeaderImage)
+                                               ? imagePath = string.Format(Constants.ImagePath, "post", latestPost.HeaderImage)
+                                               : "/img/no-image.png";
+                        }
+                        <img src="@imagePath" alt="@latestPost.Title" title="@latestPost.Title" class="img-fluid">
                     </div>
                 }
 

@@ -21,7 +21,7 @@
                             @{
                                 string imagePath = !string.IsNullOrWhiteSpace(latestPost.HeaderImage)
                                                    ? imagePath = string.Format(Constants.ImagePath, "post", latestPost.HeaderImage)
-                                                   : "https://placeimg.com/120/120/any";
+                                                   : "/img/no-image.png";
                             }
                             <img src="@imagePath" alt="@latestPost.Title" title="@latestPost.Title" class="img-fluid">
                         </div>
