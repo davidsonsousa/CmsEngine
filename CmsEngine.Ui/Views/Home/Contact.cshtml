@@ -7,6 +7,7 @@
                 <h1>Contact</h1>
                 <div class="card">
                     <form asp-controller="Home" asp-action="Contact" asp-route-returnurl="@ViewData[" ReturnUrl"]" method="post" class="form-horizontal">
+                        <input type="hidden" id="g-recaptcha-response" name="g-recaptcha-response" />
                         <div class="card-body">
                             <div asp-validation-summary="All" class="text-danger"></div>
                             <div class="form-group row">
@@ -46,4 +47,14 @@
 
 @section Scripts{
     @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+
+    <script src="https://www.google.com/recaptcha/api.js?render=______SITE_KEY______"></script>
+    <script>
+        grecaptcha.ready(function () {
+            grecaptcha.execute('______SITE_KEY______', { action: 'homepage' }).then(function (token) {
+                console.log(token)
+                document.getElementById('g-recaptcha-response').value = token;
+            });
+        });
+    </script>
 }
