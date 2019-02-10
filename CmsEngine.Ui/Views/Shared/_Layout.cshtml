@@ -18,7 +18,7 @@
     </environment>
 
     <environment exclude="Development">
-        <link href="css/site.min.css" rel="stylesheet" id="theme-stylesheet">
+        <link href="~/css/site.min.css" rel="stylesheet" id="theme-stylesheet">
     </environment>
 
     <!-- Favicon-->
@@ -79,12 +79,12 @@
                         <li class="nav-item">
                             <a asp-controller="Blog" asp-action="Index" class="nav-link">Blog</a>
                         </li>
-                        <li class="nav-item">
-                            <a asp-controller="Blog" asp-action="Archive" class="nav-link">Archive</a>
-                        </li>
-                        <li class="nav-item">
-                            <a asp-controller="Home" asp-action="Contact" class="nav-link">Contact</a>
-                        </li>
+                        @*<li class="nav-item">
+                                <a asp-controller="Blog" asp-action="Archive" class="nav-link">Archive</a>
+                            </li>*@
+                        @*<li class="nav-item">
+                                <a asp-controller="Home" asp-action="Contact" class="nav-link">Contact</a>
+                            </li>*@
                     </ul>
                     <div class="navbar-text"><a href="#" class="search-btn"><i class="icon-search-1"></i></a></div>
                 </div>
