@@ -109,18 +109,19 @@ namespace CmsEngine.Ui
             // wwwroot
             app.UseStaticFiles();
 
-            // Uploaded images
+            // Uploaded files
+            string uploadPath = Path.Combine(env.WebRootPath, "UploadedFiles");
+
+            if (!Directory.Exists(uploadPath))
+            {
+                Directory.CreateDirectory(uploadPath);
+            }
+
             app.UseStaticFiles(new StaticFileOptions
             {
                 FileProvider = new PhysicalFileProvider(Path.Combine(env.WebRootPath, "UploadedFiles")),
                 RequestPath = "/image"
             });
-
-            string uploadPath = Path.Combine(env.WebRootPath, "UploadedFiles");
-            if (!Directory.Exists(uploadPath))
-            {
-                Directory.CreateDirectory(uploadPath);
-            }
 
             app.UseCookiePolicy();
 
