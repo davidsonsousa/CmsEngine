@@ -87,7 +87,10 @@
     <script src="~/js/vendors/bootstrap.min.js"></script>
     <script src="~/js/vendors/jquery.cookie.min.js"></script>
     <script src="~/js/vendors/jquery.fancybox.min.js"></script>
-    <script id="dsq-count-scr" src="//davidsonsousa.disqus.com/count.js" async></script>
+    @if (Model.ApiDetails.HasDisqusDetails)
+    {
+        <script id="dsq-count-scr" src="//davidsonsousa.disqus.com/count.js" async></script>
+    }
 
     <environment include="Development">
         <script src="~/js/site.js"></script>
