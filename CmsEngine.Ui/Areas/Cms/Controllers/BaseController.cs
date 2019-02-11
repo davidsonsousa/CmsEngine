@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -32,6 +33,11 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
         {
             service = new CmsService(uow, mapper, hca, userManager, logger);
             this.logger = logger;
+
+            var cultureInfo = new CultureInfo(service.Instance.Culture);
+
+            CultureInfo.DefaultThreadCurrentCulture = cultureInfo;
+            CultureInfo.DefaultThreadCurrentUICulture = cultureInfo;
         }
 
         public override void OnActionExecuting(ActionExecutingContext context)

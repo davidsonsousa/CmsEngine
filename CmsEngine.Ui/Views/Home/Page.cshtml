@@ -12,7 +12,7 @@
                     <div class="post-thumbnail">
                         @{
                             string imagePath = !string.IsNullOrWhiteSpace(selectedPage.HeaderImage)
-                                               ? imagePath = string.Format(Constants.ImagePath, "post", selectedPage.HeaderImage)
+                                               ? imagePath = string.Format(Constants.ImagePath, "page", selectedPage.HeaderImage)
                                                : "/img/no-image.png";
                         }
                         <img src="@imagePath" alt="@selectedPage.Title" title="@selectedPage.Title" class="img-fluid">

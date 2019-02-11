@@ -1,3 +1,4 @@
+using System.Globalization;
 using AutoMapper;
 using CmsEngine.Data.AccessLayer;
 using CmsEngine.Data.Models;
@@ -21,6 +22,11 @@ namespace CmsEngine.Ui.Controllers
             service = new CmsService(uow, mapper, hca, userManager, logger);
             instance = service.Instance;
             this.logger = logger;
+
+            var cultureInfo = new CultureInfo(instance.Culture);
+
+            CultureInfo.DefaultThreadCurrentCulture = cultureInfo;
+            CultureInfo.DefaultThreadCurrentUICulture = cultureInfo;
         }
 
         public override void OnActionExecuting(ActionExecutingContext context)

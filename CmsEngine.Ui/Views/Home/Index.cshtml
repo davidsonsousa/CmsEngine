@@ -19,7 +19,7 @@
         <div class="row">
             <div class="col-lg-8">
                 <h2 class="h3">Who am I?</h2>
-                <p class="text-big">@Html.Raw(Model.Description)</p>
+                <div class="text-big">@Html.Raw(Model.Description)</div>
             </div>
         </div>
     </div>
@@ -35,7 +35,7 @@
                     <div class="image col-lg-5">
                         @{
                             string imagePath = !string.IsNullOrWhiteSpace(latestPost.HeaderImage)
-                                               ? imagePath = string.Format(Constants.ImagePath, "post", latestPost.HeaderImage)
+                                               ? imagePath = string.Format(Constants.Image640Path, "post", latestPost.HeaderImage)
                                                : "/img/no-image.png";
                         }
                         <img src="@imagePath" alt="@latestPost.Title" title="@latestPost.Title" class="img-fluid">
@@ -49,7 +49,7 @@
                     <div class="image col-lg-5">
                         @{
                             string imagePath = !string.IsNullOrWhiteSpace(latestPost.HeaderImage)
-                                               ? imagePath = string.Format(Constants.ImagePath, "post", latestPost.HeaderImage)
+                                               ? imagePath = string.Format(Constants.Image640Path, "post", latestPost.HeaderImage)
                                                : "/img/no-image.png";
                         }
                         <img src="@imagePath" alt="@latestPost.Title" title="@latestPost.Title" class="img-fluid">
