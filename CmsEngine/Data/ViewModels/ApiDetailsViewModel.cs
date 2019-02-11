@@ -12,5 +12,16 @@ namespace CmsEngine.Data.ViewModels
                 return !string.IsNullOrWhiteSpace(FacebookAppId) && !string.IsNullOrWhiteSpace(FacebookApiVersion);
             }
         }
+
+        public string DisqusShortName { get; set; }
+
+        public bool HasDisqusDetails
+        {
+            get
+            {
+                return !string.IsNullOrWhiteSpace(DisqusShortName);
+            }
+        }
+
     }
 }

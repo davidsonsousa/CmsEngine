@@ -35,5 +35,6 @@ namespace CmsEngine.Data.Models
         // Api configuration
         public string FacebookAppId { get; set; }
         public string FacebookApiVersion { get; set; }
+        public string DisqusShortName { get; set; }
     }
 }
