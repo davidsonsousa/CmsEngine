@@ -37,10 +37,14 @@
                                 <div class="title"><span>@selectedPost.Author.FullName</span></div>
                             </a>
                             <div class="d-flex align-items-center flex-wrap">
-                                <div class="date"><i class="icon-clock"></i> @selectedPost.PublishedOn.ToShortDateString()</div>
+                                <div class="date">
+                                    <i class="icon-clock"></i> @selectedPost.PublishedOn.ToShortDateString()
+                                </div>
                                 <div class="comments meta-last">
                                     <i class="icon-comment"></i>
-                                    <span class="fb-comments-count" data-href="@Url.Link("blogRoute", new {Controller = "Blog", Action = "Post", Slug = selectedPost.Slug })"></span>
+                                    <a href="@Url.Link("blogRoute", new {Controller = "Blog", Action = "Post", Slug = selectedPost.Slug })#disqus_thread">
+                                        Post a comment
+                                    </a>
                                 </div>
                             </div>
                         </div>
@@ -76,14 +80,27 @@
                             </div>
                         *@
 
-                        @if (Model.ApiDetails.HasFacebookDetails)
-                        {
-                            <div class="fb-comments"
-                                 data-href="@Url.Link("blogRoute", new {Controller = "Blog", Action = "Post", Slug = selectedPost.Slug })"
-                                 data-width="100%"
-                                 data-numposts="5">
-                            </div>
-                        }
+
+                        <div id="disqus_thread"></div>
+                        <script>
+
+                            /**
+                            *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+                            *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
+
+                            var disqus_config = function () {
+                                this.page.url = '@Url.Link("blog", new {Controller = "Blog", Action = "Post", Slug = selectedPost.Slug })';
+                                this.page.identifier = '@selectedPost.VanityId';
+                            };
+
+                            (function () { // DON'T EDIT BELOW THIS LINE
+                                var d = document, s = d.createElement('script');
+                                s.src = 'https://davidsonsousa.disqus.com/embed.js';
+                                s.setAttribute('data-timestamp', +new Date());
+                                (d.head || d.body).appendChild(s);
+                            })();
+                        </script>
+                        <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
 
                     </div>
                 </div>
