@@ -62,5 +62,8 @@ namespace CmsEngine.Data.EditModels
 
         [MaxLength(10)]
         public string FacebookApiVersion { get; set; }
+
+        [MaxLength(30)]
+        public string DisqusShortName { get; set; }
     }
 }

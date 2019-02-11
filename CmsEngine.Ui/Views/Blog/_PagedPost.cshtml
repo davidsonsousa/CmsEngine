@@ -34,7 +34,7 @@
             <div class="date"><i class="icon-clock"></i> @Model.PublishedOn.ToShortDateString()</div>
             <div class="comments meta-last">
                 <i class="icon-comment"></i>
-                <span class="fb-comments-count" data-href="@Url.Link("blogRoute", new {Controller = "Blog", Action = "Post", Slug = Model.Slug })"></span>
+                <span class="disqus-comment-count" data-disqus-identifier="@Model.VanityId">0</span>
             </div>
         </footer>
     </div>

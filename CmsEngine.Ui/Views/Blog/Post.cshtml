@@ -37,10 +37,12 @@
                                 <div class="title"><span>@selectedPost.Author.FullName</span></div>
                             </a>
                             <div class="d-flex align-items-center flex-wrap">
-                                <div class="date"><i class="icon-clock"></i> @selectedPost.PublishedOn.ToShortDateString()</div>
+                                <div class="date">
+                                    <i class="icon-clock"></i> @selectedPost.PublishedOn.ToShortDateString()
+                                </div>
                                 <div class="comments meta-last">
                                     <i class="icon-comment"></i>
-                                    <span class="fb-comments-count" data-href="@Url.Link("blogRoute", new {Controller = "Blog", Action = "Post", Slug = selectedPost.Slug })"></span>
+                                    <span class="disqus-comment-count" data-disqus-identifier="@selectedPost.VanityId">0</span>
                                 </div>
                             </div>
                         </div>
@@ -76,13 +78,23 @@
                             </div>
                         *@
 
-                        @if (Model.ApiDetails.HasFacebookDetails)
+                        @if (Model.ApiDetails.HasDisqusDetails)
                         {
-                            <div class="fb-comments"
-                                 data-href="@Url.Link("blogRoute", new {Controller = "Blog", Action = "Post", Slug = selectedPost.Slug })"
-                                 data-width="100%"
-                                 data-numposts="5">
-                            </div>
+                            <div id="disqus_thread"></div>
+                            <script>
+                            var disqus_config = function () {
+                                this.page.url = '@Url.Link("blog", new {Controller = "Blog", Action = "Post", Slug = selectedPost.Slug })';
+                                this.page.identifier = '@selectedPost.VanityId';
+                            };
+
+                            (function () { // DON'T EDIT BELOW THIS LINE
+                                var d = document, s = d.createElement('script');
+                                s.src = 'https://davidsonsousa.disqus.com/embed.js';
+                                s.setAttribute('data-timestamp', +new Date());
+                                (d.head || d.body).appendChild(s);
+                            })();
+                            </script>
+                            <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
                         }
 
                     </div>
