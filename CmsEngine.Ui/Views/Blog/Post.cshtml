@@ -1,6 +1,21 @@
 @model InstanceViewModel
 @{
     var selectedPost = (PostViewModel)Model.SelectedDocument;
+    string imagePath = !string.IsNullOrWhiteSpace(selectedPost.HeaderImage)
+                       ? string.Format(Constants.ImagePath, "post", selectedPost.HeaderImage)
+                       : "/img/no-image.png";
+}
+
+@section FacebookMeta {
+    <meta property="og:url" content="@string.Format("{0}://{1}{2}", Context.Request.Scheme, Context.Request.Host, Context.Request.Path)" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="@Model.PageTitle" />
+    <meta property="og:description" content="@selectedPost.Description" />
+    <meta property="og:image" content="@string.Format("{0}://{1}{2}", Context.Request.Scheme, Context.Request.Host, imagePath)" />
+}
+
+@section TwitterMeta {
+    <meta name="twitter:card" content="@string.Format("{0}://{1}{2}", Context.Request.Scheme, Context.Request.Host, imagePath)">
 }
 
 <div class="container">
