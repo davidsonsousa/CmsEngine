@@ -1,7 +1,6 @@
 using System;
 using System.Linq;
 using CmsEngine.Data.Models;
-using CmsEngine.Extensions;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -38,7 +37,8 @@ namespace CmsEngine.Data
             builder.Entity<PostApplicationUser>(ModelConfiguration.ConfigurePostApplicationUser);
             builder.Entity<PageApplicationUser>(ModelConfiguration.ConfigurePageApplicationUser);
 
-            builder.Seed();
+            // TODO: Commenting seed out since it forces to remove all demo data
+            //builder.Seed();
 
             base.OnModelCreating(builder);
         }

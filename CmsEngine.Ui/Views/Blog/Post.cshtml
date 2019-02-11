@@ -1,6 +1,21 @@
 @model InstanceViewModel
 @{
     var selectedPost = (PostViewModel)Model.SelectedDocument;
+    string imagePath = !string.IsNullOrWhiteSpace(selectedPost.HeaderImage)
+                       ? string.Format(Constants.ImagePath, "post", selectedPost.HeaderImage)
+                       : "/img/no-image.png";
+}
+
+@section FacebookMeta {
+    <meta property="og:url" content="@string.Format("{0}://{1}{2}", Context.Request.Scheme, Context.Request.Host, Context.Request.Path)" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="@Model.PageTitle" />
+    <meta property="og:description" content="@selectedPost.Description" />
+    <meta property="og:image" content="@string.Format("{0}://{1}{2}", Context.Request.Scheme, Context.Request.Host, imagePath)" />
+}
+
+@section TwitterMeta {
+    <meta name="twitter:card" content="@string.Format("{0}://{1}{2}", Context.Request.Scheme, Context.Request.Host, imagePath)">
 }
 
 <div class="container">
@@ -37,10 +52,12 @@
                                 <div class="title"><span>@selectedPost.Author.FullName</span></div>
                             </a>
                             <div class="d-flex align-items-center flex-wrap">
-                                <div class="date"><i class="icon-clock"></i> @selectedPost.PublishedOn.ToShortDateString()</div>
+                                <div class="date">
+                                    <i class="icon-clock"></i> @selectedPost.PublishedOn.ToShortDateString()
+                                </div>
                                 <div class="comments meta-last">
                                     <i class="icon-comment"></i>
-                                    <span class="fb-comments-count" data-href="@Url.Link("blogRoute", new {Controller = "Blog", Action = "Post", Slug = selectedPost.Slug })"></span>
+                                    <span class="disqus-comment-count" data-disqus-identifier="@selectedPost.VanityId">0</span>
                                 </div>
                             </div>
                         </div>
@@ -76,13 +93,23 @@
                             </div>
                         *@
 
-                        @if (Model.ApiDetails.HasFacebookDetails)
+                        @if (Model.ApiDetails.HasDisqusDetails)
                         {
-                            <div class="fb-comments"
-                                 data-href="@Url.Link("blogRoute", new {Controller = "Blog", Action = "Post", Slug = selectedPost.Slug })"
-                                 data-width="100%"
-                                 data-numposts="5">
-                            </div>
+                            <div id="disqus_thread"></div>
+                            <script>
+                            var disqus_config = function () {
+                                this.page.url = '@Url.Link("blog", new {Controller = "Blog", Action = "Post", Slug = selectedPost.Slug })';
+                                this.page.identifier = '@selectedPost.VanityId';
+                            };
+
+                            (function () { // DON'T EDIT BELOW THIS LINE
+                                var d = document, s = d.createElement('script');
+                                s.src = 'https://davidsonsousa.disqus.com/embed.js';
+                                s.setAttribute('data-timestamp', +new Date());
+                                (d.head || d.body).appendChild(s);
+                            })();
+                            </script>
+                            <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
                         }
 
                     </div>

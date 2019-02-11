@@ -81,7 +81,8 @@ namespace CmsEngine
                                 ApiDetails = new ApiDetailsViewModel
                                 {
                                     FacebookAppId = website.FacebookAppId,
-                                    FacebookApiVersion = website.FacebookApiVersion
+                                    FacebookApiVersion = website.FacebookApiVersion,
+                                    DisqusShortName = website.DisqusShortName
                                 }
                             };
                         }
