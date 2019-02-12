@@ -93,9 +93,10 @@
     <script src="~/js/vendors/bootstrap.min.js"></script>
     <script src="~/js/vendors/jquery.cookie.min.js"></script>
     <script src="~/js/vendors/jquery.fancybox.min.js"></script>
+
     @if (Model.ApiDetails.HasDisqusDetails)
     {
-        <script id="dsq-count-scr" src="//davidsonsousa.disqus.com/count.js" async></script>
+        <script id="dsq-count-scr" src="//@(Model.ApiDetails.DisqusShortName).disqus.com/count.js" async></script>
     }
 
     <environment include="Development">
