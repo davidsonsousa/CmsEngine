@@ -18,7 +18,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 using static System.Web.HttpUtility;
 
 namespace CmsEngine
@@ -73,16 +72,19 @@ namespace CmsEngine
                                     Address = website.Address,
                                     Phone = website.Phone,
                                     Email = website.Email,
-                                    Facebook = website.Facebook,
-                                    Twitter = website.Twitter,
-                                    Instagram = website.Instagram,
-                                    LinkedIn = website.LinkedIn
                                 },
                                 ApiDetails = new ApiDetailsViewModel
                                 {
                                     FacebookAppId = website.FacebookAppId,
                                     FacebookApiVersion = website.FacebookApiVersion,
                                     DisqusShortName = website.DisqusShortName
+                                },
+                                SocialMedia = new SocialMediaViewModel
+                                {
+                                    Facebook = website.Facebook,
+                                    Twitter = website.Twitter,
+                                    Instagram = website.Instagram,
+                                    LinkedIn = website.LinkedIn
                                 }
                             };
                         }
@@ -248,6 +250,40 @@ namespace CmsEngine
                              new XAttribute("version", "2.0")));
         }
 
+        public XDocument GenerateSitemap()
+        {
+            var items = new List<SitemapViewModel>();
+
+            items.AddRange(_unitOfWork.Posts
+                                      .Get()
+                                      .OrderByDescending(o => o.PublishedOn)
+                                      .Select(x => new SitemapViewModel
+                                      {
+                                          Url = FormatUrl("post", x.Slug),
+                                          PublishedOn = x.PublishedOn.ToString("yyyy-MM-dd")
+                                      }));
+
+            items.AddRange(_unitOfWork.Pages
+                                      .Get()
+                                      .OrderByDescending(o => o.PublishedOn)
+                                      .Select(x => new SitemapViewModel
+                                      {
+                                          Url = FormatUrl("post", x.Slug),
+                                          PublishedOn = x.PublishedOn.ToString("yyyy-MM-dd")
+                                      }));
+
+            XNamespace ns = "http://www.sitemaps.org/schemas/sitemap/0.9";
+            return new XDocument(new XDeclaration("1.0", "utf-8", null),
+                                         new XElement(ns + "urlset",
+                                                      from item in items
+                                                      select new XElement(ns + "url",
+                                                                new XElement(ns + "loc", item.Url),
+                                                                new XElement(ns + "lastmod", item.PublishedOn),
+                                                                new XElement(ns + "changefreq", "monthly")
+                                                             )));
+
+        }
+
         #region Helpers
 
         private IEnumerable<CheckboxEditModel> PopulateCheckboxList<T>(IEnumerable<string> selectedItems = null) where T : BaseModel
@@ -313,7 +349,7 @@ namespace CmsEngine
 
         private ReturnValue Delete<T>(T item) where T : BaseModel
         {
-            _logger.LogInformation("CmsService > Delete(item: {0})", SerializeObjectForLog(item));
+            _logger.LogInformation("CmsService > Delete<{0}>({1})", item.GetType().BaseType.Name, item.ToString());
 
             var returnValue = new ReturnValue();
             try
@@ -410,10 +446,6 @@ namespace CmsEngine
             return url;
         }
 
-        private string SerializeObjectForLog(object obj)
-        {
-            return JsonConvert.SerializeObject(obj, new JsonSerializerSettings { ContractResolver = new CustomResolver() });
-        }
         #endregion
     }
 }

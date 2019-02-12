@@ -1,6 +1,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Newtonsoft.Json.Linq;
 
 namespace CmsEngine.Data.Models
 {
@@ -33,5 +34,14 @@ namespace CmsEngine.Data.Models
         public string UserModified { get; set; }
 
         #endregion
+
+        public override string ToString()
+        {
+            var jsonResult = new JObject(
+                                        new JProperty("Id", Id),
+                                        new JProperty("VanityId", VanityId)
+                                    );
+            return jsonResult.ToString();
+        }
     }
 }

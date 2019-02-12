@@ -40,7 +40,7 @@ namespace CmsEngine
             var item = _unitOfWork.Pages.GetById(id);
 
             _logger.LogInformation("CmsService > GetPageById(id: {0})", id);
-            _logger.LogInformation("Page: {0}", SerializeObjectForLog(item));
+            _logger.LogInformation("Page: {0}", item.ToString());
 
             return _mapper.Map<Page, PageViewModel>(item);
         }
@@ -50,7 +50,7 @@ namespace CmsEngine
             var item = _unitOfWork.Pages.GetById(id);
 
             _logger.LogInformation("CmsService > GetPageById(id: {0})", id);
-            _logger.LogInformation("Page: {0}", SerializeObjectForLog(item));
+            _logger.LogInformation("Page: {0}", item.ToString());
 
             return _mapper.Map<Page, PageViewModel>(item);
         }
@@ -60,7 +60,7 @@ namespace CmsEngine
             var item = _unitOfWork.Pages.Get(q => q.Slug == slug).SingleOrDefault();
 
             _logger.LogInformation("CmsService > GetPageBySlug(slug: {0})", slug);
-            _logger.LogInformation("Page: {0}", SerializeObjectForLog(item));
+            _logger.LogInformation("Page: {0}", item.ToString());
 
             return _mapper.Map<Page, PageViewModel>(item);
         }
@@ -80,7 +80,7 @@ namespace CmsEngine
             var item = _unitOfWork.Pages.GetById(id);
 
             _logger.LogInformation("CmsService > SetupCategoryEditModel(id: {0})", id);
-            _logger.LogInformation("Page: {0}", SerializeObjectForLog(item));
+            _logger.LogInformation("Page: {0}", item.ToString());
 
             return _mapper.Map<Page, PageEditModel>(item);
         }
@@ -90,7 +90,7 @@ namespace CmsEngine
             var item = _unitOfWork.Pages.GetById(id);
 
             _logger.LogInformation("CmsService > SetupCategoryEditModel(id: {0})", id);
-            _logger.LogInformation("Page: {0}", SerializeObjectForLog(item));
+            _logger.LogInformation("Page: {0}", item.ToString());
 
             return _mapper.Map<Page, PageEditModel>(item);
         }
@@ -101,7 +101,7 @@ namespace CmsEngine
 
         public ReturnValue SavePage(IEditModel editModel)
         {
-            _logger.LogInformation("CmsService > SavePage(editModel: {0})", SerializeObjectForLog(editModel));
+            _logger.LogInformation("CmsService > SavePage(editModel: {0})", editModel.ToString());
 
             var returnValue = new ReturnValue
             {
@@ -118,7 +118,7 @@ namespace CmsEngine
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error when saving category {0}", SerializeObjectForLog(editModel));
+                _logger.LogError(ex, "Error when saving category {0}", editModel.ToString());
 
                 returnValue.IsError = true;
                 returnValue.Message = "An error has occurred while saving the page";

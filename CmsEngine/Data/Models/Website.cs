@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Newtonsoft.Json.Linq;
 
 namespace CmsEngine.Data.Models
 {
@@ -36,5 +37,17 @@ namespace CmsEngine.Data.Models
         public string FacebookAppId { get; set; }
         public string FacebookApiVersion { get; set; }
         public string DisqusShortName { get; set; }
+
+        public override string ToString()
+        {
+            var jsonResult = new JObject(
+                                        new JProperty("Id", Id),
+                                        new JProperty("VanityId", VanityId),
+                                        new JProperty("Name", Name),
+                                        new JProperty("SiteUrl", SiteUrl),
+                                        new JProperty("Tagline", Tagline)
+                                    );
+            return jsonResult.ToString();
+        }
     }
 }
