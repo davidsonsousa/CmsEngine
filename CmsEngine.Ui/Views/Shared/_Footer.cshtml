@@ -16,7 +16,7 @@
                         <p>Phone: @Model.ContactDetails.Phone</p>
                     }
 
-                    @if (Model.ContactDetails.HasSocialMediaOrEmail)
+                    @if (Model.SocialMedia.HasSocialMedia || Model.ContactDetails.HasEmail)
                     {
                         <ul class="social-menu">
                             @if (!string.IsNullOrWhiteSpace(Model.ContactDetails.Email))
@@ -25,28 +25,28 @@
                                     <a asp-controller="Home" asp-action="Contact"><i class="fa fa-envelope-o"></i></a>
                                 </li>
                             }
-                            @if (!string.IsNullOrWhiteSpace(Model.ContactDetails.Facebook))
+                            @if (!string.IsNullOrWhiteSpace(Model.SocialMedia.Facebook))
                             {
                                 <li class="list-inline-item">
-                                    <a href="https://www.facebook.com/@Model.ContactDetails.Facebook"><i class="fa fa-facebook"></i></a>
+                                    <a href="https://www.facebook.com/@Model.SocialMedia.Facebook"><i class="fa fa-facebook"></i></a>
                                 </li>
                             }
-                            @if (!string.IsNullOrWhiteSpace(Model.ContactDetails.Twitter))
+                            @if (!string.IsNullOrWhiteSpace(Model.SocialMedia.Twitter))
                             {
                                 <li class="list-inline-item">
-                                    <a href="https://twitter.com/@Model.ContactDetails.Twitter"><i class="fa fa-twitter"></i></a>
+                                    <a href="https://twitter.com/@Model.SocialMedia.Twitter"><i class="fa fa-twitter"></i></a>
                                 </li>
                             }
-                            @if (!string.IsNullOrWhiteSpace(Model.ContactDetails.Instagram))
+                            @if (!string.IsNullOrWhiteSpace(Model.SocialMedia.Instagram))
                             {
                                 <li class="list-inline-item">
-                                    <a href="https://www.instagram.com/@Model.ContactDetails.Instagram"><i class="fa fa-instagram"></i></a>
+                                    <a href="https://www.instagram.com/@Model.SocialMedia.Instagram"><i class="fa fa-instagram"></i></a>
                                 </li>
                             }
-                            @if (!string.IsNullOrWhiteSpace(Model.ContactDetails.LinkedIn))
+                            @if (!string.IsNullOrWhiteSpace(Model.SocialMedia.LinkedIn))
                             {
                                 <li class="list-inline-item">
-                                    <a href="https://www.linkedin.com/in/@Model.ContactDetails.LinkedIn"><i class="fa fa-linkedin"></i></a>
+                                    <a href="https://www.linkedin.com/in/@Model.SocialMedia.LinkedIn"><i class="fa fa-linkedin"></i></a>
                                 </li>
                             }
                         </ul>

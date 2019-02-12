@@ -5,15 +5,23 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>@Model.PageTitle</title>
-    <meta name="description" content="@Model.Description">
+    <meta name="description" content="@Model.Tagline">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="robots" content="all,follow">
 
     @* Facebook *@
     @RenderSection("FacebookMeta", required: false)
+    @if (Model.ApiDetails.HasFacebookDetails)
+    {
+        <meta property="fb:app_id" content="@Model.ApiDetails.FacebookAppId" />
+    }
 
     @* Twitter *@
     @RenderSection("TwitterMeta", required: false)
+    @if (Model.SocialMedia.HasTwitter)
+    {
+        <meta name="twitter:site" content="@@@Model.SocialMedia.Twitter">
+    }
 
     <link href="~/css/vendors/font-awesome.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700" rel="stylesheet">
