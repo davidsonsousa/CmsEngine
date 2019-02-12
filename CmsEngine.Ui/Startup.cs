@@ -100,9 +100,14 @@ namespace CmsEngine.Ui
 
             const int http301 = (int)HttpStatusCode.MovedPermanently;
 
+            // Added compatibility to the old davidsonsousa.net
             var rewriteOptions = new RewriteOptions().Add(new RedirectToNonWwwRule(http301))
                                                      .AddRedirect("^en/(.*)", "blog/$1", http301)
                                                      .AddRedirect("^pt/(.*)", "blog/$1", http301)
+                                                     .AddRedirect("^image/articles/(.*)", "image/post/$1", http301)
+                                                     .AddRedirect("^image/pages/(.*)", "image/page/$1", http301)
+                                                     .AddRedirect("^file/articles/(.*)", "file/post/$1", http301)
+                                                     .AddRedirect("^file/pages/(.*)", "file/page/$1", http301)
                                                      .AddRedirectToHttps(http301);
             app.UseRewriter(rewriteOptions);
 
@@ -121,6 +126,12 @@ namespace CmsEngine.Ui
             {
                 FileProvider = new PhysicalFileProvider(Path.Combine(env.WebRootPath, "UploadedFiles")),
                 RequestPath = "/image"
+            });
+
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new PhysicalFileProvider(Path.Combine(env.WebRootPath, "UploadedFiles")),
+                RequestPath = "/file"
             });
 
             app.UseCookiePolicy();
@@ -142,6 +153,11 @@ namespace CmsEngine.Ui
                     name: "main",
                     template: "",
                     defaults: new { controller = "Home", action = "Index" });
+
+                routes.MapRoute(
+                    name: "sitemap",
+                    template: "{slug}",
+                    defaults: new { controller = "Home", action = "Sitemap" });
 
                 routes.MapRoute(
                     name: "page",

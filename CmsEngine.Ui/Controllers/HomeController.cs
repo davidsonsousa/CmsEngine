@@ -57,9 +57,9 @@ namespace CmsEngine.Ui.Controllers
             }
         }
 
-        public IActionResult Privacy()
+        public IActionResult Sitemap()
         {
-            return View();
+            return Content(service.GenerateSitemap().ToString(), "text/xml");
         }
 
         public IActionResult Error()

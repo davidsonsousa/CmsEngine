@@ -90,7 +90,7 @@ namespace CmsEngine
             var item = _unitOfWork.Posts.GetById(id);
 
             _logger.LogInformation("CmsService > GetPostById(id: {0})", id);
-            _logger.LogInformation("Posts loaded: {0}", SerializeObjectForLog(item));
+            _logger.LogInformation("Posts loaded: {0}", item.ToString());
 
             return _mapper.Map<Post, PostViewModel>(item);
         }
@@ -100,7 +100,7 @@ namespace CmsEngine
             var item = _unitOfWork.Posts.GetById(id);
 
             _logger.LogInformation("CmsService > GetPostById(id: {0})", id);
-            _logger.LogInformation("Posts loaded: {0}", SerializeObjectForLog(item));
+            _logger.LogInformation("Posts loaded: {0}", item.ToString());
 
             return _mapper.Map<Post, PostViewModel>(item);
         }
@@ -110,7 +110,7 @@ namespace CmsEngine
             var item = _unitOfWork.Posts.Get(q => q.Slug == slug).SingleOrDefault();
 
             _logger.LogInformation("CmsService > GetPostById(slug: {0})", slug);
-            _logger.LogInformation("Posts loaded: {0}", SerializeObjectForLog(item));
+            _logger.LogInformation("Posts loaded: {0}", item.ToString());
 
             return _mapper.Map<Post, PostViewModel>(item);
         }
@@ -138,7 +138,7 @@ namespace CmsEngine
             editModel.Tags = this.PopulateSelectListItems<Tag>(editModel.SelectedTags);
 
             _logger.LogInformation("CmsService > SetupPostEditModel(id: {0})", id);
-            _logger.LogInformation("Post: {0}", SerializeObjectForLog(editModel));
+            _logger.LogInformation("Post: {0}", editModel.ToString());
 
             return editModel;
         }
@@ -151,7 +151,7 @@ namespace CmsEngine
             editModel.Tags = this.PopulateSelectListItems<Tag>(editModel.SelectedTags);
 
             _logger.LogInformation("CmsService > SetupPostEditModel(id: {0})", id);
-            _logger.LogInformation("Post: {0}", SerializeObjectForLog(editModel));
+            _logger.LogInformation("Post: {0}", editModel.ToString());
 
             return editModel;
         }
@@ -162,7 +162,7 @@ namespace CmsEngine
 
         public ReturnValue SavePost(IEditModel editModel)
         {
-            _logger.LogInformation("CmsService > SavePost(editModel: {0})", SerializeObjectForLog(editModel));
+            _logger.LogInformation("CmsService > SavePost(editModel: {0})", editModel.ToString());
 
             var returnValue = new ReturnValue
             {
@@ -179,7 +179,7 @@ namespace CmsEngine
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error when saving category {0}", SerializeObjectForLog(editModel));
+                _logger.LogError(ex, "Error when saving category {0}", editModel.ToString());
 
                 returnValue.IsError = true;
                 returnValue.Message = "An error has occurred while saving the post";
