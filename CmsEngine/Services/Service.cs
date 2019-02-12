@@ -73,16 +73,19 @@ namespace CmsEngine
                                     Address = website.Address,
                                     Phone = website.Phone,
                                     Email = website.Email,
-                                    Facebook = website.Facebook,
-                                    Twitter = website.Twitter,
-                                    Instagram = website.Instagram,
-                                    LinkedIn = website.LinkedIn
                                 },
                                 ApiDetails = new ApiDetailsViewModel
                                 {
                                     FacebookAppId = website.FacebookAppId,
                                     FacebookApiVersion = website.FacebookApiVersion,
                                     DisqusShortName = website.DisqusShortName
+                                },
+                                SocialMedia = new SocialMediaViewModel
+                                {
+                                    Facebook = website.Facebook,
+                                    Twitter = website.Twitter,
+                                    Instagram = website.Instagram,
+                                    LinkedIn = website.LinkedIn
                                 }
                             };
                         }
