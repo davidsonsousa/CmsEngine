@@ -250,6 +250,40 @@ namespace CmsEngine
                              new XAttribute("version", "2.0")));
         }
 
+        public XDocument GenerateSitemap()
+        {
+            var items = new List<SitemapViewModel>();
+
+            items.AddRange(_unitOfWork.Posts
+                                      .Get()
+                                      .OrderByDescending(o => o.PublishedOn)
+                                      .Select(x => new SitemapViewModel
+                                      {
+                                          Url = FormatUrl("post", x.Slug),
+                                          PublishedOn = x.PublishedOn.ToString("yyyy-MM-dd")
+                                      }));
+
+            items.AddRange(_unitOfWork.Pages
+                                      .Get()
+                                      .OrderByDescending(o => o.PublishedOn)
+                                      .Select(x => new SitemapViewModel
+                                      {
+                                          Url = FormatUrl("post", x.Slug),
+                                          PublishedOn = x.PublishedOn.ToString("yyyy-MM-dd")
+                                      }));
+
+            XNamespace ns = "http://www.sitemaps.org/schemas/sitemap/0.9";
+            return new XDocument(new XDeclaration("1.0", "utf-8", null),
+                                         new XElement(ns + "urlset",
+                                                      from item in items
+                                                      select new XElement(ns + "url",
+                                                                new XElement(ns + "loc", item.Url),
+                                                                new XElement(ns + "lastmod", item.PublishedOn),
+                                                                new XElement(ns + "changefreq", "monthly")
+                                                             )));
+
+        }
+
         #region Helpers
 
         private IEnumerable<CheckboxEditModel> PopulateCheckboxList<T>(IEnumerable<string> selectedItems = null) where T : BaseModel
