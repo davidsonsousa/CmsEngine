@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Newtonsoft.Json.Linq;
 
 namespace CmsEngine.Data.EditModels
 {
@@ -42,5 +43,19 @@ namespace CmsEngine.Data.EditModels
         [DisplayFormat(DataFormatString = "{0:MM/dd/yyyy HH:mm}", ApplyFormatInEditMode = true)]
         public DateTime PublishedOn { get; set; }
 
+        public override string ToString()
+        {
+            var jsonResult = new JObject(
+                                        new JProperty("Id", Id),
+                                        new JProperty("VanityId", VanityId),
+                                        new JProperty("Title", Title),
+                                        new JProperty("Slug", Slug),
+                                        new JProperty("HeaderImage", HeaderImage),
+                                        new JProperty("Description", Description),
+                                        new JProperty("Status", Status.ToString()),
+                                        new JProperty("PublishedOn", PublishedOn)
+                                    );
+            return jsonResult.ToString();
+        }
     }
 }

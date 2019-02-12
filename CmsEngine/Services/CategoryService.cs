@@ -44,7 +44,7 @@ namespace CmsEngine
             var item = _unitOfWork.Categories.GetById(id);
 
             _logger.LogInformation("CmsService > GetCategoryById(id: {0})", id);
-            _logger.LogInformation("Category: {0}", SerializeObjectForLog(item));
+            _logger.LogInformation("Category: {0}", item.ToString());
 
             return _mapper.Map<Category, CategoryViewModel>(item);
         }
@@ -54,7 +54,7 @@ namespace CmsEngine
             var item = _unitOfWork.Categories.GetById(id);
 
             _logger.LogInformation("CmsService > GetCategoryById(id: {0})", id);
-            _logger.LogInformation("Category: {0}", SerializeObjectForLog(item));
+            _logger.LogInformation("Category: {0}", item.ToString());
 
             return _mapper.Map<Category, CategoryViewModel>(item);
         }
@@ -64,7 +64,7 @@ namespace CmsEngine
             var item = _unitOfWork.Categories.Get(q => q.Slug == slug).SingleOrDefault();
 
             _logger.LogInformation("CmsService > GetCategoryBySlug(slug: {0})", slug);
-            _logger.LogInformation("Category: {0}", SerializeObjectForLog(item));
+            _logger.LogInformation("Category: {0}", item.ToString());
 
             return _mapper.Map<Category, CategoryViewModel>(item);
         }
@@ -84,7 +84,7 @@ namespace CmsEngine
             var item = _unitOfWork.Categories.GetById(id);
 
             _logger.LogInformation("CmsService > SetupCategoryEditModel(id: {0})", id);
-            _logger.LogInformation("Category: {0}", SerializeObjectForLog(item));
+            _logger.LogInformation("Category: {0}", item.ToString());
 
             return _mapper.Map<Category, CategoryEditModel>(item);
         }
@@ -94,7 +94,7 @@ namespace CmsEngine
             var item = _unitOfWork.Categories.GetById(id);
 
             _logger.LogInformation("CmsService > SetupCategoryEditModel(id: {0})", id);
-            _logger.LogInformation("Category: {0}", SerializeObjectForLog(item));
+            _logger.LogInformation("Category: {0}", item.ToString());
 
             return _mapper.Map<Category, CategoryEditModel>(item);
         }
@@ -105,7 +105,7 @@ namespace CmsEngine
 
         public ReturnValue SaveCategory(IEditModel editModel)
         {
-            _logger.LogInformation("CmsService > SaveCategory(editModel: {0})", SerializeObjectForLog(editModel));
+            _logger.LogInformation("CmsService > SaveCategory(editModel: {0})", editModel.ToString());
 
             var returnValue = new ReturnValue
             {
@@ -122,7 +122,7 @@ namespace CmsEngine
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error when saving category {0}", SerializeObjectForLog(editModel));
+                _logger.LogError(ex, "Error when saving category {0}", editModel.ToString());
 
                 returnValue.IsError = true;
                 returnValue.Message = "An error has occurred while saving the category";

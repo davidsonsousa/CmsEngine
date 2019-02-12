@@ -18,7 +18,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 using static System.Web.HttpUtility;
 
 namespace CmsEngine
@@ -316,7 +315,7 @@ namespace CmsEngine
 
         private ReturnValue Delete<T>(T item) where T : BaseModel
         {
-            _logger.LogInformation("CmsService > Delete(item: {0})", SerializeObjectForLog(item));
+            _logger.LogInformation("CmsService > Delete<{0}>({1})", item.GetType().BaseType.Name, item.ToString());
 
             var returnValue = new ReturnValue();
             try
@@ -413,10 +412,6 @@ namespace CmsEngine
             return url;
         }
 
-        private string SerializeObjectForLog(object obj)
-        {
-            return JsonConvert.SerializeObject(obj, new JsonSerializerSettings { ContractResolver = new CustomResolver() });
-        }
         #endregion
     }
 }

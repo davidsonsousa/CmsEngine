@@ -1,4 +1,5 @@
 using System;
+using Newtonsoft.Json.Linq;
 
 namespace CmsEngine.Data.Models
 {
@@ -19,5 +20,20 @@ namespace CmsEngine.Data.Models
         public DocumentStatus Status { get; set; }
 
         public DateTime PublishedOn { get; set; }
+
+        public override string ToString()
+        {
+            var jsonResult = new JObject(
+                                        new JProperty("Id", Id),
+                                        new JProperty("VanityId", VanityId),
+                                        new JProperty("Title", Title),
+                                        new JProperty("Slug", Slug),
+                                        new JProperty("HeaderImage", HeaderImage),
+                                        new JProperty("Description", Description),
+                                        new JProperty("Status", Status.ToString()),
+                                        new JProperty("PublishedOn", PublishedOn)
+                                    );
+            return jsonResult.ToString();
+        }
     }
 }
