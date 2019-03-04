@@ -1,0 +1,63 @@
+@model InstanceViewModel
+
+@{
+    string imagePath = !string.IsNullOrWhiteSpace(Model.HeaderImage)
+                       ? string.Format(Constants.ImagePath, "page", Model.HeaderImage)
+                       : "/img/no-image.png";
+}
+
+@section FacebookMeta {
+    <meta property="og:url" content="@string.Format("{0}://{1}{2}", Context.Request.Scheme, Context.Request.Host, Context.Request.Path)" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="@Model.PageTitle" />
+    <meta property="og:description" content="@Model.Description" />
+    <meta property="og:image" content="@string.Format("{0}://{1}{2}", Context.Request.Scheme, Context.Request.Host, imagePath)" />
+}
+
+@section TwitterMeta {
+    <meta name="twitter:card" content="summary_large_image">
+}
+
+<div class="container">
+    <div class="row">
+        <!-- Latest Posts -->
+        <main class="posts-listing col-lg-8">
+            <div class="container">
+                <div class="row">
+                    <h1>Archive</h1>
+                    <div class="container">
+                        <div class="row">
+                            <ul class="list-unstyled">
+                                @if (Model.Categories.Count() > 0)
+                                {
+                                    foreach (var category in Model.Categories)
+                                    {
+                                        <li>
+                                            <p class="h2">@category.Name</p>
+                                            <ul class="list-unstyled">
+                                                <li>
+
+                                                    @foreach (var post in category.Posts)
+                                                    {
+                                                        <p class="h4"><a href="~/blog/post/@post.Slug">@post.Title</a></p>
+                                                        <p>@post.Description</p>
+                                                    }
+                                                </li>
+                                            </ul>
+                                        </li>
+                                    }
+                                }
+                                else
+                                {
+                                    <li><p class="h4">No articles available</p></li>
+                                }
+
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+        @await Html.PartialAsync("_Sidebar", Model)
+    </div>
+</div>

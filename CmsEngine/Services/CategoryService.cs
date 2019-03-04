@@ -25,7 +25,7 @@ namespace CmsEngine
             return _mapper.Map<IEnumerable<Category>, IEnumerable<T>>(listItems);
         }
 
-        public IEnumerable<T> GetCategoriesWithPostCount<T>() where T : IViewModel
+        public IEnumerable<T> GetCategoriesWithPosts<T>() where T : IViewModel
         {
             IEnumerable<Category> listItems = _unitOfWork.Categories
                                                             .Get(q => q.PostCategories.Any(pc => pc.Post.Status == DocumentStatus.Published
@@ -33,7 +33,7 @@ namespace CmsEngine
                                                             .OrderBy(o => o.Name)
                                                             .ToList();
 
-            _logger.LogInformation("CmsService > GetCategoriesWithPostCount()");
+            _logger.LogInformation("CmsService > GetCategoriesWithPosts()");
             _logger.LogInformation("Categories loaded: {0}", listItems.Count());
 
             return _mapper.Map<IEnumerable<Category>, IEnumerable<T>>(listItems);
