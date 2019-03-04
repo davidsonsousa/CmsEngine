@@ -156,8 +156,13 @@ namespace CmsEngine.Ui
 
                 routes.MapRoute(
                     name: "sitemap",
-                    template: "{slug}",
+                    template: "sitemap",
                     defaults: new { controller = "Home", action = "Sitemap" });
+
+                routes.MapRoute(
+                    name: "archive",
+                    template: "archive",
+                    defaults: new { controller = "Home", action = "Archive" });
 
                 routes.MapRoute(
                     name: "page",

@@ -51,7 +51,7 @@ namespace CmsEngine.Ui.Controllers
 
             instance.LatestPosts = service.GetPostsByStatusReadOnly<PostViewModel>(DocumentStatus.Published, 3);
             instance.Pages = service.GetPagesByStatusReadOnly<PageViewModel>(DocumentStatus.Published);
-            instance.Categories = service.GetCategoriesWithPostCount<CategoryViewModel>();
+            instance.Categories = service.GetCategoriesWithPosts<CategoryViewModel>();
             instance.Tags = service.GetAllTagsReadOnly<TagViewModel>();
         }
     }
