@@ -34,6 +34,12 @@ namespace CmsEngine.Ui.Controllers
             return View(instance);
         }
 
+        public IActionResult Archive()
+        {
+            instance.PageTitle = $"Archive - {instance.Name}";
+            return View(instance);
+        }
+
         public IActionResult Contact()
         {
             ViewData["Message"] = "Your contact page.";
