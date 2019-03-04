@@ -99,10 +99,12 @@ namespace CmsEngine.Data.Mapper
             // View model
             CreateMap<Category, CategoryViewModel>()
                 .ForMember(
-                    dst => dst.PostCount,
+                    dst => dst.Posts,
                     opt => opt.MapFrom(src => src.PostCategories
-                                                 .Count(q => q.Post.IsDeleted == false && q.Post.Status == DocumentStatus.Published))
-                );
+                                                 .Select(x => x.Post)
+                                                 .Where(post => post.IsDeleted == false && post.Status == DocumentStatus.Published)
+                                                 .OrderBy(post => post.Title)
+                ));
             CreateMap<CategoryViewModel, Category>();
 
             // Table view model
