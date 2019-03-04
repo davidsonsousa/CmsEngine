@@ -46,7 +46,7 @@
         </header>
         @foreach (var category in Model.Categories)
         {
-            <div class="item d-flex justify-content-between"><a asp-controller="Blog" asp-action="Category" asp-route-slug="@category.Slug">@category.Name</a><span>@category.PostCount</span></div>
+            <div class="item d-flex justify-content-between"><a asp-controller="Blog" asp-action="Category" asp-route-slug="@category.Slug">@category.Name</a><span>@category.Posts.Count()</span></div>
         }
     </div>
     <!-- Widget [Tags Cloud Widget]-->
