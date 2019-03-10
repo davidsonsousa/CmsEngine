@@ -204,9 +204,16 @@ namespace CmsEngine
                 switch (orderColumn)
                 {
                     case 1:
-                    case 0:
-                    default:
                         listItems = orderDirection == "asc" ? listCategories.OrderBy(o => o.Name) : listCategories.OrderByDescending(o => o.Name);
+                        break;
+                    case 2:
+                        listItems = orderDirection == "asc" ? listCategories.OrderBy(o => o.Slug) : listCategories.OrderByDescending(o => o.Slug);
+                        break;
+                    case 3:
+                        listItems = orderDirection == "asc" ? listCategories.OrderBy(o => o.Description) : listCategories.OrderByDescending(o => o.Description);
+                        break;
+                    default:
+                        listItems = listCategories.OrderBy(o => o.Name);
                         break;
                 }
             }
