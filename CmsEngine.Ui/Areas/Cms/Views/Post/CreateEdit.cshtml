@@ -1,9 +1,10 @@
 @model PostEditModel
 
 @section PageHead{
-    <script src="~/js/vendors/tinymce/tinymce.min.js"></script>
+    <link rel="stylesheet" href="~/css/vendors/jquery.fileupload.min.css" />
     <link rel="stylesheet" href="~/js/vendors/pc-bootstrap4-datetimepicker/build/css/bootstrap-datetimepicker.min.css" />
     <link rel="stylesheet" href="~/css/vendors/select2.min.css" />
+    <script src="~/js/vendors/tinymce/tinymce.min.js"></script>
 }
 
 @section Breadcrumb {
@@ -30,29 +31,29 @@
                     <div asp-validation-summary="All" class="text-danger"></div>
 
                     <div class="form-group row">
-                        <div class="col-md-12">
-                            <span class="btn btn-success fileinput-button">
-                                <i class="glyphicon glyphicon-plus"></i>
-                                <span>Header image</span>
-                                <input id="uploadHeadImage" type="file" name="files">
-                            </span>
-
-                            <button class="btn btn-outline-danger" id="removeHeadImage">Remove image</button>
-
+                        <div class="col-md-12 offset-md-2">
                             <div class="header-preview">
                                 @if (!string.IsNullOrWhiteSpace(Model.HeaderImage))
                                 {
-                                    <img src="@string.Format(Constants.Image320Path, "post", Model.HeaderImage)" alt="Image preview" title="Image preview" />
+                                    <img src="@string.Format(Constants.Image320Path, "website", Model.HeaderImage)" alt="Image preview" title="Image preview" />
                                 }
                             </div>
                             <input asp-for="HeaderImage" type="hidden" />
 
-                            <div id="progress">
-                                <div class="progress-bar" style="width: 0%;"></div>
+                            <div class="upload-bar">
+                                <span class="btn btn-success fileinput-button">
+                                    <i class="fas fa-upload"></i>
+                                    <span>Header image</span>
+                                    <input id="uploadHeadImage" type="file" name="files">
+                                </span>
+
+                                <button class="btn btn-outline-danger" id="removeHeadImage">Remove image</button>
+                                <div id="progress">
+                                    <div class="progress-bar" style="width: 0%;"></div>
+                                </div>
                             </div>
                         </div>
                     </div>
-
 
                     <div class="form-group row">
                         <label asp-for="Title" class="col-md-2 form-control-label"></label>
@@ -78,16 +79,18 @@
                     <div class="form-group row">
                         <div class="col-md-12">
                             <textarea asp-for="DocumentContent" class="form-control"></textarea>
-                            <span class="btn btn-success fileinput-button float-right">
-                                <i class="glyphicon glyphicon-plus"></i>
-                                <span>Upload images</span>
-                                <input id="uploadEditorImages" type="file" name="editorImage" multiple>
-                            </span>
-                            <span class="btn btn-success fileinput-button float-right">
-                                <i class="glyphicon glyphicon-plus"></i>
-                                <span>Upload files</span>
-                                <input id="uploadEditorFiles" type="file" name="editorFile" multiple>
-                            </span>
+                            <div class="upload-bar float-right">
+                                <span class="btn btn-success fileinput-button">
+                                    <i class="fas fa-upload"></i>
+                                    <span>Upload images</span>
+                                    <input id="uploadEditorImages" type="file" name="editorImage" multiple>
+                                </span>
+                                <span class="btn btn-success fileinput-button">
+                                    <i class="fas fa-upload"></i>
+                                    <span>Upload files</span>
+                                    <input id="uploadEditorFiles" type="file" name="editorFile" multiple>
+                                </span>
+                            </div>
                         </div>
                     </div>
                     <div class="form-group row">
