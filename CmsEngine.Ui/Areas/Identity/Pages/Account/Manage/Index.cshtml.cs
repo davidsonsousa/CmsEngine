@@ -21,6 +21,7 @@ namespace CmsEngine.Ui.Areas.Identity.Pages.Account.Manage
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IEmailSender _emailSender;
         private readonly CmsService _service;
+        private readonly ILogger<IndexModel> _logger;
 
         public IndexModel(
             UserManager<ApplicationUser> userManager,
@@ -31,6 +32,7 @@ namespace CmsEngine.Ui.Areas.Identity.Pages.Account.Manage
             _userManager = userManager;
             _signInManager = signInManager;
             _emailSender = emailSender;
+            _logger = logger;
             _service = new CmsService(uow, mapper, hca, userManager, logger);
         }
 
@@ -93,16 +95,19 @@ namespace CmsEngine.Ui.Areas.Identity.Pages.Account.Manage
 
         public async Task<IActionResult> OnPostAsync()
         {
+            _logger.LogInformation("Account > Manage > OnPostAsync()");
             ViewData["CurrentUser"] = _service?.CurrentUser;
 
             if (!ModelState.IsValid)
             {
+                _logger.LogInformation("Invalid ModelState");
                 return Page();
             }
 
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
             {
+                _logger.LogInformation($"User not found. Id: {_userManager.GetUserId(User)}");
                 return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
             }
 
@@ -137,6 +142,9 @@ namespace CmsEngine.Ui.Areas.Identity.Pages.Account.Manage
 
             await _signInManager.RefreshSignInAsync(user);
             StatusMessage = "Your profile has been updated";
+
+            _logger.LogInformation($"User {_userManager.GetUserId(User)} updated");
+
             return RedirectToPage();
         }
 
