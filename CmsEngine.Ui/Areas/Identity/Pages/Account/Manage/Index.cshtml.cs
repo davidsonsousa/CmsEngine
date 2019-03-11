@@ -26,7 +26,7 @@ namespace CmsEngine.Ui.Areas.Identity.Pages.Account.Manage
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
             IEmailSender emailSender,
-            IUnitOfWork uow, IMapper mapper, IHttpContextAccessor hca, ILogger logger)
+            IUnitOfWork uow, IMapper mapper, IHttpContextAccessor hca, ILogger<IndexModel> logger)
         {
             _userManager = userManager;
             _signInManager = signInManager;
