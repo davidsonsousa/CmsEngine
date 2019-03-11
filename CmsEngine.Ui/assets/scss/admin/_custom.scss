@@ -6,3 +6,8 @@ input[type="radio"], input[type="checkbox"] {
     padding-top: 5px;
     padding-bottom: 5px;
 }
+
+.checkbox-list{
+    overflow:auto;
+    max-height:300px;
+}

@@ -95,12 +95,14 @@
                     </div>
                     <div class="form-group row">
                         <label asp-for="Categories" class="col-md-2 form-control-label"></label>
-                        <checkbox-list name="SelectedCategories" items="Model.Categories"
-                                       outer-container-class="col-md-9"
-                                       inner-container-class="form-check"
-                                       label-class="form-check-label"
-                                       input-class="form-check-input">
-                        </checkbox-list>
+                        <div class="col-md-4">
+                            <checkbox-list name="SelectedCategories" items="Model.Categories"
+                                           outer-container-class="checkbox-list"
+                                           inner-container-class="form-check"
+                                           label-class="form-check-label"
+                                           input-class="form-check-input">
+                            </checkbox-list>
+                        </div>
                     </div>
                     <div class="form-group row">
                         <label asp-for="Tags" class="col-md-2 form-control-label"></label>
