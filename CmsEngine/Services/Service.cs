@@ -302,7 +302,7 @@ namespace CmsEngine
                 });
             }
 
-            return checkBoxList;
+            return checkBoxList.OrderBy(o => o.Label);
         }
 
         private IEnumerable<SelectListItem> PopulateSelectListItems<T>(IEnumerable<string> selectedItems = null) where T : BaseModel
