@@ -69,8 +69,8 @@ CmsEngine.Configure.DataTable = function (route) {
                 "width": "85px",
                 "data": null,
                 "render": function (data, type, row, meta) {
-                    return '<a href="' + route + '/edit/' + row[row.length - 1] + '" role="button" class="btn btn-secondary" data-toggle="tooltip" data-placement="top" title="Edit"><span class="fa fa-pencil"></span></a>'
-                        + '<a href="' + route + '/delete/' + row[row.length - 1] + '" role="button" class="btn btn-danger delete-link" data-toggle="tooltip" data-placement="top" data-message="Do you really want to <span class=&quot;text-danger&quot;>delete</span> <strong>' + row[1] + '</strong>?" title="Delete"><span class="fa fa-trash-o"></span></a>';
+                    return '<a href="' + route + '/edit/' + row[row.length - 1] + '" role="button" class="btn btn-secondary" data-toggle="tooltip" data-placement="top" title="Edit"><span class="far fa-edit"></span></a>'
+                        + '<a href="' + route + '/delete/' + row[row.length - 1] + '" role="button" class="btn btn-danger delete-link" data-toggle="tooltip" data-placement="top" data-message="Do you really want to <span class=&quot;text-danger&quot;>delete</span> <strong>' + row[1] + '</strong>?" title="Delete"><span class="far fa-trash-alt"></span></a>';
                 }
             }],
         "ajax": {

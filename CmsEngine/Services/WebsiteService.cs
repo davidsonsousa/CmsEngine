@@ -171,16 +171,17 @@ namespace CmsEngine
 
                 switch (orderColumn)
                 {
-                    case 3:
-                        listItems = orderDirection == "asc" ? listWebsites.OrderBy(o => o.Culture) : listWebsites.OrderByDescending(o => o.Culture);
+                    case 1:
+                        listItems = orderDirection == "asc" ? listWebsites.OrderBy(o => o.Name) : listWebsites.OrderByDescending(o => o.Name);
                         break;
                     case 2:
                         listItems = orderDirection == "asc" ? listWebsites.OrderBy(o => o.Tagline) : listWebsites.OrderByDescending(o => o.Tagline);
                         break;
-                    case 1:
-                    case 0:
+                    case 3:
+                        listItems = orderDirection == "asc" ? listWebsites.OrderBy(o => o.Culture) : listWebsites.OrderByDescending(o => o.Culture);
+                        break;
                     default:
-                        listItems = orderDirection == "asc" ? listWebsites.OrderBy(o => o.Name) : listWebsites.OrderByDescending(o => o.Name);
+                        listItems = listWebsites.OrderBy(o => o.Name);
                         break;
                 }
             }

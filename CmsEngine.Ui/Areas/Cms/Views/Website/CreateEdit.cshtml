@@ -1,7 +1,7 @@
 @model WebsiteEditModel
 
 @section PageHead{
-    <link href="~/css/vendors/jquery.fileupload.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/css/vendors/jquery.fileupload.min.css" />
     <script src="~/js/vendors/tinymce/tinymce.min.js"></script>
 }
 
@@ -28,15 +28,7 @@
 
                     <div asp-validation-summary="All" class="text-danger"></div>
                     <div class="form-group row">
-                        <div class="col-md-12">
-                            <span class="btn btn-success fileinput-button">
-                                <i class="glyphicon glyphicon-plus"></i>
-                                <span>Header image</span>
-                                <input id="uploadHeadImage" type="file" name="files">
-                            </span>
-
-                            <button class="btn btn-outline-danger" id="removeHeadImage">Remove image</button>
-
+                        <div class="col-md-12 offset-md-2">
                             <div class="header-preview">
                                 @if (!string.IsNullOrWhiteSpace(Model.HeaderImage))
                                 {
@@ -45,11 +37,21 @@
                             </div>
                             <input asp-for="HeaderImage" type="hidden" />
 
-                            <div id="progress">
-                                <div class="progress-bar" style="width: 0%;"></div>
+                            <div class="upload-bar">
+                                <span class="btn btn-success fileinput-button">
+                                    <i class="fas fa-upload"></i>
+                                    <span>Header image</span>
+                                    <input id="uploadHeadImage" type="file" name="files">
+                                </span>
+
+                                <button class="btn btn-outline-danger" id="removeHeadImage">Remove image</button>
+                                <div id="progress">
+                                    <div class="progress-bar" style="width: 0%;"></div>
+                                </div>
                             </div>
                         </div>
                     </div>
+
                     <div class="form-group row">
                         <label asp-for="Name" class="col-md-2 form-control-label"></label>
                         <div class="col-md-10">
@@ -68,16 +70,18 @@
                         <label asp-for="Description" class="col-md-2 form-control-label"></label>
                         <div class="col-md-10">
                             <textarea asp-for="Description" class="form-control"></textarea>
-                            <span class="btn btn-success fileinput-button float-right">
-                                <i class="glyphicon glyphicon-plus"></i>
-                                <span>Upload images</span>
-                                <input id="uploadEditorImages" type="file" name="editorImage" multiple>
-                            </span>
-                            <span class="btn btn-success fileinput-button float-right">
-                                <i class="glyphicon glyphicon-plus"></i>
-                                <span>Upload files</span>
-                                <input id="uploadEditorFiles" type="file" name="editorFile" multiple>
-                            </span>
+                            <div class="upload-bar float-right">
+                                <span class="btn btn-success fileinput-button">
+                                    <i class="fas fa-upload"></i>
+                                    <span>Upload images</span>
+                                    <input id="uploadEditorImages" type="file" name="editorImage" multiple>
+                                </span>
+                                <span class="btn btn-success fileinput-button">
+                                    <i class="fas fa-upload"></i>
+                                    <span>Upload files</span>
+                                    <input id="uploadEditorFiles" type="file" name="editorFile" multiple>
+                                </span>
+                            </div>
                         </div>
                     </div>
                     <div class="form-group row">
@@ -187,7 +191,7 @@
                     </div>
                 </div>
                 <div class="card-footer">
-                    <button type="submit" class="btn btn-primary"><i class="fa fa-dot-circle-o"></i> Save</button>
+                    <button type="submit" class="btn btn-primary"><i class="far fa-dot-circle"></i> Save</button>
                 </div>
             </form>
         </div>

@@ -288,40 +288,32 @@ namespace CmsEngine
 
         private IEnumerable<CheckboxEditModel> PopulateCheckboxList<T>(IEnumerable<string> selectedItems = null) where T : BaseModel
         {
-            var itemList = _unitOfWork.GetRepository<T>().GetReadOnly(q => q.IsDeleted == false);
-            var checkBoxList = new List<CheckboxEditModel>();
+            var checkBoxList = _unitOfWork.GetRepository<T>()
+                                          .GetReadOnly(q => q.IsDeleted == false)
+                                          .Select(x => new CheckboxEditModel
+                                          {
+                                              Label = x.GetType().GetProperty("Name").GetValue(x).ToString(),
+                                              Value = x.VanityId.ToString(),
+                                              Enabled = true,
+                                              Selected = (selectedItems?.Contains(x.VanityId.ToString()) ?? false)
+                                          });
 
-            foreach (var item in itemList)
-            {
-                checkBoxList.Add(new CheckboxEditModel
-                {
-                    Label = item.GetType().GetProperty("Name").GetValue(item).ToString(),
-                    Value = item.VanityId.ToString(),
-                    Enabled = true,
-                    Selected = (selectedItems == null ? false : selectedItems.Contains(item.VanityId.ToString()))
-                });
-            }
-
-            return checkBoxList;
+            return checkBoxList.OrderBy(o => o.Label);
         }
 
         private IEnumerable<SelectListItem> PopulateSelectListItems<T>(IEnumerable<string> selectedItems = null) where T : BaseModel
         {
-            var itemList = _unitOfWork.GetRepository<T>().GetReadOnly(q => q.IsDeleted == false);
-            var selectListItems = new List<SelectListItem>();
+            var selectListItems = _unitOfWork.GetRepository<T>()
+                                      .GetReadOnly(q => q.IsDeleted == false)
+                                      .Select(x => new SelectListItem
+                                      {
+                                          Text = x.GetType().GetProperty("Name").GetValue(x).ToString(),
+                                          Value = x.VanityId.ToString(),
+                                          Disabled = false,
+                                          Selected = (selectedItems?.Contains(x.VanityId.ToString()) ?? false)
+                                      });
 
-            foreach (var item in itemList)
-            {
-                selectListItems.Add(new SelectListItem
-                {
-                    Text = item.GetType().GetProperty("Name").GetValue(item).ToString(),
-                    Value = item.VanityId.ToString(),
-                    Disabled = false,
-                    Selected = (selectedItems == null ? false : selectedItems.Contains(item.VanityId.ToString()))
-                });
-            }
-
-            return selectListItems;
+            return selectListItems.OrderBy(o => o.Text);
         }
 
         private IEnumerable<T> GetAllReadOnly<T>(int count = 0) where T : BaseModel
