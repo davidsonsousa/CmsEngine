@@ -17,7 +17,7 @@ gulp.task('build:vendors', function (callback) {
         'vendors:cleanCSS', 'compile-vendors-admin:sass', 'node-vendors:copyCSS', 'node-vendors:minifyCSS',
         'vendors:cleanJS', 'node-vendors:copyJS', 'node-vendors:copyMAP', 'node-vendors:minifyJS',
         'node-vendors:copyTinyMCE', 'node-vendors:copyDatetimePicker',
-        'vendors:copyFonts',
+        'vendors:copyFonts', 'vendors:copyFontAwesome',
         'clean:temp',
         callback
     );
@@ -36,7 +36,7 @@ var vendorsCSS = [
     'node_modules/codemirror/lib/codemirror.css',
     'node_modules/datatables.net-bs4/css/dataTables.bootstrap4.css',
     'node_modules/datatables.net-buttons-bs4/css/buttons.bootstrap4.css',
-    'node_modules/font-awesome/css/font-awesome.css',
+    'node_modules/@fortawesome/fontawesome-free/css/all.css',
     'node_modules/ladda/dist/ladda-themeless.min.css',
     'node_modules/quill/dist/quill.snow.css',
     'node_modules/simple-line-icons/css/simple-line-icons.css',
@@ -144,7 +144,6 @@ gulp.task('vendors:cleanJS', function () {
 
 /** Fonts **/
 var fonts = [
-    'node_modules/font-awesome/fonts/**',
     'node_modules/simple-line-icons/fonts/**',
     'assets/fonts/blog.*'
 ];
@@ -152,6 +151,18 @@ var fonts = [
 gulp.task('vendors:copyFonts', function () {
     return gulp.src(fonts)
         .pipe(gulp.dest(gulp.paths.webroot + gulp.paths.css + gulp.paths.fonts));
+});
+
+var fontawesome = [
+    'node_modules/@fortawesome/fontawesome-free/webfonts/*.eot',
+    'node_modules/@fortawesome/fontawesome-free/webfonts/*.ttf',
+    'node_modules/@fortawesome/fontawesome-free/webfonts/*.woff',
+    'node_modules/@fortawesome/fontawesome-free/webfonts/*.woff2'
+];
+
+gulp.task('vendors:copyFontAwesome', function () {
+    return gulp.src(fontawesome)
+        .pipe(gulp.dest(gulp.paths.webroot + gulp.paths.css + 'web' + gulp.paths.fonts));
 });
 
 /** TinyMCE **/

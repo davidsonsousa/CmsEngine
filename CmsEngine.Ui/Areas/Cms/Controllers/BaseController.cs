@@ -47,20 +47,23 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
             ViewBag.CurrentUser = service?.CurrentUser;
         }
 
-        protected void SetupMessages(string pageTitle, PageType pageType, string description = "", string panelTitle = "")
+        protected void SetupMessages(string pageTitle)
         {
             ViewBag.PageTitle = pageTitle;
+        }
+
+        protected void SetupMessages(string pageTitle, PageType pageType, string description = "", string panelTitle = "")
+        {
+            this.SetupMessages(pageTitle);
+
+            ViewBag.PageType = pageType.ToString();
             ViewBag.PageDescription = description;
             ViewBag.PanelTitle = panelTitle;
-            ViewBag.PageType = pageType.ToString();
         }
 
         protected void SetupMessages(string pageTitle, PageType pageType, string modelError, string generalError, string description = "", string panelTitle = "")
         {
-            ViewBag.PageTitle = pageTitle;
-            ViewBag.PageDescription = description;
-            ViewBag.PanelTitle = panelTitle;
-            ViewBag.PageType = pageType.ToString();
+            this.SetupMessages(pageTitle, pageType, description, panelTitle);
 
             if (!string.IsNullOrWhiteSpace(modelError))
             {
