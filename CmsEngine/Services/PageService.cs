@@ -218,9 +218,25 @@ namespace CmsEngine
                 switch (orderColumn)
                 {
                     case 1:
-                    case 0:
-                    default:
                         listItems = orderDirection == "asc" ? listPages.OrderBy(o => o.Title) : listPages.OrderByDescending(o => o.Title);
+                        break;
+                    case 2:
+                        listItems = orderDirection == "asc" ? listPages.OrderBy(o => o.Description) : listPages.OrderByDescending(o => o.Description);
+                        break;
+                    case 3:
+                        listItems = orderDirection == "asc" ? listPages.OrderBy(o => o.Slug) : listPages.OrderByDescending(o => o.Slug);
+                        break;
+                    case 4:
+                        listItems = orderDirection == "asc" ? listPages.OrderBy(o => o.Author.FullName) : listPages.OrderByDescending(o => o.Author.FullName);
+                        break;
+                    case 5:
+                        listItems = orderDirection == "asc" ? listPages.OrderBy(o => o.PublishedOn) : listPages.OrderByDescending(o => o.PublishedOn);
+                        break;
+                    case 6:
+                        listItems = orderDirection == "asc" ? listPages.OrderBy(o => o.Status) : listPages.OrderByDescending(o => o.Status);
+                        break;
+                    default:
+                        listItems = listPages.OrderByDescending(o => o.PublishedOn);
                         break;
                 }
             }
