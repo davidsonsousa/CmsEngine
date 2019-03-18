@@ -57,14 +57,14 @@
                     <div class="form-group row">
                         <label asp-for="Title" class="col-md-2 form-control-label"></label>
                         <div class="col-md-10">
-                            <input asp-for="Title" class="form-control" />
+                            <input asp-for="Title" class="form-control slugify" />
                             <span asp-validation-for="Title" class="text-danger"></span>
                         </div>
                     </div>
                     <div class="form-group row">
                         <label asp-for="Slug" class="col-md-2 form-control-label"></label>
                         <div class="col-md-10">
-                            <input asp-for="Slug" class="form-control" />
+                            <input asp-for="Slug" class="form-control slug" />
                             <span asp-validation-for="Slug" class="text-danger"></span>
                         </div>
                     </div>
