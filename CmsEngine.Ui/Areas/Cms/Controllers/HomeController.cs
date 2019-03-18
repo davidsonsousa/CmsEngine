@@ -18,6 +18,7 @@ namespace CmsEngine.Ui.Admin.Controllers
 
         public IActionResult Index()
         {
+            this.SetupMessages("Dashboard");
             return View();
         }
     }
