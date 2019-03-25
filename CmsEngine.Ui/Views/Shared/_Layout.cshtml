@@ -75,13 +75,13 @@
                 <div id="navbarcollapse" class="collapse navbar-collapse">
                     <ul class="navbar-nav ml-auto">
                         <li class="nav-item">
-                            <a asp-controller="Home" asp-action="Index" class="nav-link">Home</a>
+                            <a asp-controller="Home" asp-action="Index" class="nav-link @Html.IsSelected(controllers: "Home", actions: "Index, Page")">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a asp-controller="Blog" asp-action="Index" class="nav-link">Blog</a>
+                            <a asp-controller="Blog" asp-action="Index" class="nav-link @Html.IsSelected(controllers: "Blog", actions: "Index, Post")">Blog</a>
                         </li>
                         <li class="nav-item">
-                            <a asp-controller="Home" asp-action="Archive" class="nav-link">Archive</a>
+                            <a asp-controller="Home" asp-action="Archive" class="nav-link @Html.IsSelected(controllers: "Home", actions: "Archive")">Archive</a>
                         </li>
                         @*<li class="nav-item">
                                 <a asp-controller="Home" asp-action="Contact" class="nav-link">Contact</a>
