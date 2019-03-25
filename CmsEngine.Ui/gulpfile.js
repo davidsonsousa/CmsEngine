@@ -19,6 +19,8 @@ gulp.paths = {
     temp: './wwwroot/temp/',
     css: 'css/',
     js: 'js/',
+    img: 'img/',
+    uploadedFiles: 'UploadedFiles/',
     fonts: 'fonts/',
     vendors: 'vendors/'
 };
@@ -86,7 +88,12 @@ gulp.task('copy:images', function () {
 });
 
 gulp.task('clean:dist', function () {
-    return del(gulp.paths.webroot + './*');
+    return del([
+        gulp.paths.webroot + gulp.paths.css + '**',
+        gulp.paths.webroot + gulp.paths.img + '**',
+        gulp.paths.webroot + gulp.paths.js + '**',
+        '!' + gulp.paths.webroot + gulp.paths.uploadedFiles
+    ]);
 });
 
 gulp.task('default', function (callback) {
