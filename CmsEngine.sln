@@ -1,11 +1,20 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28010.2003
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28803.156
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CmsEngine", "CmsEngine\CmsEngine.csproj", "{B65DC0CE-2BB1-4B30-B4E5-A45C73EAFADB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CmsEngine", "CmsEngine\CmsEngine.csproj", "{B65DC0CE-2BB1-4B30-B4E5-A45C73EAFADB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CmsEngine.Ui", "CmsEngine.Ui\CmsEngine.Ui.csproj", "{E26D9FA6-8F8C-4F34-876D-29BED7B5E9D3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CmsEngine.Ui", "CmsEngine.Ui\CmsEngine.Ui.csproj", "{E26D9FA6-8F8C-4F34-876D-29BED7B5E9D3}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution files", "Solution files", "{456BB7BF-28D5-432E-A21E-F51EF27F7B27}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+		.gitignore = .gitignore
+		global.json = global.json
+		LICENSE = LICENSE
+		README.md = README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
