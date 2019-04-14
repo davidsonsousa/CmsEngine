@@ -41,17 +41,24 @@ namespace CmsEngine.Ui
                 string certificatePassword = certificateSettings.GetValue<string>("password");
 
                 Log.Information("Starting host");
-                CreateWebHostBuilder(args)
-                    .UseKestrel(options =>
+
+                var webHostBuilder = CreateWebHostBuilder(args);
+
+                if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Development")
+                {
+                    Log.Information("Using Kestrel with port 5001");
+
+                    webHostBuilder.UseKestrel(options =>
                     {
                         options.AddServerHeader = false;
                         options.Listen(IPAddress.Loopback, 5001, listenOptions =>
                         {
                             listenOptions.UseHttps(new X509Certificate2(certificateName, certificatePassword));
                         });
-                    })
-                    .Build()
-                    .Run();
+                    });
+                }
+
+                webHostBuilder.Build().Run();
             }
             catch (Exception ex)
             {
