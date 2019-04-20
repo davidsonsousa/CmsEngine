@@ -1,5 +1,7 @@
 using System;
 using System.IO;
+using System.Net;
+using System.Security.Cryptography.X509Certificates;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -16,10 +18,14 @@ namespace CmsEngine.Ui
                 string environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
 
                 return new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory())
-                                                 .AddJsonFile("appsettings.json")
-                                                 .AddJsonFile($"appsettings.{environment}.json", optional: true)
-                                                 .AddEnvironmentVariables()
-                                                 .Build();
+                                                       .AddJsonFile("appsettings.json")
+                                                       .AddJsonFile($"appsettings.{environment}.json", optional: true, reloadOnChange: true)
+                                                       .AddJsonFile("emailsettings.json", optional: false, reloadOnChange: true)
+                                                       .AddJsonFile($"emailsettings.{environment}.json", optional: true, reloadOnChange: true)
+                                                       .AddJsonFile("certificate.json", optional: true, reloadOnChange: true)
+                                                       .AddJsonFile($"certificate.{environment}.json", optional: true, reloadOnChange: true)
+                                                       .AddEnvironmentVariables()
+                                                       .Build();
             }
         }
 
@@ -28,11 +34,31 @@ namespace CmsEngine.Ui
             Log.Logger = new LoggerConfiguration().ReadFrom.Configuration(Configuration)
                                                   .Enrich.FromLogContext()
                                                   .CreateLogger();
-
             try
             {
+                var certificateSettings = Configuration.GetSection("certificateSettings");
+                string certificateName = certificateSettings.GetValue<string>("fileName");
+                string certificatePassword = certificateSettings.GetValue<string>("password");
+
                 Log.Information("Starting host");
-                CreateWebHostBuilder(args).Build().Run();
+
+                var webHostBuilder = CreateWebHostBuilder(args);
+
+                if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Development")
+                {
+                    Log.Information("Using Kestrel with port 5001");
+
+                    webHostBuilder.UseKestrel(options =>
+                    {
+                        options.AddServerHeader = false;
+                        options.Listen(IPAddress.Loopback, 5001, listenOptions =>
+                        {
+                            listenOptions.UseHttps(new X509Certificate2(certificateName, certificatePassword));
+                        });
+                    });
+                }
+
+                webHostBuilder.Build().Run();
             }
             catch (Exception ex)
             {
@@ -45,17 +71,11 @@ namespace CmsEngine.Ui
             }
         }
 
-        public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
-            WebHost.CreateDefaultBuilder(args)
-                   .UseStartup<Startup>()
-                   .UseSerilog()
-                   .ConfigureAppConfiguration((hostingContext, config) =>
-                   {
-                       var env = hostingContext.HostingEnvironment;
-                       config.AddJsonFile("emailsettings.json")
-                             .AddJsonFile($"emailsettings.{env.EnvironmentName}.json", optional: true);
-
-                       config.AddEnvironmentVariables();
-                   });
+        public static IWebHostBuilder CreateWebHostBuilder(string[] args)
+        {
+            return WebHost.CreateDefaultBuilder(args)
+                          .UseStartup<Startup>()
+                          .UseSerilog();
+        }
     }
 }
