@@ -35,16 +35,19 @@ namespace CmsEngine.Ui.Controllers
 
             if (context.ActionArguments.TryGetValue("q", out object searchValue))
             {
+                // Showing searched posts
                 instance.PagedPosts = service.GetPagedPostsFullTextSearch<PostViewModel>(DocumentStatus.Published, 1, searchValue.ToString());
             }
             else
             {
                 if (context.ActionArguments.TryGetValue("page", out object value) && int.TryParse(value.ToString(), out int page))
                 {
+                    // Showing posts after paging
                     instance.PagedPosts = service.GetPagedPostsByStatusReadOnly<PostViewModel>(DocumentStatus.Published, page);
                 }
                 else
                 {
+                    // Showing regular posts
                     instance.PagedPosts = service.GetPagedPostsByStatusReadOnly<PostViewModel>(DocumentStatus.Published);
                 }
             }

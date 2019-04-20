@@ -154,6 +154,5 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
 
             return folder;
         }
-
     }
 }
