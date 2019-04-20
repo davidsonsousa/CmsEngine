@@ -13,8 +13,6 @@ namespace CmsEngine
 {
     public sealed partial class CmsService
     {
-        #region Get
-
         public IEnumerable<T> GetAllCategoriesReadOnly<T>(int count = 0) where T : IViewModel
         {
             IEnumerable<Category> listItems = GetAllReadOnly<Category>(count);
@@ -69,10 +67,6 @@ namespace CmsEngine
             return _mapper.Map<Category, CategoryViewModel>(item);
         }
 
-        #endregion
-
-        #region Setup
-
         public IEditModel SetupCategoryEditModel()
         {
             _logger.LogInformation("CmsService > SetupCategoryEditModel()");
@@ -98,10 +92,6 @@ namespace CmsEngine
 
             return _mapper.Map<Category, CategoryEditModel>(item);
         }
-
-        #endregion
-
-        #region Save
 
         public ReturnValue SaveCategory(IEditModel editModel)
         {
@@ -132,10 +122,6 @@ namespace CmsEngine
 
             return returnValue;
         }
-
-        #endregion
-
-        #region Delete
 
         public ReturnValue DeleteCategory(Guid id)
         {
@@ -172,10 +158,6 @@ namespace CmsEngine
 
             return returnValue;
         }
-
-        #endregion
-
-        #region DataTable
 
         public IEnumerable<IViewModel> FilterCategory(string searchTerm, IEnumerable<IViewModel> listItems)
         {
@@ -225,10 +207,6 @@ namespace CmsEngine
             return listItems;
         }
 
-        #endregion
-
-        #region Helpers
-
         private void PrepareCategoryForSaving(IEditModel editModel)
         {
             Category category;
@@ -253,7 +231,5 @@ namespace CmsEngine
                 _unitOfWork.Categories.Update(category);
             }
         }
-
-        #endregion
     }
 }

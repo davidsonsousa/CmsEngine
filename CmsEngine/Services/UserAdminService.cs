@@ -12,8 +12,6 @@ namespace CmsEngine
 {
     public sealed partial class CmsService
     {
-        #region Get
-
         public IEnumerable<IViewModel> GetAllUsersReadOnly()
         {
             IEnumerable<ApplicationUser> listItems;
@@ -46,10 +44,6 @@ namespace CmsEngine
             return _mapper.Map<ApplicationUser, UserViewModel>(item);
         }
 
-        #endregion
-
-        #region Setup
-
         public IEditModel SetupUserEditModel()
         {
             return new UserEditModel();
@@ -66,10 +60,6 @@ namespace CmsEngine
             var item = await _userManager.FindByNameAsync(userName);
             return _mapper.Map<ApplicationUser, UserEditModel>(item);
         }
-
-        #endregion
-
-        #region Save
 
         public ReturnValue SaveUser(IEditModel editModel)
         {
@@ -95,10 +85,6 @@ namespace CmsEngine
 
             return returnValue;
         }
-
-        #endregion
-
-        #region Delete
 
         public async Task<ReturnValue> DeleteUser(Guid id)
         {
@@ -156,10 +142,6 @@ namespace CmsEngine
             return returnValue;
         }
 
-        #endregion
-
-        #region DataTable
-
         public IEnumerable<IViewModel> FilterUser(string searchTerm, IEnumerable<IViewModel> listItems)
         {
             var items = (IEnumerable<UserViewModel>)listItems;
@@ -202,10 +184,6 @@ namespace CmsEngine
 
         }
 
-        #endregion
-
-        #region Helpers
-
         private async Task PrepareUserForSaving(IEditModel editModel)
         {
             ApplicationUser user;
@@ -222,7 +200,5 @@ namespace CmsEngine
                 await _userManager.UpdateAsync(user);
             }
         }
-
-        #endregion
     }
 }

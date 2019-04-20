@@ -99,8 +99,6 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
             return Ok(dataTable);
         }
 
-        #region Helpers
-
         private IActionResult Save(TagEditModel tagEditModel)
         {
             var returnValue = service.SaveTag(tagEditModel);
@@ -116,8 +114,5 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
 
             return RedirectToAction("Index");
         }
-
-        #endregion
-
     }
 }

@@ -5,14 +5,10 @@ namespace CmsEngine.Data.Models
 {
     public class Website : BaseModel
     {
-        #region Navigation
-
         public virtual ICollection<Page> Pages { get; set; }
         public virtual ICollection<Post> Posts { get; set; }
         public virtual ICollection<Tag> Tags { get; set; }
         public virtual ICollection<Category> Categories { get; set; }
-
-        #endregion
 
         public string Name { get; set; }
         public string Tagline { get; set; }

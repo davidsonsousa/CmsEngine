@@ -13,8 +13,6 @@ namespace CmsEngine
 {
     public sealed partial class CmsService
     {
-        #region Get
-
         public IEnumerable<T> GetPagesByStatusReadOnly<T>(DocumentStatus documentStatus, int count = 0) where T : IViewModel
         {
             var items = this.GetDocumentsByStatus<Page>(documentStatus, count);
@@ -65,10 +63,6 @@ namespace CmsEngine
             return _mapper.Map<Page, PageViewModel>(item);
         }
 
-        #endregion
-
-        #region Setup
-
         public IEditModel SetupPageEditModel()
         {
             _logger.LogInformation("CmsService > SetupPageEditModel()");
@@ -94,10 +88,6 @@ namespace CmsEngine
 
             return _mapper.Map<Page, PageEditModel>(item);
         }
-
-        #endregion
-
-        #region Save
 
         public ReturnValue SavePage(IEditModel editModel)
         {
@@ -128,10 +118,6 @@ namespace CmsEngine
 
             return returnValue;
         }
-
-        #endregion
-
-        #region Delete
 
         public ReturnValue DeletePage(Guid id)
         {
@@ -186,10 +172,6 @@ namespace CmsEngine
 
             return returnValue;
         }
-
-        #endregion
-
-        #region DataTable
 
         public IEnumerable<IViewModel> FilterPage(string searchTerm, IEnumerable<IViewModel> listItems)
         {
@@ -248,10 +230,6 @@ namespace CmsEngine
             return listItems;
         }
 
-        #endregion
-
-        #region Helpers
-
         private void PreparePageForSaving(IEditModel editModel)
         {
             Page page;
@@ -262,7 +240,7 @@ namespace CmsEngine
             {
                 _logger.LogInformation("New page");
 
-                page = _mapper.Map<PageEditModel, Page>((PageEditModel)editModel);
+                page = _mapper.Map<PageEditModel, Page>(pageEditModel);
                 page.WebsiteId = Instance.Id;
 
                 _unitOfWork.Pages.Insert(page);
@@ -271,8 +249,8 @@ namespace CmsEngine
             {
                 _logger.LogInformation("Update page");
 
-                page = _unitOfWork.Pages.GetById(editModel.VanityId);
-                _mapper.Map((PageEditModel)editModel, page);
+                page = _unitOfWork.Pages.GetById(pageEditModel.VanityId);
+                _mapper.Map(pageEditModel, page);
                 page.WebsiteId = Instance.Id;
 
                 _unitOfWork.Pages.Update(page);
@@ -299,7 +277,5 @@ namespace CmsEngine
                            });
             }
         }
-
-        #endregion
     }
 }

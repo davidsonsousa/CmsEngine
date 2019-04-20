@@ -14,8 +14,6 @@ namespace CmsEngine
 {
     public sealed partial class CmsService
     {
-        #region Get
-
         public PaginatedList<T> GetPagedPostsByStatusReadOnly<T>(DocumentStatus documentStatus, int pageIndex = 1) where T : IViewModel
         {
             var posts = GetDocumentsByStatus<Post>(documentStatus);
@@ -115,10 +113,6 @@ namespace CmsEngine
             return _mapper.Map<Post, PostViewModel>(item);
         }
 
-        #endregion
-
-        #region Setup
-
         public IEditModel SetupPostEditModel()
         {
             _logger.LogInformation("CmsService > SetupPostEditModel()");
@@ -156,10 +150,6 @@ namespace CmsEngine
             return editModel;
         }
 
-        #endregion
-
-        #region Save
-
         public ReturnValue SavePost(IEditModel editModel)
         {
             _logger.LogInformation("CmsService > SavePost(editModel: {0})", editModel.ToString());
@@ -189,10 +179,6 @@ namespace CmsEngine
 
             return returnValue;
         }
-
-        #endregion
-
-        #region Delete
 
         public ReturnValue DeletePost(Guid id)
         {
@@ -247,10 +233,6 @@ namespace CmsEngine
 
             return returnValue;
         }
-
-        #endregion
-
-        #region DataTable
 
         public IEnumerable<IViewModel> FilterPost(string searchTerm, IEnumerable<IViewModel> listItems)
         {
@@ -308,10 +290,6 @@ namespace CmsEngine
 
             return listItems;
         }
-
-        #endregion
-
-        #region Helpers
 
         private void PreparePostForSaving(IEditModel editModel)
         {
@@ -433,7 +411,5 @@ namespace CmsEngine
 
             return new PaginatedList<T>(mappedItems, count, page, Instance.ArticleLimit);
         }
-
-        #endregion
     }
 }

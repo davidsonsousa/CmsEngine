@@ -134,8 +134,6 @@ namespace CmsEngine.Data.AccessLayer
             }
         }
 
-        #region Dispose
-
         protected virtual void Dispose(bool disposing)
         {
             if (!_disposed)
@@ -153,7 +151,5 @@ namespace CmsEngine.Data.AccessLayer
             Dispose(true);
             GC.SuppressFinalize(this);
         }
-
-        #endregion
     }
 }

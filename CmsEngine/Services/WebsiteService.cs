@@ -12,8 +12,6 @@ namespace CmsEngine
 {
     public sealed partial class CmsService
     {
-        #region Get
-
         public IEnumerable<T> GetAllWebsitesReadOnly<T>(int count = 0) where T : IViewModel
         {
             IEnumerable<Website> listItems = GetAllReadOnly<Website>(count);
@@ -33,10 +31,6 @@ namespace CmsEngine
             return _mapper.Map<Website, WebsiteViewModel>(item);
         }
 
-        #endregion
-
-        #region Setup
-
         public IEditModel SetupWebsiteEditModel()
         {
             return new WebsiteEditModel();
@@ -53,10 +47,6 @@ namespace CmsEngine
             var item = _unitOfWork.Websites.GetById(id);
             return _mapper.Map<Website, WebsiteEditModel>(item);
         }
-
-        #endregion
-
-        #region Save
 
         public ReturnValue SaveWebsite(IEditModel editModel)
         {
@@ -82,10 +72,6 @@ namespace CmsEngine
 
             return returnValue;
         }
-
-        #endregion
-
-        #region Delete
 
         public ReturnValue DeleteWebsite(Guid id)
         {
@@ -141,10 +127,6 @@ namespace CmsEngine
             return returnValue;
         }
 
-        #endregion
-
-        #region DataTable
-
         public IEnumerable<IViewModel> FilterWebsite(string searchTerm, IEnumerable<IViewModel> listItems)
         {
             var items = (IEnumerable<WebsiteTableViewModel>)listItems;
@@ -193,10 +175,6 @@ namespace CmsEngine
             return listItems;
         }
 
-        #endregion
-
-        #region Helpers
-
         private void PrepareWebsiteForSaving(IEditModel editModel)
         {
             Website website;
@@ -214,7 +192,5 @@ namespace CmsEngine
                 _unitOfWork.Websites.Update(website);
             }
         }
-
-        #endregion
     }
 }

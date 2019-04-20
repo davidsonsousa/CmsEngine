@@ -32,8 +32,6 @@ namespace CmsEngine
 
         private InstanceViewModel _instance;
 
-        #region Properties
-
         public UserViewModel CurrentUser
         {
             get
@@ -98,8 +96,6 @@ namespace CmsEngine
                 return _instance;
             }
         }
-
-        #endregion
 
         public CmsService(IUnitOfWork uow, IMapper mapper, IHttpContextAccessor hca, UserManager<ApplicationUser> userManager, ILogger logger)
         {
@@ -284,8 +280,6 @@ namespace CmsEngine
 
         }
 
-        #region Helpers
-
         private IEnumerable<CheckboxEditModel> PopulateCheckboxList<T>(IEnumerable<string> selectedItems = null) where T : BaseModel
         {
             var checkBoxList = _unitOfWork.GetRepository<T>()
@@ -437,7 +431,5 @@ namespace CmsEngine
 
             return url;
         }
-
-        #endregion
     }
 }

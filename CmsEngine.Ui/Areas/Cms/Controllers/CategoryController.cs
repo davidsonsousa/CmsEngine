@@ -99,7 +99,7 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
             return Ok(dataTable);
         }
 
-        #region Helpers
+        
 
         private IActionResult Save(CategoryEditModel categoryEditModel)
         {
@@ -117,7 +117,7 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
             return RedirectToAction("Index");
         }
 
-        #endregion
+        
 
     }
 }

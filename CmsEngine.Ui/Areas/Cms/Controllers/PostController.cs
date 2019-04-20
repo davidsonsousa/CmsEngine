@@ -110,7 +110,7 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
             return await this.PrepareAndUploadFiles(_env.WebRootPath, "Post");
         }
 
-        #region Helpers
+        
 
         private IActionResult Save(PostEditModel postEditModel)
         {
@@ -128,7 +128,7 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
             return RedirectToAction("Index");
         }
 
-        #endregion
+        
 
     }
 }

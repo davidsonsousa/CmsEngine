@@ -12,8 +12,6 @@ namespace CmsEngine
 {
     public sealed partial class CmsService
     {
-        #region Get
-
         public IEnumerable<T> GetAllTagsReadOnly<T>(int count = 0) where T : IViewModel
         {
             IEnumerable<Tag> listItems = GetAllReadOnly<Tag>(count);
@@ -32,10 +30,6 @@ namespace CmsEngine
             return _mapper.Map<Tag, TagViewModel>(item);
         }
 
-        #endregion
-
-        #region Setup
-
         public IEditModel SetupTagEditModel()
         {
             return new TagEditModel();
@@ -52,10 +46,6 @@ namespace CmsEngine
             var item = _unitOfWork.Tags.GetById(id);
             return _mapper.Map<Tag, TagEditModel>(item);
         }
-
-        #endregion
-
-        #region Save
 
         public ReturnValue SaveTag(IEditModel editModel)
         {
@@ -81,10 +71,6 @@ namespace CmsEngine
 
             return returnValue;
         }
-
-        #endregion
-
-        #region Delete
 
         public ReturnValue DeleteTag(Guid id)
         {
@@ -140,10 +126,6 @@ namespace CmsEngine
             return returnValue;
         }
 
-        #endregion
-
-        #region DataTable
-
         public IEnumerable<IViewModel> FilterTag(string searchTerm, IEnumerable<IViewModel> listItems)
         {
             var items = (IEnumerable<TagTableViewModel>)listItems;
@@ -189,10 +171,6 @@ namespace CmsEngine
             return listItems;
         }
 
-        #endregion
-
-        #region Helpers
-
         private void PrepareTagForSaving(IEditModel editModel)
         {
             Tag tag;
@@ -213,7 +191,5 @@ namespace CmsEngine
                 _unitOfWork.Tags.Update(tag);
             }
         }
-
-        #endregion
     }
 }
