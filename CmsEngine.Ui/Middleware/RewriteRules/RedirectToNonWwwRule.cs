@@ -17,24 +17,24 @@ namespace CmsEngine.Ui.Middleware.RewriteRules
 
         public virtual void ApplyRule(RewriteContext context)
         {
-            var req = context.HttpContext.Request;
-            if (req.Host.Host.Equals("localhost", StringComparison.OrdinalIgnoreCase))
+            var httpRequest = context.HttpContext.Request;
+            if (httpRequest.Host.Host.Equals(Constants.Localhost, StringComparison.OrdinalIgnoreCase))
             {
                 context.Result = RuleResult.ContinueRules;
                 return;
             }
 
-            if (!req.Host.Value.StartsWith("www.", StringComparison.OrdinalIgnoreCase))
+            if (!httpRequest.Host.Value.StartsWith(Constants.WwwDot, StringComparison.OrdinalIgnoreCase))
             {
                 context.Result = RuleResult.ContinueRules;
                 return;
             }
 
-            var wwwHost = new HostString(req.Host.Value.Replace("www.", string.Empty));
-            var newUrl = UriHelper.BuildAbsolute(req.Scheme, wwwHost, req.PathBase, req.Path, req.QueryString);
-            var response = context.HttpContext.Response;
-            response.StatusCode = _statusCode;
-            response.Headers[HeaderNames.Location] = newUrl;
+            var wwwHost = new HostString(httpRequest.Host.Value.Replace(Constants.WwwDot, string.Empty));
+            var newUrl = UriHelper.BuildAbsolute(httpRequest.Scheme, wwwHost, httpRequest.PathBase, httpRequest.Path, httpRequest.QueryString);
+            var httpResponse = context.HttpContext.Response;
+            httpResponse.StatusCode = _statusCode;
+            httpResponse.Headers[HeaderNames.Location] = newUrl;
             context.Result = RuleResult.EndResponse;
         }
     }

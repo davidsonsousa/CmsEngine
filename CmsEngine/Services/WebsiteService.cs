@@ -12,13 +12,27 @@ namespace CmsEngine
 {
     public sealed partial class CmsService
     {
-        #region Get
-
         public IEnumerable<T> GetAllWebsitesReadOnly<T>(int count = 0) where T : IViewModel
         {
             IEnumerable<Website> listItems = GetAllReadOnly<Website>(count);
 
             return _mapper.Map<IEnumerable<Website>, IEnumerable<T>>(listItems);
+        }
+
+        public (IEnumerable<IViewModel> Data, int RecordsCount) GetWebsitesForDataTable(DataParameters parameters)
+        {
+            var items = _unitOfWork.Websites.GetAll();
+
+            if (!string.IsNullOrWhiteSpace(parameters.Search.Value))
+            {
+                items = FilterWebsite(parameters.Search.Value, items);
+            }
+
+            items = OrderWebsite(parameters.Order[0].Column, parameters.Order[0].Dir, items);
+
+            int recordsCount = items.Count();
+
+            return (_mapper.Map<IEnumerable<Website>, IEnumerable<WebsiteTableViewModel>>(items.Skip(parameters.Start).Take(parameters.Length).ToList()), recordsCount);
         }
 
         public IViewModel GetWebsiteById(int id)
@@ -32,10 +46,6 @@ namespace CmsEngine
             var item = _unitOfWork.Websites.GetById(id);
             return _mapper.Map<Website, WebsiteViewModel>(item);
         }
-
-        #endregion
-
-        #region Setup
 
         public IEditModel SetupWebsiteEditModel()
         {
@@ -53,10 +63,6 @@ namespace CmsEngine
             var item = _unitOfWork.Websites.GetById(id);
             return _mapper.Map<Website, WebsiteEditModel>(item);
         }
-
-        #endregion
-
-        #region Save
 
         public ReturnValue SaveWebsite(IEditModel editModel)
         {
@@ -82,10 +88,6 @@ namespace CmsEngine
 
             return returnValue;
         }
-
-        #endregion
-
-        #region Delete
 
         public ReturnValue DeleteWebsite(Guid id)
         {
@@ -141,47 +143,36 @@ namespace CmsEngine
             return returnValue;
         }
 
-        #endregion
-
-        #region DataTable
-
-        public IEnumerable<IViewModel> FilterWebsite(string searchTerm, IEnumerable<IViewModel> listItems)
+        private IQueryable<Website> FilterWebsite(string searchTerm, IQueryable<Website> items)
         {
-            var items = (IEnumerable<WebsiteTableViewModel>)listItems;
-
             if (!string.IsNullOrWhiteSpace(searchTerm))
             {
                 var searchableProperties = typeof(WebsiteTableViewModel).GetProperties().Where(p => Attribute.IsDefined(p, typeof(Searchable)));
 
                 var lambda = this.PrepareFilter<Website>(searchTerm, searchableProperties);
-
-                // TODO: There must be a way to improve this
-                var tempItems = _mapper.Map<IEnumerable<WebsiteTableViewModel>, IEnumerable<Website>>(items);
-                items = _mapper.Map<IEnumerable<Website>, IEnumerable<WebsiteTableViewModel>>(tempItems.Where(lambda));
+                items = items.Where(lambda);
             }
 
             return items;
         }
 
-        public IEnumerable<IViewModel> OrderWebsite(int orderColumn, string orderDirection, IEnumerable<IViewModel> listItems)
+        private IQueryable<Website> OrderWebsite(int orderColumn, string orderDirection, IQueryable<Website> items)
         {
             try
             {
-                var listWebsites = _mapper.Map<IEnumerable<IViewModel>, IEnumerable<WebsiteTableViewModel>>(listItems);
-
                 switch (orderColumn)
                 {
                     case 1:
-                        listItems = orderDirection == "asc" ? listWebsites.OrderBy(o => o.Name) : listWebsites.OrderByDescending(o => o.Name);
+                        items = orderDirection == "asc" ? items.OrderBy(o => o.Name) : items.OrderByDescending(o => o.Name);
                         break;
                     case 2:
-                        listItems = orderDirection == "asc" ? listWebsites.OrderBy(o => o.Tagline) : listWebsites.OrderByDescending(o => o.Tagline);
+                        items = orderDirection == "asc" ? items.OrderBy(o => o.Tagline) : items.OrderByDescending(o => o.Tagline);
                         break;
                     case 3:
-                        listItems = orderDirection == "asc" ? listWebsites.OrderBy(o => o.Culture) : listWebsites.OrderByDescending(o => o.Culture);
+                        items = orderDirection == "asc" ? items.OrderBy(o => o.Culture) : items.OrderByDescending(o => o.Culture);
                         break;
                     default:
-                        listItems = listWebsites.OrderBy(o => o.Name);
+                        items = items.OrderBy(o => o.Name);
                         break;
                 }
             }
@@ -190,12 +181,8 @@ namespace CmsEngine
                 throw;
             }
 
-            return listItems;
+            return items;
         }
-
-        #endregion
-
-        #region Helpers
 
         private void PrepareWebsiteForSaving(IEditModel editModel)
         {
@@ -214,7 +201,5 @@ namespace CmsEngine
                 _unitOfWork.Websites.Update(website);
             }
         }
-
-        #endregion
     }
 }

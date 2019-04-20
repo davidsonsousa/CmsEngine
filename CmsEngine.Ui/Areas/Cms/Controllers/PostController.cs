@@ -95,10 +95,9 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
         [HttpPost]
         public IActionResult GetData([FromForm]DataParameters parameters)
         {
-            var filteredItems = service.FilterPost(parameters.Search.Value, service.GetAllPostsReadOnly<PostTableViewModel>());
-            var orderedItems = service.OrderPost(parameters.Order[0].Column, parameters.Order[0].Dir, filteredItems);
+            var items = service.GetPostsForDataTable(parameters);
 
-            var dataTable = service.BuildDataTable<Post>(orderedItems, parameters.Start, parameters.Length);
+            var dataTable = service.BuildDataTable<Post>(items.Data, items.RecordsCount);
             dataTable.Draw = parameters.Draw;
 
             return Ok(dataTable);
@@ -109,8 +108,6 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
         {
             return await this.PrepareAndUploadFiles(_env.WebRootPath, "Post");
         }
-
-        #region Helpers
 
         private IActionResult Save(PostEditModel postEditModel)
         {
@@ -127,8 +124,5 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
 
             return RedirectToAction("Index");
         }
-
-        #endregion
-
     }
 }

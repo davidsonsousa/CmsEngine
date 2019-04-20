@@ -90,16 +90,13 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
         [HttpPost]
         public IActionResult GetData([FromForm]DataParameters parameters)
         {
-            var filteredItems = service.FilterTag(parameters.Search.Value, service.GetAllTagsReadOnly<TagTableViewModel>());
-            var orderedItems = service.OrderTag(parameters.Order[0].Column, parameters.Order[0].Dir, filteredItems);
+            var items = service.GetTagsForDataTable(parameters);
 
-            var dataTable = service.BuildDataTable<Tag>(orderedItems, parameters.Start, parameters.Length);
+            var dataTable = service.BuildDataTable<Tag>(items.Data, items.RecordsCount);
             dataTable.Draw = parameters.Draw;
 
             return Ok(dataTable);
         }
-
-        #region Helpers
 
         private IActionResult Save(TagEditModel tagEditModel)
         {
@@ -116,8 +113,5 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
 
             return RedirectToAction("Index");
         }
-
-        #endregion
-
     }
 }

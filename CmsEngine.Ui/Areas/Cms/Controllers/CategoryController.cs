@@ -90,16 +90,13 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
         [HttpPost]
         public IActionResult GetData([FromForm]DataParameters parameters)
         {
-            var filteredItems = service.FilterCategory(parameters.Search.Value, service.GetAllCategoriesReadOnly<CategoryTableViewModel>());
-            var orderedItems = service.OrderCategory(parameters.Order[0].Column, parameters.Order[0].Dir, filteredItems);
+            var items = service.GetCategoriesForDataTable(parameters);
 
-            var dataTable = service.BuildDataTable<Category>(orderedItems, parameters.Start, parameters.Length);
+            var dataTable = service.BuildDataTable<Category>(items.Data, items.RecordsCount);
             dataTable.Draw = parameters.Draw;
 
             return Ok(dataTable);
         }
-
-        #region Helpers
 
         private IActionResult Save(CategoryEditModel categoryEditModel)
         {
@@ -116,8 +113,5 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
 
             return RedirectToAction("Index");
         }
-
-        #endregion
-
     }
 }

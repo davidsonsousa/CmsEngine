@@ -13,8 +13,6 @@ namespace CmsEngine
 {
     public sealed partial class CmsService
     {
-        #region Get
-
         public IEnumerable<T> GetPagesByStatusReadOnly<T>(DocumentStatus documentStatus, int count = 0) where T : IViewModel
         {
             var items = this.GetDocumentsByStatus<Page>(documentStatus, count);
@@ -33,6 +31,22 @@ namespace CmsEngine
             _logger.LogInformation("Pages loaded: {0}", listItems.Count());
 
             return _mapper.Map<IEnumerable<Page>, IEnumerable<T>>(listItems);
+        }
+
+        public (IEnumerable<IViewModel> Data, int RecordsCount) GetPagesForDataTable(DataParameters parameters)
+        {
+            var items = _unitOfWork.Pages.GetAll();
+
+            if (!string.IsNullOrWhiteSpace(parameters.Search.Value))
+            {
+                items = FilterPage(parameters.Search.Value, items);
+            }
+
+            items = OrderPage(parameters.Order[0].Column, parameters.Order[0].Dir, items);
+
+            int recordsCount = items.Count();
+
+            return (_mapper.Map<IEnumerable<Page>, IEnumerable<PageTableViewModel>>(items.Skip(parameters.Start).Take(parameters.Length).ToList()), recordsCount);
         }
 
         public IViewModel GetPageById(int id)
@@ -65,10 +79,6 @@ namespace CmsEngine
             return _mapper.Map<Page, PageViewModel>(item);
         }
 
-        #endregion
-
-        #region Setup
-
         public IEditModel SetupPageEditModel()
         {
             _logger.LogInformation("CmsService > SetupPageEditModel()");
@@ -94,10 +104,6 @@ namespace CmsEngine
 
             return _mapper.Map<Page, PageEditModel>(item);
         }
-
-        #endregion
-
-        #region Save
 
         public ReturnValue SavePage(IEditModel editModel)
         {
@@ -128,10 +134,6 @@ namespace CmsEngine
 
             return returnValue;
         }
-
-        #endregion
-
-        #region Delete
 
         public ReturnValue DeletePage(Guid id)
         {
@@ -187,56 +189,45 @@ namespace CmsEngine
             return returnValue;
         }
 
-        #endregion
-
-        #region DataTable
-
-        public IEnumerable<IViewModel> FilterPage(string searchTerm, IEnumerable<IViewModel> listItems)
+        private IQueryable<Page> FilterPage(string searchTerm, IQueryable<Page> items)
         {
-            var items = (IEnumerable<PageTableViewModel>)listItems;
-
             if (!string.IsNullOrWhiteSpace(searchTerm))
             {
                 var searchableProperties = typeof(PageTableViewModel).GetProperties().Where(p => Attribute.IsDefined(p, typeof(Searchable)));
 
                 var lambda = this.PrepareFilter<Page>(searchTerm, searchableProperties);
-
-                // TODO: There must be a way to improve this
-                var tempItems = _mapper.Map<IEnumerable<PageTableViewModel>, IEnumerable<Page>>(items);
-                items = _mapper.Map<IEnumerable<Page>, IEnumerable<PageTableViewModel>>(tempItems.Where(lambda));
+                items = items.Where(lambda);
             }
 
             return items;
         }
 
-        public IEnumerable<IViewModel> OrderPage(int orderColumn, string orderDirection, IEnumerable<IViewModel> listItems)
+        private IQueryable<Page> OrderPage(int orderColumn, string orderDirection, IQueryable<Page> items)
         {
             try
             {
-                var listPages = _mapper.Map<IEnumerable<IViewModel>, IEnumerable<PageTableViewModel>>(listItems);
-
                 switch (orderColumn)
                 {
                     case 1:
-                        listItems = orderDirection == "asc" ? listPages.OrderBy(o => o.Title) : listPages.OrderByDescending(o => o.Title);
+                        items = orderDirection == "asc" ? items.OrderBy(o => o.Title) : items.OrderByDescending(o => o.Title);
                         break;
                     case 2:
-                        listItems = orderDirection == "asc" ? listPages.OrderBy(o => o.Description) : listPages.OrderByDescending(o => o.Description);
+                        items = orderDirection == "asc" ? items.OrderBy(o => o.Description) : items.OrderByDescending(o => o.Description);
                         break;
                     case 3:
-                        listItems = orderDirection == "asc" ? listPages.OrderBy(o => o.Slug) : listPages.OrderByDescending(o => o.Slug);
+                        items = orderDirection == "asc" ? items.OrderBy(o => o.Slug) : items.OrderByDescending(o => o.Slug);
                         break;
-                    case 4:
-                        listItems = orderDirection == "asc" ? listPages.OrderBy(o => o.Author.FullName) : listPages.OrderByDescending(o => o.Author.FullName);
-                        break;
+                    //case 4:
+                    //    items = orderDirection == "asc" ? items.OrderBy(o => o.Author.FullName) : items.OrderByDescending(o => o.Author.FullName);
+                    //    break;
                     case 5:
-                        listItems = orderDirection == "asc" ? listPages.OrderBy(o => o.PublishedOn) : listPages.OrderByDescending(o => o.PublishedOn);
+                        items = orderDirection == "asc" ? items.OrderBy(o => o.PublishedOn) : items.OrderByDescending(o => o.PublishedOn);
                         break;
                     case 6:
-                        listItems = orderDirection == "asc" ? listPages.OrderBy(o => o.Status) : listPages.OrderByDescending(o => o.Status);
+                        items = orderDirection == "asc" ? items.OrderBy(o => o.Status) : items.OrderByDescending(o => o.Status);
                         break;
                     default:
-                        listItems = listPages.OrderByDescending(o => o.PublishedOn);
+                        items = items.OrderByDescending(o => o.PublishedOn);
                         break;
                 }
             }
@@ -245,12 +236,8 @@ namespace CmsEngine
                 throw;
             }
 
-            return listItems;
+            return items;
         }
-
-        #endregion
-
-        #region Helpers
 
         private void PreparePageForSaving(IEditModel editModel)
         {
@@ -262,7 +249,7 @@ namespace CmsEngine
             {
                 _logger.LogInformation("New page");
 
-                page = _mapper.Map<PageEditModel, Page>((PageEditModel)editModel);
+                page = _mapper.Map<PageEditModel, Page>(pageEditModel);
                 page.WebsiteId = Instance.Id;
 
                 _unitOfWork.Pages.Insert(page);
@@ -271,8 +258,8 @@ namespace CmsEngine
             {
                 _logger.LogInformation("Update page");
 
-                page = _unitOfWork.Pages.GetById(editModel.VanityId);
-                _mapper.Map((PageEditModel)editModel, page);
+                page = _unitOfWork.Pages.GetById(pageEditModel.VanityId);
+                _mapper.Map(pageEditModel, page);
                 page.WebsiteId = Instance.Id;
 
                 _unitOfWork.Pages.Update(page);
@@ -299,7 +286,5 @@ namespace CmsEngine
                            });
             }
         }
-
-        #endregion
     }
 }

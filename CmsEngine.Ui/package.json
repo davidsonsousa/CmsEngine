@@ -23,9 +23,9 @@
     "tinymce": "^4.8.1"
   },
   "devDependencies": {
-    "browser-sync": "^2.24.7",
+    "browser-sync": "^2.26.3",
     "del": "^3.0.0",
-    "gulp": "^3.9.1",
+    "gulp": "4.0.0",
     "gulp-autoprefixer": "^4.1.0",
     "gulp-bower-src": "^0.1.0",
     "gulp-concat": "^2.6.1",
@@ -34,7 +34,7 @@
     "gulp-filter": "^5.1.0",
     "gulp-rename": "^1.4.0",
     "gulp-replace": "^0.6.1",
-    "gulp-sass": "^3.2.1",
+    "gulp-sass": "^4.0.2",
     "gulp-search": "^1.0.0",
     "gulp-uglify": "^3.0.1",
     "require-dir": "^0.3.2",
@@ -54,6 +54,6 @@
     "Opera >= 30"
   ],
   "author": "Davidson Sousa",
-  "url": "http://davidsonsousa.net",
-  "copyright": "Copyright 2017 Davidson Sousa"
+  "url": "https://davidsonsousa.net",
+  "copyright": "Copyright 2019 Davidson Sousa"
 }

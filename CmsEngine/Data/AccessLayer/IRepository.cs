@@ -29,6 +29,8 @@ namespace CmsEngine.Data.AccessLayer
 
         T GetById(Guid id);
 
+        int Count(Expression<Func<T, bool>> filter = null);
+
         /// <summary>
         /// Inserts a record
         /// </summary>
