@@ -110,8 +110,6 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
             return await this.PrepareAndUploadFiles(_env.WebRootPath, "Page");
         }
 
-        
-
         private IActionResult Save(PageEditModel pageEditModel)
         {
             var returnValue = service.SavePage(pageEditModel);
@@ -127,8 +125,5 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
 
             return RedirectToAction("Index");
         }
-
-        
-
     }
 }

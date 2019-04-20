@@ -99,8 +99,6 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
             return Ok(dataTable);
         }
 
-        
-
         private IActionResult Save(CategoryEditModel categoryEditModel)
         {
             var returnValue = service.SaveCategory(categoryEditModel);
@@ -116,8 +114,5 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
 
             return RedirectToAction("Index");
         }
-
-        
-
     }
 }
