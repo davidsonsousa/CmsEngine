@@ -363,8 +363,6 @@ namespace CmsEngine
 
         private string PrepareProperty(IViewModel item, PropertyInfo property)
         {
-            string propertyValue;
-
             switch (property.PropertyType.Name)
             {
                 case "DocumentStatus":
@@ -383,18 +381,13 @@ namespace CmsEngine
                             break;
                     }
 
-                    propertyValue = $"<span class=\"label label-{generalStatus.ToString().ToLowerInvariant()}\">{documentStatus.ToEnum<DocumentStatus>().GetName()}</status-label>";
-                    break;
+                    return $"<span class=\"badge badge-{generalStatus.ToString().ToLowerInvariant()}\">{documentStatus.ToEnum<DocumentStatus>().GetName()}</status-label>";
                 case "UserViewModel":
                     var author = ((UserViewModel)item.GetType().GetProperty(property.Name).GetValue(item));
-                    propertyValue = HtmlEncode(author?.FullName) ?? "";
-                    break;
+                    return HtmlEncode(author?.FullName) ?? "";
                 default:
-                    propertyValue = HtmlEncode(item.GetType().GetProperty(property.Name).GetValue(item)?.ToString()) ?? "";
-                    break;
+                    return HtmlEncode(item.GetType().GetProperty(property.Name).GetValue(item)?.ToString()) ?? "";
             }
-
-            return propertyValue;
         }
 
         private Func<T, bool> PrepareFilter<T>(string searchTerm, IEnumerable<PropertyInfo> searchableProperties)
