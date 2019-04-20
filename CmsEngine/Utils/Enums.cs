@@ -57,12 +57,14 @@ namespace CmsEngine
     /// </summary>
     public enum GeneralStatus
     {
-        Default,
         Primary,
+        Secondary,
         Success,
-        Info,
+        Danger,
         Warning,
-        Danger
+        Info,
+        Light,
+        Dark
     }
 
     public enum PageType
