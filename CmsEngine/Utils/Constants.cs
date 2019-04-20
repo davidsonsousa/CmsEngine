@@ -17,5 +17,8 @@ namespace CmsEngine
         public const string Image640Path = "/image/{0}/640x426_{1}";
         public const string Image320Path = "/image/{0}/320x213_{1}";
         public const string Image120Path = "/image/{0}/120x120_{1}";
+
+        public const string WwwDot = "www.";
+        public const string Localhost = "localhost";
     }
 }
