@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Xml.Linq;
@@ -144,18 +145,6 @@ namespace CmsEngine
             return _mapper.Map<IEnumerable<TModel>, IEnumerable<TViewModel>>(listItems);
         }
 
-        public int CountRecords<T>() where T : BaseModel
-        {
-            try
-            {
-                return _unitOfWork.GetRepository<T>().GetReadOnly(q => q.IsDeleted == false).Count();
-            }
-            catch
-            {
-                throw;
-            }
-        }
-
         public ReturnValue BulkDelete<T>(Guid[] id) where T : BaseModel
         {
             var returnValue = new ReturnValue();
@@ -183,11 +172,11 @@ namespace CmsEngine
             return returnValue;
         }
 
-        public TableViewModel BuildDataTable<T>(IEnumerable<IViewModel> listItems, int start, int size) where T : BaseModel
+        public TableViewModel BuildDataTable<T>(IEnumerable<IViewModel> listItems, int recordsCount) where T : BaseModel
         {
             var listString = new List<List<string>>();
 
-            foreach (var item in listItems.Skip(start).Take(size))
+            foreach (var item in listItems)
             {
                 // Get the properties which should appear in the DataTable
                 var itemProperties = item.GetType()
@@ -213,8 +202,8 @@ namespace CmsEngine
             return new TableViewModel
             {
                 Data = listString,
-                RecordsTotal = this.CountRecords<T>(),
-                RecordsFiltered = listItems.Count(),
+                RecordsTotal = _unitOfWork.GetRepository<T>().Count(q => q.IsDeleted == false),
+                RecordsFiltered = recordsCount,
                 Draw = 0
             };
         }
@@ -390,7 +379,7 @@ namespace CmsEngine
             }
         }
 
-        private Func<T, bool> PrepareFilter<T>(string searchTerm, IEnumerable<PropertyInfo> searchableProperties)
+        private Expression<Func<T, bool>> PrepareFilter<T>(string searchTerm, IEnumerable<PropertyInfo> searchableProperties)
         {
             var expressionFilter = new List<ExpressionFilter>();
 
@@ -404,7 +393,7 @@ namespace CmsEngine
                 });
             }
 
-            return ExpressionBuilder.GetExpression<T>(expressionFilter, LogicalOperators.Or).Compile();
+            return ExpressionBuilder.GetExpression<T>(expressionFilter, LogicalOperators.Or);
         }
 
         private string FormatUrl(string type, string slug = "")

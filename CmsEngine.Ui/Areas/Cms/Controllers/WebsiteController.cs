@@ -95,10 +95,9 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
         [HttpPost]
         public IActionResult GetData([FromForm]DataParameters parameters)
         {
-            var filteredItems = service.FilterWebsite(parameters.Search.Value, service.GetAllWebsitesReadOnly<WebsiteTableViewModel>());
-            var orderedItems = service.OrderWebsite(parameters.Order[0].Column, parameters.Order[0].Dir, filteredItems);
+            var items = service.GetWebsitesForDataTable(parameters);
 
-            var dataTable = service.BuildDataTable<Website>(orderedItems, parameters.Start, parameters.Length);
+            var dataTable = service.BuildDataTable<Website>(items.Data, items.RecordsCount);
             dataTable.Draw = parameters.Draw;
 
             return Ok(dataTable);

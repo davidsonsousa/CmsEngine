@@ -83,6 +83,22 @@ namespace CmsEngine
             return _mapper.Map<IEnumerable<Post>, IEnumerable<T>>(listItems);
         }
 
+        public (IEnumerable<IViewModel> Data, int RecordsCount) GetPostsForDataTable(DataParameters parameters)
+        {
+            var items = _unitOfWork.Posts.GetAll();
+
+            if (!string.IsNullOrWhiteSpace(parameters.Search.Value))
+            {
+                items = FilterPost(parameters.Search.Value, items);
+            }
+
+            items = OrderPost(parameters.Order[0].Column, parameters.Order[0].Dir, items);
+
+            int recordsCount = items.Count();
+
+            return (_mapper.Map<IEnumerable<Post>, IEnumerable<PostTableViewModel>>(items.Skip(parameters.Start).Take(parameters.Length).ToList()), recordsCount);
+        }
+
         public IViewModel GetPostById(int id)
         {
             var item = _unitOfWork.Posts.GetById(id);
@@ -234,52 +250,45 @@ namespace CmsEngine
             return returnValue;
         }
 
-        public IEnumerable<IViewModel> FilterPost(string searchTerm, IEnumerable<IViewModel> listItems)
+        private IQueryable<Post> FilterPost(string searchTerm, IQueryable<Post> items)
         {
-            var items = (IEnumerable<PostTableViewModel>)listItems;
-
             if (!string.IsNullOrWhiteSpace(searchTerm))
             {
                 var searchableProperties = typeof(PostTableViewModel).GetProperties().Where(p => Attribute.IsDefined(p, typeof(Searchable)));
 
                 var lambda = this.PrepareFilter<Post>(searchTerm, searchableProperties);
-
-                // TODO: There must be a way to improve this
-                var tempItems = _mapper.Map<IEnumerable<PostTableViewModel>, IEnumerable<Post>>(items);
-                items = _mapper.Map<IEnumerable<Post>, IEnumerable<PostTableViewModel>>(tempItems.Where(lambda));
+                items = items.Where(lambda);
             }
 
             return items;
         }
 
-        public IEnumerable<IViewModel> OrderPost(int orderColumn, string orderDirection, IEnumerable<IViewModel> listItems)
+        private IQueryable<Post> OrderPost(int orderColumn, string orderDirection, IQueryable<Post> items)
         {
             try
             {
-                var listPosts = _mapper.Map<IEnumerable<IViewModel>, IEnumerable<PostTableViewModel>>(listItems);
-
                 switch (orderColumn)
                 {
                     case 1:
-                        listItems = orderDirection == "asc" ? listPosts.OrderBy(o => o.Title) : listPosts.OrderByDescending(o => o.Title);
+                        items = orderDirection == "asc" ? items.OrderBy(o => o.Title) : items.OrderByDescending(o => o.Title);
                         break;
                     case 2:
-                        listItems = orderDirection == "asc" ? listPosts.OrderBy(o => o.Description) : listPosts.OrderByDescending(o => o.Description);
+                        items = orderDirection == "asc" ? items.OrderBy(o => o.Description) : items.OrderByDescending(o => o.Description);
                         break;
                     case 3:
-                        listItems = orderDirection == "asc" ? listPosts.OrderBy(o => o.Slug) : listPosts.OrderByDescending(o => o.Slug);
+                        items = orderDirection == "asc" ? items.OrderBy(o => o.Slug) : items.OrderByDescending(o => o.Slug);
                         break;
-                    case 4:
-                        listItems = orderDirection == "asc" ? listPosts.OrderBy(o => o.Author.FullName) : listPosts.OrderByDescending(o => o.Author.FullName);
-                        break;
+                    //case 4:
+                    //    items = orderDirection == "asc" ? items.OrderBy(o => o.Author.FullName) : items.OrderByDescending(o => o.Author.FullName);
+                    //    break;
                     case 5:
-                        listItems = orderDirection == "asc" ? listPosts.OrderBy(o => o.PublishedOn) : listPosts.OrderByDescending(o => o.PublishedOn);
+                        items = orderDirection == "asc" ? items.OrderBy(o => o.PublishedOn) : items.OrderByDescending(o => o.PublishedOn);
                         break;
                     case 6:
-                        listItems = orderDirection == "asc" ? listPosts.OrderBy(o => o.Status) : listPosts.OrderByDescending(o => o.Status);
+                        items = orderDirection == "asc" ? items.OrderBy(o => o.Status) : items.OrderByDescending(o => o.Status);
                         break;
                     default:
-                        listItems = listPosts.OrderByDescending(o => o.PublishedOn);
+                        items = items.OrderByDescending(o => o.PublishedOn);
                         break;
                 }
             }
@@ -288,7 +297,7 @@ namespace CmsEngine
                 throw;
             }
 
-            return listItems;
+            return items;
         }
 
         private void PreparePostForSaving(IEditModel editModel)

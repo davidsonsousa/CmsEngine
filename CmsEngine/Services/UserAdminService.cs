@@ -142,47 +142,47 @@ namespace CmsEngine
             return returnValue;
         }
 
-        public IEnumerable<IViewModel> FilterUser(string searchTerm, IEnumerable<IViewModel> listItems)
-        {
-            var items = (IEnumerable<UserViewModel>)listItems;
+        //public IEnumerable<IViewModel> FilterUser(string searchTerm, IEnumerable<IViewModel> listItems)
+        //{
+        //    var items = (IEnumerable<UserViewModel>)listItems;
 
-            if (!string.IsNullOrWhiteSpace(searchTerm))
-            {
-                var searchableProperties = typeof(UserViewModel).GetProperties().Where(p => Attribute.IsDefined(p, typeof(Searchable)));
+        //    if (!string.IsNullOrWhiteSpace(searchTerm))
+        //    {
+        //        var searchableProperties = typeof(UserViewModel).GetProperties().Where(p => Attribute.IsDefined(p, typeof(Searchable)));
 
-                var lambda = this.PrepareFilter<ApplicationUser>(searchTerm, searchableProperties);
+        //        var lambda = this.PrepareFilter<ApplicationUser>(searchTerm, searchableProperties);
 
-                // TODO: There must be a way to improve this
-                var tempItems = _mapper.Map<IEnumerable<UserViewModel>, IEnumerable<ApplicationUser>>(items);
-                items = _mapper.Map<IEnumerable<ApplicationUser>, IEnumerable<UserViewModel>>(tempItems.Where(lambda));
-            }
+        //        // TODO: There must be a way to improve this
+        //        var tempItems = _mapper.Map<IEnumerable<UserViewModel>, IEnumerable<ApplicationUser>>(items);
+        //        items = _mapper.Map<IEnumerable<ApplicationUser>, IEnumerable<UserViewModel>>(tempItems.Where(lambda));
+        //    }
 
-            return items;
-        }
+        //    return items;
+        //}
 
-        public IEnumerable<IViewModel> OrderUser(int orderColumn, string orderDirection, IEnumerable<IViewModel> listItems)
-        {
-            try
-            {
-                var listUsers = _mapper.Map<IEnumerable<IViewModel>, IEnumerable<UserViewModel>>(listItems);
+        //public IEnumerable<IViewModel> OrderUser(int orderColumn, string orderDirection, IEnumerable<IViewModel> listItems)
+        //{
+        //    try
+        //    {
+        //        var listUsers = _mapper.Map<IEnumerable<IViewModel>, IEnumerable<UserViewModel>>(listItems);
 
-                switch (orderColumn)
-                {
-                    case 1:
-                    case 0:
-                    default:
-                        listItems = orderDirection == "asc" ? listUsers.OrderBy(o => o.Name) : listUsers.OrderByDescending(o => o.Name);
-                        break;
-                }
-            }
-            catch
-            {
-                throw;
-            }
+        //        switch (orderColumn)
+        //        {
+        //            case 1:
+        //            case 0:
+        //            default:
+        //                listItems = orderDirection == "asc" ? listUsers.OrderBy(o => o.Name) : listUsers.OrderByDescending(o => o.Name);
+        //                break;
+        //        }
+        //    }
+        //    catch
+        //    {
+        //        throw;
+        //    }
 
-            return listItems;
+        //    return listItems;
 
-        }
+        //}
 
         private async Task PrepareUserForSaving(IEditModel editModel)
         {
