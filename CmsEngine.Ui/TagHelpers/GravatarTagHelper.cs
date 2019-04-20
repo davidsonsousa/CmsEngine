@@ -39,21 +39,21 @@ namespace CmsEngine.Ui.TagHelpers
 
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
-
             output.TagName = "img";
             var email = string.IsNullOrWhiteSpace(EmailAddress) ? string.Empty : EmailAddress.ToLower();
 
             output.Attributes.Add("src",
                 string.Format("{0}://{1}.gravatar.com/avatar/{2}?s={3}{4}{5}{6}",
-                    "https",
-                    "s",
-                    GravatarUtilities.GetMd5Hash(email),
-                    ImageSize,
-                    "&d=" + (!string.IsNullOrEmpty(DefaultImageUrl) ? HtmlEncoder.Default.Encode(DefaultImageUrl) : DefaultImage.GetDescription()),
-                    ForceDefaultImage ? "&f=y" : "",
-                    "&r=" + Rating.GetDescription()
+                              "https",
+                              "s",
+                              GravatarUtilities.GetMd5Hash(email),
+                              ImageSize,
+                              "&d=" + (!string.IsNullOrEmpty(DefaultImageUrl) ? HtmlEncoder.Default.Encode(DefaultImageUrl) : DefaultImage.GetDescription()),
+                              ForceDefaultImage ? "&f=y" : "",
+                              "&r=" + Rating.GetDescription()
                 )
             );
+
             if (!string.IsNullOrWhiteSpace(AdditionalCssClasses))
             {
                 if (output.Attributes.Any(x => string.Equals(x.Name, "class", StringComparison.OrdinalIgnoreCase)))
@@ -65,6 +65,7 @@ namespace CmsEngine.Ui.TagHelpers
                 // Add the additional CSS classes
                 output.Attributes.Add("class", AdditionalCssClasses);
             }
+
             base.Process(context, output);
         }
     }
