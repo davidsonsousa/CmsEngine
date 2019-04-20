@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Xml.Linq;
@@ -31,8 +32,6 @@ namespace CmsEngine
         private readonly ILogger _logger;
 
         private InstanceViewModel _instance;
-
-        #region Properties
 
         public UserViewModel CurrentUser
         {
@@ -99,8 +98,6 @@ namespace CmsEngine
             }
         }
 
-        #endregion
-
         public CmsService(IUnitOfWork uow, IMapper mapper, IHttpContextAccessor hca, UserManager<ApplicationUser> userManager, ILogger logger)
         {
             _unitOfWork = uow;
@@ -148,18 +145,6 @@ namespace CmsEngine
             return _mapper.Map<IEnumerable<TModel>, IEnumerable<TViewModel>>(listItems);
         }
 
-        public int CountRecords<T>() where T : BaseModel
-        {
-            try
-            {
-                return _unitOfWork.GetRepository<T>().GetReadOnly(q => q.IsDeleted == false).Count();
-            }
-            catch
-            {
-                throw;
-            }
-        }
-
         public ReturnValue BulkDelete<T>(Guid[] id) where T : BaseModel
         {
             var returnValue = new ReturnValue();
@@ -187,11 +172,11 @@ namespace CmsEngine
             return returnValue;
         }
 
-        public TableViewModel BuildDataTable<T>(IEnumerable<IViewModel> listItems, int start, int size) where T : BaseModel
+        public TableViewModel BuildDataTable<T>(IEnumerable<IViewModel> listItems, int recordsCount) where T : BaseModel
         {
             var listString = new List<List<string>>();
 
-            foreach (var item in listItems.Skip(start).Take(size))
+            foreach (var item in listItems)
             {
                 // Get the properties which should appear in the DataTable
                 var itemProperties = item.GetType()
@@ -217,8 +202,8 @@ namespace CmsEngine
             return new TableViewModel
             {
                 Data = listString,
-                RecordsTotal = this.CountRecords<T>(),
-                RecordsFiltered = listItems.Count(),
+                RecordsTotal = _unitOfWork.GetRepository<T>().Count(q => q.IsDeleted == false),
+                RecordsFiltered = recordsCount,
                 Draw = 0
             };
         }
@@ -283,8 +268,6 @@ namespace CmsEngine
                                                              )));
 
         }
-
-        #region Helpers
 
         private IEnumerable<CheckboxEditModel> PopulateCheckboxList<T>(IEnumerable<string> selectedItems = null) where T : BaseModel
         {
@@ -369,8 +352,6 @@ namespace CmsEngine
 
         private string PrepareProperty(IViewModel item, PropertyInfo property)
         {
-            string propertyValue;
-
             switch (property.PropertyType.Name)
             {
                 case "DocumentStatus":
@@ -389,21 +370,16 @@ namespace CmsEngine
                             break;
                     }
 
-                    propertyValue = $"<span class=\"label label-{generalStatus.ToString().ToLowerInvariant()}\">{documentStatus.ToEnum<DocumentStatus>().GetName()}</status-label>";
-                    break;
+                    return $"<span class=\"badge badge-{generalStatus.ToString().ToLowerInvariant()}\">{documentStatus.ToEnum<DocumentStatus>().GetName()}</status-label>";
                 case "UserViewModel":
                     var author = ((UserViewModel)item.GetType().GetProperty(property.Name).GetValue(item));
-                    propertyValue = HtmlEncode(author?.FullName) ?? "";
-                    break;
+                    return HtmlEncode(author?.FullName) ?? "";
                 default:
-                    propertyValue = HtmlEncode(item.GetType().GetProperty(property.Name).GetValue(item)?.ToString()) ?? "";
-                    break;
+                    return HtmlEncode(item.GetType().GetProperty(property.Name).GetValue(item)?.ToString()) ?? "";
             }
-
-            return propertyValue;
         }
 
-        private Func<T, bool> PrepareFilter<T>(string searchTerm, IEnumerable<PropertyInfo> searchableProperties)
+        private Expression<Func<T, bool>> PrepareFilter<T>(string searchTerm, IEnumerable<PropertyInfo> searchableProperties)
         {
             var expressionFilter = new List<ExpressionFilter>();
 
@@ -417,7 +393,7 @@ namespace CmsEngine
                 });
             }
 
-            return ExpressionBuilder.GetExpression<T>(expressionFilter, LogicalOperators.Or).Compile();
+            return ExpressionBuilder.GetExpression<T>(expressionFilter, LogicalOperators.Or);
         }
 
         private string FormatUrl(string type, string slug = "")
@@ -437,7 +413,5 @@ namespace CmsEngine
 
             return url;
         }
-
-        #endregion
     }
 }

@@ -46,8 +46,10 @@ namespace CmsEngine
     public enum DocumentStatus
     {
         Published = 0,
+
         [Display(Name = "Pending approval")]
         PendingApproval = 1,
+
         Draft = 2
     }
 
@@ -57,12 +59,14 @@ namespace CmsEngine
     /// </summary>
     public enum GeneralStatus
     {
-        Default,
         Primary,
+        Secondary,
         Success,
-        Info,
+        Danger,
         Warning,
-        Danger
+        Info,
+        Light,
+        Dark
     }
 
     public enum PageType
@@ -80,21 +84,27 @@ namespace CmsEngine
         /// <summary>Default Gravatar logo</summary>
         [Description("")]
         Default,
+
         /// <summary>404 - do not load any image if none is associated with the email hash, instead return an HTTP 404 (File Not Found) response</summary>
         [Description("404")]
         Http404,
+
         /// <summary>Mystery-Man - a simple, cartoon-style silhouetted outline of a person (does not vary by email hash)</summary>
         [Description("mm")]
         MysteryMan,
+
         /// <summary>Identicon - a geometric pattern based on an email hash</summary>
         [Description("identicon")]
         Identicon,
+
         /// <summary>MonsterId - a generated 'monster' with different colors, faces, etc</summary>
         [Description("monsterid")]
         MonsterId,
+
         /// <summary>Wavatar - generated faces with differing features and backgrounds</summary>
         [Description("wavatar")]
         Wavatar,
+
         /// <summary>Retro - awesome generated, 8-bit arcade-style pixelated faces</summary>
         [Description("retro")]
         Retro
@@ -108,12 +118,15 @@ namespace CmsEngine
         /// <summary>Suitable for display on all websites with any audience type</summary>
         [Description("g")]
         G,
+
         /// <summary>May contain rude gestures, provocatively dressed individuals, the lesser swear words, or mild violence</summary>
         [Description("pg")]
         PG,
+
         /// <summary>May contain such things as harsh profanity, intense violence, nudity, or hard drug use</summary>
         [Description("r")]
         R,
+
         /// <summary>May contain hardcore sexual imagery or extremely disturbing violence</summary>
         [Description("x")]
         X

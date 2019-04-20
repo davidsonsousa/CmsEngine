@@ -9,11 +9,7 @@ namespace CmsEngine.Data.Models
         public string Name { get; set; }
         public string Surname { get; set; }
 
-        #region Navigation
-
         public virtual ICollection<PostApplicationUser> PostApplicationUsers { get; set; }
         public virtual ICollection<PageApplicationUser> PageApplicationUsers { get; set; }
-
-        #endregion
     }
 }

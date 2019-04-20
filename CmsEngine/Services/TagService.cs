@@ -12,12 +12,26 @@ namespace CmsEngine
 {
     public sealed partial class CmsService
     {
-        #region Get
-
         public IEnumerable<T> GetAllTagsReadOnly<T>(int count = 0) where T : IViewModel
         {
             IEnumerable<Tag> listItems = GetAllReadOnly<Tag>(count);
             return _mapper.Map<IEnumerable<Tag>, IEnumerable<T>>(listItems);
+        }
+
+        public (IEnumerable<IViewModel> Data, int RecordsCount) GetTagsForDataTable(DataParameters parameters)
+        {
+            var items = _unitOfWork.Tags.GetAll();
+
+            if (!string.IsNullOrWhiteSpace(parameters.Search.Value))
+            {
+                items = FilterTag(parameters.Search.Value, items);
+            }
+
+            items = OrderTag(parameters.Order[0].Column, parameters.Order[0].Dir, items);
+
+            int recordsCount = items.Count();
+
+            return (_mapper.Map<IEnumerable<Tag>, IEnumerable<TagTableViewModel>>(items.Skip(parameters.Start).Take(parameters.Length).ToList()), recordsCount);
         }
 
         public IViewModel GetTagById(int id)
@@ -31,10 +45,6 @@ namespace CmsEngine
             var item = _unitOfWork.Tags.GetById(id);
             return _mapper.Map<Tag, TagViewModel>(item);
         }
-
-        #endregion
-
-        #region Setup
 
         public IEditModel SetupTagEditModel()
         {
@@ -52,10 +62,6 @@ namespace CmsEngine
             var item = _unitOfWork.Tags.GetById(id);
             return _mapper.Map<Tag, TagEditModel>(item);
         }
-
-        #endregion
-
-        #region Save
 
         public ReturnValue SaveTag(IEditModel editModel)
         {
@@ -81,10 +87,6 @@ namespace CmsEngine
 
             return returnValue;
         }
-
-        #endregion
-
-        #region Delete
 
         public ReturnValue DeleteTag(Guid id)
         {
@@ -140,44 +142,33 @@ namespace CmsEngine
             return returnValue;
         }
 
-        #endregion
-
-        #region DataTable
-
-        public IEnumerable<IViewModel> FilterTag(string searchTerm, IEnumerable<IViewModel> listItems)
+        private IQueryable<Tag> FilterTag(string searchTerm, IQueryable<Tag> items)
         {
-            var items = (IEnumerable<TagTableViewModel>)listItems;
-
             if (!string.IsNullOrWhiteSpace(searchTerm))
             {
                 var searchableProperties = typeof(TagTableViewModel).GetProperties().Where(p => Attribute.IsDefined(p, typeof(Searchable)));
 
                 var lambda = this.PrepareFilter<Tag>(searchTerm, searchableProperties);
-
-                // TODO: There must be a way to improve this
-                var tempItems = _mapper.Map<IEnumerable<TagTableViewModel>, IEnumerable<Tag>>(items);
-                items = _mapper.Map<IEnumerable<Tag>, IEnumerable<TagTableViewModel>>(tempItems.Where(lambda));
+                items = items.Where(lambda);
             }
 
             return items;
         }
 
-        public IEnumerable<IViewModel> OrderTag(int orderColumn, string orderDirection, IEnumerable<IViewModel> listItems)
+        private IQueryable<Tag> OrderTag(int orderColumn, string orderDirection, IQueryable<Tag> items)
         {
             try
             {
-                var listTags = _mapper.Map<IEnumerable<IViewModel>, IEnumerable<TagTableViewModel>>(listItems);
-
                 switch (orderColumn)
                 {
                     case 1:
-                        listItems = orderDirection == "asc" ? listTags.OrderBy(o => o.Name) : listTags.OrderByDescending(o => o.Name);
+                        items = orderDirection == "asc" ? items.OrderBy(o => o.Name) : items.OrderByDescending(o => o.Name);
                         break;
                     case 2:
-                        listItems = orderDirection == "asc" ? listTags.OrderBy(o => o.Slug) : listTags.OrderByDescending(o => o.Slug);
+                        items = orderDirection == "asc" ? items.OrderBy(o => o.Slug) : items.OrderByDescending(o => o.Slug);
                         break;
                     default:
-                        listItems = listTags.OrderBy(o => o.Name);
+                        items = items.OrderBy(o => o.Name);
                         break;
                 }
             }
@@ -186,12 +177,8 @@ namespace CmsEngine
                 throw;
             }
 
-            return listItems;
+            return items;
         }
-
-        #endregion
-
-        #region Helpers
 
         private void PrepareTagForSaving(IEditModel editModel)
         {
@@ -213,7 +200,5 @@ namespace CmsEngine
                 _unitOfWork.Tags.Update(tag);
             }
         }
-
-        #endregion
     }
 }

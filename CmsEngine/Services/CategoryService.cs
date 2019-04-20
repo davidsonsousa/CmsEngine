@@ -13,8 +13,6 @@ namespace CmsEngine
 {
     public sealed partial class CmsService
     {
-        #region Get
-
         public IEnumerable<T> GetAllCategoriesReadOnly<T>(int count = 0) where T : IViewModel
         {
             IEnumerable<Category> listItems = GetAllReadOnly<Category>(count);
@@ -37,6 +35,22 @@ namespace CmsEngine
             _logger.LogInformation("Categories loaded: {0}", listItems.Count());
 
             return _mapper.Map<IEnumerable<Category>, IEnumerable<T>>(listItems);
+        }
+
+        public (IEnumerable<IViewModel> Data, int RecordsCount) GetCategoriesForDataTable(DataParameters parameters)
+        {
+            var items = _unitOfWork.Categories.GetAll();
+
+            if (!string.IsNullOrWhiteSpace(parameters.Search.Value))
+            {
+                items = FilterCategory(parameters.Search.Value, items);
+            }
+
+            items = OrderCategory(parameters.Order[0].Column, parameters.Order[0].Dir, items);
+
+            int recordsCount = items.Count();
+
+            return (_mapper.Map<IEnumerable<Category>, IEnumerable<CategoryTableViewModel>>(items.Skip(parameters.Start).Take(parameters.Length).ToList()), recordsCount);
         }
 
         public IViewModel GetCategoryById(int id)
@@ -69,10 +83,6 @@ namespace CmsEngine
             return _mapper.Map<Category, CategoryViewModel>(item);
         }
 
-        #endregion
-
-        #region Setup
-
         public IEditModel SetupCategoryEditModel()
         {
             _logger.LogInformation("CmsService > SetupCategoryEditModel()");
@@ -98,10 +108,6 @@ namespace CmsEngine
 
             return _mapper.Map<Category, CategoryEditModel>(item);
         }
-
-        #endregion
-
-        #region Save
 
         public ReturnValue SaveCategory(IEditModel editModel)
         {
@@ -132,10 +138,6 @@ namespace CmsEngine
 
             return returnValue;
         }
-
-        #endregion
-
-        #region Delete
 
         public ReturnValue DeleteCategory(Guid id)
         {
@@ -173,47 +175,36 @@ namespace CmsEngine
             return returnValue;
         }
 
-        #endregion
-
-        #region DataTable
-
-        public IEnumerable<IViewModel> FilterCategory(string searchTerm, IEnumerable<IViewModel> listItems)
+        private IQueryable<Category> FilterCategory(string searchTerm, IQueryable<Category> items)
         {
-            var items = (IEnumerable<CategoryTableViewModel>)listItems;
-
             if (!string.IsNullOrWhiteSpace(searchTerm))
             {
                 var searchableProperties = typeof(CategoryTableViewModel).GetProperties().Where(p => Attribute.IsDefined(p, typeof(Searchable)));
 
                 var lambda = this.PrepareFilter<Category>(searchTerm, searchableProperties);
-
-                // TODO: There must be a way to improve this
-                var tempItems = _mapper.Map<IEnumerable<CategoryTableViewModel>, IEnumerable<Category>>(items);
-                items = _mapper.Map<IEnumerable<Category>, IEnumerable<CategoryTableViewModel>>(tempItems.Where(lambda));
+                items = items.Where(lambda);
             }
 
             return items;
         }
 
-        public IEnumerable<IViewModel> OrderCategory(int orderColumn, string orderDirection, IEnumerable<IViewModel> listItems)
+        private IQueryable<Category> OrderCategory(int orderColumn, string orderDirection, IQueryable<Category> items)
         {
             try
             {
-                var listCategories = _mapper.Map<IEnumerable<IViewModel>, IEnumerable<CategoryTableViewModel>>(listItems);
-
                 switch (orderColumn)
                 {
                     case 1:
-                        listItems = orderDirection == "asc" ? listCategories.OrderBy(o => o.Name) : listCategories.OrderByDescending(o => o.Name);
+                        items = orderDirection == "asc" ? items.OrderBy(o => o.Name) : items.OrderByDescending(o => o.Name);
                         break;
                     case 2:
-                        listItems = orderDirection == "asc" ? listCategories.OrderBy(o => o.Slug) : listCategories.OrderByDescending(o => o.Slug);
+                        items = orderDirection == "asc" ? items.OrderBy(o => o.Slug) : items.OrderByDescending(o => o.Slug);
                         break;
                     case 3:
-                        listItems = orderDirection == "asc" ? listCategories.OrderBy(o => o.Description) : listCategories.OrderByDescending(o => o.Description);
+                        items = orderDirection == "asc" ? items.OrderBy(o => o.Description) : items.OrderByDescending(o => o.Description);
                         break;
                     default:
-                        listItems = listCategories.OrderBy(o => o.Name);
+                        items = items.OrderBy(o => o.Name);
                         break;
                 }
             }
@@ -222,12 +213,8 @@ namespace CmsEngine
                 throw;
             }
 
-            return listItems;
+            return items;
         }
-
-        #endregion
-
-        #region Helpers
 
         private void PrepareCategoryForSaving(IEditModel editModel)
         {
@@ -253,7 +240,5 @@ namespace CmsEngine
                 _unitOfWork.Categories.Update(category);
             }
         }
-
-        #endregion
     }
 }
