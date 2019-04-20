@@ -76,6 +76,18 @@ namespace CmsEngine.Data.AccessLayer
             return Get(q => q.VanityId == id).SingleOrDefault();
         }
 
+        public int Count(Expression<Func<T, bool>> filter = null)
+        {
+            IQueryable<T> query = _dbSet;
+
+            if (filter != null)
+            {
+                return query.Count(filter);
+            }
+
+            return query.Count();
+        }
+
         public void Insert(T entity)
         {
             if (entity != null)
