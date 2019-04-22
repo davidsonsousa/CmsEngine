@@ -65,6 +65,7 @@ namespace CmsEngine
                                 DateFormat = website.DateFormat,
                                 SiteUrl = website.SiteUrl,
                                 ArticleLimit = website.ArticleLimit,
+                                GoogleAnalytics = website.GoogleAnalytics,
                                 PageTitle = website.Name,
                                 ContactDetails = new ContactDetailsViewModel
                                 {
