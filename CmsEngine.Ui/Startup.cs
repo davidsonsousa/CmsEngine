@@ -98,6 +98,12 @@ namespace CmsEngine.Ui
                 app.UseHsts();
             }
 
+            // Apply DB migrations
+            using (var scope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
+            {
+                scope.ServiceProvider.GetService<CmsEngineContext>().Database.Migrate();
+            }
+
             const int http301 = (int)HttpStatusCode.MovedPermanently;
 
             // Added compatibility to the old davidsonsousa.net

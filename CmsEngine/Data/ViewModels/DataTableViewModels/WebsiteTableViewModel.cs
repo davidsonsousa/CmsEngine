@@ -1,4 +1,5 @@
 using CmsEngine.Attributes;
+using CmsEngine.Extensions;
 
 namespace CmsEngine.Data.ViewModels.DataTableViewModels
 {
@@ -21,5 +22,16 @@ namespace CmsEngine.Data.ViewModels.DataTableViewModels
 
         [Searchable, Orderable, ShowOnDataTable(5)]
         public string SiteUrl { get; set; }
+
+        public string GoogleAnalytics { get; set; }
+
+        [Orderable, ShowOnDataTable(6)]
+        public string HasGoogleAnalytics
+        {
+            get
+            {
+                return (!string.IsNullOrWhiteSpace(GoogleAnalytics)).ToReadableString();
+            }
+        }
     }
 }

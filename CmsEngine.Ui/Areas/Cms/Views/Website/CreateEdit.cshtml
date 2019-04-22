@@ -69,7 +69,7 @@
                     <div class="form-group row">
                         <label asp-for="Description" class="col-md-2 form-control-label"></label>
                         <div class="col-md-10">
-                            <textarea asp-for="Description" class="form-control"></textarea>
+                            <textarea asp-for="Description" class="form-control" id="description-content"></textarea>
                             <div class="upload-bar float-right">
                                 <span class="btn btn-success fileinput-button">
                                     <i class="fas fa-upload"></i>
@@ -189,6 +189,12 @@
                             <span asp-validation-for="DisqusShortName" class="text-danger"></span>
                         </div>
                     </div>
+                    <div class="form-group row">
+                        <label asp-for="GoogleAnalytics" class="col-md-2 form-control-label"></label>
+                        <div class="col-md-10">
+                            <textarea asp-for="GoogleAnalytics" class="form-control" rows="12"></textarea>
+                        </div>
+                    </div>
                 </div>
                 <div class="card-footer">
                     <button type="submit" class="btn btn-primary"><i class="far fa-dot-circle"></i> Save</button>
@@ -205,7 +211,7 @@
     <script src="~/js/vendors/jquery.fileupload.min.js"></script>
     <script>
         $(function () {
-            CmsEngine.Configure.TinyMCE('textarea', 500);
+            CmsEngine.Configure.TinyMCE('#description-content', 500);
             CmsEngine.FileUpload.UploadHeader('#uploadHeadImage', '@Url.Action("uploadfiles")', '.header-preview', '#HeaderImage');
             CmsEngine.FileUpload.UploadImagesToEditor('#uploadEditorImages', '@Url.Action("uploadfiles")');
             CmsEngine.FileUpload.UploadFilesToEditor('#uploadEditorFiles', '@Url.Action("uploadfiles")');

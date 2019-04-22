@@ -65,5 +65,7 @@ namespace CmsEngine.Data.EditModels
 
         [MaxLength(30)]
         public string DisqusShortName { get; set; }
+
+        public string GoogleAnalytics { get; set; }
     }
 }
