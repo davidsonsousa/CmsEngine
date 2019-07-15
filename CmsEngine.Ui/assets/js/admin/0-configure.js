@@ -132,6 +132,7 @@ CmsEngine.Configure.TinyMCE = function (selector, height) {
                 e.content = e.content.replace(/&#39/g, "&apos");
             });
         },
-        toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image"
+        toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | code",
+        extended_valid_elements: 'script[language|type|src]'
     });
 };
