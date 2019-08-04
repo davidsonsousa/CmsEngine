@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using System.Net;
 using AutoMapper;
@@ -52,7 +53,7 @@ namespace CmsEngine.Ui
             services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
             // Add AutoMapper
-            services.AddAutoMapper();
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
             // Add Unit of Work
             services.AddScoped<IUnitOfWork, UnitOfWork>();
