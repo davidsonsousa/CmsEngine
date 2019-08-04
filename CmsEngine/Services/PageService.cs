@@ -15,7 +15,7 @@ namespace CmsEngine
     {
         public IEnumerable<T> GetPagesByStatusReadOnly<T>(DocumentStatus documentStatus, int count = 0) where T : IViewModel
         {
-            var items = this.GetDocumentsByStatus<Page>(documentStatus, count);
+            var items = GetDocumentsByStatus<Page>(documentStatus, count);
 
             _logger.LogInformation("CmsService > GetPagesByStatusReadOnly(documentStatus: {0}, count: {1})", documentStatus, count);
             _logger.LogInformation("Pages loaded: {0}", items.Count());
@@ -25,7 +25,7 @@ namespace CmsEngine
 
         public IEnumerable<T> GetAllPagesReadOnly<T>(int count = 0) where T : IViewModel
         {
-            IEnumerable<Page> listItems = this.GetAllReadOnly<Page>(count);
+            IEnumerable<Page> listItems = GetAllReadOnly<Page>(count);
 
             _logger.LogInformation("CmsService > GetAllPagesReadOnly(count: {0})", count);
             _logger.LogInformation("Pages loaded: {0}", listItems.Count());
@@ -39,10 +39,10 @@ namespace CmsEngine
 
             if (!string.IsNullOrWhiteSpace(parameters.Search.Value))
             {
-                items = this.FilterPage(parameters.Search.Value, items);
+                items = FilterPage(parameters.Search.Value, items);
             }
 
-            items = this.OrderPage(parameters.Order[0].Column, parameters.Order[0].Dir, items);
+            items = OrderPage(parameters.Order[0].Column, parameters.Order[0].Dir, items);
 
             int recordsCount = items.Count();
 
@@ -54,7 +54,11 @@ namespace CmsEngine
             var item = _unitOfWork.Pages.GetById(id);
 
             _logger.LogInformation("CmsService > GetPageById(id: {0})", id);
-            _logger.LogInformation("Page: {0}", item.ToString());
+
+            if (item != null)
+            {
+                _logger.LogInformation("Page: {0}", item.ToString());
+            }
 
             return _mapper.Map<Page, PageViewModel>(item);
         }
@@ -64,7 +68,11 @@ namespace CmsEngine
             var item = _unitOfWork.Pages.GetById(id);
 
             _logger.LogInformation("CmsService > GetPageById(id: {0})", id);
-            _logger.LogInformation("Page: {0}", item.ToString());
+
+            if (item != null)
+            {
+                _logger.LogInformation("Page: {0}", item.ToString());
+            }
 
             return _mapper.Map<Page, PageViewModel>(item);
         }
@@ -74,7 +82,11 @@ namespace CmsEngine
             var item = _unitOfWork.Pages.Get(q => q.Slug == slug).SingleOrDefault();
 
             _logger.LogInformation("CmsService > GetPageBySlug(slug: {0})", slug);
-            _logger.LogInformation("Page: {0}", item.ToString());
+
+            if (item != null)
+            {
+                _logger.LogInformation("Page: {0}", item.ToString());
+            }
 
             return _mapper.Map<Page, PageViewModel>(item);
         }
@@ -117,7 +129,7 @@ namespace CmsEngine
 
             try
             {
-                this.PreparePageForSaving(editModel);
+                PreparePageForSaving(editModel);
 
                 _unitOfWork.Save();
                 _logger.LogInformation("Page saved");
@@ -141,7 +153,7 @@ namespace CmsEngine
             try
             {
                 var page = _unitOfWork.Pages.GetById(id);
-                returnValue = this.Delete(page);
+                returnValue = Delete(page);
 
                 if (!returnValue.IsError)
                 {
@@ -168,7 +180,7 @@ namespace CmsEngine
             try
             {
                 var page = _unitOfWork.Pages.GetById(id);
-                returnValue = this.Delete(page);
+                returnValue = Delete(page);
 
                 if (!returnValue.IsError)
                 {
@@ -195,7 +207,7 @@ namespace CmsEngine
             {
                 var searchableProperties = typeof(PageTableViewModel).GetProperties().Where(p => Attribute.IsDefined(p, typeof(Searchable)));
 
-                var lambda = this.PrepareFilter<Page>(searchTerm, searchableProperties);
+                var lambda = PrepareFilter<Page>(searchTerm, searchableProperties);
                 items = items.Where(lambda);
             }
 
@@ -265,7 +277,7 @@ namespace CmsEngine
                 _unitOfWork.Pages.Update(page);
             }
 
-            this.PrepareRelatedAuthorsForPage(page);
+            PrepareRelatedAuthorsForPage(page);
         }
 
         private void PrepareRelatedAuthorsForPage(Page page)

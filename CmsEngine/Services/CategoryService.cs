@@ -15,7 +15,7 @@ namespace CmsEngine
     {
         public IEnumerable<T> GetAllCategoriesReadOnly<T>(int count = 0) where T : IViewModel
         {
-            IEnumerable<Category> listItems = this.GetAllReadOnly<Category>(count);
+            IEnumerable<Category> listItems = GetAllReadOnly<Category>(count);
 
             _logger.LogInformation("CmsService > GetAllCategoriesReadOnly(count: {0})", count);
             _logger.LogInformation("Categories loaded: {0}", listItems.Count());
@@ -43,10 +43,10 @@ namespace CmsEngine
 
             if (!string.IsNullOrWhiteSpace(parameters.Search.Value))
             {
-                items = this.FilterCategory(parameters.Search.Value, items);
+                items = FilterCategory(parameters.Search.Value, items);
             }
 
-            items = this.OrderCategory(parameters.Order[0].Column, parameters.Order[0].Dir, items);
+            items = OrderCategory(parameters.Order[0].Column, parameters.Order[0].Dir, items);
 
             int recordsCount = items.Count();
 
@@ -58,7 +58,11 @@ namespace CmsEngine
             var item = _unitOfWork.Categories.GetById(id);
 
             _logger.LogInformation("CmsService > GetCategoryById(id: {0})", id);
-            _logger.LogInformation("Category: {0}", item.ToString());
+
+            if (item != null)
+            {
+                _logger.LogInformation("Category: {0}", item.ToString());
+            }
 
             return _mapper.Map<Category, CategoryViewModel>(item);
         }
@@ -68,7 +72,11 @@ namespace CmsEngine
             var item = _unitOfWork.Categories.GetById(id);
 
             _logger.LogInformation("CmsService > GetCategoryById(id: {0})", id);
-            _logger.LogInformation("Category: {0}", item.ToString());
+
+            if (item != null)
+            {
+                _logger.LogInformation("Category: {0}", item.ToString());
+            }
 
             return _mapper.Map<Category, CategoryViewModel>(item);
         }
@@ -78,7 +86,11 @@ namespace CmsEngine
             var item = _unitOfWork.Categories.Get(q => q.Slug == slug).SingleOrDefault();
 
             _logger.LogInformation("CmsService > GetCategoryBySlug(slug: {0})", slug);
-            _logger.LogInformation("Category: {0}", item.ToString());
+
+            if (item != null)
+            {
+                _logger.LogInformation("Category: {0}", item.ToString());
+            }
 
             return _mapper.Map<Category, CategoryViewModel>(item);
         }
@@ -121,7 +133,7 @@ namespace CmsEngine
 
             try
             {
-                this.PrepareCategoryForSaving(editModel);
+                PrepareCategoryForSaving(editModel);
 
                 _unitOfWork.Save();
                 _logger.LogInformation("Category saved");
@@ -141,12 +153,12 @@ namespace CmsEngine
 
         public ReturnValue DeleteCategory(Guid id)
         {
-            return this.DeleteCategory(_unitOfWork.Categories.GetById(id));
+            return DeleteCategory(_unitOfWork.Categories.GetById(id));
         }
 
         public ReturnValue DeleteCategory(int id)
         {
-            return this.DeleteCategory(_unitOfWork.Categories.GetById(id));
+            return DeleteCategory(_unitOfWork.Categories.GetById(id));
         }
 
         private ReturnValue DeleteCategory(Category category)
@@ -154,7 +166,7 @@ namespace CmsEngine
             var returnValue = new ReturnValue();
             try
             {
-                returnValue = this.Delete(category);
+                returnValue = Delete(category);
 
                 if (!returnValue.IsError)
                 {
@@ -181,7 +193,7 @@ namespace CmsEngine
             {
                 var searchableProperties = typeof(CategoryTableViewModel).GetProperties().Where(p => Attribute.IsDefined(p, typeof(Searchable)));
 
-                var lambda = this.PrepareFilter<Category>(searchTerm, searchableProperties);
+                var lambda = PrepareFilter<Category>(searchTerm, searchableProperties);
                 items = items.Where(lambda);
             }
 
