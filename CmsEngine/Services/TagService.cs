@@ -14,20 +14,20 @@ namespace CmsEngine
     {
         public IEnumerable<T> GetAllTagsReadOnly<T>(int count = 0) where T : IViewModel
         {
-            IEnumerable<Tag> listItems = GetAllReadOnly<Tag>(count);
+            IEnumerable<Tag> listItems = this.GetAllReadOnly<Tag>(count);
             return _mapper.Map<IEnumerable<Tag>, IEnumerable<T>>(listItems);
         }
 
         public (IEnumerable<IViewModel> Data, int RecordsCount) GetTagsForDataTable(DataParameters parameters)
         {
-            var items = _unitOfWork.Tags.GetAll();
+            var items = _unitOfWork.Tags.Get();
 
             if (!string.IsNullOrWhiteSpace(parameters.Search.Value))
             {
-                items = FilterTag(parameters.Search.Value, items);
+                items = this.FilterTag(parameters.Search.Value, items);
             }
 
-            items = OrderTag(parameters.Order[0].Column, parameters.Order[0].Dir, items);
+            items = this.OrderTag(parameters.Order[0].Column, parameters.Order[0].Dir, items);
 
             int recordsCount = items.Count();
 
@@ -73,7 +73,7 @@ namespace CmsEngine
 
             try
             {
-                PrepareTagForSaving(editModel);
+                this.PrepareTagForSaving(editModel);
 
                 _unitOfWork.Save();
             }

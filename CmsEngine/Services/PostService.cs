@@ -85,7 +85,7 @@ namespace CmsEngine
 
         public (IEnumerable<IViewModel> Data, int RecordsCount) GetPostsForDataTable(DataParameters parameters)
         {
-            var items = _unitOfWork.Posts.GetAll();
+            var items = _unitOfWork.Posts.Get();
 
             if (!string.IsNullOrWhiteSpace(parameters.Search.Value))
             {
@@ -104,7 +104,11 @@ namespace CmsEngine
             var item = _unitOfWork.Posts.GetById(id);
 
             _logger.LogInformation("CmsService > GetPostById(id: {0})", id);
-            _logger.LogInformation("Posts loaded: {0}", item.ToString());
+
+            if (item != null)
+            {
+                _logger.LogInformation("Post: {0}", item.ToString());
+            }
 
             return _mapper.Map<Post, PostViewModel>(item);
         }
@@ -114,7 +118,11 @@ namespace CmsEngine
             var item = _unitOfWork.Posts.GetById(id);
 
             _logger.LogInformation("CmsService > GetPostById(id: {0})", id);
-            _logger.LogInformation("Posts loaded: {0}", item.ToString());
+
+            if (item != null)
+            {
+                _logger.LogInformation("Post: {0}", item.ToString());
+            }
 
             return _mapper.Map<Post, PostViewModel>(item);
         }
@@ -124,7 +132,11 @@ namespace CmsEngine
             var item = _unitOfWork.Posts.Get(q => q.Slug == slug).SingleOrDefault();
 
             _logger.LogInformation("CmsService > GetPostById(slug: {0})", slug);
-            _logger.LogInformation("Posts loaded: {0}", item.ToString());
+
+            if (item != null)
+            {
+                _logger.LogInformation("Post: {0}", item.ToString());
+            }
 
             return _mapper.Map<Post, PostViewModel>(item);
         }
@@ -135,8 +147,8 @@ namespace CmsEngine
 
             return new PostEditModel
             {
-                Categories = this.PopulateCheckboxList<Category>(),
-                Tags = this.PopulateSelectListItems<Tag>()
+                Categories = PopulateCheckboxList<Category>(),
+                Tags = PopulateSelectListItems<Tag>()
             };
         }
 
@@ -144,8 +156,8 @@ namespace CmsEngine
         {
             var item = _unitOfWork.Posts.GetById(id);
             var editModel = _mapper.Map<Post, PostEditModel>(item);
-            editModel.Categories = this.PopulateCheckboxList<Category>(editModel.SelectedCategories);
-            editModel.Tags = this.PopulateSelectListItems<Tag>(editModel.SelectedTags);
+            editModel.Categories = PopulateCheckboxList<Category>(editModel.SelectedCategories);
+            editModel.Tags = PopulateSelectListItems<Tag>(editModel.SelectedTags);
 
             _logger.LogInformation("CmsService > SetupPostEditModel(id: {0})", id);
             _logger.LogInformation("Post: {0}", editModel.ToString());
@@ -157,8 +169,8 @@ namespace CmsEngine
         {
             var item = _unitOfWork.Posts.GetById(id);
             var editModel = _mapper.Map<Post, PostEditModel>(item);
-            editModel.Categories = this.PopulateCheckboxList<Category>(editModel.SelectedCategories);
-            editModel.Tags = this.PopulateSelectListItems<Tag>(editModel.SelectedTags);
+            editModel.Categories = PopulateCheckboxList<Category>(editModel.SelectedCategories);
+            editModel.Tags = PopulateSelectListItems<Tag>(editModel.SelectedTags);
 
             _logger.LogInformation("CmsService > SetupPostEditModel(id: {0})", id);
             _logger.LogInformation("Post: {0}", editModel.ToString());
@@ -202,7 +214,7 @@ namespace CmsEngine
             try
             {
                 var post = _unitOfWork.Posts.GetById(id);
-                returnValue = this.Delete(post);
+                returnValue = Delete(post);
 
                 if (!returnValue.IsError)
                 {
@@ -229,7 +241,7 @@ namespace CmsEngine
             try
             {
                 var post = _unitOfWork.Posts.GetById(id);
-                returnValue = this.Delete(post);
+                returnValue = Delete(post);
 
                 if (!returnValue.IsError)
                 {
@@ -256,7 +268,7 @@ namespace CmsEngine
             {
                 var searchableProperties = typeof(PostTableViewModel).GetProperties().Where(p => Attribute.IsDefined(p, typeof(Searchable)));
 
-                var lambda = this.PrepareFilter<Post>(searchTerm, searchableProperties);
+                var lambda = PrepareFilter<Post>(searchTerm, searchableProperties);
                 items = items.Where(lambda);
             }
 

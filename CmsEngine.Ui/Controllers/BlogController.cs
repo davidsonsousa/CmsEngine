@@ -26,6 +26,12 @@ namespace CmsEngine.Ui.Controllers
         public IActionResult Post(string slug)
         {
             instance.SelectedDocument = (PostViewModel)service.GetPostBySlug(slug);
+
+            if (instance.SelectedDocument == null)
+            {
+                return NotFound();
+            }
+
             instance.PageTitle = $"{instance.SelectedDocument.Title} - {instance.Name}";
             return View(instance);
         }
@@ -34,6 +40,12 @@ namespace CmsEngine.Ui.Controllers
         {
             instance.PagedPosts = service.GetPagedPostsByCategoryReadOnly<PostViewModel>(slug, page);
             var selectedCategory = instance.PagedPosts.SelectMany(p => p.Categories.Where(c => c.Slug == slug).Select(x => x.Name)).FirstOrDefault();
+
+            if (selectedCategory == null)
+            {
+                return NotFound();
+            }
+
             instance.PageTitle = $"{selectedCategory} - {instance.Name}";
             return View("Index", instance);
         }
@@ -42,6 +54,12 @@ namespace CmsEngine.Ui.Controllers
         {
             instance.PagedPosts = service.GetPagedPostsByTagReadOnly<PostViewModel>(slug, page);
             var selectedTag = instance.PagedPosts.SelectMany(p => p.Tags.Where(t => t.Slug == slug).Select(x => x.Name)).FirstOrDefault();
+
+            if (selectedTag == null)
+            {
+                return NotFound();
+            }
+
             instance.PageTitle = $"#{selectedTag} - {instance.Name}";
             return View("Index", instance);
         }

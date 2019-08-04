@@ -14,21 +14,21 @@ namespace CmsEngine
     {
         public IEnumerable<T> GetAllWebsitesReadOnly<T>(int count = 0) where T : IViewModel
         {
-            IEnumerable<Website> listItems = GetAllReadOnly<Website>(count);
+            IEnumerable<Website> listItems = this.GetAllReadOnly<Website>(count);
 
             return _mapper.Map<IEnumerable<Website>, IEnumerable<T>>(listItems);
         }
 
         public (IEnumerable<IViewModel> Data, int RecordsCount) GetWebsitesForDataTable(DataParameters parameters)
         {
-            var items = _unitOfWork.Websites.GetAll();
+            var items = _unitOfWork.Websites.Get();
 
             if (!string.IsNullOrWhiteSpace(parameters.Search.Value))
             {
-                items = FilterWebsite(parameters.Search.Value, items);
+                items = this.FilterWebsite(parameters.Search.Value, items);
             }
 
-            items = OrderWebsite(parameters.Order[0].Column, parameters.Order[0].Dir, items);
+            items = this.OrderWebsite(parameters.Order[0].Column, parameters.Order[0].Dir, items);
 
             int recordsCount = items.Count();
 
@@ -74,7 +74,7 @@ namespace CmsEngine
 
             try
             {
-                PrepareWebsiteForSaving(editModel);
+                this.PrepareWebsiteForSaving(editModel);
 
                 _unitOfWork.Save();
             }

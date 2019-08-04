@@ -39,7 +39,7 @@ namespace CmsEngine
 
         public (IEnumerable<IViewModel> Data, int RecordsCount) GetCategoriesForDataTable(DataParameters parameters)
         {
-            var items = _unitOfWork.Categories.GetAll();
+            var items = _unitOfWork.Categories.Get();
 
             if (!string.IsNullOrWhiteSpace(parameters.Search.Value))
             {
@@ -58,7 +58,11 @@ namespace CmsEngine
             var item = _unitOfWork.Categories.GetById(id);
 
             _logger.LogInformation("CmsService > GetCategoryById(id: {0})", id);
-            _logger.LogInformation("Category: {0}", item.ToString());
+
+            if (item != null)
+            {
+                _logger.LogInformation("Category: {0}", item.ToString());
+            }
 
             return _mapper.Map<Category, CategoryViewModel>(item);
         }
@@ -68,7 +72,11 @@ namespace CmsEngine
             var item = _unitOfWork.Categories.GetById(id);
 
             _logger.LogInformation("CmsService > GetCategoryById(id: {0})", id);
-            _logger.LogInformation("Category: {0}", item.ToString());
+
+            if (item != null)
+            {
+                _logger.LogInformation("Category: {0}", item.ToString());
+            }
 
             return _mapper.Map<Category, CategoryViewModel>(item);
         }
@@ -78,7 +86,11 @@ namespace CmsEngine
             var item = _unitOfWork.Categories.Get(q => q.Slug == slug).SingleOrDefault();
 
             _logger.LogInformation("CmsService > GetCategoryBySlug(slug: {0})", slug);
-            _logger.LogInformation("Category: {0}", item.ToString());
+
+            if (item != null)
+            {
+                _logger.LogInformation("Category: {0}", item.ToString());
+            }
 
             return _mapper.Map<Category, CategoryViewModel>(item);
         }
@@ -141,12 +153,12 @@ namespace CmsEngine
 
         public ReturnValue DeleteCategory(Guid id)
         {
-            return this.DeleteCategory(_unitOfWork.Categories.GetById(id));
+            return DeleteCategory(_unitOfWork.Categories.GetById(id));
         }
 
         public ReturnValue DeleteCategory(int id)
         {
-            return this.DeleteCategory(_unitOfWork.Categories.GetById(id));
+            return DeleteCategory(_unitOfWork.Categories.GetById(id));
         }
 
         private ReturnValue DeleteCategory(Category category)
@@ -154,7 +166,7 @@ namespace CmsEngine
             var returnValue = new ReturnValue();
             try
             {
-                returnValue = this.Delete(category);
+                returnValue = Delete(category);
 
                 if (!returnValue.IsError)
                 {
@@ -181,7 +193,7 @@ namespace CmsEngine
             {
                 var searchableProperties = typeof(CategoryTableViewModel).GetProperties().Where(p => Attribute.IsDefined(p, typeof(Searchable)));
 
-                var lambda = this.PrepareFilter<Category>(searchTerm, searchableProperties);
+                var lambda = PrepareFilter<Category>(searchTerm, searchableProperties);
                 items = items.Where(lambda);
             }
 
