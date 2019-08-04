@@ -30,6 +30,12 @@ namespace CmsEngine.Ui.Controllers
         public IActionResult Page(string slug)
         {
             instance.SelectedDocument = (PageViewModel)service.GetPageBySlug(slug);
+
+            if (instance.SelectedDocument == null)
+            {
+                return NotFound();
+            }
+
             instance.PageTitle = $"{instance.SelectedDocument.Title} - {instance.Name}";
             return View(instance);
         }
