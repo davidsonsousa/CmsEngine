@@ -16,33 +16,33 @@ namespace CmsEngine
     {
         public PaginatedList<T> GetPagedPostsByStatusReadOnly<T>(DocumentStatus documentStatus, int pageIndex = 1) where T : IViewModel
         {
-            var posts = GetDocumentsByStatus<Post>(documentStatus);
+            var posts = this.GetDocumentsByStatus<Post>(documentStatus);
 
             _logger.LogInformation("CmsService > GetPagedPostsByStatusReadOnly(documentStatus: {0}, pageIndex: {1})", documentStatus, pageIndex);
             _logger.LogInformation("Posts loaded: {0}", posts.Count());
 
-            return PreparePostsForPaging<T>(pageIndex, posts);
+            return this.PreparePostsForPaging<T>(pageIndex, posts);
         }
 
         public PaginatedList<T> GetPagedPostsByCategoryReadOnly<T>(string categorySlug, int pageIndex = 1) where T : IViewModel
         {
-            var posts = GetDocumentsByStatus<Post>(DocumentStatus.Published).Where(q => q.PostCategories
+            var posts = this.GetDocumentsByStatus<Post>(DocumentStatus.Published).Where(q => q.PostCategories
                                                                                          .Any(pc => pc.Category.Slug == categorySlug));
 
             _logger.LogInformation("CmsService > GetPagedPostsByCategoryReadOnly(categorySlug: {0}, pageIndex: {1})", categorySlug, pageIndex);
             _logger.LogInformation("Posts loaded: {0}", posts.Count());
 
-            return PreparePostsForPaging<T>(pageIndex, posts);
+            return this.PreparePostsForPaging<T>(pageIndex, posts);
         }
 
         public PaginatedList<T> GetPagedPostsByTagReadOnly<T>(string tagSlug, int pageIndex = 1) where T : IViewModel
         {
-            var posts = GetDocumentsByStatus<Post>(DocumentStatus.Published).Where(q => q.PostTags.Any(pt => pt.Tag.Slug == tagSlug));
+            var posts = this.GetDocumentsByStatus<Post>(DocumentStatus.Published).Where(q => q.PostTags.Any(pt => pt.Tag.Slug == tagSlug));
 
             _logger.LogInformation("CmsService > GetPagedPostsByTagReadOnly(tagSlug: {0}, pageIndex: {1})", tagSlug, pageIndex);
             _logger.LogInformation("Posts loaded: {0}", posts.Count());
 
-            return PreparePostsForPaging<T>(pageIndex, posts);
+            return this.PreparePostsForPaging<T>(pageIndex, posts);
         }
 
         public PaginatedList<T> GetPagedPostsFullTextSearch<T>(DocumentStatus documentStatus, int pageIndex = 1, string searchTerm = "")
@@ -50,22 +50,22 @@ namespace CmsEngine
         {
             if (string.IsNullOrWhiteSpace(searchTerm))
             {
-                return GetPagedPostsByStatusReadOnly<T>(documentStatus, pageIndex);
+                return this.GetPagedPostsByStatusReadOnly<T>(documentStatus, pageIndex);
             }
 
-            var posts = GetDocumentsByStatus<Post>(documentStatus).Where(q => q.Title.Contains(searchTerm)
+            var posts = this.GetDocumentsByStatus<Post>(documentStatus).Where(q => q.Title.Contains(searchTerm)
                                                                            || q.DocumentContent.Contains(searchTerm));
 
             _logger.LogInformation("CmsService > GetPagedPostsFullTextSearch(documentStatus: {0}, pageIndex: {1}, searchTerm: {2})",
                                    documentStatus, pageIndex, searchTerm);
             _logger.LogInformation("Posts loaded: {0}", posts.Count());
 
-            return PreparePostsForPaging<T>(pageIndex, posts);
+            return this.PreparePostsForPaging<T>(pageIndex, posts);
         }
 
         public IEnumerable<T> GetPostsByStatusReadOnly<T>(DocumentStatus documentStatus, int count = 0) where T : IViewModel
         {
-            var posts = GetDocumentsByStatus<Post>(documentStatus, count);
+            var posts = this.GetDocumentsByStatus<Post>(documentStatus, count);
 
             _logger.LogInformation("CmsService > GetPostsByStatusReadOnly(documentStatus: {0}, count: {1})", documentStatus, count);
             _logger.LogInformation("Posts loaded: {0}", posts.Count());
@@ -75,7 +75,7 @@ namespace CmsEngine
 
         public IEnumerable<T> GetAllPostsReadOnly<T>(int count = 0) where T : IViewModel
         {
-            IEnumerable<Post> listItems = GetAllReadOnly<Post>(count);
+            IEnumerable<Post> listItems = this.GetAllReadOnly<Post>(count);
 
             _logger.LogInformation("CmsService > GetAllPostsReadOnly(count: {0})", count);
             _logger.LogInformation("Posts loaded: {0}", listItems.Count());
@@ -85,14 +85,14 @@ namespace CmsEngine
 
         public (IEnumerable<IViewModel> Data, int RecordsCount) GetPostsForDataTable(DataParameters parameters)
         {
-            var items = _unitOfWork.Posts.GetAll();
+            var items = _unitOfWork.Posts.Get();
 
             if (!string.IsNullOrWhiteSpace(parameters.Search.Value))
             {
-                items = FilterPost(parameters.Search.Value, items);
+                items = this.FilterPost(parameters.Search.Value, items);
             }
 
-            items = OrderPost(parameters.Order[0].Column, parameters.Order[0].Dir, items);
+            items = this.OrderPost(parameters.Order[0].Column, parameters.Order[0].Dir, items);
 
             int recordsCount = items.Count();
 
@@ -178,7 +178,7 @@ namespace CmsEngine
 
             try
             {
-                PreparePostForSaving(editModel);
+                this.PreparePostForSaving(editModel);
 
                 _unitOfWork.Save();
                 _logger.LogInformation("Post saved");
@@ -324,9 +324,9 @@ namespace CmsEngine
                 _unitOfWork.Posts.Update(post);
             }
 
-            PrepareRelatedAuthorsForPost(post);
-            PrepareRelatedCategories(post, postEditModel);
-            PrepareRelatedTags(post, postEditModel);
+            this.PrepareRelatedAuthorsForPost(post);
+            this.PrepareRelatedCategories(post, postEditModel);
+            this.PrepareRelatedTags(post, postEditModel);
         }
 
         private void PrepareRelatedAuthorsForPost(Post post)

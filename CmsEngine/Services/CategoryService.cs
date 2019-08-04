@@ -15,7 +15,7 @@ namespace CmsEngine
     {
         public IEnumerable<T> GetAllCategoriesReadOnly<T>(int count = 0) where T : IViewModel
         {
-            IEnumerable<Category> listItems = GetAllReadOnly<Category>(count);
+            IEnumerable<Category> listItems = this.GetAllReadOnly<Category>(count);
 
             _logger.LogInformation("CmsService > GetAllCategoriesReadOnly(count: {0})", count);
             _logger.LogInformation("Categories loaded: {0}", listItems.Count());
@@ -39,14 +39,14 @@ namespace CmsEngine
 
         public (IEnumerable<IViewModel> Data, int RecordsCount) GetCategoriesForDataTable(DataParameters parameters)
         {
-            var items = _unitOfWork.Categories.GetAll();
+            var items = _unitOfWork.Categories.Get();
 
             if (!string.IsNullOrWhiteSpace(parameters.Search.Value))
             {
-                items = FilterCategory(parameters.Search.Value, items);
+                items = this.FilterCategory(parameters.Search.Value, items);
             }
 
-            items = OrderCategory(parameters.Order[0].Column, parameters.Order[0].Dir, items);
+            items = this.OrderCategory(parameters.Order[0].Column, parameters.Order[0].Dir, items);
 
             int recordsCount = items.Count();
 
@@ -121,7 +121,7 @@ namespace CmsEngine
 
             try
             {
-                PrepareCategoryForSaving(editModel);
+                this.PrepareCategoryForSaving(editModel);
 
                 _unitOfWork.Save();
                 _logger.LogInformation("Category saved");

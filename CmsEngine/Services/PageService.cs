@@ -25,7 +25,7 @@ namespace CmsEngine
 
         public IEnumerable<T> GetAllPagesReadOnly<T>(int count = 0) where T : IViewModel
         {
-            IEnumerable<Page> listItems = GetAllReadOnly<Page>(count);
+            IEnumerable<Page> listItems = this.GetAllReadOnly<Page>(count);
 
             _logger.LogInformation("CmsService > GetAllPagesReadOnly(count: {0})", count);
             _logger.LogInformation("Pages loaded: {0}", listItems.Count());
@@ -35,14 +35,14 @@ namespace CmsEngine
 
         public (IEnumerable<IViewModel> Data, int RecordsCount) GetPagesForDataTable(DataParameters parameters)
         {
-            var items = _unitOfWork.Pages.GetAll();
+            var items = _unitOfWork.Pages.Get();
 
             if (!string.IsNullOrWhiteSpace(parameters.Search.Value))
             {
-                items = FilterPage(parameters.Search.Value, items);
+                items = this.FilterPage(parameters.Search.Value, items);
             }
 
-            items = OrderPage(parameters.Order[0].Column, parameters.Order[0].Dir, items);
+            items = this.OrderPage(parameters.Order[0].Column, parameters.Order[0].Dir, items);
 
             int recordsCount = items.Count();
 
@@ -117,7 +117,7 @@ namespace CmsEngine
 
             try
             {
-                PreparePageForSaving(editModel);
+                this.PreparePageForSaving(editModel);
 
                 _unitOfWork.Save();
                 _logger.LogInformation("Page saved");
@@ -265,7 +265,7 @@ namespace CmsEngine
                 _unitOfWork.Pages.Update(page);
             }
 
-            PrepareRelatedAuthorsForPage(page);
+            this.PrepareRelatedAuthorsForPage(page);
         }
 
         private void PrepareRelatedAuthorsForPage(Page page)
