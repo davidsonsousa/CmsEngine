@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using CmsEngine.Attributes;
 using CmsEngine.Data.EditModels;
 using CmsEngine.Data.Models;
@@ -49,9 +50,9 @@ namespace CmsEngine
             return (_mapper.Map<IEnumerable<Page>, IEnumerable<PageTableViewModel>>(items.Skip(parameters.Start).Take(parameters.Length).ToList()), recordsCount);
         }
 
-        public IViewModel GetPageById(int id)
+        public async Task<IViewModel> GetPageById(int id)
         {
-            var item = _unitOfWork.Pages.GetById(id);
+            var item = await _unitOfWork.Pages.GetById(id);
 
             _logger.LogInformation("CmsService > GetPageById(id: {0})", id);
 
@@ -63,9 +64,9 @@ namespace CmsEngine
             return _mapper.Map<Page, PageViewModel>(item);
         }
 
-        public IViewModel GetPageById(Guid id)
+        public async Task<IViewModel> GetPageById(Guid id)
         {
-            var item = _unitOfWork.Pages.GetById(id);
+            var item = await _unitOfWork.Pages.GetById(id);
 
             _logger.LogInformation("CmsService > GetPageById(id: {0})", id);
 
@@ -97,9 +98,9 @@ namespace CmsEngine
             return new PageEditModel();
         }
 
-        public IEditModel SetupPageEditModel(int id)
+        public async Task<IEditModel> SetupPageEditModel(int id)
         {
-            var item = _unitOfWork.Pages.GetById(id);
+            var item = await _unitOfWork.Pages.GetById(id);
 
             _logger.LogInformation("CmsService > SetupCategoryEditModel(id: {0})", id);
             _logger.LogInformation("Page: {0}", item.ToString());
@@ -107,9 +108,9 @@ namespace CmsEngine
             return _mapper.Map<Page, PageEditModel>(item);
         }
 
-        public IEditModel SetupPageEditModel(Guid id)
+        public async Task<IEditModel> SetupPageEditModel(Guid id)
         {
-            var item = _unitOfWork.Pages.GetById(id);
+            var item = await _unitOfWork.Pages.GetById(id);
 
             _logger.LogInformation("CmsService > SetupCategoryEditModel(id: {0})", id);
             _logger.LogInformation("Page: {0}", item.ToString());
@@ -117,7 +118,7 @@ namespace CmsEngine
             return _mapper.Map<Page, PageEditModel>(item);
         }
 
-        public ReturnValue SavePage(IEditModel editModel)
+        public async Task<ReturnValue> SavePage(IEditModel editModel)
         {
             _logger.LogInformation("CmsService > SavePage(editModel: {0})", editModel.ToString());
 
@@ -129,7 +130,7 @@ namespace CmsEngine
 
             try
             {
-                PreparePageForSaving(editModel);
+                await PreparePageForSaving(editModel);
 
                 _unitOfWork.Save();
                 _logger.LogInformation("Page saved");
@@ -147,12 +148,12 @@ namespace CmsEngine
             return returnValue;
         }
 
-        public ReturnValue DeletePage(Guid id)
+        public async Task<ReturnValue> DeletePage(Guid id)
         {
             var returnValue = new ReturnValue();
             try
             {
-                var page = _unitOfWork.Pages.GetById(id);
+                var page = await _unitOfWork.Pages.GetById(id);
                 returnValue = Delete(page);
 
                 if (!returnValue.IsError)
@@ -174,12 +175,12 @@ namespace CmsEngine
             return returnValue;
         }
 
-        public ReturnValue DeletePage(int id)
+        public async Task<ReturnValue> DeletePage(int id)
         {
             var returnValue = new ReturnValue();
             try
             {
-                var page = _unitOfWork.Pages.GetById(id);
+                var page = await _unitOfWork.Pages.GetById(id);
                 returnValue = Delete(page);
 
                 if (!returnValue.IsError)
@@ -251,7 +252,7 @@ namespace CmsEngine
             return items;
         }
 
-        private void PreparePageForSaving(IEditModel editModel)
+        private async Task PreparePageForSaving(IEditModel editModel)
         {
             Page page;
 
@@ -264,13 +265,13 @@ namespace CmsEngine
                 page = _mapper.Map<PageEditModel, Page>(pageEditModel);
                 page.WebsiteId = Instance.Id;
 
-                _unitOfWork.Pages.Insert(page);
+                await _unitOfWork.Pages.Insert(page);
             }
             else
             {
                 _logger.LogInformation("Update page");
 
-                page = _unitOfWork.Pages.GetById(pageEditModel.VanityId);
+                page = await _unitOfWork.Pages.GetById(pageEditModel.VanityId);
                 _mapper.Map(pageEditModel, page);
                 page.WebsiteId = Instance.Id;
 

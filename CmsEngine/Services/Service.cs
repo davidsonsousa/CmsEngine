@@ -129,13 +129,13 @@ namespace CmsEngine
             }
         }
 
-        public IEnumerable<IViewModel> GetAllReadOnly<TModel, TViewModel>() where TModel : BaseModel where TViewModel : BaseViewModel
+        public async Task<IEnumerable<IViewModel>> GetAllReadOnly<TModel, TViewModel>() where TModel : BaseModel where TViewModel : BaseViewModel
         {
             IEnumerable<TModel> listItems;
 
             try
             {
-                listItems = _unitOfWork.GetRepository<TModel>().GetReadOnly(q => q.IsDeleted == false);
+                listItems = await _unitOfWork.GetRepository<TModel>().GetReadOnly(q => q.IsDeleted == false);
             }
             catch
             {
@@ -145,17 +145,18 @@ namespace CmsEngine
             return _mapper.Map<IEnumerable<TModel>, IEnumerable<TViewModel>>(listItems);
         }
 
-        public ReturnValue BulkDelete<T>(Guid[] id) where T : BaseModel
+        public async Task<ReturnValue> BulkDelete<T>(Guid[] id) where T : BaseModel
         {
             var returnValue = new ReturnValue();
             try
             {
-                var itemsToDelete = _unitOfWork.GetRepository<T>().GetReadOnly(q => id.Contains(q.VanityId));
-                _unitOfWork.GetRepositoryMany<T>().UpdateMany(itemsToDelete.Select(x =>
-                                                                            {
-                                                                                x.IsDeleted = true;
-                                                                                return x;
-                                                                            }));
+                var itemsToDelete = await _unitOfWork.GetRepository<T>().GetReadOnly(q => id.Contains(q.VanityId));
+                _unitOfWork.GetRepositoryMany<T>()
+                           .UpdateMany(itemsToDelete.Select(x =>
+                                                                {
+                                                                    x.IsDeleted = true;
+                                                                    return x;
+                                                                }));
 
                 _unitOfWork.Save();
 
@@ -172,7 +173,7 @@ namespace CmsEngine
             return returnValue;
         }
 
-        public TableViewModel BuildDataTable<T>(IEnumerable<IViewModel> listItems, int recordsCount) where T : BaseModel
+        public async Task<TableViewModel> BuildDataTable<T>(IEnumerable<IViewModel> listItems, int recordsCount) where T : BaseModel
         {
             var listString = new List<List<string>>();
 
@@ -202,7 +203,7 @@ namespace CmsEngine
             return new TableViewModel
             {
                 Data = listString,
-                RecordsTotal = _unitOfWork.GetRepository<T>().Count(q => q.IsDeleted == false),
+                RecordsTotal = await _unitOfWork.GetRepository<T>().Count(q => q.IsDeleted == false),
                 RecordsFiltered = recordsCount,
                 Draw = 0
             };
@@ -269,32 +270,30 @@ namespace CmsEngine
 
         }
 
-        private IEnumerable<CheckboxEditModel> PopulateCheckboxList<T>(IEnumerable<string> selectedItems = null) where T : BaseModel
+        private async Task<IEnumerable<CheckboxEditModel>> PopulateCheckboxList<T>(IEnumerable<string> selectedItems = null) where T : BaseModel
         {
-            var checkBoxList = _unitOfWork.GetRepository<T>()
-                                          .GetReadOnly(q => q.IsDeleted == false)
-                                          .Select(x => new CheckboxEditModel
-                                          {
-                                              Label = x.GetType().GetProperty("Name").GetValue(x).ToString(),
-                                              Value = x.VanityId.ToString(),
-                                              Enabled = true,
-                                              Selected = (selectedItems?.Contains(x.VanityId.ToString()) ?? false)
-                                          });
+            var items = await _unitOfWork.GetRepository<T>().GetReadOnly(q => q.IsDeleted == false);
+            var checkBoxList = items.Select(x => new CheckboxEditModel
+            {
+                Label = x.GetType().GetProperty("Name").GetValue(x).ToString(),
+                Value = x.VanityId.ToString(),
+                Enabled = true,
+                Selected = (selectedItems?.Contains(x.VanityId.ToString()) ?? false)
+            });
 
             return checkBoxList.OrderBy(o => o.Label);
         }
 
-        private IEnumerable<SelectListItem> PopulateSelectListItems<T>(IEnumerable<string> selectedItems = null) where T : BaseModel
+        private async Task<IEnumerable<SelectListItem>> PopulateSelectListItems<T>(IEnumerable<string> selectedItems = null) where T : BaseModel
         {
-            var selectListItems = _unitOfWork.GetRepository<T>()
-                                      .GetReadOnly(q => q.IsDeleted == false)
-                                      .Select(x => new SelectListItem
-                                      {
-                                          Text = x.GetType().GetProperty("Name").GetValue(x).ToString(),
-                                          Value = x.VanityId.ToString(),
-                                          Disabled = false,
-                                          Selected = (selectedItems?.Contains(x.VanityId.ToString()) ?? false)
-                                      });
+            var items = await _unitOfWork.GetRepository<T>().GetReadOnly(q => q.IsDeleted == false);
+            var selectListItems = items.Select(x => new SelectListItem
+            {
+                Text = x.GetType().GetProperty("Name").GetValue(x).ToString(),
+                Value = x.VanityId.ToString(),
+                Disabled = false,
+                Selected = (selectedItems?.Contains(x.VanityId.ToString()) ?? false)
+            });
 
             return selectListItems.OrderBy(o => o.Text);
         }

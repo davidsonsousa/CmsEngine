@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using CmsEngine.Attributes;
 using CmsEngine.Data.EditModels;
 using CmsEngine.Data.Models;
@@ -35,15 +36,15 @@ namespace CmsEngine
             return (_mapper.Map<IEnumerable<Website>, IEnumerable<WebsiteTableViewModel>>(items.Skip(parameters.Start).Take(parameters.Length).ToList()), recordsCount);
         }
 
-        public IViewModel GetWebsiteById(int id)
+        public async Task<IViewModel> GetWebsiteById(int id)
         {
-            var item = _unitOfWork.Websites.GetById(id);
+            var item = await _unitOfWork.Websites.GetById(id);
             return _mapper.Map<Website, WebsiteViewModel>(item);
         }
 
-        public IViewModel GetWebsiteById(Guid id)
+        public async Task<IViewModel> GetWebsiteById(Guid id)
         {
-            var item = _unitOfWork.Websites.GetById(id);
+            var item = await _unitOfWork.Websites.GetById(id);
             return _mapper.Map<Website, WebsiteViewModel>(item);
         }
 
@@ -52,19 +53,19 @@ namespace CmsEngine
             return new WebsiteEditModel();
         }
 
-        public IEditModel SetupWebsiteEditModel(int id)
+        public async Task<IEditModel> SetupWebsiteEditModel(int id)
         {
-            var item = _unitOfWork.Websites.GetById(id);
+            var item = await _unitOfWork.Websites.GetById(id);
             return _mapper.Map<Website, WebsiteEditModel>(item);
         }
 
-        public IEditModel SetupWebsiteEditModel(Guid id)
+        public async Task<IEditModel> SetupWebsiteEditModel(Guid id)
         {
-            var item = _unitOfWork.Websites.GetById(id);
+            var item = await _unitOfWork.Websites.GetById(id);
             return _mapper.Map<Website, WebsiteEditModel>(item);
         }
 
-        public ReturnValue SaveWebsite(IEditModel editModel)
+        public async Task<ReturnValue> SaveWebsite(IEditModel editModel)
         {
             var returnValue = new ReturnValue
             {
@@ -74,7 +75,7 @@ namespace CmsEngine
 
             try
             {
-                this.PrepareWebsiteForSaving(editModel);
+                await PrepareWebsiteForSaving(editModel);
 
                 _unitOfWork.Save();
             }
@@ -89,12 +90,12 @@ namespace CmsEngine
             return returnValue;
         }
 
-        public ReturnValue DeleteWebsite(Guid id)
+        public async Task<ReturnValue> DeleteWebsite(Guid id)
         {
             var returnValue = new ReturnValue();
             try
             {
-                var website = _unitOfWork.Websites.GetById(id);
+                var website = await _unitOfWork.Websites.GetById(id);
                 returnValue = this.Delete(website);
 
                 if (!returnValue.IsError)
@@ -116,12 +117,12 @@ namespace CmsEngine
             return returnValue;
         }
 
-        public ReturnValue DeleteWebsite(int id)
+        public async Task<ReturnValue> DeleteWebsite(int id)
         {
             var returnValue = new ReturnValue();
             try
             {
-                var website = _unitOfWork.Websites.GetById(id);
+                var website = await _unitOfWork.Websites.GetById(id);
                 returnValue = this.Delete(website);
 
                 if (!returnValue.IsError)
@@ -184,18 +185,18 @@ namespace CmsEngine
             return items;
         }
 
-        private void PrepareWebsiteForSaving(IEditModel editModel)
+        private async Task PrepareWebsiteForSaving(IEditModel editModel)
         {
             Website website;
 
             if (editModel.IsNew)
             {
                 website = _mapper.Map<WebsiteEditModel, Website>((WebsiteEditModel)editModel);
-                _unitOfWork.Websites.Insert(website);
+                await _unitOfWork.Websites.Insert(website);
             }
             else
             {
-                website = _unitOfWork.Websites.GetById(editModel.VanityId);
+                website = await _unitOfWork.Websites.GetById(editModel.VanityId);
                 _mapper.Map((WebsiteEditModel)editModel, website);
 
                 _unitOfWork.Websites.Update(website);

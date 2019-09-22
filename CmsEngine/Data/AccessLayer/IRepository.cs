@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 
 namespace CmsEngine.Data.AccessLayer
 {
@@ -23,19 +24,19 @@ namespace CmsEngine.Data.AccessLayer
         /// <param name="filter"></param>
         /// <param name="count"></param>
         /// <returns></returns>
-        IEnumerable<T> GetReadOnly(Expression<Func<T, bool>> filter = null);
+        Task<IEnumerable<T>> GetReadOnly(Expression<Func<T, bool>> filter = null);
 
-        T GetById(int id);
+        Task<T> GetById(int id);
 
-        T GetById(Guid id);
+        Task<T> GetById(Guid id);
 
-        int Count(Expression<Func<T, bool>> filter = null);
+        Task<int> Count(Expression<Func<T, bool>> filter = null);
 
         /// <summary>
         /// Inserts a record
         /// </summary>
         /// <param name="entity"></param>
-        void Insert(T entity);
+        Task Insert(T entity);
 
         /// <summary>
         /// Updates record

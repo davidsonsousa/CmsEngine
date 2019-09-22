@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using CmsEngine.Attributes;
 using CmsEngine.Data.EditModels;
 using CmsEngine.Data.Models;
@@ -34,15 +35,15 @@ namespace CmsEngine
             return (_mapper.Map<IEnumerable<Tag>, IEnumerable<TagTableViewModel>>(items.Skip(parameters.Start).Take(parameters.Length).ToList()), recordsCount);
         }
 
-        public IViewModel GetTagById(int id)
+        public async Task<IViewModel> GetTagById(int id)
         {
-            var item = _unitOfWork.Tags.GetById(id);
+            var item = await _unitOfWork.Tags.GetById(id);
             return _mapper.Map<Tag, TagViewModel>(item);
         }
 
-        public IViewModel GetTagById(Guid id)
+        public async Task<IViewModel> GetTagById(Guid id)
         {
-            var item = _unitOfWork.Tags.GetById(id);
+            var item = await _unitOfWork.Tags.GetById(id);
             return _mapper.Map<Tag, TagViewModel>(item);
         }
 
@@ -51,19 +52,19 @@ namespace CmsEngine
             return new TagEditModel();
         }
 
-        public IEditModel SetupTagEditModel(int id)
+        public async Task<IEditModel> SetupTagEditModel(int id)
         {
-            var item = _unitOfWork.Tags.GetById(id);
+            var item = await _unitOfWork.Tags.GetById(id);
             return _mapper.Map<Tag, TagEditModel>(item);
         }
 
-        public IEditModel SetupTagEditModel(Guid id)
+        public async Task<IEditModel> SetupTagEditModel(Guid id)
         {
-            var item = _unitOfWork.Tags.GetById(id);
+            var item = await _unitOfWork.Tags.GetById(id);
             return _mapper.Map<Tag, TagEditModel>(item);
         }
 
-        public ReturnValue SaveTag(IEditModel editModel)
+        public async Task<ReturnValue> SaveTag(IEditModel editModel)
         {
             var returnValue = new ReturnValue
             {
@@ -73,7 +74,7 @@ namespace CmsEngine
 
             try
             {
-                this.PrepareTagForSaving(editModel);
+                await PrepareTagForSaving(editModel);
 
                 _unitOfWork.Save();
             }
@@ -88,12 +89,12 @@ namespace CmsEngine
             return returnValue;
         }
 
-        public ReturnValue DeleteTag(Guid id)
+        public async Task<ReturnValue> DeleteTag(Guid id)
         {
             var returnValue = new ReturnValue();
             try
             {
-                var tag = _unitOfWork.Tags.GetById(id);
+                var tag = await _unitOfWork.Tags.GetById(id);
                 returnValue = this.Delete(tag);
 
                 if (!returnValue.IsError)
@@ -115,12 +116,12 @@ namespace CmsEngine
             return returnValue;
         }
 
-        public ReturnValue DeleteTag(int id)
+        public async Task<ReturnValue> DeleteTag(int id)
         {
             var returnValue = new ReturnValue();
             try
             {
-                var tag = _unitOfWork.Tags.GetById(id);
+                var tag = await _unitOfWork.Tags.GetById(id);
                 returnValue = this.Delete(tag);
 
                 if (!returnValue.IsError)
@@ -180,7 +181,7 @@ namespace CmsEngine
             return items;
         }
 
-        private void PrepareTagForSaving(IEditModel editModel)
+        private async Task PrepareTagForSaving(IEditModel editModel)
         {
             Tag tag;
 
@@ -189,11 +190,11 @@ namespace CmsEngine
                 tag = _mapper.Map<TagEditModel, Tag>((TagEditModel)editModel);
                 tag.WebsiteId = Instance.Id;
 
-                _unitOfWork.Tags.Insert(tag);
+                await _unitOfWork.Tags.Insert(tag);
             }
             else
             {
-                tag = _unitOfWork.Tags.GetById(editModel.VanityId);
+                tag = await _unitOfWork.Tags.GetById(editModel.VanityId);
                 _mapper.Map((TagEditModel)editModel, tag);
                 tag.WebsiteId = Instance.Id;
 

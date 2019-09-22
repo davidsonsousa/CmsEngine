@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using CmsEngine.Attributes;
 using CmsEngine.Data.EditModels;
 using CmsEngine.Data.Models;
@@ -99,9 +100,9 @@ namespace CmsEngine
             return (_mapper.Map<IEnumerable<Post>, IEnumerable<PostTableViewModel>>(items.Skip(parameters.Start).Take(parameters.Length).ToList()), recordsCount);
         }
 
-        public IViewModel GetPostById(int id)
+        public async Task<IViewModel> GetPostById(int id)
         {
-            var item = _unitOfWork.Posts.GetById(id);
+            var item = await _unitOfWork.Posts.GetById(id);
 
             _logger.LogInformation("CmsService > GetPostById(id: {0})", id);
 
@@ -113,9 +114,9 @@ namespace CmsEngine
             return _mapper.Map<Post, PostViewModel>(item);
         }
 
-        public IViewModel GetPostById(Guid id)
+        public async Task<IViewModel> GetPostById(Guid id)
         {
-            var item = _unitOfWork.Posts.GetById(id);
+            var item = await _unitOfWork.Posts.GetById(id);
 
             _logger.LogInformation("CmsService > GetPostById(id: {0})", id);
 
@@ -141,23 +142,23 @@ namespace CmsEngine
             return _mapper.Map<Post, PostViewModel>(item);
         }
 
-        public IEditModel SetupPostEditModel()
+        public async Task<IEditModel> SetupPostEditModel()
         {
             _logger.LogInformation("CmsService > SetupPostEditModel()");
 
             return new PostEditModel
             {
-                Categories = PopulateCheckboxList<Category>(),
-                Tags = PopulateSelectListItems<Tag>()
+                Categories = await PopulateCheckboxList<Category>(),
+                Tags = await PopulateSelectListItems<Tag>()
             };
         }
 
-        public IEditModel SetupPostEditModel(int id)
+        public async Task<IEditModel> SetupPostEditModel(int id)
         {
-            var item = _unitOfWork.Posts.GetById(id);
+            var item = await _unitOfWork.Posts.GetById(id);
             var editModel = _mapper.Map<Post, PostEditModel>(item);
-            editModel.Categories = PopulateCheckboxList<Category>(editModel.SelectedCategories);
-            editModel.Tags = PopulateSelectListItems<Tag>(editModel.SelectedTags);
+            editModel.Categories = await PopulateCheckboxList<Category>(editModel.SelectedCategories);
+            editModel.Tags = await PopulateSelectListItems<Tag>(editModel.SelectedTags);
 
             _logger.LogInformation("CmsService > SetupPostEditModel(id: {0})", id);
             _logger.LogInformation("Post: {0}", editModel.ToString());
@@ -165,12 +166,12 @@ namespace CmsEngine
             return editModel;
         }
 
-        public IEditModel SetupPostEditModel(Guid id)
+        public async Task<IEditModel> SetupPostEditModel(Guid id)
         {
-            var item = _unitOfWork.Posts.GetById(id);
+            var item = await _unitOfWork.Posts.GetById(id);
             var editModel = _mapper.Map<Post, PostEditModel>(item);
-            editModel.Categories = PopulateCheckboxList<Category>(editModel.SelectedCategories);
-            editModel.Tags = PopulateSelectListItems<Tag>(editModel.SelectedTags);
+            editModel.Categories = await PopulateCheckboxList<Category>(editModel.SelectedCategories);
+            editModel.Tags = await PopulateSelectListItems<Tag>(editModel.SelectedTags);
 
             _logger.LogInformation("CmsService > SetupPostEditModel(id: {0})", id);
             _logger.LogInformation("Post: {0}", editModel.ToString());
@@ -178,7 +179,7 @@ namespace CmsEngine
             return editModel;
         }
 
-        public ReturnValue SavePost(IEditModel editModel)
+        public async Task<ReturnValue> SavePost(IEditModel editModel)
         {
             _logger.LogInformation("CmsService > SavePost(editModel: {0})", editModel.ToString());
 
@@ -190,7 +191,7 @@ namespace CmsEngine
 
             try
             {
-                PreparePostForSaving(editModel);
+                await PreparePostForSaving(editModel);
 
                 _unitOfWork.Save();
                 _logger.LogInformation("Post saved");
@@ -208,12 +209,12 @@ namespace CmsEngine
             return returnValue;
         }
 
-        public ReturnValue DeletePost(Guid id)
+        public async Task<ReturnValue> DeletePost(Guid id)
         {
             var returnValue = new ReturnValue();
             try
             {
-                var post = _unitOfWork.Posts.GetById(id);
+                var post = await _unitOfWork.Posts.GetById(id);
                 returnValue = Delete(post);
 
                 if (!returnValue.IsError)
@@ -235,12 +236,12 @@ namespace CmsEngine
             return returnValue;
         }
 
-        public ReturnValue DeletePost(int id)
+        public async Task<ReturnValue> DeletePost(int id)
         {
             var returnValue = new ReturnValue();
             try
             {
-                var post = _unitOfWork.Posts.GetById(id);
+                var post = await _unitOfWork.Posts.GetById(id);
                 returnValue = Delete(post);
 
                 if (!returnValue.IsError)
@@ -312,7 +313,7 @@ namespace CmsEngine
             return items;
         }
 
-        private void PreparePostForSaving(IEditModel editModel)
+        private async Task PreparePostForSaving(IEditModel editModel)
         {
             Post post;
             var postEditModel = (PostEditModel)editModel;
@@ -324,13 +325,13 @@ namespace CmsEngine
                 post = _mapper.Map<PostEditModel, Post>(postEditModel);
                 post.WebsiteId = Instance.Id;
 
-                _unitOfWork.Posts.Insert(post);
+                await _unitOfWork.Posts.Insert(post);
             }
             else
             {
                 _logger.LogInformation("Update post");
 
-                post = _unitOfWork.Posts.GetById(editModel.VanityId);
+                post = await _unitOfWork.Posts.GetById(editModel.VanityId);
                 _mapper.Map(postEditModel, post);
 
                 _unitOfWork.Posts.Update(post);

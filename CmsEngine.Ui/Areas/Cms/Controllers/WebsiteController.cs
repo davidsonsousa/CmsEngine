@@ -41,7 +41,7 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(WebsiteEditModel websiteEditModel)
+        public async Task<IActionResult> Create(WebsiteEditModel websiteEditModel)
         {
             if (!ModelState.IsValid)
             {
@@ -49,7 +49,7 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
                 return View("CreateEdit", websiteEditModel);
             }
 
-            return this.Save(websiteEditModel);
+            return await Save(websiteEditModel);
         }
 
         public IActionResult Edit(Guid vanityId)
@@ -70,11 +70,11 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
                 return View("CreateEdit", websiteEditModel);
             }
 
-            var websiteToUpdate = (WebsiteEditModel)service.SetupWebsiteEditModel(websiteEditModel.VanityId);
+            var websiteToUpdate = await service.SetupWebsiteEditModel(websiteEditModel.VanityId);
 
-            if (await TryUpdateModelAsync(websiteToUpdate))
+            if (await TryUpdateModelAsync((WebsiteEditModel)websiteToUpdate))
             {
-                return this.Save(websiteEditModel);
+                return await Save(websiteEditModel);
             }
 
             return View("CreateEdit", websiteEditModel);
@@ -93,11 +93,11 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
         }
 
         [HttpPost]
-        public IActionResult GetData([FromForm]DataParameters parameters)
+        public async Task<IActionResult> GetData([FromForm]DataParameters parameters)
         {
             var items = service.GetWebsitesForDataTable(parameters);
 
-            var dataTable = service.BuildDataTable<Website>(items.Data, items.RecordsCount);
+            var dataTable = await service.BuildDataTable<Website>(items.Data, items.RecordsCount);
             dataTable.Draw = parameters.Draw;
 
             return Ok(dataTable);
@@ -109,9 +109,9 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
             return await this.PrepareAndUploadFiles(_env.WebRootPath, "Website");
         }
 
-        private IActionResult Save(WebsiteEditModel websiteEditModel)
+        private async Task<IActionResult> Save(WebsiteEditModel websiteEditModel)
         {
-            var returnValue = service.SaveWebsite(websiteEditModel);
+            var returnValue = await service.SaveWebsite(websiteEditModel);
 
             if (!returnValue.IsError)
             {

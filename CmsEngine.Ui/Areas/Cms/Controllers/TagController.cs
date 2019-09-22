@@ -36,7 +36,7 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(TagEditModel tagEditModel)
+        public async Task<IActionResult> Create(TagEditModel tagEditModel)
         {
             if (!ModelState.IsValid)
             {
@@ -44,7 +44,7 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
                 return View("CreateEdit", tagEditModel);
             }
 
-            return this.Save(tagEditModel);
+            return await Save(tagEditModel);
         }
 
         public IActionResult Edit(Guid vanityId)
@@ -65,11 +65,11 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
                 return View("CreateEdit", tagEditModel);
             }
 
-            var tagToUpdate = (TagEditModel)service.SetupTagEditModel(tagEditModel.VanityId);
+            var tagToUpdate = await service.SetupTagEditModel(tagEditModel.VanityId);
 
-            if (await TryUpdateModelAsync(tagToUpdate))
+            if (await TryUpdateModelAsync((TagEditModel)tagToUpdate))
             {
-                return this.Save(tagEditModel);
+                return await Save(tagEditModel);
             }
 
             return View("CreateEdit", tagEditModel);
@@ -88,19 +88,19 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
         }
 
         [HttpPost]
-        public IActionResult GetData([FromForm]DataParameters parameters)
+        public async Task<IActionResult> GetData([FromForm]DataParameters parameters)
         {
             var items = service.GetTagsForDataTable(parameters);
 
-            var dataTable = service.BuildDataTable<Tag>(items.Data, items.RecordsCount);
+            var dataTable = await service.BuildDataTable<Tag>(items.Data, items.RecordsCount);
             dataTable.Draw = parameters.Draw;
 
             return Ok(dataTable);
         }
 
-        private IActionResult Save(TagEditModel tagEditModel)
+        private async Task<IActionResult> Save(TagEditModel tagEditModel)
         {
-            var returnValue = service.SaveTag(tagEditModel);
+            var returnValue = await service.SaveTag(tagEditModel);
 
             if (!returnValue.IsError)
             {

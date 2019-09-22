@@ -41,7 +41,7 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(PostEditModel postEditModel)
+        public async Task<IActionResult> Create(PostEditModel postEditModel)
         {
             if (!ModelState.IsValid)
             {
@@ -49,7 +49,7 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
                 return View("CreateEdit", postEditModel);
             }
 
-            return this.Save(postEditModel);
+            return await Save(postEditModel);
         }
 
         public IActionResult Edit(Guid vanityId)
@@ -70,11 +70,11 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
                 return View("CreateEdit", postEditModel);
             }
 
-            var postToUpdate = (PostEditModel)service.SetupPostEditModel(postEditModel.VanityId);
+            var postToUpdate = await service.SetupPostEditModel(postEditModel.VanityId);
 
-            if (await TryUpdateModelAsync(postToUpdate))
+            if (await TryUpdateModelAsync((PostEditModel)postToUpdate))
             {
-                return this.Save(postEditModel);
+                return await Save(postEditModel);
             }
 
             return View("CreateEdit", postEditModel);
@@ -93,11 +93,11 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
         }
 
         [HttpPost]
-        public IActionResult GetData([FromForm]DataParameters parameters)
+        public async Task<IActionResult> GetData([FromForm]DataParameters parameters)
         {
             var items = service.GetPostsForDataTable(parameters);
 
-            var dataTable = service.BuildDataTable<Post>(items.Data, items.RecordsCount);
+            var dataTable = await service.BuildDataTable<Post>(items.Data, items.RecordsCount);
             dataTable.Draw = parameters.Draw;
 
             return Ok(dataTable);
@@ -109,9 +109,9 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
             return await this.PrepareAndUploadFiles(_env.WebRootPath, "Post");
         }
 
-        private IActionResult Save(PostEditModel postEditModel)
+        private async Task<IActionResult> Save(PostEditModel postEditModel)
         {
-            var returnValue = service.SavePost(postEditModel);
+            var returnValue = await service.SavePost(postEditModel);
 
             if (!returnValue.IsError)
             {

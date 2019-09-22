@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using CmsEngine.Attributes;
 using CmsEngine.Data.EditModels;
 using CmsEngine.Data.Models;
@@ -53,9 +54,9 @@ namespace CmsEngine
             return (_mapper.Map<IEnumerable<Category>, IEnumerable<CategoryTableViewModel>>(items.Skip(parameters.Start).Take(parameters.Length).ToList()), recordsCount);
         }
 
-        public IViewModel GetCategoryById(int id)
+        public async Task<IViewModel> GetCategoryById(int id)
         {
-            var item = _unitOfWork.Categories.GetById(id);
+            var item = await _unitOfWork.Categories.GetById(id);
 
             _logger.LogInformation("CmsService > GetCategoryById(id: {0})", id);
 
@@ -67,9 +68,9 @@ namespace CmsEngine
             return _mapper.Map<Category, CategoryViewModel>(item);
         }
 
-        public IViewModel GetCategoryById(Guid id)
+        public async Task<IViewModel> GetCategoryById(Guid id)
         {
-            var item = _unitOfWork.Categories.GetById(id);
+            var item = await _unitOfWork.Categories.GetById(id);
 
             _logger.LogInformation("CmsService > GetCategoryById(id: {0})", id);
 
@@ -101,9 +102,9 @@ namespace CmsEngine
             return new CategoryEditModel();
         }
 
-        public IEditModel SetupCategoryEditModel(int id)
+        public async Task<IEditModel> SetupCategoryEditModel(int id)
         {
-            var item = _unitOfWork.Categories.GetById(id);
+            var item = await _unitOfWork.Categories.GetById(id);
 
             _logger.LogInformation("CmsService > SetupCategoryEditModel(id: {0})", id);
             _logger.LogInformation("Category: {0}", item.ToString());
@@ -111,9 +112,9 @@ namespace CmsEngine
             return _mapper.Map<Category, CategoryEditModel>(item);
         }
 
-        public IEditModel SetupCategoryEditModel(Guid id)
+        public async Task<IEditModel> SetupCategoryEditModel(Guid id)
         {
-            var item = _unitOfWork.Categories.GetById(id);
+            var item = await _unitOfWork.Categories.GetById(id);
 
             _logger.LogInformation("CmsService > SetupCategoryEditModel(id: {0})", id);
             _logger.LogInformation("Category: {0}", item.ToString());
@@ -121,7 +122,7 @@ namespace CmsEngine
             return _mapper.Map<Category, CategoryEditModel>(item);
         }
 
-        public ReturnValue SaveCategory(IEditModel editModel)
+        public async Task<ReturnValue> SaveCategory(IEditModel editModel)
         {
             _logger.LogInformation("CmsService > SaveCategory(editModel: {0})", editModel.ToString());
 
@@ -133,7 +134,7 @@ namespace CmsEngine
 
             try
             {
-                PrepareCategoryForSaving(editModel);
+                await PrepareCategoryForSaving(editModel);
 
                 _unitOfWork.Save();
                 _logger.LogInformation("Category saved");
@@ -151,14 +152,14 @@ namespace CmsEngine
             return returnValue;
         }
 
-        public ReturnValue DeleteCategory(Guid id)
+        public async Task<ReturnValue> DeleteCategory(Guid id)
         {
-            return DeleteCategory(_unitOfWork.Categories.GetById(id));
+            return DeleteCategory(await _unitOfWork.Categories.GetById(id));
         }
 
-        public ReturnValue DeleteCategory(int id)
+        public async Task<ReturnValue> DeleteCategory(int id)
         {
-            return DeleteCategory(_unitOfWork.Categories.GetById(id));
+            return DeleteCategory(await _unitOfWork.Categories.GetById(id));
         }
 
         private ReturnValue DeleteCategory(Category category)
@@ -228,7 +229,7 @@ namespace CmsEngine
             return items;
         }
 
-        private void PrepareCategoryForSaving(IEditModel editModel)
+        private async Task PrepareCategoryForSaving(IEditModel editModel)
         {
             Category category;
 
@@ -239,13 +240,13 @@ namespace CmsEngine
                 category = _mapper.Map<CategoryEditModel, Category>((CategoryEditModel)editModel);
                 category.WebsiteId = Instance.Id;
 
-                _unitOfWork.Categories.Insert(category);
+                await _unitOfWork.Categories.Insert(category);
             }
             else
             {
                 _logger.LogInformation("Update category");
 
-                category = _unitOfWork.Categories.GetById(editModel.VanityId);
+                category = await _unitOfWork.Categories.GetById(editModel.VanityId);
                 _mapper.Map((CategoryEditModel)editModel, category);
                 category.WebsiteId = Instance.Id;
 

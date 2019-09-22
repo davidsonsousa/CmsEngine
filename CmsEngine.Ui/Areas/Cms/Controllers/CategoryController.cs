@@ -36,7 +36,7 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(CategoryEditModel categoryEditModel)
+        public async Task<IActionResult> Create(CategoryEditModel categoryEditModel)
         {
             if (!ModelState.IsValid)
             {
@@ -44,7 +44,7 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
                 return View("CreateEdit", categoryEditModel);
             }
 
-            return this.Save(categoryEditModel);
+            return await Save(categoryEditModel);
         }
 
         public IActionResult Edit(Guid vanityId)
@@ -65,11 +65,11 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
                 return View("CreateEdit", categoryEditModel);
             }
 
-            var categoryToUpdate = (CategoryEditModel)service.SetupCategoryEditModel(categoryEditModel.VanityId);
+            var categoryToUpdate = await service.SetupCategoryEditModel(categoryEditModel.VanityId);
 
-            if (await TryUpdateModelAsync(categoryToUpdate))
+            if (await TryUpdateModelAsync((CategoryEditModel)categoryToUpdate))
             {
-                return this.Save(categoryEditModel);
+                return await Save(categoryEditModel);
             }
 
             return View("CreateEdit", categoryEditModel);
@@ -88,19 +88,19 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
         }
 
         [HttpPost]
-        public IActionResult GetData([FromForm]DataParameters parameters)
+        public async Task<IActionResult> GetData([FromForm]DataParameters parameters)
         {
             var items = service.GetCategoriesForDataTable(parameters);
 
-            var dataTable = service.BuildDataTable<Category>(items.Data, items.RecordsCount);
+            var dataTable = await service.BuildDataTable<Category>(items.Data, items.RecordsCount);
             dataTable.Draw = parameters.Draw;
 
             return Ok(dataTable);
         }
 
-        private IActionResult Save(CategoryEditModel categoryEditModel)
+        private async Task<IActionResult> Save(CategoryEditModel categoryEditModel)
         {
-            var returnValue = service.SaveCategory(categoryEditModel);
+            var returnValue = await service.SaveCategory(categoryEditModel);
 
             if (!returnValue.IsError)
             {

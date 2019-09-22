@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 using CmsEngine.Data.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
@@ -54,7 +55,7 @@ namespace CmsEngine.Data.AccessLayer
             return query;
         }
 
-        public IEnumerable<T> GetReadOnly(Expression<Func<T, bool>> filter = null)
+        public async Task<IEnumerable<T>> GetReadOnly(Expression<Func<T, bool>> filter = null)
         {
             IQueryable<T> query = _dbSet;
 
@@ -63,44 +64,44 @@ namespace CmsEngine.Data.AccessLayer
                 query = query.Where(filter);
             }
 
-            return query.ToList();
+            return await query.ToListAsync();
         }
 
-        public T GetById(int id)
+        public async Task<T> GetById(int id)
         {
-            return Get(q => q.Id == id).SingleOrDefault();
+            return await Get(q => q.Id == id).SingleOrDefaultAsync();
         }
 
-        public T GetById(Guid id)
+        public async Task<T> GetById(Guid id)
         {
-            return Get(q => q.VanityId == id).SingleOrDefault();
+            return await Get(q => q.VanityId == id).SingleOrDefaultAsync();
         }
 
-        public int Count(Expression<Func<T, bool>> filter = null)
+        public async Task<int> Count(Expression<Func<T, bool>> filter = null)
         {
             IQueryable<T> query = _dbSet;
 
             if (filter != null)
             {
-                return query.Count(filter);
+                return await query.CountAsync(filter);
             }
 
-            return query.Count();
+            return await query.CountAsync();
         }
 
-        public void Insert(T entity)
+        public async Task Insert(T entity)
         {
             if (entity != null)
             {
-                _dbSet.Add(entity);
+                await _dbSet.AddAsync(entity);
             }
         }
 
-        public void InsertMany(IEnumerable<T> entities)
+        public async Task InsertMany(IEnumerable<T> entities)
         {
             if (entities != null)
             {
-                _dbSet.AddRange(entities);
+                await _dbSet.AddRangeAsync(entities);
             }
         }
 

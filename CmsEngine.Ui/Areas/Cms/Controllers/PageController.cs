@@ -41,7 +41,7 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(PageEditModel pageEditModel)
+        public async Task<IActionResult> Create(PageEditModel pageEditModel)
         {
             if (!ModelState.IsValid)
             {
@@ -49,7 +49,7 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
                 return View("CreateEdit", pageEditModel);
             }
 
-            return this.Save(pageEditModel);
+            return await Save(pageEditModel);
         }
 
         public IActionResult Edit(Guid vanityId)
@@ -70,11 +70,11 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
                 return View("CreateEdit", pageEditModel);
             }
 
-            var pageToUpdate = (PageEditModel)service.SetupPageEditModel(pageEditModel.VanityId);
+            var pageToUpdate = await service.SetupPageEditModel(pageEditModel.VanityId);
 
-            if (await TryUpdateModelAsync(pageToUpdate))
+            if (await TryUpdateModelAsync((PageEditModel)pageToUpdate))
             {
-                return this.Save(pageEditModel);
+                return await Save(pageEditModel);
             }
 
             return View("CreateEdit", pageEditModel);
@@ -93,11 +93,11 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
         }
 
         [HttpPost]
-        public IActionResult GetData([FromForm]DataParameters parameters)
+        public async Task<IActionResult> GetData([FromForm]DataParameters parameters)
         {
             var items = service.GetPagesForDataTable(parameters);
 
-            var dataTable = service.BuildDataTable<Page>(items.Data, items.RecordsCount);
+            var dataTable = await service.BuildDataTable<Page>(items.Data, items.RecordsCount);
             dataTable.Draw = parameters.Draw;
 
             return Ok(dataTable);
@@ -109,9 +109,9 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
             return await this.PrepareAndUploadFiles(_env.WebRootPath, "Page");
         }
 
-        private IActionResult Save(PageEditModel pageEditModel)
+        private async Task<IActionResult> Save(PageEditModel pageEditModel)
         {
-            var returnValue = service.SavePage(pageEditModel);
+            var returnValue = await service.SavePage(pageEditModel);
 
             if (!returnValue.IsError)
             {
