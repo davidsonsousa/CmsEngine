@@ -21,7 +21,7 @@ namespace CmsEngine.Data.Repositories
             dbContext = context ?? throw new ArgumentNullException("Repository - Context");
         }
 
-        public async Task<IEnumerable<TEntity>> GetAll()
+        public async Task<IEnumerable<TEntity>> GetAllAsync()
         {
             return await GetValidRecords().ToListAsync();
         }
@@ -43,7 +43,7 @@ namespace CmsEngine.Data.Repositories
             return recods;
         }
 
-        public async Task<IEnumerable<TEntity>> GetReadOnly(Expression<Func<TEntity, bool>> filter = null)
+        public async Task<IEnumerable<TEntity>> GetReadOnlyAsync(Expression<Func<TEntity, bool>> filter = null)
         {
             var records = GetValidRecords();
 
@@ -55,12 +55,12 @@ namespace CmsEngine.Data.Repositories
             return await records.ToListAsync();
         }
 
-        public async Task<TEntity> GetById(int id)
+        public async Task<TEntity> GetByIdAsync(int id)
         {
             return await Get(q => q.Id == id).SingleOrDefaultAsync();
         }
 
-        public async Task<TEntity> GetById(Guid id)
+        public async Task<TEntity> GetByIdAsync(Guid id)
         {
             return await Get(q => q.VanityId == id).SingleOrDefaultAsync();
         }
@@ -85,8 +85,9 @@ namespace CmsEngine.Data.Repositories
         {
             if (entity != null)
             {
-                Attach(entity);
-                dbContext.Entry(entity).State = EntityState.Modified;
+                //Attach(entity);
+                //dbContext.Entry(entity).State = EntityState.Modified;
+                dbContext.Update(entity);
             }
         }
 

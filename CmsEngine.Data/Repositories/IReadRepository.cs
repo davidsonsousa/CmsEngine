@@ -8,7 +8,11 @@ namespace CmsEngine.Data.Repositories
 {
     public interface IReadRepository<TEntity> where TEntity : class
     {
-        Task<IEnumerable<TEntity>> GetAll();
+        /// <summary>
+        /// Get all records which were not marked as deleted (IsDeleted == false)
+        /// </summary>
+        /// <returns></returns>
+        Task<IEnumerable<TEntity>> GetAllAsync();
 
         /// <summary>
         /// Gets item based on condition and includes extra table
@@ -24,10 +28,20 @@ namespace CmsEngine.Data.Repositories
         /// <param name="filter"></param>
         /// <param name="count"></param>
         /// <returns></returns>
-        Task<IEnumerable<TEntity>> GetReadOnly(Expression<Func<TEntity, bool>> filter = null);
+        Task<IEnumerable<TEntity>> GetReadOnlyAsync(Expression<Func<TEntity, bool>> filter = null);
 
-        Task<TEntity> GetById(int id);
+        /// <summary>
+        /// Get record by id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        Task<TEntity> GetByIdAsync(int id);
 
-        Task<TEntity> GetById(Guid id);
+        /// <summary>
+        /// Gets record by vanity id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        Task<TEntity> GetByIdAsync(Guid id);
     }
 }

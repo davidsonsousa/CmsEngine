@@ -5,14 +5,9 @@ using CmsEngine.Data.Entities;
 
 namespace CmsEngine.Data.Repositories
 {
-    public interface IWebsiteRepository
+    public interface IWebsiteRepository : IReadRepository<Website>, IDataModificationRepository<Website>, IDataModificationRangeRepository<Website>
     {
-        Task<IEnumerable<Website>> GetWebsites();
-        Task<Website> GetWebsiteById(Guid id);
-        Task<Website> GetWebsiteByHost(string host);
-        Task<Website> GetFullWebsiteByHost(string host);
-        Task InsertWebsite(Website website);
-        void UpdateWebsite(Website website);
-        void DeleteWebsite(Website website);
+        Task<IEnumerable<Website>> GetWebsitesById(Guid[] ids);
+        Task<Website> GetWebsiteInstanceByHost(string host);
     }
 }

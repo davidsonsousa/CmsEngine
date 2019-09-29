@@ -18,34 +18,24 @@ namespace CmsEngine.Data.Repositories
         {
         }
 
-        public Task<IEnumerable<Category>> GetCategories()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<IEnumerable<Category>> GetCategoriesWithPosts()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<Category> GetCategoryById(Guid id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<Category> GetCategoryBySlug(string slug)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<Category> GetCategoryBySlugWithPosts(string slug)
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task<IEnumerable<Category>> GetCategoriesById(Guid[] ids)
         {
-            return await GetReadOnly(q => ids.Contains(q.VanityId));
+            return await GetReadOnlyAsync(q => ids.Contains(q.VanityId));
+        }
+
+        public async Task<Category> GetCategoryBySlug(string slug)
+        {
+            return await Get(q => q.Slug == slug).SingleOrDefaultAsync();
+        }
+
+        public async Task<IEnumerable<Category>> GetCategoriesWithPosts()
+        {
+            return await Get().Include(c => c.PostCategories).ToListAsync();
+        }
+
+        public async Task<Category> GetCategoryBySlugWithPosts(string slug)
+        {
+            return await Get(q => q.Slug == slug).Include(c => c.PostCategories).SingleOrDefaultAsync();
         }
     }
 }

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using CmsEngine.Data.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -18,22 +19,12 @@ namespace CmsEngine.Data.Repositories
 
         }
 
-        public async Task<IEnumerable<Website>> GetWebsites()
+        public async Task<IEnumerable<Website>> GetWebsitesById(Guid[] ids)
         {
-            return await GetAll();
+            return await GetReadOnlyAsync(q => ids.Contains(q.VanityId));
         }
 
-        public async Task<Website> GetWebsiteById(Guid id)
-        {
-            return await GetById(id);
-        }
-
-        public async Task<Website> GetWebsiteByHost(string host)
-        {
-            return await Get(q => q.SiteUrl == host).SingleOrDefaultAsync();
-        }
-
-        public async Task<Website> GetFullWebsiteByHost(string host)
+        public async Task<Website> GetWebsiteInstanceByHost(string host)
         {
             return await Get(q => q.SiteUrl == host)
                             .Include(i => i.Categories)
@@ -41,21 +32,6 @@ namespace CmsEngine.Data.Repositories
                             .Include(i => i.Posts)
                             .Include(i => i.Tags)
                             .SingleOrDefaultAsync();
-        }
-
-        public async Task InsertWebsite(Website website)
-        {
-            await Insert(website);
-        }
-
-        public void UpdateWebsite(Website website)
-        {
-            Update(website);
-        }
-
-        public void DeleteWebsite(Website website)
-        {
-            Delete(website);
         }
     }
 }
