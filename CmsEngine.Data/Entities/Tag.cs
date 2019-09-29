@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace CmsEngine.Data.Entities
 {
-    public class Tag : BaseModel
+    public class Tag : BaseEntity
     {
         public int WebsiteId { get; set; }
         public virtual Website Website { get; set; }
