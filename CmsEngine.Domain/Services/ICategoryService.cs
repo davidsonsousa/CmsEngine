@@ -13,7 +13,7 @@ namespace CmsEngine.Domain.Services
         CategoryEditModel SetupEditModel();
         Task<CategoryEditModel> SetupEditModel(Guid id);
         Task<ReturnValue> Delete(Guid id);
-        Task<ReturnValue> DeleteRange(Guid[] id);
+        Task<ReturnValue> DeleteRange(Guid[] ids);
         Task<(IEnumerable<CategoryTableViewModel> Data, int RecordsTotal, int RecordsFiltered)> GetForDataTable(DataParameters parameters);
         Task<ReturnValue> Save(CategoryEditModel categoryEditModel);
     }

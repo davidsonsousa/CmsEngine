@@ -30,7 +30,7 @@ namespace CmsEngine.Domain.Services
         {
             if (Instance == null)
             {
-                var website = await unitOfWork.Websites.GetFullWebsiteByHost(_httpContextAccessor.HttpContext.Request.Host.Host);
+                var website = await unitOfWork.Websites.GetWebsiteInstanceByHost(_httpContextAccessor.HttpContext.Request.Host.Host);
 
                 if (website != null)
                 {

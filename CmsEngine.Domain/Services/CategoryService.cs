@@ -26,7 +26,7 @@ namespace CmsEngine.Domain.Services
 
         public async Task<ReturnValue> Delete(Guid id)
         {
-            var item = await _unitOfWork.Categories.GetCategoryById(id);
+            var item = await _unitOfWork.Categories.GetByIdAsync(id);
 
             var returnValue = new ReturnValue($"Category '{item.Name}' deleted at {DateTime.Now.ToString("T")}.");
 
@@ -53,7 +53,7 @@ namespace CmsEngine.Domain.Services
             try
             {
                 _unitOfWork.Categories.DeleteRange(items);
-                _unitOfWork.Save();
+                await _unitOfWork.Save();
             }
             catch (Exception ex)
             {
@@ -77,7 +77,7 @@ namespace CmsEngine.Domain.Services
 
         public async Task<(IEnumerable<CategoryTableViewModel> Data, int RecordsTotal, int RecordsFiltered)> GetForDataTable(DataParameters parameters)
         {
-            var items = await _unitOfWork.Categories.GetCategories();
+            var items = await _unitOfWork.Categories.GetAllAsync();
             int recordsTotal = items.Count();
 
             if (!string.IsNullOrWhiteSpace(parameters.Search.Value))
@@ -137,7 +137,7 @@ namespace CmsEngine.Domain.Services
                 else
                 {
                     logger.LogInformation("Update category");
-                    var category = categoryEditModel.MapToModel(await unitOfWork.Categories.GetCategoryById(categoryEditModel.VanityId));
+                    var category = categoryEditModel.MapToModel(await unitOfWork.Categories.GetByIdAsync(categoryEditModel.VanityId));
                     category.WebsiteId = Instance.Id;
 
                     _unitOfWork.Categories.Update(category);
@@ -163,7 +163,7 @@ namespace CmsEngine.Domain.Services
 
         public async Task<CategoryEditModel> SetupEditModel(Guid id)
         {
-            var item = await _unitOfWork.Categories.GetCategoryById(id);
+            var item = await _unitOfWork.Categories.GetByIdAsync(id);
 
             logger.LogInformation("CmsService > SetupCategoryEditModel(id: {0})", id);
             logger.LogInformation("Category: {0}", item.ToString());
