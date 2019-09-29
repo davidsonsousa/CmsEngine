@@ -47,9 +47,9 @@ namespace CmsEngine.Data
         {
             var saveTime = DateTime.Now;
 
-            var entries = ChangeTracker.Entries().Where(e => e.Entity is BaseModel && (e.State == EntityState.Added || e.State == EntityState.Modified));
+            var entries = ChangeTracker.Entries().Where(e => e.Entity is BaseEntity && (e.State == EntityState.Added || e.State == EntityState.Modified));
 
-            var currentUsername = "";//HttpContext.Current?.User?.Identity?.Name;
+            string currentUsername = "";//HttpContext.Current?.User?.Identity?.Name;
 
             foreach (var entry in entries)
             {
