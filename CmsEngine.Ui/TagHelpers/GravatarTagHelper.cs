@@ -1,8 +1,8 @@
 using System;
 using System.Linq;
 using System.Text.Encodings.Web;
-using CmsEngine.Extensions;
-using CmsEngine.Utils;
+using CmsEngine.Core;
+using CmsEngine.Core.Extensions;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 
 namespace CmsEngine.Ui.TagHelpers
@@ -40,7 +40,7 @@ namespace CmsEngine.Ui.TagHelpers
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
             output.TagName = "img";
-            var email = string.IsNullOrWhiteSpace(EmailAddress) ? string.Empty : EmailAddress.ToLower();
+            string email = string.IsNullOrWhiteSpace(EmailAddress) ? string.Empty : EmailAddress.ToLower();
 
             output.Attributes.Add("src",
                 string.Format("{0}://{1}.gravatar.com/avatar/{2}?s={3}{4}{5}{6}",
