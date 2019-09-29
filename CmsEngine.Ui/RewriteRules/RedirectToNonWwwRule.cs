@@ -1,14 +1,15 @@
 using System;
+using CmsEngine.Core;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Rewrite;
 using Microsoft.Net.Http.Headers;
 
-namespace CmsEngine.Ui.Middleware.RewriteRules
+namespace CmsEngine.Ui.RewriteRules
 {
     public class RedirectToNonWwwRule : IRule
     {
-        public readonly int _statusCode;
+        private readonly int _statusCode;
 
         public RedirectToNonWwwRule(int statusCode)
         {
