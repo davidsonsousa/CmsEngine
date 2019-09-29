@@ -33,8 +33,7 @@ namespace CmsEngine.Domain.EditModels
         public string SiteUrl { get; set; }
 
         [Required]
-        [MaxLength(250)]
-        public string ArticleLimit { get; set; }
+        public int ArticleLimit { get; set; }
 
         [MaxLength(250)]
         public string Address { get; set; }
