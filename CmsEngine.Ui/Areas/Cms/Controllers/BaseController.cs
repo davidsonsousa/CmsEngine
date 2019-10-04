@@ -2,14 +2,12 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Threading.Tasks;
-using AutoMapper;
-using CmsEngine.Data.AccessLayer;
-using CmsEngine.Data.Models;
-using CmsEngine.Helpers;
-using CmsEngine.Utils;
+using CmsEngine.Core;
+using CmsEngine.Data;
+using CmsEngine.Domain.Helpers;
+using CmsEngine.Domain.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Logging;
@@ -20,7 +18,7 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
     [Authorize]
     public class BaseController : Controller
     {
-        protected readonly CmsService service;
+        protected readonly Service service;
         protected List<UploadFilesResult> fileList;
         protected readonly ILogger logger;
 
@@ -29,9 +27,9 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
             this.logger = logger;
         }
 
-        public BaseController(IUnitOfWork uow, IMapper mapper, IHttpContextAccessor hca, UserManager<ApplicationUser> userManager, ILogger logger)
+        public BaseController(IUnitOfWork uow, IHttpContextAccessor hca, ILogger logger)
         {
-            service = new CmsService(uow, mapper, hca, userManager, logger);
+            service = new Service(uow, hca, logger);
             this.logger = logger;
 
             var cultureInfo = new CultureInfo(service.Instance.Culture);
