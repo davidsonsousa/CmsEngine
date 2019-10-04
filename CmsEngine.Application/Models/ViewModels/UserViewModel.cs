@@ -1,6 +1,6 @@
-using CmsEngine.Domain.Attributes;
+using CmsEngine.Application.Attributes;
 
-namespace CmsEngine.Domain.ViewModels
+namespace CmsEngine.Application.ViewModels
 {
     public class UserViewModel : BaseViewModel, IViewModel
     {

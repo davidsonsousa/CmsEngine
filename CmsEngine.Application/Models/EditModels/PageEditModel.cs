@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using CmsEngine.Core;
 using Newtonsoft.Json.Linq;
 
-namespace CmsEngine.Domain.EditModels
+namespace CmsEngine.Application.EditModels
 {
     public class PageEditModel : BaseEditModel, IEditModel
     {

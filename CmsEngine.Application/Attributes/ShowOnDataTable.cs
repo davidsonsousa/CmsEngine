@@ -1,6 +1,6 @@
 using System;
 
-namespace CmsEngine.Domain.Attributes
+namespace CmsEngine.Application.Attributes
 {
     /// <summary>
     /// Enables the properto to be visible in the DataTable
@@ -9,7 +9,13 @@ namespace CmsEngine.Domain.Attributes
     public sealed class ShowOnDataTable : Attribute
     {
         private readonly int order;
-        public int Order { get => order; }
+        public int Order
+        {
+            get
+            {
+                return order;
+            }
+        }
 
         public ShowOnDataTable(int Order)
         {

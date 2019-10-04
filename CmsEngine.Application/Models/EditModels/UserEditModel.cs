@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace CmsEngine.Domain.EditModels
+namespace CmsEngine.Application.EditModels
 {
     public class UserEditModel : BaseEditModel, IEditModel
     {

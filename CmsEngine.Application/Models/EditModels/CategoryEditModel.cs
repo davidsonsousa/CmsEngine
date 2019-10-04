@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using Newtonsoft.Json.Linq;
 
-namespace CmsEngine.Domain.EditModels
+namespace CmsEngine.Application.EditModels
 {
     public class CategoryEditModel : BaseEditModel, IEditModel
     {

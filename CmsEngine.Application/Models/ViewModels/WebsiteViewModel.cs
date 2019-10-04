@@ -1,6 +1,6 @@
 using CmsEngine.Core;
 
-namespace CmsEngine.Domain.ViewModels
+namespace CmsEngine.Application.ViewModels
 {
     public class WebsiteViewModel : BaseViewModel, IViewModel
     {

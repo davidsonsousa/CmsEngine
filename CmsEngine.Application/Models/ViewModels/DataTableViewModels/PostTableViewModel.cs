@@ -1,8 +1,8 @@
 using System;
+using CmsEngine.Application.Attributes;
 using CmsEngine.Core;
-using CmsEngine.Domain.Attributes;
 
-namespace CmsEngine.Domain.ViewModels.DataTableViewModels
+namespace CmsEngine.Application.ViewModels.DataTableViewModels
 {
     public class PostTableViewModel : BaseViewModel
     {

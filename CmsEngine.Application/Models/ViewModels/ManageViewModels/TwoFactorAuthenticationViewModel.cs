@@ -1,4 +1,4 @@
-namespace CmsEngine.Domain.ViewModels.ManageViewModels
+namespace CmsEngine.Application.ViewModels.ManageViewModels
 {
     public class TwoFactorAuthenticationViewModel
     {

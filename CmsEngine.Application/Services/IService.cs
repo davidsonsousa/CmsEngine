@@ -1,4 +1,4 @@
-namespace CmsEngine.Domain.Services
+namespace CmsEngine.Application.Services
 {
     public interface IService
     {

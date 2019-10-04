@@ -1,4 +1,4 @@
-namespace CmsEngine.Domain.EditModels
+namespace CmsEngine.Application.EditModels
 {
     public class CheckboxEditModel
     {

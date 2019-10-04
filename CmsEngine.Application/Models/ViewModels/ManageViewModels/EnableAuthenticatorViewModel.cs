@@ -1,7 +1,7 @@
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
-namespace CmsEngine.Domain.ViewModels.ManageViewModels
+namespace CmsEngine.Application.ViewModels.ManageViewModels
 {
     public class EnableAuthenticatorViewModel
     {

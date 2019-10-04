@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Newtonsoft.Json;
 
-namespace CmsEngine.Domain.ViewModels.DataTableViewModels
+namespace CmsEngine.Application.ViewModels.DataTableViewModels
 {
     public class DataParameters
     {

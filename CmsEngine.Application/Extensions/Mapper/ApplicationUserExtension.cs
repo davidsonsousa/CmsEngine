@@ -1,9 +1,9 @@
 using System;
+using CmsEngine.Application.EditModels;
+using CmsEngine.Application.ViewModels;
 using CmsEngine.Data.Entities;
-using CmsEngine.Domain.EditModels;
-using CmsEngine.Domain.ViewModels;
 
-namespace CmsEngine.Domain.Extensions.Mapper
+namespace CmsEngine.Application.Extensions.Mapper
 {
     public static class ApplicationUserExtensions
     {

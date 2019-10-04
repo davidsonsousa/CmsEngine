@@ -1,10 +1,10 @@
 using System.Collections.Generic;
 using System.Linq;
+using CmsEngine.Application.EditModels;
+using CmsEngine.Application.ViewModels.DataTableViewModels;
 using CmsEngine.Data.Entities;
-using CmsEngine.Domain.EditModels;
-using CmsEngine.Domain.ViewModels.DataTableViewModels;
 
-namespace CmsEngine.Domain.Extensions.Mapper
+namespace CmsEngine.Application.Extensions.Mapper
 {
     public static class PageExtensions
     {

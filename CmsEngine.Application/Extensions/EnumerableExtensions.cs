@@ -2,10 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
+using CmsEngine.Application.Helpers;
 using CmsEngine.Core;
-using CmsEngine.Domain.Helpers;
 
-namespace CmsEngine.Domain.Extensions
+namespace CmsEngine.Application.Extensions
 {
     public static class EnumerableExtensions
     {

@@ -1,4 +1,4 @@
-namespace CmsEngine.Domain.Helpers.Email
+namespace CmsEngine.Application.Helpers.Email
 {
     public class EmailSettings
     {

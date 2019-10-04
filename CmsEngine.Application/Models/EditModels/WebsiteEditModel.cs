@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using CmsEngine.Core;
 
-namespace CmsEngine.Domain.EditModels
+namespace CmsEngine.Application.EditModels
 {
     public class WebsiteEditModel : BaseEditModel, IEditModel
     {

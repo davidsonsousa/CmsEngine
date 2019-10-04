@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace CmsEngine.Domain.ViewModels.AccountViewModels
+namespace CmsEngine.Application.ViewModels.AccountViewModels
 {
     public class ForgotPasswordViewModel
     {

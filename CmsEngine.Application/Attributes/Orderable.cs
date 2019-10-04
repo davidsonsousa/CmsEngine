@@ -1,6 +1,6 @@
 using System;
 
-namespace CmsEngine.Domain.Attributes
+namespace CmsEngine.Application.Attributes
 {
     /// <summary>
     /// Enables the property to be orderable in the Search functionality

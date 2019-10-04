@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace CmsEngine.Domain.ViewModels
+namespace CmsEngine.Application.ViewModels
 {
     public class PostViewModel : DocumentViewModel
     {

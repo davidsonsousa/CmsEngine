@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using System.Xml.Linq;
 
-namespace CmsEngine.Domain.Services
+namespace CmsEngine.Application.Services
 {
     public interface IXmlService
     {

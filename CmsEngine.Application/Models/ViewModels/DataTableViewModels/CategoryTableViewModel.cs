@@ -1,6 +1,6 @@
-using CmsEngine.Domain.Attributes;
+using CmsEngine.Application.Attributes;
 
-namespace CmsEngine.Domain.ViewModels.DataTableViewModels
+namespace CmsEngine.Application.ViewModels.DataTableViewModels
 {
     public class CategoryTableViewModel : BaseViewModel, IViewModel
     {

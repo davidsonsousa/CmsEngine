@@ -2,18 +2,18 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using CmsEngine.Application.Attributes;
+using CmsEngine.Application.EditModels;
+using CmsEngine.Application.Extensions;
+using CmsEngine.Application.Extensions.Mapper;
+using CmsEngine.Application.ViewModels.DataTableViewModels;
 using CmsEngine.Core;
 using CmsEngine.Data;
 using CmsEngine.Data.Entities;
-using CmsEngine.Domain.Attributes;
-using CmsEngine.Domain.EditModels;
-using CmsEngine.Domain.Extensions;
-using CmsEngine.Domain.Extensions.Mapper;
-using CmsEngine.Domain.ViewModels.DataTableViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 
-namespace CmsEngine.Domain.Services
+namespace CmsEngine.Application.Services
 {
     public class CategoryService : Service, ICategoryService
     {

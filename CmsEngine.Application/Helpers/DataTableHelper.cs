@@ -2,13 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using CmsEngine.Application.Attributes;
+using CmsEngine.Application.ViewModels;
+using CmsEngine.Application.ViewModels.DataTableViewModels;
 using CmsEngine.Core;
 using CmsEngine.Core.Extensions;
-using CmsEngine.Domain.Attributes;
-using CmsEngine.Domain.ViewModels;
-using CmsEngine.Domain.ViewModels.DataTableViewModels;
 
-namespace CmsEngine.Domain.Helpers
+namespace CmsEngine.Application.Helpers
 {
     public static class DataTableHelper
     {

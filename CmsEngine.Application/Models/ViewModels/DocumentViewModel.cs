@@ -1,7 +1,7 @@
 using System;
 using CmsEngine.Core;
 
-namespace CmsEngine.Domain.ViewModels
+namespace CmsEngine.Application.ViewModels
 {
     public class DocumentViewModel : BaseViewModel
     {

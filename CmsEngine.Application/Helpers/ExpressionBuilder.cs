@@ -4,7 +4,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using CmsEngine.Core;
 
-namespace CmsEngine.Domain.Helpers
+namespace CmsEngine.Application.Helpers
 {
     public sealed class ExpressionFilter
     {

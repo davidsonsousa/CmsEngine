@@ -1,12 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using CmsEngine.Application.EditModels;
+using CmsEngine.Application.ViewModels.DataTableViewModels;
 using CmsEngine.Core;
 using CmsEngine.Data.Entities;
-using CmsEngine.Domain.EditModels;
-using CmsEngine.Domain.ViewModels.DataTableViewModels;
 
-namespace CmsEngine.Domain.Services
+namespace CmsEngine.Application.Services
 {
     public interface IPostService : IDataTableService<Post>
     {

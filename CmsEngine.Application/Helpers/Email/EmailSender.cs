@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
-namespace CmsEngine.Domain.Helpers.Email
+namespace CmsEngine.Application.Helpers.Email
 {
     public class EmailSender : IEmailSender
     {

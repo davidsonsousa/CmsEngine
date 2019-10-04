@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 
-namespace CmsEngine.Domain.ViewModels.ManageViewModels
+namespace CmsEngine.Application.ViewModels.ManageViewModels
 {
     public class ExternalLoginsViewModel
     {

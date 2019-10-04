@@ -1,8 +1,8 @@
 using System.Collections.Generic;
+using CmsEngine.Application.Helpers.Email;
 using CmsEngine.Core;
-using CmsEngine.Domain.Helpers.Email;
 
-namespace CmsEngine.Domain.ViewModels
+namespace CmsEngine.Application.ViewModels
 {
     public class InstanceViewModel
     {

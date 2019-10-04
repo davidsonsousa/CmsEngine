@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using CmsEngine.Data.Entities;
 
-namespace CmsEngine.Domain.Services
+namespace CmsEngine.Application.Services
 {
     public interface IDataTableService<T> where T : BaseEntity
     {

@@ -1,4 +1,4 @@
-namespace CmsEngine.Domain.ViewModels
+namespace CmsEngine.Application.ViewModels
 {
     public class ApiDetailsViewModel
     {

@@ -4,7 +4,7 @@ using System.Drawing.Imaging;
 using System.Globalization;
 using System.IO;
 
-namespace CmsEngine.Domain.Helpers
+namespace CmsEngine.Application.Helpers
 {
     public static class FileHelper
     {

@@ -1,6 +1,6 @@
 using System;
 
-namespace CmsEngine.Domain.EditModels
+namespace CmsEngine.Application.EditModels
 {
     public interface IEditModel
     {

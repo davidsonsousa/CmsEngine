@@ -5,7 +5,7 @@ using CmsEngine.Core;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json.Linq;
 
-namespace CmsEngine.Domain.EditModels
+namespace CmsEngine.Application.EditModels
 {
     public class PostEditModel : BaseEditModel, IEditModel
     {

@@ -1,11 +1,11 @@
 using System;
 using System.Threading.Tasks;
+using CmsEngine.Application.ViewModels;
 using CmsEngine.Data;
-using CmsEngine.Domain.ViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 
-namespace CmsEngine.Domain.Services
+namespace CmsEngine.Application.Services
 {
     public class Service : IService
     {
