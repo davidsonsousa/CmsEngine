@@ -1,0 +1,130 @@
+using System.Collections.Generic;
+using System.Linq;
+using CmsEngine.Data.Entities;
+using CmsEngine.Domain.EditModels;
+using CmsEngine.Domain.ViewModels.DataTableViewModels;
+
+namespace CmsEngine.Domain.Extensions.Mapper
+{
+    public static class PostExtensions
+    {
+        /// <summary>
+        /// Maps Post model into a PostEditModel
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns></returns>
+        public static PostEditModel MapToEditModel(this Post item)
+        {
+            return new PostEditModel
+            {
+                Id = item.Id,
+                VanityId = item.VanityId,
+                Title = item.Title,
+                Slug = item.Slug,
+                Description = item.Description,
+                DocumentContent = item.DocumentContent,
+                HeaderImage = item.HeaderImage,
+                PublishedOn = item.PublishedOn,
+                Status = item.Status
+            };
+        }
+
+        /// <summary>
+        /// Maps an IEnumerable<Post> into an IEnumerable<PostEditModel>
+        /// </summary>
+        /// <param name="posts"></param>
+        /// <returns></returns>
+        public static IEnumerable<PostEditModel> MapToEditModel(this IEnumerable<Post> posts)
+        {
+            var editModels = new List<PostEditModel>();
+
+            foreach (var item in posts)
+            {
+                editModels.Add(new PostEditModel
+                {
+                    Id = item.Id,
+                    VanityId = item.VanityId,
+                    Title = item.Title,
+                    Slug = item.Slug,
+                    Description = item.Description,
+                    DocumentContent = item.DocumentContent,
+                    HeaderImage = item.HeaderImage,
+                    PublishedOn = item.PublishedOn,
+                    Status = item.Status
+                });
+            }
+
+            return editModels;
+        }
+
+        /// <summary>
+        /// Maps a PostEditModel into a Post
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns></returns>
+        public static Post MapToModel(this PostEditModel item)
+        {
+            return new Post
+            {
+                Id = item.Id,
+                VanityId = item.VanityId,
+                Title = item.Title,
+                Slug = item.Slug,
+                Description = item.Description,
+                DocumentContent = item.DocumentContent,
+                HeaderImage = item.HeaderImage,
+                PublishedOn = item.PublishedOn,
+                Status = item.Status
+            };
+        }
+
+        /// <summary>
+        /// Maps a PostEditModel into a specific Post
+        /// </summary>
+        /// <param name="item"></param>
+        /// <param name="post"></param>
+        /// <returns></returns>
+        public static Post MapToModel(this PostEditModel item, Post post)
+        {
+            post.Id = item.Id;
+            post.VanityId = item.VanityId;
+            post.Title = item.Title;
+            post.Slug = item.Slug;
+            post.Description = item.Description;
+            post.DocumentContent = item.DocumentContent;
+            post.HeaderImage = item.HeaderImage;
+            post.PublishedOn = item.PublishedOn;
+            post.Status = item.Status;
+
+            return post;
+        }
+
+        /// <summary>
+        /// Maps an IEnumerable<Post> into an IEnumerable<PostTableViewModel>
+        /// </summary>
+        /// <param name="posts"></param>
+        /// <returns></returns>
+        public static IEnumerable<PostTableViewModel> MapToTableViewModel(this IEnumerable<Post> posts)
+        {
+            var tableViewModel = new List<PostTableViewModel>();
+
+            foreach (var item in posts)
+            {
+                tableViewModel.Add(new PostTableViewModel
+                {
+                    Id = item.Id,
+                    VanityId = item.VanityId,
+                    Title = item.Title,
+                    Slug = item.Slug,
+                    Description = item.Description,
+                    DocumentContent = item.DocumentContent,
+                    Author = item.PostApplicationUsers.Select(x => x.ApplicationUser).SingleOrDefault().MapToViewModel(),
+                    PublishedOn = item.PublishedOn,
+                    Status = item.Status
+                });
+            }
+
+            return tableViewModel;
+        }
+    }
+}
