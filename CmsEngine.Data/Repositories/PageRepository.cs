@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using CmsEngine.Core;
 using CmsEngine.Data.Entities;
 using Microsoft.EntityFrameworkCore;
 
@@ -20,9 +21,19 @@ namespace CmsEngine.Data.Repositories
 
         }
 
-        public async Task<IEnumerable<Page>> GetPagesOrderByDescending(Expression<Func<Page, DateTime>> orderBy)
+        public async Task<IEnumerable<Page>> GetOrderByDescending(Expression<Func<Page, DateTime>> orderBy)
         {
             return await Get().OrderByDescending(orderBy).ToListAsync();
+        }
+
+        public async Task<IEnumerable<Page>> GetByStatusOrderByDescending(DocumentStatus documentStatus)
+        {
+            return await Get(q => q.Status == documentStatus).OrderByDescending(o => o.PublishedOn).ToListAsync();
+        }
+
+        public async Task<IEnumerable<Page>> GetPagesById(Guid[] ids)
+        {
+            return await GetReadOnlyAsync(q => ids.Contains(q.VanityId));
         }
     }
 }
