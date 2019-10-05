@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using CmsEngine.Data.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -17,11 +14,6 @@ namespace CmsEngine.Data.Repositories
         public WebsiteRepository(DbContext context) : base(context)
         {
 
-        }
-
-        public async Task<IEnumerable<Website>> GetWebsitesById(Guid[] ids)
-        {
-            return await GetReadOnlyAsync(q => ids.Contains(q.VanityId));
         }
 
         public async Task<Website> GetWebsiteInstanceByHost(string host)

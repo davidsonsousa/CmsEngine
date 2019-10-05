@@ -1,6 +1,4 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using CmsEngine.Data.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -16,11 +14,6 @@ namespace CmsEngine.Data.Repositories
 
         public CategoryRepository(DbContext context) : base(context)
         {
-        }
-
-        public async Task<IEnumerable<Category>> GetCategoriesById(Guid[] ids)
-        {
-            return await GetReadOnlyAsync(q => ids.Contains(q.VanityId));
         }
 
         public async Task<Category> GetCategoryBySlug(string slug)

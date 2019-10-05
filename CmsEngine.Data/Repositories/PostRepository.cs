@@ -31,9 +31,9 @@ namespace CmsEngine.Data.Repositories
             return await Get(q => q.Status == documentStatus).OrderByDescending(o => o.PublishedOn).ToListAsync();
         }
 
-        public async Task<IEnumerable<Post>> GetPostsById(Guid[] ids)
+        public async Task<Post> GetBySlug(string slug)
         {
-            return await GetReadOnlyAsync(q => ids.Contains(q.VanityId));
+            return await Get(q => q.Slug == slug).SingleOrDefaultAsync();
         }
     }
 }

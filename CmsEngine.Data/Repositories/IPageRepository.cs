@@ -11,6 +11,6 @@ namespace CmsEngine.Data.Repositories
     {
         Task<IEnumerable<Page>> GetOrderByDescending(Expression<Func<Page, DateTime>> orderBy);
         Task<IEnumerable<Page>> GetByStatusOrderByDescending(DocumentStatus documentStatus);
-        Task<IEnumerable<Page>> GetPagesById(Guid[] ids);
+        Task<Page> GetBySlug(string slug);
     }
 }

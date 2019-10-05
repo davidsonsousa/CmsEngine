@@ -1,6 +1,4 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using CmsEngine.Data.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -27,11 +25,6 @@ namespace CmsEngine.Data.Repositories
         public async Task<Tag> GetTagBySlugWithPosts(string slug)
         {
             return await Get(q => q.Slug == slug).Include(t => t.PostTags).SingleOrDefaultAsync();
-        }
-
-        public async Task<IEnumerable<Tag>> GetTagsById(Guid[] ids)
-        {
-            return await GetReadOnlyAsync(q => ids.Contains(q.VanityId));
         }
 
         public async Task<IEnumerable<Tag>> GetTagsWithPosts()
