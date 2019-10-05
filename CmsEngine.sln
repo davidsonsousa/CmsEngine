@@ -17,7 +17,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CmsEngine.Data", "CmsEngine
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CmsEngine.Core", "CmsEngine.Core\CmsEngine.Core.csproj", "{37A9090A-6417-465D-B2E0-159569BD20B1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CmsEngine.Domain", "CmsEngine.Domain\CmsEngine.Domain.csproj", "{8D7732E4-AD83-4934-A29E-69CE21AC88E3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CmsEngine.Application", "CmsEngine.Application\CmsEngine.Application.csproj", "{8D7732E4-AD83-4934-A29E-69CE21AC88E3}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CmsEngine.Ui", "CmsEngine.Ui\CmsEngine.Ui.csproj", "{F84694E9-E3E5-4764-9493-52E263D8AC7F}"
 EndProject
