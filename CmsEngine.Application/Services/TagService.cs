@@ -46,7 +46,7 @@ namespace CmsEngine.Application.Services
 
         public async Task<ReturnValue> DeleteRange(Guid[] ids)
         {
-            var items = await _unitOfWork.Tags.GetTagsById(ids);
+            var items = await _unitOfWork.Tags.GetByMultipleIdsAsync(ids);
 
             var returnValue = new ReturnValue($"Tags deleted at {DateTime.Now.ToString("T")}.");
 

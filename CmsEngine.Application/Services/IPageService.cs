@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using CmsEngine.Application.EditModels;
+using CmsEngine.Application.ViewModels;
 using CmsEngine.Application.ViewModels.DataTableViewModels;
 using CmsEngine.Core;
 using CmsEngine.Data.Entities;
@@ -17,5 +18,6 @@ namespace CmsEngine.Application.Services
         Task<(IEnumerable<PageTableViewModel> Data, int RecordsTotal, int RecordsFiltered)> GetForDataTable(DataParameters parameters);
         Task<ReturnValue> Save(PageEditModel pageEditModel);
         Task<IEnumerable<PageEditModel>> GetByStatus(DocumentStatus documentStatus, int count = 0);
+        Task<PageViewModel> GetBySlug(string slug);
     }
 }

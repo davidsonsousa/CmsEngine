@@ -6,6 +6,7 @@ using CmsEngine.Application.Attributes;
 using CmsEngine.Application.EditModels;
 using CmsEngine.Application.Extensions;
 using CmsEngine.Application.Extensions.Mapper;
+using CmsEngine.Application.ViewModels;
 using CmsEngine.Application.ViewModels.DataTableViewModels;
 using CmsEngine.Core;
 using CmsEngine.Data;
@@ -46,7 +47,7 @@ namespace CmsEngine.Application.Services
 
         public async Task<ReturnValue> DeleteRange(Guid[] ids)
         {
-            var items = await _unitOfWork.Pages.GetPagesById(ids);
+            var items = await _unitOfWork.Pages.GetByMultipleIdsAsync(ids);
 
             var returnValue = new ReturnValue($"Pages deleted at {DateTime.Now.ToString("T")}.");
 
@@ -74,10 +75,19 @@ namespace CmsEngine.Application.Services
             return items;
         }
 
+        public async Task<PageViewModel> GetBySlug(string slug)
+        {
+            logger.LogInformation($"PageService > GetBySlug({slug})");
+
+            var item = await _unitOfWork.Pages.GetBySlug(slug);
+
+            return item.MapToViewModel();
+        }
+
         public async Task<IEnumerable<PageEditModel>> GetByStatus(DocumentStatus documentStatus, int count = 0)
         {
             var items = await _unitOfWork.Pages.GetByStatusOrderByDescending(documentStatus);
-            logger.LogInformation("CmsService > GetPagesByStatusReadOnly(documentStatus: {0}, count: {1})", documentStatus, count);
+            logger.LogInformation("PageService > GetPagesByStatusReadOnly(documentStatus: {0}, count: {1})", documentStatus, count);
             logger.LogInformation("Pages loaded: {0}", items.Count());
 
             return items.MapToEditModel();
@@ -134,7 +144,7 @@ namespace CmsEngine.Application.Services
 
         public async Task<ReturnValue> Save(PageEditModel pageEditModel)
         {
-            logger.LogInformation("CmsService > Save(PageEditModel: {0})", pageEditModel.ToString());
+            logger.LogInformation("PageService > Save(PageEditModel: {0})", pageEditModel.ToString());
 
             var returnValue = new ReturnValue($"Page '{pageEditModel.Title}' saved at {DateTime.Now.ToString("T")}.");
 
@@ -171,14 +181,14 @@ namespace CmsEngine.Application.Services
 
         public PageEditModel SetupEditModel()
         {
-            logger.LogInformation("CmsService > SetupEditModel()");
+            logger.LogInformation("PageService > SetupEditModel()");
             return new PageEditModel();
         }
 
         public async Task<PageEditModel> SetupEditModel(Guid id)
         {
             var item = await _unitOfWork.Pages.GetByIdAsync(id);
-            logger.LogInformation("CmsService > SetupPageEditModel(id: {0})", id);
+            logger.LogInformation("PageService > SetupPageEditModel(id: {0})", id);
             logger.LogInformation("Page: {0}", item.ToString());
             return item.MapToEditModel();
         }

@@ -6,6 +6,7 @@ using CmsEngine.Application.Attributes;
 using CmsEngine.Application.EditModels;
 using CmsEngine.Application.Extensions;
 using CmsEngine.Application.Extensions.Mapper;
+using CmsEngine.Application.ViewModels;
 using CmsEngine.Application.ViewModels.DataTableViewModels;
 using CmsEngine.Core;
 using CmsEngine.Data;
@@ -46,7 +47,7 @@ namespace CmsEngine.Application.Services
 
         public async Task<ReturnValue> DeleteRange(Guid[] ids)
         {
-            var items = await _unitOfWork.Posts.GetPostsById(ids);
+            var items = await _unitOfWork.Posts.GetByMultipleIdsAsync(ids);
 
             var returnValue = new ReturnValue($"Posts deleted at {DateTime.Now.ToString("T")}.");
 
@@ -74,11 +75,19 @@ namespace CmsEngine.Application.Services
             return items;
         }
 
-        public async Task<IEnumerable<PostEditModel>> GetByStatus(DocumentStatus documentStatus, int count = 0)
+        public async Task<PostViewModel> GetBySlug(string slug)
         {
-            var items = await _unitOfWork.Posts.GetByStatusOrderByDescending(documentStatus);
-            logger.LogInformation("CmsService > GetPostsByStatusReadOnly(documentStatus: {0}, count: {1})", documentStatus, count);
+            logger.LogInformation($"PostService > GetBySlug({slug})");
+            var item = await _unitOfWork.Posts.GetBySlug(slug);
+            return item.MapToViewModel();
+        }
+
+        public async Task<IEnumerable<PostEditModel>> GetPublishedOrderedByDate(int count = 0)
+        {
+            logger.LogInformation("PostService > GetByStatus(count: {0})", count);
+            var items = await _unitOfWork.Posts.GetByStatusOrderByDescending(DocumentStatus.Published);
             logger.LogInformation("Posts loaded: {0}", items.Count());
+
             return items.MapToEditModel();
         }
 
@@ -92,6 +101,38 @@ namespace CmsEngine.Application.Services
             }
             items = OrderForDataTable(parameters.Order[0].Column, parameters.Order[0].Dir, items);
             return (items.MapToTableViewModel(), recordsTotal, items.Count());
+        }
+
+        public async Task<PaginatedList<PostViewModel>> GetPublishedByCategoryForPagination(string categorySlug, int page = 1)
+        {
+            logger.LogInformation("CmsService > GetPublishedByCategoryForPagination(categorySlug: {0}, page: {1})", categorySlug, page);
+
+            var posts = await _unitOfWork.Posts.GetPublishedByCategoryForPagination(categorySlug, page, Instance.ArticleLimit);
+
+            return new PaginatedList<PostViewModel>(posts.Items.MapToViewModel(), posts.Count, page, Instance.ArticleLimit);
+        }
+
+        public async Task<PaginatedList<PostViewModel>> GetPublishedByTagForPagination(string tagSlug, int page = 1)
+        {
+            logger.LogInformation("CmsService > GetPublishedByTagForPagination(tagSlug: {0}, page: {1})", tagSlug, page);
+            var posts = await _unitOfWork.Posts.GetPublishedByTagForPagination(tagSlug, page, Instance.ArticleLimit);
+            return new PaginatedList<PostViewModel>(posts.Items.MapToViewModel(), posts.Count, page, Instance.ArticleLimit);
+        }
+
+        public async Task<PaginatedList<PostViewModel>> GetPublishedForPagination(int page = 1)
+        {
+            logger.LogInformation("CmsService > GetPublishedForPagination(page: {0})", page);
+            var posts = await _unitOfWork.Posts.GetPublishedForPagination(page, Instance.ArticleLimit);
+            return new PaginatedList<PostViewModel>(posts.Items.MapToViewModel(), posts.Count, page, Instance.ArticleLimit);
+        }
+
+        public async Task<PaginatedList<PostViewModel>> FindPublishedForPaginationOrderByDateDescending(string searchTerm = "", int page = 1)
+        {
+            logger.LogInformation("CmsService > FindPublishedForPaginationOrderByDateDescending(page: {0}, searchTerm: {1})", page, searchTerm);
+
+            var posts = await _unitOfWork.Posts.FindPublishedForPaginationOrderByDateDescending(page, searchTerm, Instance.ArticleLimit);
+
+            return new PaginatedList<PostViewModel>(posts.Items.MapToViewModel(), posts.Count, page, Instance.ArticleLimit);
         }
 
         public IEnumerable<Post> OrderForDataTable(int column, string direction, IEnumerable<Post> items)
@@ -133,7 +174,7 @@ namespace CmsEngine.Application.Services
 
         public async Task<ReturnValue> Save(PostEditModel postEditModel)
         {
-            logger.LogInformation("CmsService > Save(PostEditModel: {0})", postEditModel.ToString());
+            logger.LogInformation("PostService > Save(PostEditModel: {0})", postEditModel.ToString());
 
             var returnValue = new ReturnValue($"Post '{postEditModel.Title}' saved at {DateTime.Now.ToString("T")}.");
 
@@ -170,14 +211,14 @@ namespace CmsEngine.Application.Services
 
         public PostEditModel SetupEditModel()
         {
-            logger.LogInformation("CmsService > SetupEditModel()");
+            logger.LogInformation("PostService > SetupEditModel()");
             return new PostEditModel();
         }
 
         public async Task<PostEditModel> SetupEditModel(Guid id)
         {
             var item = await _unitOfWork.Posts.GetByIdAsync(id);
-            logger.LogInformation("CmsService > SetupPostEditModel(id: {0})", id);
+            logger.LogInformation("PostService > SetupPostEditModel(id: {0})", id);
             logger.LogInformation("Post: {0}", item.ToString());
             return item.MapToEditModel();
         }
