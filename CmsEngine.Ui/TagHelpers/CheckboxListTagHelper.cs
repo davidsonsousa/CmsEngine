@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Text;
-using CmsEngine.Domain.EditModels;
+using CmsEngine.Application.EditModels;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 
 namespace CmsEngine.Ui.TagHelpers
