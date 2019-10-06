@@ -1,11 +1,9 @@
 using System.Diagnostics;
-using AutoMapper;
-using CmsEngine.Data.AccessLayer;
-using CmsEngine.Data.Models;
-using CmsEngine.Data.ViewModels;
-using CmsEngine.Helpers.Email;
+using System.Threading.Tasks;
+using CmsEngine.Application.Helpers.Email;
+using CmsEngine.Application.Services;
+using CmsEngine.Application.ViewModels;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -14,12 +12,15 @@ namespace CmsEngine.Ui.Controllers
     public class HomeController : BaseController
     {
         private readonly IEmailSender _emailSender;
+        private readonly IPageService _pageService;
+        private readonly IXmlService _xmlService;
 
-        public HomeController(IUnitOfWork uow, IMapper mapper, IHttpContextAccessor hca, UserManager<ApplicationUser> userManager,
-                              IEmailSender emailSender, ILogger<HomeController> logger)
-                       : base(uow, mapper, hca, userManager, logger)
+        public HomeController(ILogger<HomeController> logger, IEmailSender emailSender, IPageService pageService, IXmlService xmlService)
+                       : base(logger)
         {
             _emailSender = emailSender;
+            _pageService = pageService;
+            _xmlService = xmlService;
         }
 
         public IActionResult Index()
@@ -27,9 +28,9 @@ namespace CmsEngine.Ui.Controllers
             return View(instance);
         }
 
-        public IActionResult Page(string slug)
+        public async Task<IActionResult> Page(string slug)
         {
-            instance.SelectedDocument = (PageViewModel)service.GetPageBySlug(slug);
+            instance.SelectedDocument = await _pageService.GetBySlug(slug);
 
             if (instance.SelectedDocument == null)
             {
@@ -69,11 +70,13 @@ namespace CmsEngine.Ui.Controllers
             }
         }
 
-        public IActionResult Sitemap()
+        public async Task<IActionResult> Sitemap()
         {
-            return Content(service.GenerateSitemap().ToString(), "text/xml");
+            var sitemap = await _xmlService.GenerateSitemap();
+            return Content(sitemap.ToString(), "text/xml");
         }
 
+        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
             instance.PageTitle = $"Error - {instance.Name}";

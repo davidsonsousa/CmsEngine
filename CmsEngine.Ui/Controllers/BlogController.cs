@@ -1,10 +1,6 @@
 using System.Linq;
-using AutoMapper;
-using CmsEngine.Data.AccessLayer;
-using CmsEngine.Data.Models;
-using CmsEngine.Data.ViewModels;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
+using System.Threading.Tasks;
+using CmsEngine.Application.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -12,10 +8,14 @@ namespace CmsEngine.Ui.Controllers
 {
     public class BlogController : BaseController
     {
-        public BlogController(IUnitOfWork uow, IMapper mapper, IHttpContextAccessor hca, UserManager<ApplicationUser> userManager,
-                              ILogger<BlogController> logger)
-                       : base(uow, mapper, hca, userManager, logger)
+        private readonly IPostService _postService;
+        private readonly IXmlService _xmlService;
+
+        public BlogController(ILogger<BlogController> logger, IPostService postService, IXmlService xmlService)
+                       : base(logger)
         {
+            _postService = postService;
+            _xmlService = xmlService;
         }
 
         public IActionResult Index(int page = 1, string q = "")
@@ -23,9 +23,9 @@ namespace CmsEngine.Ui.Controllers
             return View(instance);
         }
 
-        public IActionResult Post(string slug)
+        public async Task<IActionResult> Post(string slug)
         {
-            instance.SelectedDocument = (PostViewModel)service.GetPostBySlug(slug);
+            instance.SelectedDocument = await _postService.GetBySlug(slug);
 
             if (instance.SelectedDocument == null)
             {
@@ -36,10 +36,10 @@ namespace CmsEngine.Ui.Controllers
             return View(instance);
         }
 
-        public IActionResult Category(string slug, int page = 1)
+        public async Task<IActionResult> Category(string slug, int page = 1)
         {
-            instance.PagedPosts = service.GetPagedPostsByCategoryReadOnly<PostViewModel>(slug, page);
-            var selectedCategory = instance.PagedPosts.SelectMany(p => p.Categories.Where(c => c.Slug == slug).Select(x => x.Name)).FirstOrDefault();
+            instance.PagedPosts = await _postService.GetPublishedByCategoryForPagination(slug, page);
+            string selectedCategory = instance.PagedPosts.SelectMany(p => p.Categories.Where(c => c.Slug == slug).Select(x => x.Name)).FirstOrDefault();
 
             if (selectedCategory == null)
             {
@@ -50,10 +50,10 @@ namespace CmsEngine.Ui.Controllers
             return View("Index", instance);
         }
 
-        public IActionResult Tag(string slug, int page = 1)
+        public async Task<IActionResult> Tag(string slug, int page = 1)
         {
-            instance.PagedPosts = service.GetPagedPostsByTagReadOnly<PostViewModel>(slug, page);
-            var selectedTag = instance.PagedPosts.SelectMany(p => p.Tags.Where(t => t.Slug == slug).Select(x => x.Name)).FirstOrDefault();
+            instance.PagedPosts = await _postService.GetPublishedByTagForPagination(slug, page);
+            string selectedTag = instance.PagedPosts.SelectMany(p => p.Tags.Where(t => t.Slug == slug).Select(x => x.Name)).FirstOrDefault();
 
             if (selectedTag == null)
             {
@@ -64,9 +64,10 @@ namespace CmsEngine.Ui.Controllers
             return View("Index", instance);
         }
 
-        public IActionResult Feed()
+        public async Task<IActionResult> Feed()
         {
-            return Content(service.GenerateFeed().ToString(), "text/xml");
+            var feed = await _xmlService.GenerateFeed();
+            return Content(feed.ToString(), "text/xml");
         }
     }
 }
