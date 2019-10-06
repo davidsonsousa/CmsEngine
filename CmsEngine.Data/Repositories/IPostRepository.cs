@@ -9,8 +9,13 @@ namespace CmsEngine.Data.Repositories
 {
     public interface IPostRepository : IReadRepository<Post>, IDataModificationRepository<Post>, IDataModificationRangeRepository<Post>
     {
-        Task<IEnumerable<Post>> GetPostsOrderByDescending(Expression<Func<Post, DateTime>> orderBy);
+        Task<IEnumerable<Post>> GetPublishedPostsOrderByDescending(Expression<Func<Post, DateTime>> orderBy);
         Task<IEnumerable<Post>> GetByStatusOrderByDescending(DocumentStatus documentStatus);
+        Task<(IEnumerable<Post> Items, int Count)> GetPublishedByCategoryForPagination(string categorySlug, int page, int articleLimit);
+        Task<(IEnumerable<Post> Items, int Count)> GetPublishedByTagForPagination(string tagSlug, int page, int articleLimit);
+        Task<(IEnumerable<Post> Items, int Count)> FindPublishedForPaginationOrderByDateDescending(int page, string searchTerm, int articleLimit);
+        Task<(IEnumerable<Post> Items, int Count)> GetPublishedForPagination(int page, int articleLimit);
+
         Task<Post> GetBySlug(string slug);
     }
 }
