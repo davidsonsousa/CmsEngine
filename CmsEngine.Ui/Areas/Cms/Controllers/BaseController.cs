@@ -2,10 +2,10 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Threading.Tasks;
+using CmsEngine.Application.Helpers;
+using CmsEngine.Application.Services;
 using CmsEngine.Core;
 using CmsEngine.Data;
-using CmsEngine.Domain.Helpers;
-using CmsEngine.Domain.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -52,7 +52,7 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
 
         protected void SetupMessages(string pageTitle, PageType pageType, string description = "", string panelTitle = "")
         {
-            this.SetupMessages(pageTitle);
+            SetupMessages(pageTitle);
 
             ViewBag.PageType = pageType.ToString();
             ViewBag.PageDescription = description;
@@ -61,7 +61,7 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
 
         protected void SetupMessages(string pageTitle, PageType pageType, string modelError, string generalError, string description = "", string panelTitle = "")
         {
-            this.SetupMessages(pageTitle, pageType, description, panelTitle);
+            SetupMessages(pageTitle, pageType, description, panelTitle);
 
             if (!string.IsNullOrWhiteSpace(modelError))
             {
