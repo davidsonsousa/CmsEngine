@@ -1,6 +1,6 @@
 using System.IO;
+using CmsEngine.Application.Services;
 using CmsEngine.Data;
-using CmsEngine.Domain.Services;
 using CmsEngine.Ui.Middleware;
 using CmsEngine.Ui.RewriteRules;
 using Microsoft.AspNetCore.Builder;
@@ -52,6 +52,7 @@ namespace CmsEngine.Ui
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             // Add services
+            services.AddScoped<IService, Service>();
             services.AddScoped<ICategoryService, CategoryService>();
             services.AddScoped<IPageService, PageService>();
             services.AddScoped<IPostService, PostService>();
