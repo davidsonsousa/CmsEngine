@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using CmsEngine.Application.EditModels;
+using CmsEngine.Application.ViewModels;
 using CmsEngine.Application.ViewModels.DataTableViewModels;
 using CmsEngine.Data.Entities;
 
@@ -125,6 +126,27 @@ namespace CmsEngine.Application.Extensions.Mapper
             }
 
             return tableViewModel;
+        }
+
+        /// <summary>
+        /// Maps Page model into a PageViewModel
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns></returns>
+        public static PageViewModel MapToViewModel(this Page item)
+        {
+            return new PageViewModel
+            {
+                Id = item.Id,
+                VanityId = item.VanityId,
+                Title = item.Title,
+                Slug = item.Slug,
+                Description = item.Description,
+                DocumentContent = item.DocumentContent,
+                HeaderImage = item.HeaderImage,
+                PublishedOn = item.PublishedOn,
+                Status = item.Status
+            };
         }
     }
 }

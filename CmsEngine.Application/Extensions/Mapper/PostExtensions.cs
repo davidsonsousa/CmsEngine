@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using CmsEngine.Application.EditModels;
+using CmsEngine.Application.ViewModels;
 using CmsEngine.Application.ViewModels.DataTableViewModels;
 using CmsEngine.Data.Entities;
 
@@ -126,5 +127,55 @@ namespace CmsEngine.Application.Extensions.Mapper
 
             return tableViewModel;
         }
+
+        /// <summary>
+        /// Maps Post model into a PostViewModel
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns></returns>
+        public static PostViewModel MapToViewModel(this Post item)
+        {
+            return new PostViewModel
+            {
+                Id = item.Id,
+                VanityId = item.VanityId,
+                Title = item.Title,
+                Slug = item.Slug,
+                Description = item.Description,
+                DocumentContent = item.DocumentContent,
+                HeaderImage = item.HeaderImage,
+                PublishedOn = item.PublishedOn,
+                Status = item.Status
+            };
+        }
+
+        /// <summary>
+        /// Maps Post model into a PostViewModel
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns></returns>
+        public static IEnumerable<PostViewModel> MapToViewModel(this IEnumerable<Post> posts)
+        {
+            var viewModels = new List<PostViewModel>();
+
+            foreach (var item in posts)
+            {
+                viewModels.Add(new PostViewModel
+                {
+                    Id = item.Id,
+                    VanityId = item.VanityId,
+                    Title = item.Title,
+                    Slug = item.Slug,
+                    Description = item.Description,
+                    DocumentContent = item.DocumentContent,
+                    HeaderImage = item.HeaderImage,
+                    PublishedOn = item.PublishedOn,
+                    Status = item.Status
+                });
+            }
+
+            return viewModels;
+        }
+
     }
 }
