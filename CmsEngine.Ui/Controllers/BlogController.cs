@@ -11,8 +11,8 @@ namespace CmsEngine.Ui.Controllers
         private readonly IPostService _postService;
         private readonly IXmlService _xmlService;
 
-        public BlogController(ILogger<BlogController> logger, IPostService postService, IXmlService xmlService)
-                       : base(logger)
+        public BlogController(ILoggerFactory loggerFactory, IPostService postService, IXmlService xmlService, IService service)
+                       : base(loggerFactory, service)
         {
             _postService = postService;
             _xmlService = xmlService;

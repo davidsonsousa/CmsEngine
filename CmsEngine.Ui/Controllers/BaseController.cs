@@ -9,16 +9,16 @@ namespace CmsEngine.Ui.Controllers
 {
     public class BaseController : Controller
     {
-        protected readonly IService service;
+        //protected readonly IService service;
         protected readonly InstanceViewModel instance;
         protected readonly ILogger logger;
 
         private readonly IPostService _postService;
 
-        public BaseController(ILogger logger)
+        public BaseController(ILoggerFactory loggerFactory, IService service)
         {
             instance = service.Instance;
-            this.logger = logger;
+            logger = loggerFactory.CreateLogger("BaseController");
 
             var cultureInfo = new CultureInfo(instance.Culture);
 

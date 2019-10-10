@@ -15,8 +15,8 @@ namespace CmsEngine.Ui.Controllers
         private readonly IPageService _pageService;
         private readonly IXmlService _xmlService;
 
-        public HomeController(ILogger<HomeController> logger, IEmailSender emailSender, IPageService pageService, IXmlService xmlService)
-                       : base(logger)
+        public HomeController(ILoggerFactory loggerFactory, IEmailSender emailSender, IPageService pageService, IXmlService xmlService, IService service)
+                       : base(loggerFactory, service)
         {
             _emailSender = emailSender;
             _pageService = pageService;
