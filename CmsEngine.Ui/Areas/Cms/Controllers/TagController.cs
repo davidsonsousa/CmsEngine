@@ -17,8 +17,8 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
     {
         private readonly ITagService _tagService;
 
-        public TagController(IUnitOfWork uow, IHttpContextAccessor hca, ILogger<TagController> logger, ITagService tagService)
-                            : base(uow, hca, logger)
+        public TagController(IUnitOfWork uow, IHttpContextAccessor hca, ILoggerFactory loggerFactory, IService service, ITagService tagService)
+                            : base(uow, hca, loggerFactory, service)
         {
             _tagService = tagService;
         }

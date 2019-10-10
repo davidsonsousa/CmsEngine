@@ -17,8 +17,8 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
     {
         private readonly ICategoryService _categoryService;
 
-        public CategoryController(IUnitOfWork uow, IHttpContextAccessor hca, ILogger<CategoryController> logger, ICategoryService categoryService)
-                                 : base(uow, hca, logger)
+        public CategoryController(IUnitOfWork uow, IHttpContextAccessor hca, ILoggerFactory loggerFactory, IService service, ICategoryService categoryService)
+                                 : base(uow, hca, loggerFactory, service)
         {
             _categoryService = categoryService;
         }

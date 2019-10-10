@@ -19,8 +19,8 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
         private readonly IWebHostEnvironment _env;
         private readonly IWebsiteService _websiteService;
 
-        public WebsiteController(IUnitOfWork uow, IHttpContextAccessor hca, ILogger<WebsiteController> logger,
-                                 IWebHostEnvironment env, IWebsiteService websiteService) : base(uow, hca, logger)
+        public WebsiteController(IUnitOfWork uow, IHttpContextAccessor hca, ILoggerFactory loggerFactory, IService service,
+                                 IWebHostEnvironment env, IWebsiteService websiteService) : base(uow, hca, loggerFactory, service)
         {
             _env = env;
             _websiteService = websiteService;

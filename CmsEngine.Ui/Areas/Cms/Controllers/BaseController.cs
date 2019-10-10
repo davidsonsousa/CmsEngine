@@ -18,7 +18,7 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
     [Authorize]
     public class BaseController : Controller
     {
-        protected readonly Service service;
+        protected readonly IService service;
         protected List<UploadFilesResult> fileList;
         protected readonly ILogger logger;
 
@@ -27,10 +27,11 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
             this.logger = logger;
         }
 
-        public BaseController(IUnitOfWork uow, IHttpContextAccessor hca, ILogger logger)
+        public BaseController(IUnitOfWork uow, IHttpContextAccessor hca, ILoggerFactory loggerFactory, IService service)
         {
-            service = new Service(uow, hca, logger);
-            this.logger = logger;
+            // service = new Service(uow, hca, loggerFactory);
+            this.service = service;
+            logger = loggerFactory.CreateLogger("CmsBaseController");
 
             var cultureInfo = new CultureInfo(service.Instance.Culture);
 

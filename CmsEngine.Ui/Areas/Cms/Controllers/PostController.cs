@@ -19,8 +19,8 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
         private readonly IWebHostEnvironment _env;
         private readonly IPostService _postService;
 
-        public PostController(IUnitOfWork uow, IHttpContextAccessor hca, ILogger<PostController> logger,
-                              IWebHostEnvironment env, IPostService postService) : base(uow, hca, logger)
+        public PostController(IUnitOfWork uow, IHttpContextAccessor hca, ILoggerFactory loggerFactory, IService service,
+                              IWebHostEnvironment env, IPostService postService) : base(uow, hca, loggerFactory, service)
         {
             _env = env;
             _postService = postService;
