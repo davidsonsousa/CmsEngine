@@ -3,7 +3,7 @@
 @{
     var selectedPage = (PageViewModel)Model.SelectedDocument;
     string imagePath = !string.IsNullOrWhiteSpace(selectedPage.HeaderImage)
-                       ? string.Format(Constants.ImagePath, "page", selectedPage.HeaderImage)
+                       ? string.Format(Constants.ImagePath.Default, "page", selectedPage.HeaderImage)
                        : "/img/no-image.png";
 }
 

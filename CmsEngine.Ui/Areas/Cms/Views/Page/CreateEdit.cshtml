@@ -34,7 +34,7 @@
                             <div class="header-preview">
                                 @if (!string.IsNullOrWhiteSpace(Model.HeaderImage))
                                 {
-                                    <img src="@string.Format(Constants.Image320Path, "website", Model.HeaderImage)" alt="Image preview" title="Image preview" />
+                                    <img src="@string.Format(Constants.ImagePath.Path320, "website", Model.HeaderImage)" alt="Image preview" title="Image preview" />
                                 }
                             </div>
                             <input asp-for="HeaderImage" type="hidden" />

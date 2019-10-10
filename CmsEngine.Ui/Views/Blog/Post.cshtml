@@ -2,7 +2,7 @@
 @{
     var selectedPost = (PostViewModel)Model.SelectedDocument;
     string imagePath = !string.IsNullOrWhiteSpace(selectedPost.HeaderImage)
-                       ? string.Format(Constants.ImagePath, "post", selectedPost.HeaderImage)
+                       ? string.Format(Constants.ImagePath.Default, "post", selectedPost.HeaderImage)
                        : "/img/no-image.png";
 }
 
@@ -27,7 +27,7 @@
                     <div class="post-thumbnail">
                         @if (!string.IsNullOrWhiteSpace(selectedPost.HeaderImage))
                         {
-                            <img src="@string.Format(Constants.ImagePath, "post", selectedPost.HeaderImage)" alt="@selectedPost.Title" title="@selectedPost.Title" class="img-fluid">
+                            <img src="@string.Format(Constants.ImagePath.Default, "post", selectedPost.HeaderImage)" alt="@selectedPost.Title" title="@selectedPost.Title" class="img-fluid">
                         }
 
                     </div>

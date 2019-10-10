@@ -40,7 +40,7 @@ namespace CmsEngine.Application.Services
             try
             {
                 logger.LogInformation("Loading Instance from cache");
-                if (!_cache.TryGetValue(Constants.CacheKeys.Instance, out instance))
+                if (!_cache.TryGetValue(Constants.CacheKey.Instance, out instance))
                 {
                     logger.LogInformation("Empty cache for Instance. Loading instance from DB");
                     website = await unitOfWork.Websites.GetWebsiteInstanceByHost(_httpContextAccessor.HttpContext.Request.Host.Host);
@@ -85,7 +85,7 @@ namespace CmsEngine.Application.Services
 
                         logger.LogInformation("Adding Instance to cache with expiration date to {0}", DateTime.Now.AddMilliseconds(timeSpan.TotalMilliseconds).ToString());
                         var cacheEntryOptions = new MemoryCacheEntryOptions().SetSlidingExpiration(timeSpan);
-                        _cache.Set(Constants.CacheKeys.Instance, instance, cacheEntryOptions);
+                        _cache.Set(Constants.CacheKey.Instance, instance, cacheEntryOptions);
                     }
                 }
             }
