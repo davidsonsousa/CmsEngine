@@ -1,7 +1,9 @@
 using System.IO;
+using CmsEngine.Application.Helpers.Email;
 using CmsEngine.Application.Services;
 using CmsEngine.Data;
-using CmsEngine.Ui.Middleware;
+using CmsEngine.Data.Entities;
+using CmsEngine.Data.Repositories;
 using CmsEngine.Ui.RewriteRules;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -38,27 +40,41 @@ namespace CmsEngine.Ui
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
+            services.Configure<EmailSettings>(Configuration.GetSection("EmailSettings"));
+
             // Add CmsEngineContext
             services.AddDbContext<CmsEngineContext>(options => options.EnableSensitiveDataLogging(true) // TODO: Perhaps use a flag from appsettings instead of a hard-coded value
                                                                       .UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+            //services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+            //        .AddEntityFrameworkStores<CmsEngineContext>();
+
+            services.AddIdentity<ApplicationUser, IdentityRole>()
                     .AddEntityFrameworkStores<CmsEngineContext>();
 
             // Add HttpContextAccessor as .NET Core doesn't have HttpContext.Current anymore
             services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
-            // Add Unit of Work
+            // Add Repositories
+            services.AddScoped<ICategoryRepository, CategoryRepository>();
+            services.AddScoped<IPageRepository, PageRepository>();
+            services.AddScoped<IPostRepository, PostRepository>();
+            services.AddScoped<ITagRepository, TagRepository>();
+            services.AddScoped<IWebsiteRepository, WebsiteRepository>();
+
+            //// Add services
+            services.AddScoped<IService, Service>();
+            //services.AddScoped<ICategoryService, CategoryService>();
+            services.AddScoped<IPageService, PageService>();
+            //services.AddScoped<IPostService, PostService>();
+            //services.AddScoped<ITagService, TagService>();
+            //services.AddScoped<IWebsiteService, WebsiteService>();
+            services.AddScoped<IXmlService, XmlService>();
+
+            //// Add Unit of Work
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
-            // Add services
-            services.AddScoped<IService, Service>();
-            services.AddScoped<ICategoryService, CategoryService>();
-            services.AddScoped<IPageService, PageService>();
-            services.AddScoped<IPostService, PostService>();
-            services.AddScoped<ITagService, TagService>();
-            services.AddScoped<IWebsiteService, WebsiteService>();
-            services.AddScoped<IXmlService, XmlService>();
+            services.AddSingleton<IEmailSender, EmailSender>();
 
             services.AddControllersWithViews();
             services.AddRazorPages();
@@ -104,12 +120,14 @@ namespace CmsEngine.Ui
             // wwwroot
             app.UseStaticFiles();
 
-            // Uploaded files
-            app.ConfigureFileUpload(new FileUploadOptions
-            {
-                Root = env.WebRootPath,
-                Folder = "UploadedFiles"
-            });
+
+            // TODO: Fix this
+            //// Uploaded files
+            //app.ConfigureFileUpload(new FileUploadOptions
+            //{
+            //    Root = env.WebRootPath,
+            //    Folder = "UploadedFiles"
+            //});
 
             app.UseStaticFiles(new StaticFileOptions
             {
