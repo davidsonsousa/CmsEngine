@@ -5,6 +5,7 @@ using System.Xml.Linq;
 using CmsEngine.Application.ViewModels;
 using CmsEngine.Data;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 
 namespace CmsEngine.Application.Services
@@ -13,7 +14,8 @@ namespace CmsEngine.Application.Services
     {
         private readonly IUnitOfWork _unitOfWork;
 
-        public XmlService(IUnitOfWork uow, IHttpContextAccessor hca, ILogger log) : base(uow, hca, log)
+        public XmlService(IUnitOfWork uow, IHttpContextAccessor hca, ILoggerFactory loggerFactory, IMemoryCache memoryCache)
+                         : base(uow, hca, loggerFactory, memoryCache)
         {
             _unitOfWork = uow;
         }
