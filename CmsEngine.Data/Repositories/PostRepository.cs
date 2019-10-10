@@ -11,12 +11,7 @@ namespace CmsEngine.Data.Repositories
 {
     public class PostRepository : Repository<Post>, IPostRepository
     {
-        public CmsEngineContext CmsEngineContext
-        {
-            get { return dbContext as CmsEngineContext; }
-        }
-
-        public PostRepository(DbContext context) : base(context)
+        public PostRepository(CmsEngineContext context) : base(context)
         {
 
         }

@@ -6,12 +6,7 @@ namespace CmsEngine.Data.Repositories
 {
     public class WebsiteRepository : Repository<Website>, IWebsiteRepository
     {
-        public CmsEngineContext CmsEngineContext
-        {
-            get { return dbContext as CmsEngineContext; }
-        }
-
-        public WebsiteRepository(DbContext context) : base(context)
+        public WebsiteRepository(CmsEngineContext context) : base(context)
         {
 
         }

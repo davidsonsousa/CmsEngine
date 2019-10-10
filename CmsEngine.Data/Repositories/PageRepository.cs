@@ -11,12 +11,7 @@ namespace CmsEngine.Data.Repositories
 {
     public class PageRepository : Repository<Page>, IPageRepository
     {
-        public CmsEngineContext CmsEngineContext
-        {
-            get { return dbContext as CmsEngineContext; }
-        }
-
-        public PageRepository(DbContext context) : base(context)
+        public PageRepository(CmsEngineContext context) : base(context)
         {
 
         }

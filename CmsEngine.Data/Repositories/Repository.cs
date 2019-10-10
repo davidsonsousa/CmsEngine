@@ -14,9 +14,9 @@ namespace CmsEngine.Data.Repositories
                                        IDataModificationRangeRepository<TEntity>
                                        where TEntity : BaseEntity
     {
-        protected readonly DbContext dbContext;
+        protected readonly CmsEngineContext dbContext;
 
-        public Repository(DbContext context)
+        public Repository(CmsEngineContext context)
         {
             dbContext = context ?? throw new ArgumentNullException("Repository - Context");
         }

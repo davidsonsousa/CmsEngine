@@ -7,12 +7,7 @@ namespace CmsEngine.Data.Repositories
 {
     public class CategoryRepository : Repository<Category>, ICategoryRepository
     {
-        public CmsEngineContext CmsEngineContext
-        {
-            get { return dbContext as CmsEngineContext; }
-        }
-
-        public CategoryRepository(DbContext context) : base(context)
+        public CategoryRepository(CmsEngineContext context) : base(context)
         {
         }
 

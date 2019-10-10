@@ -7,12 +7,7 @@ namespace CmsEngine.Data.Repositories
 {
     public class TagRepository : Repository<Tag>, ITagRepository
     {
-        public CmsEngineContext CmsEngineContext
-        {
-            get { return dbContext as CmsEngineContext; }
-        }
-
-        public TagRepository(DbContext context) : base(context)
+        public TagRepository(CmsEngineContext context) : base(context)
         {
 
         }
