@@ -15,6 +15,7 @@ namespace CmsEngine.Data.Repositories
         Task<(IEnumerable<Post> Items, int Count)> GetPublishedByTagForPagination(string tagSlug, int page, int articleLimit);
         Task<(IEnumerable<Post> Items, int Count)> FindPublishedForPaginationOrderByDateDescending(int page, string searchTerm, int articleLimit);
         Task<(IEnumerable<Post> Items, int Count)> GetPublishedForPagination(int page, int articleLimit);
+        Task<IEnumerable<Post>> GetPublishedLatestPosts(int count);
 
         Task<Post> GetBySlug(string slug);
     }

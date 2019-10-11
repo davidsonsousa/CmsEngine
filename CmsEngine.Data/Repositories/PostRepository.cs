@@ -72,5 +72,10 @@ namespace CmsEngine.Data.Repositories
 
             return (items, count);
         }
+
+        public async Task<IEnumerable<Post>> GetPublishedLatestPosts(int count)
+        {
+            return await Get(q => q.Status == DocumentStatus.Published).OrderByDescending(o => o.PublishedOn).Take(count).ToListAsync();
+        }
     }
 }
