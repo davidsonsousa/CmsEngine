@@ -64,11 +64,11 @@ namespace CmsEngine.Ui
 
             //// Add services
             services.AddScoped<IService, Service>();
-            //services.AddScoped<ICategoryService, CategoryService>();
+            services.AddScoped<ICategoryService, CategoryService>();
             services.AddScoped<IPageService, PageService>();
-            //services.AddScoped<IPostService, PostService>();
-            //services.AddScoped<ITagService, TagService>();
-            //services.AddScoped<IWebsiteService, WebsiteService>();
+            services.AddScoped<IPostService, PostService>();
+            services.AddScoped<ITagService, TagService>();
+            services.AddScoped<IWebsiteService, WebsiteService>();
             services.AddScoped<IXmlService, XmlService>();
 
             //// Add Unit of Work
