@@ -148,5 +148,34 @@ namespace CmsEngine.Application.Extensions.Mapper
                 Status = item.Status
             };
         }
+
+        /// <summary>
+        /// Maps an IEnumerable<Page> into an IEnumerable<PageEditModel>
+        /// </summary>
+        /// <param name="pages"></param>
+        /// <returns></returns>
+        public static IEnumerable<PageViewModel> MapToViewModel(this IEnumerable<Page> pages)
+        {
+            var editModels = new List<PageViewModel>();
+
+            foreach (var item in pages)
+            {
+                editModels.Add(new PageViewModel
+                {
+                    Id = item.Id,
+                    VanityId = item.VanityId,
+                    Title = item.Title,
+                    Slug = item.Slug,
+                    Description = item.Description,
+                    DocumentContent = item.DocumentContent,
+                    HeaderImage = item.HeaderImage,
+                    PublishedOn = item.PublishedOn,
+                    Status = item.Status
+                });
+            }
+
+            return editModels;
+        }
+
     }
 }

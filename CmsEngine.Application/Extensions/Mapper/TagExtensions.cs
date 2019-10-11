@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using CmsEngine.Application.EditModels;
+using CmsEngine.Application.ViewModels;
 using CmsEngine.Application.ViewModels.DataTableViewModels;
 using CmsEngine.Data.Entities;
 
@@ -76,6 +77,29 @@ namespace CmsEngine.Application.Extensions.Mapper
             }
 
             return tableViewModel;
+        }
+
+        /// <summary>
+        /// Maps an IEnumerable<Tag> into an IEnumerable<TagViewModel>
+        /// </summary>
+        /// <param name="tags"></param>
+        /// <returns></returns>
+        public static IEnumerable<TagViewModel> MapToViewModel(this IEnumerable<Tag> tags)
+        {
+            var viewModel = new List<TagViewModel>();
+
+            foreach (var item in tags)
+            {
+                viewModel.Add(new TagViewModel
+                {
+                    Id = item.Id,
+                    VanityId = item.VanityId,
+                    Name = item.Name,
+                    Slug = item.Slug
+                });
+            }
+
+            return viewModel;
         }
     }
 }

@@ -1,5 +1,7 @@
 using System.Collections.Generic;
+using System.Linq;
 using CmsEngine.Application.EditModels;
+using CmsEngine.Application.ViewModels;
 using CmsEngine.Application.ViewModels.DataTableViewModels;
 using CmsEngine.Data.Entities;
 
@@ -80,6 +82,31 @@ namespace CmsEngine.Application.Extensions.Mapper
             }
 
             return tableViewModel;
+        }
+
+        /// <summary>
+        /// Maps an IEnumerable<Category> into an IEnumerable<CategoryViewModel>
+        /// </summary>
+        /// <param name="categories"></param>
+        /// <returns></returns>
+        public static IEnumerable<CategoryViewModel> MapToViewModel(this IEnumerable<Category> categories)
+        {
+            var viewModel = new List<CategoryViewModel>();
+
+            foreach (var item in categories)
+            {
+                viewModel.Add(new CategoryViewModel
+                {
+                    Id = item.Id,
+                    VanityId = item.VanityId,
+                    Name = item.Name,
+                    Description = item.Description,
+                    Slug = item.Slug,
+                    Posts = item.PostCategories.Select(x => x.Post).MapToViewModel()
+                });
+            }
+
+            return viewModel;
         }
     }
 }
