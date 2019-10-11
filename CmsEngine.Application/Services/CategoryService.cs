@@ -6,6 +6,7 @@ using CmsEngine.Application.Attributes;
 using CmsEngine.Application.EditModels;
 using CmsEngine.Application.Extensions;
 using CmsEngine.Application.Extensions.Mapper;
+using CmsEngine.Application.ViewModels;
 using CmsEngine.Application.ViewModels.DataTableViewModels;
 using CmsEngine.Core;
 using CmsEngine.Data;
@@ -75,6 +76,14 @@ namespace CmsEngine.Application.Services
             }
 
             return items;
+        }
+
+        public async Task<IEnumerable<CategoryViewModel>> GetCategoriesWithPosts()
+        {
+            var items = await _unitOfWork.Categories.GetCategoriesWithPosts();
+            logger.LogInformation("CategoryService > GetCategoriesWithPosts()");
+            logger.LogInformation("Categories loaded: {0}", items.Count());
+            return items.MapToViewModel();
         }
 
         public async Task<(IEnumerable<CategoryTableViewModel> Data, int RecordsTotal, int RecordsFiltered)> GetForDataTable(DataParameters parameters)

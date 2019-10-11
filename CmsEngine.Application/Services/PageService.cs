@@ -77,6 +77,14 @@ namespace CmsEngine.Application.Services
             return items;
         }
 
+        public async Task<IEnumerable<PageViewModel>> GetAllPublished()
+        {
+            var items = await _unitOfWork.Pages.GetByStatusOrderByDescending(DocumentStatus.Published);
+            logger.LogInformation("PageService > GetPagesByStatusReadOnly()");
+            logger.LogInformation("Pages loaded: {0}", items.Count());
+            return items.MapToViewModel();
+        }
+
         public async Task<PageViewModel> GetBySlug(string slug)
         {
             logger.LogInformation($"PageService > GetBySlug({slug})");

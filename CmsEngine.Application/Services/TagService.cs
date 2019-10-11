@@ -6,6 +6,7 @@ using CmsEngine.Application.Attributes;
 using CmsEngine.Application.EditModels;
 using CmsEngine.Application.Extensions;
 using CmsEngine.Application.Extensions.Mapper;
+using CmsEngine.Application.ViewModels;
 using CmsEngine.Application.ViewModels.DataTableViewModels;
 using CmsEngine.Core;
 using CmsEngine.Data;
@@ -86,6 +87,14 @@ namespace CmsEngine.Application.Services
             }
             items = OrderForDataTable(parameters.Order[0].Column, parameters.Order[0].Dir, items);
             return (items.MapToTableViewModel(), recordsTotal, items.Count());
+        }
+
+        public async Task<IEnumerable<TagViewModel>> GetAllTags()
+        {
+            var items = await _unitOfWork.Tags.GetAllAsync();
+            logger.LogInformation("TagService > GetAllTags()");
+            logger.LogInformation("Tags loaded: {0}", items.Count());
+            return items.MapToViewModel();
         }
 
         public IEnumerable<Tag> OrderForDataTable(int column, string direction, IEnumerable<Tag> items)

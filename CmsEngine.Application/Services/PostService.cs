@@ -128,6 +128,13 @@ namespace CmsEngine.Application.Services
             return new PaginatedList<PostViewModel>(posts.Items.MapToViewModel(), posts.Count, page, Instance.ArticleLimit);
         }
 
+        public async Task<IEnumerable<PostViewModel>> GetPublishedLatestPosts(int count)
+        {
+            logger.LogInformation("CmsService > GetPublishedLatestPosts(count: {0})", count);
+            var posts = await _unitOfWork.Posts.GetPublishedLatestPosts(count);
+            return posts.MapToViewModel();
+        }
+
         public async Task<PaginatedList<PostViewModel>> FindPublishedForPaginationOrderByDateDescending(string searchTerm = "", int page = 1)
         {
             logger.LogInformation("CmsService > FindPublishedForPaginationOrderByDateDescending(page: {0}, searchTerm: {1})", page, searchTerm);

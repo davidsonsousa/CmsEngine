@@ -22,6 +22,7 @@ namespace CmsEngine.Application.Services
         Task<PaginatedList<PostViewModel>> GetPublishedByCategoryForPagination(string categorySlug, int page = 1);
         Task<PaginatedList<PostViewModel>> GetPublishedByTagForPagination(string tagSlug, int page = 1);
         Task<PaginatedList<PostViewModel>> GetPublishedForPagination(int page = 1);
+        Task<IEnumerable<PostViewModel>> GetPublishedLatestPosts(int count);
         Task<PaginatedList<PostViewModel>> FindPublishedForPaginationOrderByDateDescending(string searchTerm = "", int page = 1);
     }
 }
