@@ -21,7 +21,21 @@ namespace CmsEngine.Ui.Controllers
 
         public IActionResult Index(int page = 1, string q = "")
         {
-            instance.PageTitle = string.IsNullOrWhiteSpace(q) ? $"Blog - {instance.Name}" : $"Results for '{q}' - {instance.Name}";
+            if (string.IsNullOrWhiteSpace(q))
+            {
+                if (page == 1)
+                {
+                    instance.PageTitle = $"Blog - {instance.Name}";
+                }
+                else
+                {
+                    instance.PageTitle = $"Blog - {instance.Name} - Page {page}";
+                }
+            }
+            else
+            {
+                instance.PageTitle = $"Results for '{q}' - {instance.Name}";
+            }
 
             return View(instance);
         }
