@@ -18,7 +18,7 @@ namespace CmsEngine.Data.Repositories
 
         public async Task<IEnumerable<Category>> GetCategoriesWithPosts()
         {
-            return await Get().Include(c => c.PostCategories).ToListAsync();
+            return await Get().Include(c => c.PostCategories).ThenInclude(pc => pc.Post).ToListAsync();
         }
 
         public async Task<Category> GetCategoryBySlugWithPosts(string slug)
