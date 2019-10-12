@@ -108,17 +108,15 @@ namespace CmsEngine.Application.Services
         public async Task<PaginatedList<PostViewModel>> GetPublishedByCategoryForPagination(string categorySlug, int page = 1)
         {
             logger.LogInformation("CmsService > GetPublishedByCategoryForPagination(categorySlug: {0}, page: {1})", categorySlug, page);
-
             var posts = await _unitOfWork.Posts.GetPublishedByCategoryForPagination(categorySlug, page, Instance.ArticleLimit);
-
-            return new PaginatedList<PostViewModel>(posts.Items.MapToViewModel(), posts.Count, page, Instance.ArticleLimit);
+            return new PaginatedList<PostViewModel>(posts.Items.MapToViewModelWithCategories(), posts.Count, page, Instance.ArticleLimit);
         }
 
         public async Task<PaginatedList<PostViewModel>> GetPublishedByTagForPagination(string tagSlug, int page = 1)
         {
             logger.LogInformation("CmsService > GetPublishedByTagForPagination(tagSlug: {0}, page: {1})", tagSlug, page);
             var posts = await _unitOfWork.Posts.GetPublishedByTagForPagination(tagSlug, page, Instance.ArticleLimit);
-            return new PaginatedList<PostViewModel>(posts.Items.MapToViewModel(), posts.Count, page, Instance.ArticleLimit);
+            return new PaginatedList<PostViewModel>(posts.Items.MapToViewModelWithTags(), posts.Count, page, Instance.ArticleLimit);
         }
 
         public async Task<PaginatedList<PostViewModel>> GetPublishedForPagination(int page = 1)

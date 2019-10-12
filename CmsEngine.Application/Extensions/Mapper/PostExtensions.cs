@@ -177,5 +177,63 @@ namespace CmsEngine.Application.Extensions.Mapper
             return viewModels;
         }
 
+        /// <summary>
+        /// Maps Post model into a PostViewModel with Categories
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns></returns>
+        public static IEnumerable<PostViewModel> MapToViewModelWithCategories(this IEnumerable<Post> posts)
+        {
+            var viewModels = new List<PostViewModel>();
+
+            foreach (var item in posts)
+            {
+                viewModels.Add(new PostViewModel
+                {
+                    Id = item.Id,
+                    VanityId = item.VanityId,
+                    Title = item.Title,
+                    Slug = item.Slug,
+                    Description = item.Description,
+                    DocumentContent = item.DocumentContent,
+                    HeaderImage = item.HeaderImage,
+                    PublishedOn = item.PublishedOn,
+                    Status = item.Status,
+                    Categories = item.PostCategories.Select(x => x.Category).MapToViewModel()
+                });
+            }
+
+            return viewModels;
+        }
+
+        /// <summary>
+        /// Maps Post model into a PostViewModel with Tags
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns></returns>
+        public static IEnumerable<PostViewModel> MapToViewModelWithTags(this IEnumerable<Post> posts)
+        {
+            var viewModels = new List<PostViewModel>();
+
+            foreach (var item in posts)
+            {
+                viewModels.Add(new PostViewModel
+                {
+                    Id = item.Id,
+                    VanityId = item.VanityId,
+                    Title = item.Title,
+                    Slug = item.Slug,
+                    Description = item.Description,
+                    DocumentContent = item.DocumentContent,
+                    HeaderImage = item.HeaderImage,
+                    PublishedOn = item.PublishedOn,
+                    Status = item.Status,
+                    Tags = item.PostTags.Select(x => x.Tag).MapToViewModel()
+                });
+            }
+
+            return viewModels;
+        }
+
     }
 }

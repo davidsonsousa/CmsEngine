@@ -33,7 +33,9 @@ namespace CmsEngine.Data.Repositories
 
         public async Task<(IEnumerable<Post> Items, int Count)> GetPublishedByCategoryForPagination(string categorySlug, int page, int articleLimit)
         {
-            var posts = Get(q => q.Status == DocumentStatus.Published).OrderByDescending(o => o.PublishedOn)
+            var posts = Get(q => q.Status == DocumentStatus.Published).Include(p => p.PostCategories)
+                                                                      .ThenInclude(pc => pc.Category)
+                                                                      .OrderByDescending(o => o.PublishedOn)
                                                                       .Where(q => q.PostCategories.Any(pc => pc.Category.Slug == categorySlug));
 
             int count = posts.Count();
@@ -44,8 +46,11 @@ namespace CmsEngine.Data.Repositories
 
         public async Task<(IEnumerable<Post> Items, int Count)> GetPublishedByTagForPagination(string tagSlug, int page, int articleLimit)
         {
-            var posts = Get(q => q.Status == DocumentStatus.Published).OrderByDescending(o => o.PublishedOn)
+            var posts = Get(q => q.Status == DocumentStatus.Published).Include(p => p.PostTags)
+                                                                      .ThenInclude(pt => pt.Tag)
+                                                                      .OrderByDescending(o => o.PublishedOn)
                                                                       .Where(q => q.PostTags.Any(pc => pc.Tag.Slug == tagSlug));
+
             int count = posts.Count();
             var items = await posts.Skip((page - 1) * articleLimit).Take(articleLimit).ToListAsync();
 
