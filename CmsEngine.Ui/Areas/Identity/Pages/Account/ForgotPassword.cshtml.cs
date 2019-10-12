@@ -52,7 +52,8 @@ namespace CmsEngine.Ui.Areas.Identity.Pages.Account
                     values: new { code },
                     protocol: Request.Scheme);
 
-                await _emailSender.SendPasswordResetAsync(Input.Email, HtmlEncoder.Default.Encode(callbackUrl));
+                var contactForm = new ContactForm(Input.Email, "Reset password", HtmlEncoder.Default.Encode(callbackUrl));
+                await _emailSender.SendPasswordResetAsync(contactForm);
 
                 return RedirectToPage("./ForgotPasswordConfirmation");
             }

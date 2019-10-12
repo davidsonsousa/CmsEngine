@@ -167,7 +167,9 @@ namespace CmsEngine.Ui.Areas.Identity.Pages.Account.Manage
                 pageHandler: null,
                 values: new { userId = userId, code = code },
                 protocol: Request.Scheme);
-            await _emailSender.SendEmailConfirmationAsync(email, HtmlEncoder.Default.Encode(callbackUrl));
+
+            var contactForm = new ContactForm(email, "E-mail confirmation", HtmlEncoder.Default.Encode(callbackUrl));
+            await _emailSender.SendEmailConfirmationAsync(contactForm);
 
             StatusMessage = "Verification email sent. Please check your email.";
             return RedirectToPage();

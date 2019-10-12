@@ -23,15 +23,21 @@ namespace CmsEngine.Application.Helpers.Email
             await Execute(mailEditModel);
         }
 
+        public async Task SendEmailConfirmationAsync(ContactForm mailEditModel)
+        {
+            await Execute(mailEditModel);
+        }
+
+        public async Task SendPasswordResetAsync(ContactForm mailEditModel)
+        {
+            await Execute(mailEditModel);
+        }
+
         private async Task Execute(ContactForm mailEditModel)
         {
             try
             {
-                MailMessage mail = new MailMessage()
-                {
-                    From = new MailAddress(_emailSettings.Username, "CmsEngine")
-                };
-                mail.To.Add(new MailAddress(mailEditModel.Sender));
+                MailMessage mail = new MailMessage(new MailAddress(_emailSettings.Username, "CmsEngine"), new MailAddress(mailEditModel.Sender));
 
                 if (!string.IsNullOrWhiteSpace(_emailSettings.CcEmail))
                 {
