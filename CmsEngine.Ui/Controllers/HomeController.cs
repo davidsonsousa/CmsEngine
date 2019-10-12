@@ -26,6 +26,7 @@ namespace CmsEngine.Ui.Controllers
 
         public IActionResult Index()
         {
+            instance.PageTitle = $"{instance.Name}";
             return View(instance);
         }
 
