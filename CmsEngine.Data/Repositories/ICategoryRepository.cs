@@ -7,7 +7,7 @@ namespace CmsEngine.Data.Repositories
     public interface ICategoryRepository : IReadRepository<Category>, IDataModificationRepository<Category>, IDataModificationRangeRepository<Category>
     {
         Task<Category> GetCategoryBySlug(string slug);
-        Task<IEnumerable<Category>> GetCategoriesWithPosts();
+        Task<IEnumerable<Category>> GetCategoriesWithPostsOrderedByName();
         Task<Category> GetCategoryBySlugWithPosts(string slug);
     }
 }

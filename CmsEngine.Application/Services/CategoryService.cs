@@ -80,7 +80,7 @@ namespace CmsEngine.Application.Services
 
         public async Task<IEnumerable<CategoryViewModel>> GetCategoriesWithPosts()
         {
-            var items = await _unitOfWork.Categories.GetCategoriesWithPosts();
+            var items = await _unitOfWork.Categories.GetCategoriesWithPostsOrderedByName();
             logger.LogInformation("CategoryService > GetCategoriesWithPosts()");
             logger.LogInformation("Categories loaded: {0}", items.Count());
             return items.MapToViewModel();
