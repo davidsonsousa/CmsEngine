@@ -57,10 +57,10 @@ namespace CmsEngine.Ui.Controllers
         }
 
         [HttpPost]
-        public IActionResult Contact(ContactForm contactForm, string returnUrl = null)
+        public async Task<IActionResult> Contact(ContactForm contactForm, string returnUrl = null)
         {
             ViewData["ReturnUrl"] = returnUrl;
-            _emailSender.SendEmailAsync(contactForm);
+            await _emailSender.SendEmailAsync(contactForm);
 
             if (Url.IsLocalUrl(returnUrl))
             {

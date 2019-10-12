@@ -18,10 +18,9 @@ namespace CmsEngine.Application.Helpers.Email
             _logger = logger;
         }
 
-        public Task SendEmailAsync(ContactForm mailEditModel)
+        public async Task SendEmailAsync(ContactForm mailEditModel)
         {
-            Execute(mailEditModel).GetAwaiter().GetResult();
-            return Task.FromResult(0);
+            await Execute(mailEditModel);
         }
 
         private async Task Execute(ContactForm mailEditModel)
