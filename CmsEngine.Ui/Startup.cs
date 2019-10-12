@@ -46,11 +46,9 @@ namespace CmsEngine.Ui
             services.AddDbContext<CmsEngineContext>(options => options.EnableSensitiveDataLogging(true) // TODO: Perhaps use a flag from appsettings instead of a hard-coded value
                                                                       .UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
-            //services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-            //        .AddEntityFrameworkStores<CmsEngineContext>();
-
             services.AddIdentity<ApplicationUser, IdentityRole>()
-                    .AddEntityFrameworkStores<CmsEngineContext>();
+                    .AddEntityFrameworkStores<CmsEngineContext>()
+                    .AddDefaultTokenProviders();
 
             // Add HttpContextAccessor as .NET Core doesn't have HttpContext.Current anymore
             services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
@@ -78,6 +76,13 @@ namespace CmsEngine.Ui
 
             services.AddControllersWithViews();
             services.AddRazorPages();
+
+            services.ConfigureApplicationCookie(options =>
+            {
+                options.LoginPath = $"/Identity/Account/Login";
+                options.LogoutPath = $"/Identity/Account/Logout";
+                options.AccessDeniedPath = $"/Identity/Account/AccessDenied";
+            });
 
             if (!Environment.IsDevelopment())
             {
