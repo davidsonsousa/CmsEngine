@@ -178,6 +178,35 @@ namespace CmsEngine.Application.Extensions.Mapper
         }
 
         /// <summary>
+        /// Maps Post model into a PostViewModel with Author information
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns></returns>
+        public static IEnumerable<PostViewModel> MapToViewModelWithAuthor(this IEnumerable<Post> posts)
+        {
+            var viewModels = new List<PostViewModel>();
+
+            foreach (var item in posts)
+            {
+                viewModels.Add(new PostViewModel
+                {
+                    Id = item.Id,
+                    VanityId = item.VanityId,
+                    Title = item.Title,
+                    Slug = item.Slug,
+                    Description = item.Description,
+                    DocumentContent = item.DocumentContent,
+                    HeaderImage = item.HeaderImage,
+                    PublishedOn = item.PublishedOn,
+                    Status = item.Status,
+                    Author = item.PostApplicationUsers.Select(pau => pau.ApplicationUser).FirstOrDefault().MapToViewModel()
+                });
+            }
+
+            return viewModels;
+        }
+
+        /// <summary>
         /// Maps Post model into a PostViewModel with Categories
         /// </summary>
         /// <param name="item"></param>
@@ -229,6 +258,33 @@ namespace CmsEngine.Application.Extensions.Mapper
                     PublishedOn = item.PublishedOn,
                     Status = item.Status,
                     Tags = item.PostTags.Select(x => x.Tag).MapToViewModel()
+                });
+            }
+
+            return viewModels;
+        }
+
+        /// <summary>
+        /// Maps Post model into a PostViewModel
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns></returns>
+        public static IEnumerable<PostViewModel> MapToViewModelLatestPosts(this IEnumerable<Post> posts)
+        {
+            var viewModels = new List<PostViewModel>();
+
+            foreach (var item in posts)
+            {
+                viewModels.Add(new PostViewModel
+                {
+                    VanityId = item.VanityId,
+                    Title = item.Title,
+                    Slug = item.Slug,
+                    Description = item.Description,
+                    HeaderImage = item.HeaderImage,
+                    PublishedOn = item.PublishedOn,
+                    Categories = item.Categories.MapToViewModelSimple(),
+                    Author = item.ApplicationUsers.MapToViewModelSimple().SingleOrDefault()
                 });
             }
 

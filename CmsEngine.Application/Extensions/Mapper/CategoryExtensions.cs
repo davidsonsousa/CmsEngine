@@ -108,5 +108,27 @@ namespace CmsEngine.Application.Extensions.Mapper
 
             return viewModel;
         }
+
+        /// <summary>
+        /// Maps VanityId, Name and Slug
+        /// </summary>
+        /// <param name="categories"></param>
+        /// <returns></returns>
+        public static IEnumerable<CategoryViewModel> MapToViewModelSimple(this IEnumerable<Category> categories)
+        {
+            var viewModel = new List<CategoryViewModel>();
+
+            foreach (var item in categories)
+            {
+                viewModel.Add(new CategoryViewModel
+                {
+                    VanityId = item.VanityId,
+                    Name = item.Name,
+                    Slug = item.Slug
+                });
+            }
+
+            return viewModel;
+        }
     }
 }

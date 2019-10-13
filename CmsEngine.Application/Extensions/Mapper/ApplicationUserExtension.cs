@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using CmsEngine.Application.EditModels;
 using CmsEngine.Application.ViewModels;
 using CmsEngine.Data.Entities;
@@ -39,6 +40,29 @@ namespace CmsEngine.Application.Extensions.Mapper
                 Email = item.Email,
                 UserName = item.UserName
             };
+        }
+
+        /// <summary>
+        /// Maps Name, Surname, Email and UserName
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns></returns>
+        public static IEnumerable<UserViewModel> MapToViewModelSimple(this IEnumerable<ApplicationUser> users)
+        {
+            var viewModels = new List<UserViewModel>();
+
+            foreach (var item in users)
+            {
+                viewModels.Add(new UserViewModel
+                {
+                    Name = item.Name,
+                    Surname = item.Surname,
+                    Email = item.Email,
+                    UserName = item.UserName
+                });
+            }
+
+            return viewModels;
         }
 
         /// <summary>

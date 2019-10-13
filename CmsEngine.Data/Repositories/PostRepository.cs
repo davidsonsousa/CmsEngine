@@ -61,7 +61,11 @@ namespace CmsEngine.Data.Repositories
         {
             var posts = string.IsNullOrWhiteSpace(searchTerm)
                         ? Get(q => q.Status == DocumentStatus.Published)
-                        : Get(q => (q.Title.Contains(searchTerm) || q.DocumentContent.Contains(searchTerm)) && q.Status == DocumentStatus.Published);
+                            .Include(p => p.PostApplicationUsers)
+                            .ThenInclude(pau => pau.ApplicationUser)
+                        : Get(q => (q.Title.Contains(searchTerm) || q.DocumentContent.Contains(searchTerm)) && q.Status == DocumentStatus.Published)
+                            .Include(p => p.PostApplicationUsers)
+                            .ThenInclude(pau => pau.ApplicationUser);
 
             int count = posts.Count();
             var items = await posts.OrderBy(o => o.PublishedOn).Skip((page - 1) * articleLimit).Take(articleLimit).ToListAsync();
@@ -71,7 +75,9 @@ namespace CmsEngine.Data.Repositories
 
         public async Task<(IEnumerable<Post> Items, int Count)> GetPublishedForPagination(int page, int articleLimit)
         {
-            var posts = Get(q => q.Status == DocumentStatus.Published).OrderByDescending(o => o.PublishedOn);
+            var posts = Get(q => q.Status == DocumentStatus.Published).OrderByDescending(o => o.PublishedOn)
+                            .Include(p => p.PostApplicationUsers)
+                            .ThenInclude(pau => pau.ApplicationUser);
             int count = posts.Count();
             var items = await posts.Skip((page - 1) * articleLimit).Take(articleLimit).ToListAsync();
 
@@ -80,7 +86,34 @@ namespace CmsEngine.Data.Repositories
 
         public async Task<IEnumerable<Post>> GetPublishedLatestPosts(int count)
         {
-            return await Get(q => q.Status == DocumentStatus.Published).OrderByDescending(o => o.PublishedOn).Take(count).ToListAsync();
+            return await Get(q => q.Status == DocumentStatus.Published)
+                            .Include(p => p.PostCategories)
+                                .ThenInclude(pc => pc.Category)
+                            .Include(p => p.PostApplicationUsers)
+                                .ThenInclude(pau => pau.ApplicationUser)
+                            .Select(p => new Post
+                            {
+                                VanityId = p.VanityId,
+                                Title = p.Title,
+                                Slug = p.Slug,
+                                Description = p.Description,
+                                HeaderImage = p.HeaderImage,
+                                PublishedOn = p.PublishedOn,
+                                Categories = p.PostCategories.Select(pc => pc.Category).Select(c => new Category
+                                {
+                                    VanityId = c.VanityId,
+                                    Name = c.Name,
+                                    Slug = c.Slug
+                                }),
+                                ApplicationUsers = p.PostApplicationUsers.Select(pau => pau.ApplicationUser).Select(au => new ApplicationUser
+                                {
+                                    Id = au.Id,
+                                    Name = au.Name,
+                                    Surname = au.Surname,
+                                    Email = au.Email
+                                })
+                            })
+                            .OrderByDescending(o => o.PublishedOn).Take(count).ToListAsync();
         }
     }
 }
