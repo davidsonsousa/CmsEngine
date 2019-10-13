@@ -17,7 +17,6 @@ namespace CmsEngine.Application.Services
         Task<ReturnValue> DeleteRange(Guid[] ids);
         Task<(IEnumerable<PageTableViewModel> Data, int RecordsTotal, int RecordsFiltered)> GetForDataTable(DataParameters parameters);
         Task<ReturnValue> Save(PageEditModel pageEditModel);
-        Task<IEnumerable<PageEditModel>> GetByStatus(DocumentStatus documentStatus, int count = 0);
         Task<PageViewModel> GetBySlug(string slug);
         Task<IEnumerable<PageViewModel>> GetAllPublished();
     }
