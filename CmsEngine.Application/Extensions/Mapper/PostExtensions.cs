@@ -265,11 +265,11 @@ namespace CmsEngine.Application.Extensions.Mapper
         }
 
         /// <summary>
-        /// Maps Post model into a PostViewModel
+        /// Maps limited information for Partial Views
         /// </summary>
         /// <param name="item"></param>
         /// <returns></returns>
-        public static IEnumerable<PostViewModel> MapToViewModelLatestPosts(this IEnumerable<Post> posts)
+        public static IEnumerable<PostViewModel> MapToViewModelForPartialView(this IEnumerable<Post> posts)
         {
             var viewModels = new List<PostViewModel>();
 
