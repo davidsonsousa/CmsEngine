@@ -28,7 +28,31 @@ namespace CmsEngine.Data.Repositories
 
         public async Task<Post> GetBySlug(string slug)
         {
-            return await Get(q => q.Slug == slug).SingleOrDefaultAsync();
+            return await Get(q => q.Slug == slug)
+                             .Select(p => new Post
+                             {
+                                 VanityId = p.VanityId,
+                                 Title = p.Title,
+                                 Slug = p.Slug,
+                                 Description = p.Description,
+                                 DocumentContent = p.DocumentContent,
+                                 HeaderImage = p.HeaderImage,
+                                 PublishedOn = p.PublishedOn,
+                                 Categories = p.PostCategories.Select(pc => pc.Category).Select(c => new Category
+                                 {
+                                     VanityId = c.VanityId,
+                                     Name = c.Name,
+                                     Slug = c.Slug
+                                 }),
+                                 ApplicationUsers = p.PostApplicationUsers.Select(pau => pau.ApplicationUser).Select(au => new ApplicationUser
+                                 {
+                                     Id = au.Id,
+                                     Name = au.Name,
+                                     Surname = au.Surname,
+                                     Email = au.Email
+                                 })
+                             })
+                             .SingleOrDefaultAsync();
         }
 
         public async Task<(IEnumerable<Post> Items, int Count)> GetPublishedByCategoryForPagination(string categorySlug, int page, int articleLimit)
