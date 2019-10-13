@@ -39,7 +39,7 @@ namespace CmsEngine.Application.Services
                              new XElement("channel",
                                           new XElement("title", Instance.Name),
                                           new XElement("link", FormatUrl(string.Empty)),
-                                          new XElement("description", Instance.Description),
+                                          new XElement("description", Instance.Tagline),
                                           new XElement("language", Instance.Culture.ToLowerInvariant()),
                                           new XElement("generator", "MultiCMS"),
                                           articleList
