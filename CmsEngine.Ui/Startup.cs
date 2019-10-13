@@ -111,8 +111,9 @@ namespace CmsEngine.Ui
 
             const int http301 = StatusCodes.Status301MovedPermanently;
 
-            // Added compatibility to the old davidsonsousa.net
+            // Added compatibility with the old davidsonsousa.net
             var rewriteOptions = new RewriteOptions().Add(new RedirectToNonWwwRule(http301))
+                                                     .Add(new RedirectLowerCaseRule(http301))
                                                      .AddRedirect("^en/(.*)", "blog/$1", http301)
                                                      .AddRedirect("^pt/(.*)", "blog/$1", http301)
                                                      .AddRedirect("^image/articles/(.*)", "image/post/$1", http301)
