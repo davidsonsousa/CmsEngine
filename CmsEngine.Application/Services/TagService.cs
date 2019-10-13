@@ -91,8 +91,8 @@ namespace CmsEngine.Application.Services
 
         public async Task<IEnumerable<TagViewModel>> GetAllTags()
         {
-            var items = await _unitOfWork.Tags.GetAllAsync();
             logger.LogInformation("TagService > GetAllTags()");
+            var items = await _unitOfWork.Tags.GetAllAsync();
             logger.LogInformation("Tags loaded: {0}", items.Count());
             return items.MapToViewModel();
         }
@@ -167,8 +167,8 @@ namespace CmsEngine.Application.Services
 
         public async Task<TagEditModel> SetupEditModel(Guid id)
         {
-            var item = await _unitOfWork.Tags.GetByIdAsync(id);
             logger.LogInformation("CmsService > SetupTagEditModel(id: {0})", id);
+            var item = await _unitOfWork.Tags.GetByIdAsync(id);
             logger.LogInformation("Tag: {0}", item.ToString());
             return item.MapToEditModel();
         }
