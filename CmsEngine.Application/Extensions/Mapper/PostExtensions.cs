@@ -262,5 +262,32 @@ namespace CmsEngine.Application.Extensions.Mapper
             return viewModels;
         }
 
+        /// <summary>
+        /// Maps limited information for Partial Views for Tags
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns></returns>
+        public static IEnumerable<PostViewModel> MapToViewModelForPartialViewForTags(this IEnumerable<Post> posts)
+        {
+            var viewModels = new List<PostViewModel>();
+
+            foreach (var item in posts)
+            {
+                viewModels.Add(new PostViewModel
+                {
+                    VanityId = item.VanityId,
+                    Title = item.Title,
+                    Slug = item.Slug,
+                    Description = item.Description,
+                    HeaderImage = item.HeaderImage,
+                    PublishedOn = item.PublishedOn,
+                    Categories = item.Categories.MapToViewModelSimple(),
+                    Tags = item.Tags.MapToViewModelSimple(),
+                    Author = item.ApplicationUsers.MapToViewModelSimple().SingleOrDefault()
+                });
+            }
+
+            return viewModels;
+        }
     }
 }

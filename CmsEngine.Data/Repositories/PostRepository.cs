@@ -57,13 +57,37 @@ namespace CmsEngine.Data.Repositories
 
         public async Task<(IEnumerable<Post> Items, int Count)> GetPublishedByCategoryForPagination(string categorySlug, int page, int articleLimit)
         {
-            var posts = Get(q => q.Status == DocumentStatus.Published).Include(p => p.PostCategories)
-                                                                      .ThenInclude(pc => pc.Category)
-                                                                      .OrderByDescending(o => o.PublishedOn)
-                                                                      .Where(q => q.PostCategories.Any(pc => pc.Category.Slug == categorySlug));
+            var posts = Get(q => q.Status == DocumentStatus.Published)
+                            .Include(p => p.PostCategories)
+                                .ThenInclude(pc => pc.Category)
+                            .Include(p => p.PostApplicationUsers)
+                                .ThenInclude(pau => pau.ApplicationUser)
+                            .OrderByDescending(o => o.PublishedOn)
+                            .Where(q => q.PostCategories.Any(pc => pc.Category.Slug == categorySlug));
 
             int count = posts.Count();
-            var items = await posts.Skip((page - 1) * articleLimit).Take(articleLimit).ToListAsync();
+            var items = await posts.Select(p => new Post
+            {
+                VanityId = p.VanityId,
+                Title = p.Title,
+                Slug = p.Slug,
+                Description = p.Description,
+                HeaderImage = p.HeaderImage,
+                PublishedOn = p.PublishedOn,
+                Categories = p.PostCategories.Select(pc => pc.Category).Select(c => new Category
+                {
+                    VanityId = c.VanityId,
+                    Name = c.Name,
+                    Slug = c.Slug
+                }),
+                ApplicationUsers = p.PostApplicationUsers.Select(pau => pau.ApplicationUser).Select(au => new ApplicationUser
+                {
+                    Id = au.Id,
+                    Name = au.Name,
+                    Surname = au.Surname,
+                    Email = au.Email
+                })
+            }).Skip((page - 1) * articleLimit).Take(articleLimit).ToListAsync();
 
             return (items, count);
         }
@@ -71,12 +95,43 @@ namespace CmsEngine.Data.Repositories
         public async Task<(IEnumerable<Post> Items, int Count)> GetPublishedByTagForPagination(string tagSlug, int page, int articleLimit)
         {
             var posts = Get(q => q.Status == DocumentStatus.Published).Include(p => p.PostTags)
-                                                                      .ThenInclude(pt => pt.Tag)
+                                                                          .ThenInclude(pt => pt.Tag)
+                                                                      .Include(p => p.PostCategories)
+                                                                          .ThenInclude(pc => pc.Category)
+                                                                      .Include(p => p.PostApplicationUsers)
+                                                                          .ThenInclude(pau => pau.ApplicationUser)
                                                                       .OrderByDescending(o => o.PublishedOn)
                                                                       .Where(q => q.PostTags.Any(pc => pc.Tag.Slug == tagSlug));
 
             int count = posts.Count();
-            var items = await posts.Skip((page - 1) * articleLimit).Take(articleLimit).ToListAsync();
+            var items = await posts.Select(p => new Post
+            {
+                VanityId = p.VanityId,
+                Title = p.Title,
+                Slug = p.Slug,
+                Description = p.Description,
+                HeaderImage = p.HeaderImage,
+                PublishedOn = p.PublishedOn,
+                Categories = p.PostCategories.Select(pc => pc.Category).Select(c => new Category
+                {
+                    VanityId = c.VanityId,
+                    Name = c.Name,
+                    Slug = c.Slug
+                }),
+                Tags = p.PostTags.Select(pt => pt.Tag).Select(c => new Tag
+                {
+                    VanityId = c.VanityId,
+                    Name = c.Name,
+                    Slug = c.Slug
+                }),
+                ApplicationUsers = p.PostApplicationUsers.Select(pau => pau.ApplicationUser).Select(au => new ApplicationUser
+                {
+                    Id = au.Id,
+                    Name = au.Name,
+                    Surname = au.Surname,
+                    Email = au.Email
+                })
+            }).Skip((page - 1) * articleLimit).Take(articleLimit).ToListAsync();
 
             return (items, count);
         }

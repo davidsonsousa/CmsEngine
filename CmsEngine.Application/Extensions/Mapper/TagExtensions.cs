@@ -101,5 +101,27 @@ namespace CmsEngine.Application.Extensions.Mapper
 
             return viewModel;
         }
+
+        /// <summary>
+        /// Maps VanityId, Name and Slug
+        /// </summary>
+        /// <param name="tags"></param>
+        /// <returns></returns>
+        public static IEnumerable<TagViewModel> MapToViewModelSimple(this IEnumerable<Tag> tags)
+        {
+            var viewModel = new List<TagViewModel>();
+
+            foreach (var item in tags)
+            {
+                viewModel.Add(new TagViewModel
+                {
+                    VanityId = item.VanityId,
+                    Name = item.Name,
+                    Slug = item.Slug
+                });
+            }
+
+            return viewModel;
+        }
     }
 }

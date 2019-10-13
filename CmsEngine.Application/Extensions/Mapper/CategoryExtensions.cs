@@ -153,6 +153,7 @@ namespace CmsEngine.Application.Extensions.Mapper
 
             return viewModel;
         }
+
         /// <summary>
         /// Maps VanityId, Name and Slug with Posts
         /// </summary>
