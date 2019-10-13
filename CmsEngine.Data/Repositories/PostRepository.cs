@@ -62,13 +62,34 @@ namespace CmsEngine.Data.Repositories
             var posts = string.IsNullOrWhiteSpace(searchTerm)
                         ? Get(q => q.Status == DocumentStatus.Published)
                             .Include(p => p.PostApplicationUsers)
-                            .ThenInclude(pau => pau.ApplicationUser)
+                                .ThenInclude(pau => pau.ApplicationUser)
                         : Get(q => (q.Title.Contains(searchTerm) || q.DocumentContent.Contains(searchTerm)) && q.Status == DocumentStatus.Published)
                             .Include(p => p.PostApplicationUsers)
-                            .ThenInclude(pau => pau.ApplicationUser);
+                                .ThenInclude(pau => pau.ApplicationUser);
 
-            int count = posts.Count();
-            var items = await posts.OrderBy(o => o.PublishedOn).Skip((page - 1) * articleLimit).Take(articleLimit).ToListAsync();
+            int count = await posts.CountAsync();
+            var items = await posts.Select(p => new Post
+            {
+                VanityId = p.VanityId,
+                Title = p.Title,
+                Slug = p.Slug,
+                Description = p.Description,
+                HeaderImage = p.HeaderImage,
+                PublishedOn = p.PublishedOn,
+                Categories = p.PostCategories.Select(pc => pc.Category).Select(c => new Category
+                {
+                    VanityId = c.VanityId,
+                    Name = c.Name,
+                    Slug = c.Slug
+                }),
+                ApplicationUsers = p.PostApplicationUsers.Select(pau => pau.ApplicationUser).Select(au => new ApplicationUser
+                {
+                    Id = au.Id,
+                    Name = au.Name,
+                    Surname = au.Surname,
+                    Email = au.Email
+                })
+            }).OrderByDescending(o => o.PublishedOn).Skip((page - 1) * articleLimit).Take(articleLimit).ToListAsync();
 
             return (items, count);
         }
