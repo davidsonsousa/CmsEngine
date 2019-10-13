@@ -132,7 +132,7 @@ namespace CmsEngine.Application.Extensions.Mapper
         }
 
         /// <summary>
-        /// Maps VanityId, Name and Slug
+        /// Maps VanityId, Name and Slug with post count
         /// </summary>
         /// <param name="categories"></param>
         /// <returns></returns>
@@ -148,6 +148,34 @@ namespace CmsEngine.Application.Extensions.Mapper
                     Name = item.Name,
                     Slug = item.Slug,
                     PostCount = item.PostCount
+                });
+            }
+
+            return viewModel;
+        }
+        /// <summary>
+        /// Maps VanityId, Name and Slug with Posts
+        /// </summary>
+        /// <param name="categories"></param>
+        /// <returns></returns>
+        public static IEnumerable<CategoryViewModel> MapToViewModelWithPost(this IEnumerable<Category> categories)
+        {
+            var viewModel = new List<CategoryViewModel>();
+
+            foreach (var item in categories)
+            {
+                viewModel.Add(new CategoryViewModel
+                {
+                    VanityId = item.VanityId,
+                    Name = item.Name,
+                    Slug = item.Slug,
+                    Posts = item.Posts.Select(p => new PostViewModel
+                    {
+                        VanityId = p.VanityId,
+                        Title = p.Title,
+                        Description = p.Description,
+                        Slug = p.Slug
+                    })
                 });
             }
 

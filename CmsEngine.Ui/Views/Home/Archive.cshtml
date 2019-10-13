@@ -30,7 +30,7 @@
                             <ul class="list-unstyled">
                                 @if (Model.Categories.Count() > 0)
                                 {
-                                    foreach (var category in Model.Categories)
+                                    foreach (var category in Model.CategoriesWithPosts)
                                     {
                                         <li>
                                             <p class="h2">@category.Name</p>

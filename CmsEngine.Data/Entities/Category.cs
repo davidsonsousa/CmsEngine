@@ -15,7 +15,9 @@ namespace CmsEngine.Data.Entities
         public string Slug { get; set; }
         public string Description { get; set; }
 
-        // Property for data projection only
+        // Properties for data projection only
+        [NotMapped]
+        public IEnumerable<Post> Posts { get; set; }
         [NotMapped]
         public int PostCount { get; set; }
 

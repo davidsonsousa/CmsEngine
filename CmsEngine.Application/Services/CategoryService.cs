@@ -78,6 +78,14 @@ namespace CmsEngine.Application.Services
             return items;
         }
 
+        public async Task<IEnumerable<CategoryViewModel>> GetCategoriesWithPost()
+        {
+            logger.LogInformation("CategoryService > GetCategoriesWithPost()");
+            var items = await _unitOfWork.Categories.GetCategoriesWithPostOrderedByName();
+            logger.LogInformation("Categories loaded: {0}", items.Count());
+            return items.MapToViewModelWithPost();
+        }
+
         public async Task<IEnumerable<CategoryViewModel>> GetCategoriesWithPostCount()
         {
             logger.LogInformation("CategoryService > GetCategoriesWithPostCount()");

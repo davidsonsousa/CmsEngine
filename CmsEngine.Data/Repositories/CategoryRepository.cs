@@ -34,5 +34,24 @@ namespace CmsEngine.Data.Repositories
         {
             return await Get(q => q.Slug == slug).Include(c => c.PostCategories).SingleOrDefaultAsync();
         }
+
+        public async Task<IEnumerable<Category>> GetCategoriesWithPostOrderedByName()
+        {
+            return await Get().Include(c => c.PostCategories)
+                              .Select(c => new Category
+                              {
+                                  VanityId = c.VanityId,
+                                  Name = c.Name,
+                                  Slug = c.Slug,
+                                  Posts = c.PostCategories.Select(pc => pc.Post).Select(p => new Post
+                                  {
+                                      VanityId = p.VanityId,
+                                      Title = p.Title,
+                                      Description = p.Description,
+                                      Slug = p.Slug
+                                  })
+                              })
+                              .OrderBy(o => o.Name).ToListAsync();
+        }
     }
 }
