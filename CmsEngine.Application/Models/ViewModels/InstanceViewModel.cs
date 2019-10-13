@@ -25,7 +25,7 @@ namespace CmsEngine.Application.ViewModels
         public string PageTitle { get; set; }
 
         public PaginatedList<PostViewModel> PagedPosts { get; set; }
-        public IEnumerable<PostViewModel> LatestPosts { get; set; }
+        public IEnumerable<PostViewModel> LatestPosts { get; set; } // TODO: Maybe I need 2 versions of this property - For Index and for Footer
         public IEnumerable<PageViewModel> Pages { get; set; }
         public IEnumerable<CategoryViewModel> Categories { get; set; }
         public IEnumerable<TagViewModel> Tags { get; set; }
