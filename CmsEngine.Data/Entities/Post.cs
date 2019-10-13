@@ -11,7 +11,7 @@ namespace CmsEngine.Data.Entities
         public virtual ICollection<PostTag> PostTags { get; set; }
         public virtual ICollection<PostApplicationUser> PostApplicationUsers { get; set; }
 
-        // Tables used for data projection
+        // Properties used for data projection only
         [NotMapped]
         public IEnumerable<Category> Categories { get; set; }
         [NotMapped]
