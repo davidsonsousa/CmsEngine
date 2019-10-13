@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using Newtonsoft.Json.Linq;
 
 namespace CmsEngine.Data.Entities
@@ -13,6 +14,10 @@ namespace CmsEngine.Data.Entities
         public string Name { get; set; }
         public string Slug { get; set; }
         public string Description { get; set; }
+
+        // Property for data projection only
+        [NotMapped]
+        public int PostCount { get; set; }
 
         public override string ToString()
         {

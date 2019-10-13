@@ -17,6 +17,6 @@ namespace CmsEngine.Application.Services
         Task<ReturnValue> DeleteRange(Guid[] ids);
         Task<(IEnumerable<CategoryTableViewModel> Data, int RecordsTotal, int RecordsFiltered)> GetForDataTable(DataParameters parameters);
         Task<ReturnValue> Save(CategoryEditModel categoryEditModel);
-        Task<IEnumerable<CategoryViewModel>> GetCategoriesWithPosts();
+        Task<IEnumerable<CategoryViewModel>> GetCategoriesWithPostCount();
     }
 }

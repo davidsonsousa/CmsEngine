@@ -78,12 +78,12 @@ namespace CmsEngine.Application.Services
             return items;
         }
 
-        public async Task<IEnumerable<CategoryViewModel>> GetCategoriesWithPosts()
+        public async Task<IEnumerable<CategoryViewModel>> GetCategoriesWithPostCount()
         {
-            var items = await _unitOfWork.Categories.GetCategoriesWithPostsOrderedByName();
-            logger.LogInformation("CategoryService > GetCategoriesWithPosts()");
+            logger.LogInformation("CategoryService > GetCategoriesWithPostCount()");
+            var items = await _unitOfWork.Categories.GetCategoriesWithPostCountOrderedByName();
             logger.LogInformation("Categories loaded: {0}", items.Count());
-            return items.MapToViewModel();
+            return items.MapToViewModelWithPostCount();
         }
 
         public async Task<(IEnumerable<CategoryTableViewModel> Data, int RecordsTotal, int RecordsFiltered)> GetForDataTable(DataParameters parameters)
@@ -174,9 +174,8 @@ namespace CmsEngine.Application.Services
 
         public async Task<CategoryEditModel> SetupEditModel(Guid id)
         {
-            var item = await _unitOfWork.Categories.GetByIdAsync(id);
-
             logger.LogInformation("CmsService > SetupCategoryEditModel(id: {0})", id);
+            var item = await _unitOfWork.Categories.GetByIdAsync(id);
             logger.LogInformation("Category: {0}", item.ToString());
 
             return item.MapToEditModel();

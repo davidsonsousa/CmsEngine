@@ -58,7 +58,7 @@ namespace CmsEngine.Ui.Controllers
 
             instance.LatestPosts = await _postService.GetPublishedLatestPosts(3);
             instance.Pages = await _pageService.GetAllPublished();
-            instance.Categories = await _categoryService.GetCategoriesWithPosts();
+            instance.Categories = await _categoryService.GetCategoriesWithPostCount();
             instance.Tags = await _tagService.GetAllTags();
 
 
