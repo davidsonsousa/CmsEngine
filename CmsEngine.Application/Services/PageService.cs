@@ -79,8 +79,8 @@ namespace CmsEngine.Application.Services
 
         public async Task<IEnumerable<PageViewModel>> GetAllPublished()
         {
-            var items = await _unitOfWork.Pages.GetByStatusOrderByDescending(DocumentStatus.Published);
             logger.LogInformation("PageService > GetPagesByStatusReadOnly()");
+            var items = await _unitOfWork.Pages.GetByStatusOrderByDescending(DocumentStatus.Published);
             logger.LogInformation("Pages loaded: {0}", items.Count());
             return items.MapToViewModel();
         }
@@ -96,8 +96,8 @@ namespace CmsEngine.Application.Services
 
         public async Task<IEnumerable<PageEditModel>> GetByStatus(DocumentStatus documentStatus, int count = 0)
         {
-            var items = await _unitOfWork.Pages.GetByStatusOrderByDescending(documentStatus);
             logger.LogInformation("PageService > GetPagesByStatusReadOnly(documentStatus: {0}, count: {1})", documentStatus, count);
+            var items = await _unitOfWork.Pages.GetByStatusOrderByDescending(documentStatus);
             logger.LogInformation("Pages loaded: {0}", items.Count());
 
             return items.MapToEditModel();
@@ -197,8 +197,8 @@ namespace CmsEngine.Application.Services
 
         public async Task<PageEditModel> SetupEditModel(Guid id)
         {
-            var item = await _unitOfWork.Pages.GetByIdAsync(id);
             logger.LogInformation("PageService > SetupPageEditModel(id: {0})", id);
+            var item = await _unitOfWork.Pages.GetByIdAsync(id);
             logger.LogInformation("Page: {0}", item.ToString());
             return item.MapToEditModel();
         }
