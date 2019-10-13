@@ -137,7 +137,6 @@ namespace CmsEngine.Application.Extensions.Mapper
         {
             return new PageViewModel
             {
-                Id = item.Id,
                 VanityId = item.VanityId,
                 Title = item.Title,
                 Slug = item.Slug,
@@ -145,7 +144,7 @@ namespace CmsEngine.Application.Extensions.Mapper
                 DocumentContent = item.DocumentContent,
                 HeaderImage = item.HeaderImage,
                 PublishedOn = item.PublishedOn,
-                Status = item.Status
+                Author = item.ApplicationUsers.MapToViewModelSimple().SingleOrDefault()
             };
         }
 

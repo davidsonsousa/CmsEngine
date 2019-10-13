@@ -88,19 +88,8 @@ namespace CmsEngine.Application.Services
         public async Task<PageViewModel> GetBySlug(string slug)
         {
             logger.LogInformation($"PageService > GetBySlug({slug})");
-
             var item = await _unitOfWork.Pages.GetBySlug(slug);
-
             return item.MapToViewModel();
-        }
-
-        public async Task<IEnumerable<PageEditModel>> GetByStatus(DocumentStatus documentStatus, int count = 0)
-        {
-            logger.LogInformation("PageService > GetPagesByStatusReadOnly(documentStatus: {0}, count: {1})", documentStatus, count);
-            var items = await _unitOfWork.Pages.GetByStatusOrderByDescending(documentStatus);
-            logger.LogInformation("Pages loaded: {0}", items.Count());
-
-            return items.MapToEditModel();
         }
 
         public async Task<(IEnumerable<PageTableViewModel> Data, int RecordsTotal, int RecordsFiltered)> GetForDataTable(DataParameters parameters)

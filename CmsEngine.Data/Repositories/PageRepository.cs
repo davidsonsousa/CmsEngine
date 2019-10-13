@@ -28,7 +28,25 @@ namespace CmsEngine.Data.Repositories
 
         public async Task<Page> GetBySlug(string slug)
         {
-            return await Get(q => q.Slug == slug).SingleOrDefaultAsync();
+            return await Get(q => q.Slug == slug)
+                            .Select(p => new Page
+                            {
+                                VanityId = p.VanityId,
+                                Title = p.Title,
+                                Slug = p.Slug,
+                                Description = p.Description,
+                                DocumentContent = p.DocumentContent,
+                                HeaderImage = p.HeaderImage,
+                                PublishedOn = p.PublishedOn,
+                                ApplicationUsers = p.PageApplicationUsers.Select(pau => pau.ApplicationUser).Select(au => new ApplicationUser
+                                {
+                                    Id = au.Id,
+                                    Name = au.Name,
+                                    Surname = au.Surname,
+                                    Email = au.Email
+                                })
+                            })
+                            .SingleOrDefaultAsync();
         }
     }
 }
