@@ -178,35 +178,6 @@ namespace CmsEngine.Application.Extensions.Mapper
         }
 
         /// <summary>
-        /// Maps Post model into a PostViewModel with Author information
-        /// </summary>
-        /// <param name="item"></param>
-        /// <returns></returns>
-        public static IEnumerable<PostViewModel> MapToViewModelWithAuthor(this IEnumerable<Post> posts)
-        {
-            var viewModels = new List<PostViewModel>();
-
-            foreach (var item in posts)
-            {
-                viewModels.Add(new PostViewModel
-                {
-                    Id = item.Id,
-                    VanityId = item.VanityId,
-                    Title = item.Title,
-                    Slug = item.Slug,
-                    Description = item.Description,
-                    DocumentContent = item.DocumentContent,
-                    HeaderImage = item.HeaderImage,
-                    PublishedOn = item.PublishedOn,
-                    Status = item.Status,
-                    Author = item.PostApplicationUsers.Select(pau => pau.ApplicationUser).FirstOrDefault().MapToViewModel()
-                });
-            }
-
-            return viewModels;
-        }
-
-        /// <summary>
         /// Maps Post model into a PostViewModel with Categories
         /// </summary>
         /// <param name="item"></param>
