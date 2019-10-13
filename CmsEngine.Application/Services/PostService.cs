@@ -123,7 +123,7 @@ namespace CmsEngine.Application.Services
         {
             logger.LogInformation("CmsService > GetPublishedForPagination(page: {0})", page);
             var posts = await _unitOfWork.Posts.GetPublishedForPagination(page, Instance.ArticleLimit);
-            return new PaginatedList<PostViewModel>(posts.Items.MapToViewModelWithAuthor(), posts.Count, page, Instance.ArticleLimit);
+            return new PaginatedList<PostViewModel>(posts.Items.MapToViewModelForPartialView(), posts.Count, page, Instance.ArticleLimit);
         }
 
         public async Task<IEnumerable<PostViewModel>> GetPublishedLatestPosts(int count)

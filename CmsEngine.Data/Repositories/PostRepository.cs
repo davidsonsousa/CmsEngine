@@ -96,11 +96,31 @@ namespace CmsEngine.Data.Repositories
 
         public async Task<(IEnumerable<Post> Items, int Count)> GetPublishedForPagination(int page, int articleLimit)
         {
-            var posts = Get(q => q.Status == DocumentStatus.Published).OrderByDescending(o => o.PublishedOn)
-                            .Include(p => p.PostApplicationUsers)
-                            .ThenInclude(pau => pau.ApplicationUser);
+            var posts = Get(q => q.Status == DocumentStatus.Published).Include(p => p.PostApplicationUsers)
+                                                                        .ThenInclude(pau => pau.ApplicationUser);
             int count = posts.Count();
-            var items = await posts.Skip((page - 1) * articleLimit).Take(articleLimit).ToListAsync();
+            var items = await posts.Select(p => new Post
+            {
+                VanityId = p.VanityId,
+                Title = p.Title,
+                Slug = p.Slug,
+                Description = p.Description,
+                HeaderImage = p.HeaderImage,
+                PublishedOn = p.PublishedOn,
+                Categories = p.PostCategories.Select(pc => pc.Category).Select(c => new Category
+                {
+                    VanityId = c.VanityId,
+                    Name = c.Name,
+                    Slug = c.Slug
+                }),
+                ApplicationUsers = p.PostApplicationUsers.Select(pau => pau.ApplicationUser).Select(au => new ApplicationUser
+                {
+                    Id = au.Id,
+                    Name = au.Name,
+                    Surname = au.Surname,
+                    Email = au.Email
+                })
+            }).OrderByDescending(o => o.PublishedOn).Skip((page - 1) * articleLimit).Take(articleLimit).ToListAsync();
 
             return (items, count);
         }
