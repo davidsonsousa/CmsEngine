@@ -5,8 +5,6 @@ using CmsEngine.Application.Helpers;
 using CmsEngine.Application.Services;
 using CmsEngine.Application.ViewModels.DataTableViewModels;
 using CmsEngine.Core;
-using CmsEngine.Data;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -17,8 +15,8 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
     {
         private readonly ICategoryService _categoryService;
 
-        public CategoryController(IUnitOfWork uow, IHttpContextAccessor hca, ILoggerFactory loggerFactory, IService service, ICategoryService categoryService)
-                                 : base(uow, hca, loggerFactory, service)
+        public CategoryController(ILoggerFactory loggerFactory, IService service, ICategoryService categoryService)
+                                 : base(loggerFactory, service)
         {
             _categoryService = categoryService;
         }

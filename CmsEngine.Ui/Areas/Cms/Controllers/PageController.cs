@@ -5,9 +5,7 @@ using CmsEngine.Application.Helpers;
 using CmsEngine.Application.Services;
 using CmsEngine.Application.ViewModels.DataTableViewModels;
 using CmsEngine.Core;
-using CmsEngine.Data;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -19,8 +17,8 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
         private readonly IWebHostEnvironment _env;
         private readonly IPageService _pageService;
 
-        public PageController(IUnitOfWork uow, IHttpContextAccessor hca, ILoggerFactory loggerFactory, IService service,
-                              IWebHostEnvironment env, IPageService pageService) : base(uow, hca, loggerFactory, service)
+        public PageController(ILoggerFactory loggerFactory, IService service,
+                              IWebHostEnvironment env, IPageService pageService) : base(loggerFactory, service)
         {
             _env = env;
             _pageService = pageService;

@@ -28,8 +28,16 @@ namespace CmsEngine.Application.Services
             logger = loggerFactory.CreateLogger("Service");
             _cache = memoryCache;
 
-            Instance = GetInstanceAsync().GetAwaiter().GetResult();
-            //CurrentUser = GetCurrentUser().GetAwaiter().GetResult();
+            if (Instance == null)
+            {
+                Instance = GetInstanceAsync().GetAwaiter().GetResult();
+            }
+
+            if (CurrentUser == null)
+            {
+                CurrentUser = GetCurrentUser().GetAwaiter().GetResult();
+            }
+
         }
 
         private async Task<InstanceViewModel> GetInstanceAsync()

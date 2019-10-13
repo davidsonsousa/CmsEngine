@@ -5,9 +5,7 @@ using CmsEngine.Application.Helpers;
 using CmsEngine.Application.Services;
 using CmsEngine.Application.ViewModels.DataTableViewModels;
 using CmsEngine.Core;
-using CmsEngine.Data;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -19,8 +17,8 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
         private readonly IWebHostEnvironment _env;
         private readonly IPostService _postService;
 
-        public PostController(IUnitOfWork uow, IHttpContextAccessor hca, ILoggerFactory loggerFactory, IService service,
-                              IWebHostEnvironment env, IPostService postService) : base(uow, hca, loggerFactory, service)
+        public PostController(ILoggerFactory loggerFactory, IService service,
+                              IWebHostEnvironment env, IPostService postService) : base(loggerFactory, service)
         {
             _env = env;
             _postService = postService;

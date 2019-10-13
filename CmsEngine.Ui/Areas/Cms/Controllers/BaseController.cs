@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using CmsEngine.Application.Helpers;
 using CmsEngine.Application.Services;
 using CmsEngine.Core;
-using CmsEngine.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -27,9 +26,8 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
             this.logger = logger;
         }
 
-        public BaseController(IUnitOfWork uow, IHttpContextAccessor hca, ILoggerFactory loggerFactory, IService service)
+        public BaseController(ILoggerFactory loggerFactory, IService service)
         {
-            // service = new Service(uow, hca, loggerFactory);
             this.service = service;
             logger = loggerFactory.CreateLogger("CmsBaseController");
 
