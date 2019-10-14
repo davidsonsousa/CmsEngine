@@ -18,7 +18,7 @@ namespace CmsEngine.Ui.RewriteRules
             var path = context.HttpContext.Request.Path;
             var host = context.HttpContext.Request.Host;
 
-            if ((path.HasValue && path.Value.Any(char.IsUpper) && !path.Value.Contains("/Identity/Account")) || (host.HasValue && host.Value.Any(char.IsUpper)))
+            if ((request.Method == "GET") && ((path.HasValue && path.Value.Any(char.IsUpper)) || (host.HasValue && host.Value.Any(char.IsUpper))))
             {
                 var response = context.HttpContext.Response;
                 response.StatusCode = _statusCode;
