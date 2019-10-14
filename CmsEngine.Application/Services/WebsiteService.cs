@@ -19,11 +19,13 @@ namespace CmsEngine.Application.Services
     public class WebsiteService : Service, IWebsiteService
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IMemoryCache _memoryCache;
 
         public WebsiteService(IUnitOfWork uow, IHttpContextAccessor hca, ILoggerFactory loggerFactory, IMemoryCache memoryCache)
                              : base(uow, hca, loggerFactory, memoryCache)
         {
             _unitOfWork = uow;
+            _memoryCache = memoryCache;
         }
 
         public async Task<ReturnValue> Delete(Guid id)
@@ -78,7 +80,7 @@ namespace CmsEngine.Application.Services
 
         public async Task<(IEnumerable<WebsiteTableViewModel> Data, int RecordsTotal, int RecordsFiltered)> GetForDataTable(DataParameters parameters)
         {
-            var items = await _unitOfWork.Websites.GetAllAsync();
+            var items = await _unitOfWork.Websites.GetForDataTable();
             int recordsTotal = items.Count();
             if (!string.IsNullOrWhiteSpace(parameters.Search.Value))
             {
@@ -140,6 +142,13 @@ namespace CmsEngine.Application.Services
                 }
 
                 await _unitOfWork.Save();
+
+                // Update Instance cache
+                var timeSpan = TimeSpan.FromDays(7); //TODO: Perhaps set this in the config file. Or DB
+                logger.LogInformation("Updating Instance with expiration date to {0}", DateTime.Now.AddMilliseconds(timeSpan.TotalMilliseconds).ToString());
+                var cacheEntryOptions = new MemoryCacheEntryOptions().SetSlidingExpiration(timeSpan);
+                _memoryCache.Set(Constants.CacheKey.Instance, websiteEditModel, cacheEntryOptions);
+
                 logger.LogInformation("Website saved");
             }
             catch (Exception ex)
@@ -159,8 +168,8 @@ namespace CmsEngine.Application.Services
 
         public async Task<WebsiteEditModel> SetupEditModel(Guid id)
         {
+            logger.LogInformation("CmsService > SetupEditModel(id: {0})", id);
             var item = await _unitOfWork.Websites.GetByIdAsync(id);
-            logger.LogInformation("CmsService > SetupWebsiteEditModel(id: {0})", id);
             logger.LogInformation("Website: {0}", item.ToString());
             return item.MapToEditModel();
         }

@@ -119,14 +119,14 @@ namespace CmsEngine.Application.Extensions.Mapper
             {
                 tableViewModel.Add(new WebsiteTableViewModel
                 {
-                    Id = item.Id,
+                    //Id = item.Id,
                     VanityId = item.VanityId,
                     Name = item.Name,
                     Tagline = item.Tagline,
                     Culture = item.Culture,
-                    UrlFormat = item.UrlFormat,
-                    DateFormat = item.DateFormat,
-                    SiteUrl = item.SiteUrl
+                    //UrlFormat = item.UrlFormat,
+                    //DateFormat = item.DateFormat,
+                    //SiteUrl = item.SiteUrl
                 });
             }
 
