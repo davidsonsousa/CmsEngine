@@ -13,7 +13,7 @@ namespace CmsEngine.Application.Services
     public class Service : IService
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly IMemoryCache _cache;
+        private readonly IMemoryCache _memoryCache;
 
         protected readonly IUnitOfWork unitOfWork;
         protected readonly ILogger logger;
@@ -38,7 +38,7 @@ namespace CmsEngine.Application.Services
             unitOfWork = uow ?? throw new ArgumentNullException("Service");
             _httpContextAccessor = hca;
             logger = loggerFactory.CreateLogger("Service");
-            _cache = memoryCache;
+            _memoryCache = memoryCache;
         }
 
         private async Task<InstanceViewModel> GetInstanceAsync()
@@ -51,7 +51,7 @@ namespace CmsEngine.Application.Services
             try
             {
                 logger.LogInformation("Loading Instance from cache");
-                if (!_cache.TryGetValue(Constants.CacheKey.Instance, out instance))
+                if (!_memoryCache.TryGetValue(Constants.CacheKey.Instance, out instance))
                 {
                     logger.LogInformation("Empty cache for Instance. Loading instance from DB");
                     website = await unitOfWork.Websites.GetWebsiteInstanceByHost(_httpContextAccessor.HttpContext.Request.Host.Host);
@@ -96,7 +96,7 @@ namespace CmsEngine.Application.Services
 
                         logger.LogInformation("Adding Instance to cache with expiration date to {0}", DateTime.Now.AddMilliseconds(timeSpan.TotalMilliseconds).ToString());
                         var cacheEntryOptions = new MemoryCacheEntryOptions().SetSlidingExpiration(timeSpan);
-                        _cache.Set(Constants.CacheKey.Instance, instance, cacheEntryOptions);
+                        _memoryCache.Set(Constants.CacheKey.Instance, instance, cacheEntryOptions);
                     }
                 }
             }
