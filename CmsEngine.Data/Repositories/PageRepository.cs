@@ -48,5 +48,25 @@ namespace CmsEngine.Data.Repositories
                             })
                             .SingleOrDefaultAsync();
         }
+
+        public async Task<IEnumerable<Page>> GetForDataTable()
+        {
+            return await Get().Select(p => new Page
+            {
+                VanityId = p.VanityId,
+                Title = p.Title,
+                Description = p.Description,
+                Slug = p.Slug,
+                PublishedOn = p.PublishedOn,
+                Status = p.Status,
+                ApplicationUsers = p.PageApplicationUsers.Select(pau => pau.ApplicationUser).Select(au => new ApplicationUser
+                {
+                    Id = au.Id,
+                    Name = au.Name,
+                    Surname = au.Surname,
+                    Email = au.Email
+                })
+            }).ToListAsync();
+        }
     }
 }
