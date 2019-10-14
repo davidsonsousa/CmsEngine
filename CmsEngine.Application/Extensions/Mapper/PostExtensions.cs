@@ -113,15 +113,13 @@ namespace CmsEngine.Application.Extensions.Mapper
             {
                 tableViewModel.Add(new PostTableViewModel
                 {
-                    Id = item.Id,
                     VanityId = item.VanityId,
                     Title = item.Title,
-                    Slug = item.Slug,
                     Description = item.Description,
-                    DocumentContent = item.DocumentContent,
-                    Author = item.PostApplicationUsers.Select(x => x.ApplicationUser).SingleOrDefault().MapToViewModel(),
+                    Slug = item.Slug,
                     PublishedOn = item.PublishedOn,
-                    Status = item.Status
+                    Status = item.Status,
+                    Author = item.ApplicationUsers.MapToViewModelSimple().SingleOrDefault()
                 });
             }
 

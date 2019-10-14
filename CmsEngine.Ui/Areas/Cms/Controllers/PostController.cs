@@ -51,10 +51,10 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
             return await Save(postEditModel);
         }
 
-        public IActionResult Edit(Guid vanityId)
+        public async Task<IActionResult> Edit(Guid vanityId)
         {
             SetupMessages("Posts", PageType.Edit, panelTitle: "Edit an existing post");
-            var postEditModel = _postService.SetupEditModel(vanityId);
+            var postEditModel = await _postService.SetupEditModel(vanityId);
 
             return View("CreateEdit", postEditModel);
         }

@@ -95,7 +95,7 @@ namespace CmsEngine.Application.Services
 
         public async Task<(IEnumerable<PostTableViewModel> Data, int RecordsTotal, int RecordsFiltered)> GetForDataTable(DataParameters parameters)
         {
-            var items = await _unitOfWork.Posts.GetAllAsync();
+            var items = await _unitOfWork.Posts.GetForDataTable();
             int recordsTotal = items.Count();
             if (!string.IsNullOrWhiteSpace(parameters.Search.Value))
             {
