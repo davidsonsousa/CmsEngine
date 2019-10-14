@@ -18,8 +18,20 @@ namespace CmsEngine.Application.Services
         protected readonly IUnitOfWork unitOfWork;
         protected readonly ILogger logger;
 
-        public InstanceViewModel Instance { get; private set; }
-        public UserViewModel CurrentUser { get; private set; }
+        public InstanceViewModel Instance
+        {
+            get
+            {
+                return GetInstanceAsync().GetAwaiter().GetResult();
+            }
+        }
+        public UserViewModel CurrentUser
+        {
+            get
+            {
+                return GetCurrentUser().GetAwaiter().GetResult();
+            }
+        }
 
         public Service(IUnitOfWork uow, IHttpContextAccessor hca, ILoggerFactory loggerFactory, IMemoryCache memoryCache)
         {
@@ -27,23 +39,14 @@ namespace CmsEngine.Application.Services
             _httpContextAccessor = hca;
             logger = loggerFactory.CreateLogger("Service");
             _cache = memoryCache;
-
-            if (Instance == null)
-            {
-                Instance = GetInstanceAsync().GetAwaiter().GetResult();
-            }
-
-            if (CurrentUser == null)
-            {
-                CurrentUser = GetCurrentUser().GetAwaiter().GetResult();
-            }
-
         }
 
         private async Task<InstanceViewModel> GetInstanceAsync()
         {
+            logger.LogInformation("GetInstanceAsync()");
+
             Website website;
-            InstanceViewModel instance = null;
+            InstanceViewModel instance;
 
             try
             {
@@ -108,16 +111,30 @@ namespace CmsEngine.Application.Services
 
         private async Task<UserViewModel> GetCurrentUser()
         {
-            var user = await unitOfWork.Users.FindByNameAsync(_httpContextAccessor.HttpContext.User.Identity.Name);
+            logger.LogInformation("GetCurrentUser()");
 
-            return new UserViewModel
+            ApplicationUser user;
+
+            try
             {
-                VanityId = Guid.Parse(user.Id),
-                Name = user.Name,
-                Surname = user.Surname,
-                Email = user.Email,
-                UserName = user.UserName
-            };
+                user = await unitOfWork.Users.FindByNameAsync(_httpContextAccessor.HttpContext.User.Identity.Name);
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "Error when trying to load CurrentUser");
+                throw ex;
+            }
+
+            return user == null
+                ? null
+                : new UserViewModel
+                {
+                    VanityId = Guid.Parse(user.Id),
+                    Name = user.Name,
+                    Surname = user.Surname,
+                    Email = user.Email,
+                    UserName = user.UserName
+                };
         }
     }
 }
