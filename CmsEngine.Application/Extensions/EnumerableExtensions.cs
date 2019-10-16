@@ -1,9 +1,13 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using CmsEngine.Application.EditModels;
 using CmsEngine.Application.Helpers;
+using CmsEngine.Application.ViewModels;
 using CmsEngine.Core;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace CmsEngine.Application.Extensions
 {
@@ -24,6 +28,28 @@ namespace CmsEngine.Application.Extensions
             }
 
             return ExpressionBuilder.GetExpression<T>(expressionFilter, LogicalOperator.Or);
+        }
+
+        public static IEnumerable<SelectListItem> PopulateSelectList<T>(this IEnumerable<T> items, IEnumerable<string> selectedItems = null) where T : BaseViewModel
+        {
+            return items.Select(x => new SelectListItem
+            {
+                Text = x.GetType().GetProperty("Name").GetValue(x).ToString(),
+                Value = x.VanityId.ToString(),
+                Disabled = false,
+                Selected = selectedItems?.Contains(x.VanityId.ToString()) ?? false
+            }).OrderBy(o => o.Text);
+        }
+
+        public static IEnumerable<CheckboxEditModel> PopulateCheckboxList<T>(this IEnumerable<T> items, IEnumerable<string> selectedItems = null) where T : BaseViewModel
+        {
+            return items.Select(x => new CheckboxEditModel
+            {
+                Label = x.GetType().GetProperty("Name").GetValue(x).ToString(),
+                Value = x.VanityId.ToString(),
+                Enabled = true,
+                Selected = selectedItems?.Contains(x.VanityId.ToString()) ?? false
+            }).OrderBy(o => o.Label);
         }
     }
 }
