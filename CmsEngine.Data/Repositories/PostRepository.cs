@@ -255,5 +255,22 @@ namespace CmsEngine.Data.Repositories
                 })
             }).ToListAsync();
         }
+
+        public async Task<Post> GetForSavingById(Guid id)
+        {
+            return await Get(q => q.VanityId == id).Include(p => p.PostCategories)
+                                                   .Include(p => p.PostTags)
+                                                   .Include(p => p.PostApplicationUsers)
+                                                   .SingleAsync();
+        }
+
+        public async Task<Post> GetForEditingById(Guid id)
+        {
+            return await Get(q => q.VanityId == id).Include(p => p.PostCategories)
+                                                       .ThenInclude(pc => pc.Category)
+                                                   .Include(p => p.PostTags)
+                                                       .ThenInclude(pt => pt.Tag)
+                                                   .SingleAsync();
+        }
     }
 }

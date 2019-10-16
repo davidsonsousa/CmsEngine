@@ -180,7 +180,6 @@ namespace CmsEngine.Application.Services
         public async Task<ReturnValue> Save(PostEditModel postEditModel)
         {
             logger.LogInformation("PostService > Save(PostEditModel: {0})", postEditModel.ToString());
-
             var returnValue = new ReturnValue($"Post '{postEditModel.Title}' saved at {DateTime.Now.ToString("T")}.");
 
             try
@@ -190,15 +189,15 @@ namespace CmsEngine.Application.Services
                     logger.LogInformation("New post");
                     var post = postEditModel.MapToModel();
                     post.WebsiteId = Instance.Id;
-
+                    await PrepareRelatedProperties(postEditModel, post);
                     await unitOfWork.Posts.Insert(post);
                 }
                 else
                 {
                     logger.LogInformation("Update post");
-                    var post = postEditModel.MapToModel(await unitOfWork.Posts.GetByIdAsync(postEditModel.VanityId));
+                    var post = postEditModel.MapToModel(await unitOfWork.Posts.GetForSavingById(postEditModel.VanityId));
                     post.WebsiteId = Instance.Id;
-
+                    await PrepareRelatedProperties(postEditModel, post);
                     _unitOfWork.Posts.Update(post);
                 }
 
@@ -214,18 +213,62 @@ namespace CmsEngine.Application.Services
             return returnValue;
         }
 
-        public PostEditModel SetupEditModel()
+        public async Task<PostEditModel> SetupEditModel()
         {
             logger.LogInformation("PostService > SetupEditModel()");
-            return new PostEditModel();
+            return new PostEditModel
+            {
+                Categories = (await unitOfWork.Categories.GetAllAsync()).MapToViewModelSimple().PopulateCheckboxList(),
+                Tags = (await unitOfWork.Tags.GetAllAsync()).MapToViewModelSimple().PopulateSelectList()
+            };
         }
 
         public async Task<PostEditModel> SetupEditModel(Guid id)
         {
-            var item = await _unitOfWork.Posts.GetByIdAsync(id);
             logger.LogInformation("PostService > SetupPostEditModel(id: {0})", id);
+            var item = await _unitOfWork.Posts.GetForEditingById(id);
             logger.LogInformation("Post: {0}", item.ToString());
-            return item.MapToEditModel();
+            var postEditModel = item.MapToEditModel();
+            postEditModel.Categories = (await unitOfWork.Categories.GetAllAsync()).MapToViewModelSimple().PopulateCheckboxList(postEditModel.SelectedCategories);
+            postEditModel.Tags = (await unitOfWork.Tags.GetAllAsync()).MapToViewModelSimple().PopulateSelectList(postEditModel.SelectedTags);
+
+            return postEditModel;
+        }
+
+        private async Task PrepareRelatedProperties(PostEditModel postEditModel, Post post)
+        {
+            var categories = await _unitOfWork.Categories.GetByMultipleIdsAsync(postEditModel.SelectedCategories.ToList().ConvertAll(Guid.Parse));
+            var tags = await _unitOfWork.Tags.GetByMultipleIdsAsync(postEditModel.SelectedTags.ToList().ConvertAll(Guid.Parse));
+            var user = await _unitOfWork.Users.FindByNameAsync(CurrentUser.UserName);
+
+            post.PostCategories = new List<PostCategory>();
+            foreach (var category in categories)
+            {
+                post.PostCategories.Add(new PostCategory
+                {
+                    Post = post,
+                    Category = category
+                });
+            }
+
+            post.PostTags = new List<PostTag>();
+            foreach (var tag in tags)
+            {
+                post.PostTags.Add(new PostTag
+                {
+                    Post = post,
+                    Tag = tag
+                });
+            }
+
+            post.PostApplicationUsers = new List<PostApplicationUser>
+            {
+                new PostApplicationUser
+                {
+                    Post = post,
+                    ApplicationUser = user
+                }
+            };
         }
     }
 }

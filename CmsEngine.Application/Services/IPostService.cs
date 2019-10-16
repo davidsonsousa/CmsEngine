@@ -11,7 +11,7 @@ namespace CmsEngine.Application.Services
 {
     public interface IPostService : IDataTableService<Post>
     {
-        PostEditModel SetupEditModel();
+        Task<PostEditModel> SetupEditModel();
         Task<PostEditModel> SetupEditModel(Guid id);
         Task<ReturnValue> Delete(Guid id);
         Task<ReturnValue> DeleteRange(Guid[] ids);

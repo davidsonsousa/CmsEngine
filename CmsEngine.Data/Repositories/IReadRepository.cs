@@ -57,5 +57,12 @@ namespace CmsEngine.Data.Repositories
         /// <param name="ids"></param>
         /// <returns></returns>
         Task<IEnumerable<TEntity>> GetByMultipleIdsAsync(Guid[] ids);
+
+        /// <summary>
+        /// Get multiple records by an IEnumerable of vanity ids
+        /// </summary>
+        /// <param name="ids"></param>
+        /// <returns></returns>
+        Task<IEnumerable<TEntity>> GetByMultipleIdsAsync(IEnumerable<Guid> ids);
     }
 }

@@ -30,10 +30,10 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
             return View("List");
         }
 
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
             SetupMessages("Post", PageType.Create, panelTitle: "Create a new post");
-            var postEditModel = _postService.SetupEditModel();
+            var postEditModel = await _postService.SetupEditModel();
 
             return View("CreateEdit", postEditModel);
         }

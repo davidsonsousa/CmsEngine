@@ -72,6 +72,11 @@ namespace CmsEngine.Data.Repositories
 
         public async Task<IEnumerable<TEntity>> GetByMultipleIdsAsync(Guid[] ids)
         {
+            return await GetByMultipleIdsAsync(ids.ToList());
+        }
+
+        public async Task<IEnumerable<TEntity>> GetByMultipleIdsAsync(IEnumerable<Guid> ids)
+        {
             return await Get(q => ids.Contains(q.VanityId)).ToListAsync();
         }
 

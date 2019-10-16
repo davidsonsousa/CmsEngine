@@ -26,7 +26,9 @@ namespace CmsEngine.Application.Extensions.Mapper
                 DocumentContent = item.DocumentContent,
                 HeaderImage = item.HeaderImage,
                 PublishedOn = item.PublishedOn,
-                Status = item.Status
+                Status = item.Status,
+                SelectedCategories = item.PostCategories.Select(x => x.Category.VanityId.ToString()),
+                SelectedTags = item.PostTags.Select(x => x.Tag.VanityId.ToString())
             };
         }
 
