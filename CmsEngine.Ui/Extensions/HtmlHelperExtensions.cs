@@ -1,28 +1,17 @@
-/// Copied from here: https://stackoverflow.com/questions/52220090/what-is-the-asp-net-core-equivalent-for-html-isselected
-
+using System.Linq;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace CmsEngine.Ui.Extensions
 {
     public static class HtmlHelperExtensions
     {
-        public static string IsSelected(this IHtmlHelper html, string controllers = null, string actions = null)
+        public static string IsSelected(this IHtmlHelper htmlHelper, string controllers, string actions, string cssClass = "active")
         {
-            string cssClass = "active";
-            string currentAction = (string)html.ViewContext.RouteData.Values["action"];
-            string currentController = (string)html.ViewContext.RouteData.Values["controller"];
-
-            if (string.IsNullOrEmpty(controllers))
-            {
-                controllers = currentController;
-            }
-
-            if (string.IsNullOrEmpty(actions))
-            {
-                actions = currentAction;
-            }
-
-            return controllers == currentController && actions == currentAction ? cssClass : string.Empty;
+            string currentAction = (htmlHelper.ViewContext.RouteData.Values["action"] as string)?.ToLower();
+            string currentController = (htmlHelper.ViewContext.RouteData.Values["controller"] as string)?.ToLower();
+            var acceptedActions = (actions ?? currentAction).Split(',').Select(x => x.Trim().ToLower());
+            var acceptedControllers = (controllers ?? currentController).Split(',').Select(x => x.Trim().ToLower());
+            return acceptedActions.Contains(currentAction) && acceptedControllers.Contains(currentController) ? cssClass : string.Empty;
         }
     }
 }
