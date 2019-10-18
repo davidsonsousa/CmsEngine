@@ -2,7 +2,7 @@
 
 @{
     string headerImagePath = !string.IsNullOrWhiteSpace(Model.HeaderImage)
-                             ? string.Format(Constants.ImagePath.Path640, "website", Model.HeaderImage)
+                             ? string.Format(CmsEngineConstants.ImagePath.Path640, "website", Model.HeaderImage)
                              : "/img/no-image.png";
 
 }

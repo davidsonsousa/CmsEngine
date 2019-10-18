@@ -1,7 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using CmsEngine.Application.ViewModels;
-using CmsEngine.Core;
+using CmsEngine.Core.Constants;
 using CmsEngine.Data;
 using CmsEngine.Data.Entities;
 using Microsoft.AspNetCore.Http;
@@ -66,7 +66,7 @@ namespace CmsEngine.Application.Services
             try
             {
                 logger.LogInformation("Loading Instance from cache");
-                if (!_memoryCache.TryGetValue(Constants.CacheKey.Instance, out instance))
+                if (!_memoryCache.TryGetValue(CmsEngineConstants.CacheKey.Instance, out instance))
                 {
                     logger.LogInformation("Empty cache for Instance. Loading instance from DB");
                     website = await unitOfWork.Websites.GetWebsiteInstanceByHost(_httpContextAccessor.HttpContext.Request.Host.Host);
@@ -111,7 +111,7 @@ namespace CmsEngine.Application.Services
 
                         logger.LogInformation("Adding Instance to cache with expiration date to {0}", DateTime.Now.AddMilliseconds(timeSpan.TotalMilliseconds).ToString());
                         var cacheEntryOptions = new MemoryCacheEntryOptions().SetSlidingExpiration(timeSpan);
-                        _memoryCache.Set(Constants.CacheKey.Instance, instance, cacheEntryOptions);
+                        _memoryCache.Set(CmsEngineConstants.CacheKey.Instance, instance, cacheEntryOptions);
                     }
                 }
             }

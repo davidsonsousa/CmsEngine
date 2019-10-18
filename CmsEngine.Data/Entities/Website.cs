@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using CmsEngine.Core;
+using CmsEngine.Core.Constants;
 using Newtonsoft.Json.Linq;
 
 namespace CmsEngine.Data.Entities
@@ -16,7 +16,7 @@ namespace CmsEngine.Data.Entities
         public string Description { get; set; }
         public string HeaderImage { get; set; }
         public string Culture { get; set; }
-        public string UrlFormat { get; set; } = $"{Constants.SiteUrl}/{Constants.Type}/{Constants.Slug}";
+        public string UrlFormat { get; set; } = $"{CmsEngineConstants.SiteUrl}/{CmsEngineConstants.Type}/{CmsEngineConstants.Slug}";
         public string DateFormat { get; set; } = "MM/dd/yyyy";
         public string SiteUrl { get; set; }
         public int ArticleLimit { get; set; }

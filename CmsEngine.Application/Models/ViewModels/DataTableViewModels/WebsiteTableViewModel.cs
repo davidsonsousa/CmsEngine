@@ -1,5 +1,5 @@
 using CmsEngine.Application.Attributes;
-using CmsEngine.Core;
+using CmsEngine.Core.Constants;
 
 namespace CmsEngine.Application.ViewModels.DataTableViewModels
 {
@@ -15,7 +15,7 @@ namespace CmsEngine.Application.ViewModels.DataTableViewModels
         public string Culture { get; set; }
 
         [Searchable, Orderable, ShowOnDataTable(3)]
-        public string UrlFormat { get; set; } = $"{Constants.SiteUrl}/{Constants.Type}/{Constants.Slug}";
+        public string UrlFormat { get; set; } = $"{CmsEngineConstants.SiteUrl}/{CmsEngineConstants.Type}/{CmsEngineConstants.Slug}";
 
         [Searchable, Orderable, ShowOnDataTable(4)]
         public string DateFormat { get; set; } = "MM/dd/yyyy";

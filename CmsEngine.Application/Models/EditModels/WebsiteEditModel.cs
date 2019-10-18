@@ -1,5 +1,5 @@
 using System.ComponentModel.DataAnnotations;
-using CmsEngine.Core;
+using CmsEngine.Core.Constants;
 
 namespace CmsEngine.Application.EditModels
 {
@@ -22,7 +22,7 @@ namespace CmsEngine.Application.EditModels
 
         [Required]
         [MaxLength(100)]
-        public string UrlFormat { get; set; } = $"{Constants.SiteUrl}/{Constants.Type}/{Constants.Slug}";
+        public string UrlFormat { get; set; } = $"{CmsEngineConstants.SiteUrl}/{CmsEngineConstants.Type}/{CmsEngineConstants.Slug}";
 
         [Required]
         [MaxLength(10)]

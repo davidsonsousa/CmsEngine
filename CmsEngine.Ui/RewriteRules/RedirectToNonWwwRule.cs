@@ -1,5 +1,5 @@
 using System;
-using CmsEngine.Core;
+using CmsEngine.Core.Constants;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Rewrite;
@@ -19,19 +19,19 @@ namespace CmsEngine.Ui.RewriteRules
         public virtual void ApplyRule(RewriteContext context)
         {
             var httpRequest = context.HttpContext.Request;
-            if (httpRequest.Host.Host.Equals(Constants.Localhost, StringComparison.OrdinalIgnoreCase))
+            if (httpRequest.Host.Host.Equals(CmsEngineConstants.Localhost, StringComparison.OrdinalIgnoreCase))
             {
                 context.Result = RuleResult.ContinueRules;
                 return;
             }
 
-            if (!httpRequest.Host.Value.StartsWith(Constants.WwwDot, StringComparison.OrdinalIgnoreCase))
+            if (!httpRequest.Host.Value.StartsWith(CmsEngineConstants.WwwDot, StringComparison.OrdinalIgnoreCase))
             {
                 context.Result = RuleResult.ContinueRules;
                 return;
             }
 
-            var wwwHost = new HostString(httpRequest.Host.Value.Replace(Constants.WwwDot, string.Empty));
+            var wwwHost = new HostString(httpRequest.Host.Value.Replace(CmsEngineConstants.WwwDot, string.Empty));
             var newUrl = UriHelper.BuildAbsolute(httpRequest.Scheme, wwwHost, httpRequest.PathBase, httpRequest.Path, httpRequest.QueryString);
             var httpResponse = context.HttpContext.Response;
             httpResponse.StatusCode = _statusCode;

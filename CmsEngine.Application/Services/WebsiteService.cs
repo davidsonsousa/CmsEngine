@@ -8,6 +8,7 @@ using CmsEngine.Application.Extensions;
 using CmsEngine.Application.Extensions.Mapper;
 using CmsEngine.Application.ViewModels.DataTableViewModels;
 using CmsEngine.Core;
+using CmsEngine.Core.Constants;
 using CmsEngine.Data;
 using CmsEngine.Data.Entities;
 using Microsoft.AspNetCore.Http;
@@ -147,7 +148,7 @@ namespace CmsEngine.Application.Services
                 var timeSpan = TimeSpan.FromDays(7); //TODO: Perhaps set this in the config file. Or DB
                 logger.LogInformation("Updating Instance with expiration date to {0}", DateTime.Now.AddMilliseconds(timeSpan.TotalMilliseconds).ToString());
                 var cacheEntryOptions = new MemoryCacheEntryOptions().SetSlidingExpiration(timeSpan);
-                _memoryCache.Set(Constants.CacheKey.Instance, websiteEditModel, cacheEntryOptions);
+                _memoryCache.Set(CmsEngineConstants.CacheKey.Instance, websiteEditModel, cacheEntryOptions);
 
                 logger.LogInformation("Website saved");
             }

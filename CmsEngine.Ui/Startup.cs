@@ -4,6 +4,8 @@ using CmsEngine.Application.Services;
 using CmsEngine.Data;
 using CmsEngine.Data.Entities;
 using CmsEngine.Data.Repositories;
+using CmsEngine.Ui.Middleware;
+using CmsEngine.Ui.Middleware.SecurityHeaders;
 using CmsEngine.Ui.RewriteRules;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -146,6 +148,8 @@ namespace CmsEngine.Ui
                 FileProvider = new PhysicalFileProvider(Path.Combine(env.WebRootPath, "UploadedFiles")),
                 RequestPath = "/file"
             });
+
+            app.UseSecurityHeaders(new SecurityHeadersBuilder().AddDefaultSecurePolicy());
 
             app.UseCookiePolicy();
 
