@@ -29,7 +29,7 @@ namespace CmsEngine.Application.Services
         {
             get
             {
-                return GetCurrentUser().GetAwaiter().GetResult();
+                return GetCurrentUserViewModelAsync().GetAwaiter().GetResult();
             }
         }
 
@@ -39,6 +39,21 @@ namespace CmsEngine.Application.Services
             _httpContextAccessor = hca;
             logger = loggerFactory.CreateLogger("Service");
             _memoryCache = memoryCache;
+        }
+
+        internal async Task<ApplicationUser> GetCurrentUserAsync()
+        {
+            logger.LogInformation("GetCurrentUser()");
+
+            try
+            {
+                return await unitOfWork.Users.FindByNameAsync(_httpContextAccessor.HttpContext.User.Identity.Name);
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "Error when trying to load CurrentUser");
+                throw ex;
+            }
         }
 
         private async Task<InstanceViewModel> GetInstanceAsync()
@@ -109,21 +124,9 @@ namespace CmsEngine.Application.Services
             return instance;
         }
 
-        private async Task<UserViewModel> GetCurrentUser()
+        private async Task<UserViewModel> GetCurrentUserViewModelAsync()
         {
-            logger.LogInformation("GetCurrentUser()");
-
-            ApplicationUser user;
-
-            try
-            {
-                user = await unitOfWork.Users.FindByNameAsync(_httpContextAccessor.HttpContext.User.Identity.Name);
-            }
-            catch (Exception ex)
-            {
-                logger.LogError(ex, "Error when trying to load CurrentUser");
-                throw ex;
-            }
+            var user = await GetCurrentUserAsync();
 
             return user == null
                 ? null
