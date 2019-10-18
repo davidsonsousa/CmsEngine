@@ -23,16 +23,6 @@ namespace CmsEngine.Application.Helpers.Email
             await Execute(mailEditModel);
         }
 
-        public async Task SendEmailConfirmationAsync(ContactForm mailEditModel)
-        {
-            await Execute(mailEditModel);
-        }
-
-        public async Task SendPasswordResetAsync(ContactForm mailEditModel)
-        {
-            await Execute(mailEditModel);
-        }
-
         private async Task Execute(ContactForm mailEditModel)
         {
             try

@@ -3,6 +3,7 @@ using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using CmsEngine.Application.Helpers.Email;
 using CmsEngine.Data.Entities;
+using CmsEngine.Ui.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -52,8 +53,7 @@ namespace CmsEngine.Ui.Areas.Identity.Pages.Account
                     values: new { code },
                     protocol: Request.Scheme);
 
-                var contactForm = new ContactForm(Input.Email, "Reset password", HtmlEncoder.Default.Encode(callbackUrl));
-                await _emailSender.SendPasswordResetAsync(contactForm);
+                await _emailSender.SendPasswordResetAsync(Input.Email, HtmlEncoder.Default.Encode(callbackUrl));
 
                 return RedirectToPage("./ForgotPasswordConfirmation");
             }

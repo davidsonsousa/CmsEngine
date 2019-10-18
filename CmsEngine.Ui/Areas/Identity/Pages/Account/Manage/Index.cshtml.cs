@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using CmsEngine.Application.Helpers.Email;
 using CmsEngine.Application.Services;
 using CmsEngine.Data.Entities;
+using CmsEngine.Ui.Extensions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -168,8 +169,7 @@ namespace CmsEngine.Ui.Areas.Identity.Pages.Account.Manage
                 values: new { userId = userId, code = code },
                 protocol: Request.Scheme);
 
-            var contactForm = new ContactForm(email, "E-mail confirmation", HtmlEncoder.Default.Encode(callbackUrl));
-            await _emailSender.SendEmailConfirmationAsync(contactForm);
+            await _emailSender.SendEmailConfirmationAsync(email, HtmlEncoder.Default.Encode(callbackUrl));
 
             StatusMessage = "Verification email sent. Please check your email.";
             return RedirectToPage();
