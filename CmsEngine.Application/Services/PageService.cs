@@ -154,7 +154,7 @@ namespace CmsEngine.Application.Services
                     logger.LogInformation("New page");
                     var page = pageEditModel.MapToModel();
                     page.WebsiteId = Instance.Id;
-
+                    PrepareRelatedProperties(page);
                     await unitOfWork.Pages.Insert(page);
                 }
                 else
@@ -162,7 +162,7 @@ namespace CmsEngine.Application.Services
                     logger.LogInformation("Update page");
                     var page = pageEditModel.MapToModel(await unitOfWork.Pages.GetByIdAsync(pageEditModel.VanityId));
                     page.WebsiteId = Instance.Id;
-
+                    PrepareRelatedProperties(page);
                     _unitOfWork.Pages.Update(page);
                 }
 
@@ -190,6 +190,18 @@ namespace CmsEngine.Application.Services
             var item = await _unitOfWork.Pages.GetByIdAsync(id);
             logger.LogInformation("Page: {0}", item.ToString());
             return item.MapToEditModel();
+        }
+
+        private async Task PrepareRelatedProperties(Page page)
+        {
+            page.PageApplicationUsers = new List<PageApplicationUser>
+            {
+                new PageApplicationUser
+                {
+                    Page = page,
+                    ApplicationUser = await GetCurrentUserAsync()
+                }
+            };
         }
     }
 }

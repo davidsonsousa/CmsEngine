@@ -239,7 +239,6 @@ namespace CmsEngine.Application.Services
         {
             var categories = await _unitOfWork.Categories.GetByMultipleIdsAsync(postEditModel.SelectedCategories.ToList().ConvertAll(Guid.Parse));
             var tags = await _unitOfWork.Tags.GetByMultipleIdsAsync(postEditModel.SelectedTags.ToList().ConvertAll(Guid.Parse));
-            var user = await _unitOfWork.Users.FindByNameAsync(CurrentUser.UserName);
 
             post.PostCategories = new List<PostCategory>();
             foreach (var category in categories)
@@ -266,7 +265,7 @@ namespace CmsEngine.Application.Services
                 new PostApplicationUser
                 {
                     Post = post,
-                    ApplicationUser = user
+                    ApplicationUser = await GetCurrentUserAsync()
                 }
             };
         }
