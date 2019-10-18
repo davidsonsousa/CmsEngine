@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using CmsEngine.Core;
 using CmsEngine.Data.Entities;
 using Microsoft.EntityFrameworkCore;
 
@@ -20,6 +21,7 @@ namespace CmsEngine.Data.Repositories
         public async Task<IEnumerable<Category>> GetCategoriesWithPostCountOrderedByName()
         {
             return await Get().Include(c => c.PostCategories)
+                              .Where(q => q.PostCategories.Any(pc => pc.Post.Status == DocumentStatus.Published))
                               .Select(c => new Category
                               {
                                   VanityId = c.VanityId,
@@ -38,6 +40,7 @@ namespace CmsEngine.Data.Repositories
         public async Task<IEnumerable<Category>> GetCategoriesWithPostOrderedByName()
         {
             return await Get().Include(c => c.PostCategories)
+                              .Where(q => q.PostCategories.Any(pc => pc.Post.Status == DocumentStatus.Published))
                               .Select(c => new Category
                               {
                                   VanityId = c.VanityId,
