@@ -1,1 +1,22 @@
-Hello world
+@section Breadcrumb {
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item active">@ViewBag.PageTitle</li>
+    </ol>
+}
+
+<div class="row">
+    <div class="col-sm-6 col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <i class="fa fa-info"></i> Information
+            </div>
+            <div class="card-body">
+                <ul>
+                    <li>
+                        .NET version: @Environment.Version.ToString()
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
