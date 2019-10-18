@@ -1,6 +1,6 @@
-namespace CmsEngine.Core
+namespace CmsEngine.Core.Constants
 {
-    public static class Constants
+    public static class CmsEngineConstants
     {
         public const string SiteUrl = "[site_url]";
         public const string Culture = "[culture]";
