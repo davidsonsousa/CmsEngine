@@ -51,9 +51,8 @@ namespace CmsEngine.Ui
 
         public static IHostBuilder CreateHostBuilder(string[] args)
         {
-            var certificateSettings = Configuration.GetSection("certificateSettings");
-            string certificateName = certificateSettings.GetValue<string>("fileName");
-            string certificatePassword = certificateSettings.GetValue<string>("password");
+            string certificateName = Configuration.GetSection("certificateSettings:fileName").Value;
+            string certificatePassword = Configuration.GetSection("certificateSettings:password").Value;
 
             return Host.CreateDefaultBuilder(args)
                        .ConfigureWebHostDefaults(webBuilder =>
@@ -71,7 +70,9 @@ namespace CmsEngine.Ui
                                });
                            }
 
-                           webBuilder.UseStartup<Startup>().UseSerilog();
+                           webBuilder.UseStartup<Startup>()
+                                     .UseSerilog()
+                                     .UseConfiguration(Configuration); // This may affect the secrets. To be studied.
                        });
         }
     }
