@@ -185,6 +185,11 @@ namespace CmsEngine.Ui
                     defaults: new { controller = "Home", action = "Archive" });
 
                 endpoints.MapControllerRoute(
+                    name: "contact",
+                    pattern: "contact",
+                    defaults: new { controller = "Home", action = "Contact" });
+
+                endpoints.MapControllerRoute(
                     name: "page",
                     pattern: "{slug}",
                     defaults: new { controller = "Home", action = "Page" });
