@@ -25,9 +25,13 @@ namespace CmsEngine.Application.Helpers.Email
 
         private async Task Execute(ContactForm mailEditModel)
         {
+            _logger.LogInformation(mailEditModel.ToString());
+
             try
             {
-                MailMessage mail = new MailMessage(new MailAddress(_emailSettings.Username, "CmsEngine"), new MailAddress(mailEditModel.Sender));
+                string from = mailEditModel.From ?? _emailSettings.Username;
+
+                MailMessage mail = new MailMessage(new MailAddress(from), new MailAddress(mailEditModel.To));
 
                 if (!string.IsNullOrWhiteSpace(_emailSettings.CcEmail))
                 {
@@ -44,16 +48,21 @@ namespace CmsEngine.Application.Helpers.Email
                 mail.IsBodyHtml = false;
                 mail.Priority = MailPriority.Normal;
 
-                using (SmtpClient smtp = new SmtpClient(_emailSettings.Domain, _emailSettings.Port))
+                using (var smtp = new SmtpClient(_emailSettings.Domain, _emailSettings.Port))
                 {
-                    smtp.Credentials = new NetworkCredential(_emailSettings.Username, _emailSettings.Password);
                     smtp.EnableSsl = true;
+                    smtp.Timeout = 10000;
+                    smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
+                    smtp.UseDefaultCredentials = false;
+                    smtp.Credentials = new NetworkCredential(_emailSettings.Username, _emailSettings.Password);
+
                     await smtp.SendMailAsync(mail);
                 }
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error when sending e-mail");
+                throw;
             }
         }
     }
