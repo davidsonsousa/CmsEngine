@@ -104,6 +104,12 @@ namespace CmsEngine.Application.Services
                                 Twitter = website.Twitter,
                                 Instagram = website.Instagram,
                                 LinkedIn = website.LinkedIn
+                            },
+                            Google = new GoogleViewModel
+                            {
+                                GoogleAnalytics = website.GoogleAnalytics,
+                                GoogleRecaptchaSiteKey = website.GoogleRecaptchaSiteKey,
+                                GoogleRecaptchaSecretKey = website.GoogleRecaptchaSecretKey
                             }
                         };
 

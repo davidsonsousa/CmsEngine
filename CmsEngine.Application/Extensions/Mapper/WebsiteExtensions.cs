@@ -36,7 +36,10 @@ namespace CmsEngine.Application.Extensions.Mapper
                 Facebook = item.Facebook,
                 Twitter = item.Twitter,
                 Instagram = item.Instagram,
-                LinkedIn = item.LinkedIn
+                LinkedIn = item.LinkedIn,
+                GoogleAnalytics = item.GoogleAnalytics,
+                GoogleRecaptchaSiteKey = item.GoogleRecaptchaSiteKey,
+                GoogleRecaptchaSecretKey = item.GoogleRecaptchaSecretKey
             };
         }
 
@@ -69,7 +72,10 @@ namespace CmsEngine.Application.Extensions.Mapper
                 Facebook = item.Facebook,
                 Twitter = item.Twitter,
                 Instagram = item.Instagram,
-                LinkedIn = item.LinkedIn
+                LinkedIn = item.LinkedIn,
+                GoogleAnalytics = item.GoogleAnalytics,
+                GoogleRecaptchaSiteKey = item.GoogleRecaptchaSiteKey,
+                GoogleRecaptchaSecretKey = item.GoogleRecaptchaSecretKey
             };
         }
 
@@ -102,6 +108,9 @@ namespace CmsEngine.Application.Extensions.Mapper
             website.Twitter = item.Twitter;
             website.Instagram = item.Instagram;
             website.LinkedIn = item.LinkedIn;
+            website.GoogleAnalytics = item.GoogleAnalytics;
+            website.GoogleRecaptchaSiteKey = item.GoogleRecaptchaSiteKey;
+            website.GoogleRecaptchaSecretKey = item.GoogleRecaptchaSecretKey;
 
             return website;
         }
