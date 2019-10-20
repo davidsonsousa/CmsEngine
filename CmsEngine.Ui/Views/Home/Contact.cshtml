@@ -36,13 +36,16 @@
 @section Scripts{
     @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
 
-    <script src="https://www.google.com/recaptcha/api.js?render=______SITE_KEY______"></script>
-    <script>
-        grecaptcha.ready(function () {
-            grecaptcha.execute('______SITE_KEY______', { action: 'homepage' }).then(function (token) {
-                console.log(token)
-                document.getElementById('g-recaptcha-response').value = token;
+    @if (Model.Google.HasRecaptchaSiteKey)
+    {
+        <script src="https://www.google.com/recaptcha/api.js?render=@Model.Google.GoogleRecaptchaSiteKey"></script>
+        <script>
+            grecaptcha.ready(function () {
+                grecaptcha.execute('@Model.Google.GoogleRecaptchaSiteKey', { action: 'homepage' }).then(function (token) {
+                    console.log(token)
+                    document.getElementById('g-recaptcha-response').value = token;
+                });
             });
-        });
-    </script>
+        </script>
+    }
 }
