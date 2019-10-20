@@ -126,7 +126,7 @@ namespace CmsEngine.Application.Services
         {
             logger.LogInformation("CmsService > Save(TagEditModel: {0})", tagEditModel.ToString());
 
-            var returnValue = new ReturnValue($"Tag '{tagEditModel.Name}' saved at {DateTime.Now.ToString("T")}.");
+            var returnValue = new ReturnValue($"Tag '{tagEditModel.Name}' saved.");
 
             try
             {

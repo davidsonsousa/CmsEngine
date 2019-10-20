@@ -123,7 +123,7 @@ namespace CmsEngine.Application.Services
         {
             logger.LogInformation("CmsService > Save(WebsiteEditModel: {0})", websiteEditModel.ToString());
 
-            var returnValue = new ReturnValue($"Website '{websiteEditModel.Name}' saved at {DateTime.Now.ToString("T")}.");
+            var returnValue = new ReturnValue($"Website '{websiteEditModel.Name}' saved.");
 
             try
             {

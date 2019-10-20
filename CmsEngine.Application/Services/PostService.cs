@@ -180,7 +180,7 @@ namespace CmsEngine.Application.Services
         public async Task<ReturnValue> Save(PostEditModel postEditModel)
         {
             logger.LogInformation("PostService > Save(PostEditModel: {0})", postEditModel.ToString());
-            var returnValue = new ReturnValue($"Post '{postEditModel.Title}' saved at {DateTime.Now.ToString("T")}.");
+            var returnValue = new ReturnValue($"Post '{postEditModel.Title}' saved.");
 
             try
             {

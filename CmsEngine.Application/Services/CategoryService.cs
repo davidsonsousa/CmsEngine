@@ -141,7 +141,7 @@ namespace CmsEngine.Application.Services
         {
             logger.LogInformation("CmsService > Save(CategoryEditModel: {0})", categoryEditModel.ToString());
 
-            var returnValue = new ReturnValue($"Category '{categoryEditModel.Name}' saved at {DateTime.Now.ToString("T")}.");
+            var returnValue = new ReturnValue($"Category '{categoryEditModel.Name}' saved.");
 
             try
             {

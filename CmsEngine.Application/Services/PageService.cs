@@ -145,7 +145,7 @@ namespace CmsEngine.Application.Services
         {
             logger.LogInformation("PageService > Save(PageEditModel: {0})", pageEditModel.ToString());
 
-            var returnValue = new ReturnValue($"Page '{pageEditModel.Title}' saved at {DateTime.Now.ToString("T")}.");
+            var returnValue = new ReturnValue($"Page '{pageEditModel.Title}' saved.");
 
             try
             {
