@@ -31,22 +31,29 @@ namespace CmsEngine.Application.Helpers.Email
             {
                 string from = mailEditModel.From ?? _emailSettings.Username;
 
-                MailMessage mail = new MailMessage(new MailAddress(from), new MailAddress(mailEditModel.To));
+                MailMessage mail = new MailMessage
+                {
+                    From = new MailAddress(from),
+                    Subject = $"🌐 CmsEngine - {mailEditModel.Subject}",
+                    Body = mailEditModel.Message,
+                    IsBodyHtml = false,
+                    Priority = MailPriority.Normal
+                };
+
+                if (!string.IsNullOrWhiteSpace(mailEditModel.To))
+                {
+                    mail.To.Add(mailEditModel.To);
+                }
 
                 if (!string.IsNullOrWhiteSpace(_emailSettings.CcEmail))
                 {
-                    mail.CC.Add(new MailAddress(_emailSettings.CcEmail));
+                    mail.CC.Add(_emailSettings.CcEmail);
                 }
 
                 if (!string.IsNullOrWhiteSpace(_emailSettings.BccEmail))
                 {
-                    mail.Bcc.Add(new MailAddress(_emailSettings.BccEmail));
+                    mail.Bcc.Add(_emailSettings.BccEmail);
                 }
-
-                mail.Subject = $"🌐 CmsEngine - {mailEditModel.Subject}";
-                mail.Body = mailEditModel.Message;
-                mail.IsBodyHtml = false;
-                mail.Priority = MailPriority.Normal;
 
                 using (var smtp = new SmtpClient(_emailSettings.Domain, _emailSettings.Port))
                 {
