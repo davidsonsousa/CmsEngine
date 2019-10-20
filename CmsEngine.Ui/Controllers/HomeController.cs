@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using CmsEngine.Application.Helpers.Email;
 using CmsEngine.Application.Services;
 using CmsEngine.Application.ViewModels;
+using CmsEngine.Core.Constants;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -59,20 +60,26 @@ namespace CmsEngine.Ui.Controllers
         [HttpPost]
         public async Task<IActionResult> Contact(ContactForm contactForm, string returnUrl = null)
         {
-            ViewData["ReturnUrl"] = returnUrl;
+            if (!ModelState.IsValid)
+            {
+                TempData[MessageConstants.WarningMessage] = "Please double check the information in the form and try again.";
+                return View(instance);
+            }
 
+            ViewData["ReturnUrl"] = returnUrl;
             contactForm.To = instance.ContactDetails.Email;
 
             try
             {
                 await _emailSender.SendEmailAsync(contactForm);
+                TempData[MessageConstants.SuccessMessage] = "Your message was sent. I will answer as soon as I can.";
             }
             catch (Exception ex)
             {
-                TempData["DangerMessage"] = "We could not send the e-mail";
+                TempData[MessageConstants.DangerMessage] = "We could not send the messsage. Please try other communication channels.";
             }
 
-            return RedirectToAction(nameof(HomeController.Contact), "Contact");
+            return RedirectToAction(nameof(HomeController.Contact));
         }
 
         public async Task<IActionResult> Sitemap()
