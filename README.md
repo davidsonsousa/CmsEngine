@@ -9,15 +9,13 @@ This the code-base of the CMS I am using in my website [https://davidsonsousa.ne
 I am making it available for anyone who would like to use a .NET Core engine to create their own website.
 
 ## Why?
-Because I need a pet project to study a couple of things. And do it with my own website seems to be the right choice.
+Because I need a pet project to practice a couple of things. And do it with my own website seems to be the right choice.
 
 ## What is this project using?
 ###### (or: _What I intend to practice with this project?_)
 * [ASP.NET Core](https://docs.microsoft.com/en-us/aspnet/core/)
 * [C#](https://www.microsoft.com/net/tutorials/csharp/getting-started)
 * [Entity Framework Core](https://docs.microsoft.com/en-us/ef/core/)
-* [AutoMapper](http://automapper.org/)
-* [xUnit](https://xunit.github.io/) (in a later stage)
 
 ## Running the project
 Since this is a .NET Core project you can run in 2 ways:
@@ -25,14 +23,12 @@ Since this is a .NET Core project you can run in 2 ways:
 ### .NET Core CLI (using PowerShell)
 - Run the project
   - `cd ..\CmsEngine.Ui`
-  - `dotnet -d watch run`
-    - `-d` shows the PID for debugging purposes
+  - `dotnet -d watch run` (`-d` runs the project in diagnostic mode)
   - Open your favorite browser and load `https://cmsengine.test:5001` (make sure this url is mapped to localhost in your hosts file)
-- Create migrations
-  - Make that sure you are in the **library folder (CmsEngine\CmsEngine)**
+- Database migrations
+  - Make that sure you are in the **library folder (CmsEngine\CmsEngine.Data)**
   - `dotnet ef migrations add MIGRATION_NAME --startup-project ..\CmsEngine.Ui\`
-- Migrations should automatically be executed but, if necessary, here how to do
-  - Make that sure you are in the **library folder (CmsEngine\CmsEngine.Ui)**
+  - Go back to the **web project folder (CmsEngine\CmsEngine.Ui)**
   - `dotnet ef database update`
 
 ### IIS Express
