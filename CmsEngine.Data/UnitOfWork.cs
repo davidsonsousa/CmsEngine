@@ -63,6 +63,14 @@ namespace CmsEngine.Data
             {
                 ex.Entries.First().Reload();
             }
+            catch (DbUpdateException ex)
+            {
+                // Retrieve the error messages as a list of strings.
+                var innerException = ex.InnerException;
+
+                // Throw a new DbEntityValidationException with the improved exception message.
+                throw new DbUpdateException(innerException.Message, innerException);
+            }
             catch
             {
                 throw;
