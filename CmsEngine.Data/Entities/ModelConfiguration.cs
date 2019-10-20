@@ -175,11 +175,11 @@ namespace CmsEngine.Data.Entities
             b.HasKey(model => model.Id);
 
             b.Property(model => model.Name)
-                .HasMaxLength(25)
+                .HasMaxLength(35)
                 .IsRequired();
 
             b.Property(model => model.Slug)
-                .HasMaxLength(25)
+                .HasMaxLength(35)
                 .IsRequired();
 
             b.Property(model => model.Description)
