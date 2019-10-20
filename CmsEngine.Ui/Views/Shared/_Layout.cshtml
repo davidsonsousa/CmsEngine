@@ -84,9 +84,9 @@
                         <li class="nav-item">
                             <a asp-controller="Home" asp-action="Archive" class="nav-link @Html.IsSelected(controllers: "Home", actions: "Archive")">Archive</a>
                         </li>
-                        @*<li class="nav-item">
-                                <a asp-controller="Home" asp-action="Contact" class="nav-link">Contact</a>
-                            </li>*@
+                        <li class="nav-item">
+                            <a asp-controller="Home" asp-action="Contact" class="nav-link @Html.IsSelected(controllers: "Home", actions: "Contact")">Contact</a>
+                        </li>
                     </ul>
                     <div class="navbar-text"><a href="#" class="search-btn"><i class="icon-search-1"></i></a></div>
                 </div>
