@@ -1,6 +1,7 @@
 using System;
 using System.Net;
 using System.Net.Mail;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -18,53 +19,58 @@ namespace CmsEngine.Application.Helpers.Email
             _logger = logger;
         }
 
-        public async Task SendEmailAsync(ContactForm mailEditModel)
+        public async Task SendEmailAsync(ContactForm contactForm)
         {
-            await Execute(mailEditModel);
+            await Execute(contactForm);
         }
 
-        private async Task Execute(ContactForm mailEditModel)
+        private async Task Execute(ContactForm contactForm)
         {
-            _logger.LogInformation(mailEditModel.ToString());
+            _logger.LogInformation("SendEmailAsync(contactForm: {0})", contactForm.ToString());
+
+            string from = contactForm.From ?? _emailSettings.Username;
+            string body = $"From: {from}\r\nTo: {contactForm.To}\r\n-----\r\n\r\n{contactForm.Message}";
 
             try
             {
-                string from = mailEditModel.From ?? _emailSettings.Username;
 
-                MailMessage mail = new MailMessage
+                MailMessage message = new MailMessage
                 {
                     From = new MailAddress(from),
-                    Subject = $"🌐 CmsEngine - {mailEditModel.Subject}",
-                    Body = mailEditModel.Message,
+                    Subject = $"🌐 CmsEngine - {contactForm.Subject}",
+                    SubjectEncoding = Encoding.UTF8,
                     IsBodyHtml = false,
+                    Body = body,
+                    BodyEncoding = Encoding.UTF8,
                     Priority = MailPriority.Normal
                 };
 
-                if (!string.IsNullOrWhiteSpace(mailEditModel.To))
+                if (!string.IsNullOrWhiteSpace(contactForm.To))
                 {
-                    mail.To.Add(mailEditModel.To);
+                    message.To.Add(contactForm.To);
                 }
 
                 if (!string.IsNullOrWhiteSpace(_emailSettings.CcEmail))
                 {
-                    mail.CC.Add(_emailSettings.CcEmail);
+                    message.CC.Add(_emailSettings.CcEmail);
                 }
 
                 if (!string.IsNullOrWhiteSpace(_emailSettings.BccEmail))
                 {
-                    mail.Bcc.Add(_emailSettings.BccEmail);
+                    message.Bcc.Add(_emailSettings.BccEmail);
                 }
 
                 using (var smtp = new SmtpClient(_emailSettings.Domain, _emailSettings.Port))
                 {
                     smtp.EnableSsl = true;
-                    smtp.Timeout = 10000;
                     smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
                     smtp.UseDefaultCredentials = false;
                     smtp.Credentials = new NetworkCredential(_emailSettings.Username, _emailSettings.Password);
 
-                    await smtp.SendMailAsync(mail);
+                    await smtp.SendMailAsync(message);
                 }
+
+                _logger.LogInformation("Email sent from {0} to {1}", message.From, message.To[0]);
             }
             catch (Exception ex)
             {
