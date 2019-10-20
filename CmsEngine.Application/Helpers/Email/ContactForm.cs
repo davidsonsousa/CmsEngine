@@ -11,8 +11,10 @@ namespace CmsEngine.Application.Helpers.Email
         [DataType(DataType.EmailAddress)]
         public string To { get; set; }
         [Required]
+        [MaxLength(150)]
         public string Subject { get; set; }
         [Required]
+        [MaxLength(500)]
         public string Message { get; set; }
 
         public ContactForm()
