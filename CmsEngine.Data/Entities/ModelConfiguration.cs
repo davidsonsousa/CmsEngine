@@ -200,21 +200,34 @@ namespace CmsEngine.Data.Entities
         {
             // Fields
             b.HasKey(model => model.Id);
-
             b.Property(model => model.Name)
                 .HasMaxLength(25)
                 .IsRequired();
-
             b.Property(model => model.Slug)
                 .HasMaxLength(25)
                 .IsRequired();
-
             b.Property(model => model.UserCreated)
                 .HasMaxLength(20);
-
             b.Property(model => model.UserModified)
                 .HasMaxLength(20);
-
+            b.Property(model => model.VanityId)
+                .ValueGeneratedOnAdd()
+                .HasDefaultValueSql("newid()");
+        }
+        public static void ConfigureEmail(EntityTypeBuilder<Email> b)
+        {
+            // Fields
+            b.HasKey(model => model.Id);
+            b.Property(model => model.Subject)
+                .HasMaxLength(150)
+                .IsRequired();
+            b.Property(model => model.Message)
+                .HasMaxLength(500)
+                .IsRequired();
+            b.Property(model => model.UserCreated)
+                .HasMaxLength(20);
+            b.Property(model => model.UserModified)
+                .HasMaxLength(20);
             b.Property(model => model.VanityId)
                 .ValueGeneratedOnAdd()
                 .HasDefaultValueSql("newid()");
