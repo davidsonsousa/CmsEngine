@@ -61,6 +61,7 @@ namespace CmsEngine.Ui
             services.AddScoped<IPostRepository, PostRepository>();
             services.AddScoped<ITagRepository, TagRepository>();
             services.AddScoped<IWebsiteRepository, WebsiteRepository>();
+            services.AddScoped<IEmailRepository, EmailRepository>();
 
             //// Add services
             services.AddScoped<IService, Service>();
@@ -70,6 +71,7 @@ namespace CmsEngine.Ui
             services.AddScoped<ITagService, TagService>();
             services.AddScoped<IWebsiteService, WebsiteService>();
             services.AddScoped<IXmlService, XmlService>();
+            services.AddScoped<IEmailService, EmailService>();
 
             //// Add Unit of Work
             services.AddScoped<IUnitOfWork, UnitOfWork>();
