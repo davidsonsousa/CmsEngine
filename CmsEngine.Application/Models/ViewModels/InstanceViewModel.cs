@@ -21,6 +21,7 @@ namespace CmsEngine.Application.ViewModels
         public DocumentViewModel SelectedDocument { get; set; }
         public ContactForm ContactForm { get; set; }
         public SocialMediaViewModel SocialMedia { get; set; }
+        public GoogleViewModel Google { get; set; }
 
         public string PageTitle { get; set; }
 
