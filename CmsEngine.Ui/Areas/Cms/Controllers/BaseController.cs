@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using CmsEngine.Application.Helpers;
 using CmsEngine.Application.Services;
 using CmsEngine.Core;
+using CmsEngine.Core.Constants;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -67,7 +68,7 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
                 ModelState.AddModelError("", modelError);
             }
 
-            TempData["DangerMessage"] = generalError;
+            TempData[MessageConstants.DangerMessage] = generalError;
         }
 
         protected async Task<ContentResult> PrepareAndUploadFiles(string webrootPath, string folderName)

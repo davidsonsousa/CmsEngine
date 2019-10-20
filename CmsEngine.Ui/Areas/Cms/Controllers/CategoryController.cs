@@ -5,6 +5,7 @@ using CmsEngine.Application.Helpers;
 using CmsEngine.Application.Services;
 using CmsEngine.Application.ViewModels.DataTableViewModels;
 using CmsEngine.Core;
+using CmsEngine.Core.Constants;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -103,7 +104,7 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
 
             if (!returnValue.IsError)
             {
-                TempData["SuccessMessage"] = returnValue.Message;
+                TempData[MessageConstants.SuccessMessage] = returnValue.Message;
             }
             else
             {
