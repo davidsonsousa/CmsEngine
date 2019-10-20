@@ -19,10 +19,11 @@ namespace CmsEngine.Data
         public ITagRepository Tags { get; private set; }
         public IWebsiteRepository Websites { get; private set; }
         public UserManager<ApplicationUser> Users { get; private set; }
+        public IEmailRepository Emails { get; private set; }
 
         public UnitOfWork(CmsEngineContext context, ICategoryRepository categoryRepository, IPageRepository pageRepository,
                           IPostRepository postRepository, ITagRepository tagRepository, IWebsiteRepository websiteRepository,
-                          UserManager<ApplicationUser> userManager)
+                          UserManager<ApplicationUser> userManager, IEmailRepository emailRepository)
         {
             _ctx = context;
 
@@ -32,6 +33,7 @@ namespace CmsEngine.Data
             Tags = tagRepository;
             Websites = websiteRepository;
             Users = userManager;
+            Emails = emailRepository;
 
             _disposed = false;
         }

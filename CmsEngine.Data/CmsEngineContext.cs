@@ -1,5 +1,7 @@
 using System;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using CmsEngine.Data.Entities;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -13,6 +15,7 @@ namespace CmsEngine.Data
         public DbSet<Post> Posts { get; set; }
         public DbSet<Tag> Tags { get; set; }
         public DbSet<Category> Categories { get; set; }
+        public DbSet<Email> Emails { get; set; }
 
         public CmsEngineContext(DbContextOptions<CmsEngineContext> options) : base(options)
         {
@@ -32,6 +35,7 @@ namespace CmsEngine.Data
             builder.Entity<Post>(ModelConfiguration.ConfigurePost);
             builder.Entity<Tag>(ModelConfiguration.ConfigureTag);
             builder.Entity<Category>(ModelConfiguration.ConfigureCategory);
+            builder.Entity<Email>(ModelConfiguration.ConfigureEmail);
             builder.Entity<PostCategory>(ModelConfiguration.ConfigurePostCategory);
             builder.Entity<PostTag>(ModelConfiguration.ConfigurePostTag);
             builder.Entity<PostApplicationUser>(ModelConfiguration.ConfigurePostApplicationUser);
@@ -43,14 +47,11 @@ namespace CmsEngine.Data
             base.OnModelCreating(builder);
         }
 
-        public override int SaveChanges()
+        public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
             var saveTime = DateTime.Now;
-
             var entries = ChangeTracker.Entries().Where(e => e.Entity is BaseEntity && (e.State == EntityState.Added || e.State == EntityState.Modified));
-
             string currentUsername = "";//HttpContext.Current?.User?.Identity?.Name;
-
             foreach (var entry in entries)
             {
                 if (entry.State == EntityState.Added)
@@ -58,12 +59,11 @@ namespace CmsEngine.Data
                     entry.Property("DateCreated").CurrentValue = saveTime;
                     entry.Property("UserCreated").CurrentValue = currentUsername;
                 }
-
                 entry.Property("DateModified").CurrentValue = saveTime;
                 entry.Property("UserModified").CurrentValue = currentUsername;
             }
 
-            return base.SaveChanges();
+            return base.SaveChangesAsync(cancellationToken);
         }
     }
 }

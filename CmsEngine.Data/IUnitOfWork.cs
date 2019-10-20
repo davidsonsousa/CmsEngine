@@ -14,6 +14,7 @@ namespace CmsEngine.Data
         ITagRepository Tags { get; }
         IWebsiteRepository Websites { get; }
         UserManager<ApplicationUser> Users { get; }
+        IEmailRepository Emails { get; }
 
         /// <summary>
         /// Saves all pending changes into the database
