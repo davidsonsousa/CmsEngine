@@ -1,6 +1,7 @@
-@if (!string.IsNullOrWhiteSpace(TempData[MessageConstants.InfoMessage].ToString()))
+@if (TempData[MessageConstants.InfoMessage] != null)
 {
     <div class="alert alert-info alert-dismissible fade show" role="alert">
+        <small>@DateTime.Now</small><br />
         @TempData[MessageConstants.InfoMessage]
         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
             <span aria-hidden="true">&times;</span>
@@ -8,9 +9,10 @@
     </div>
 }
 
-@if (!string.IsNullOrWhiteSpace(TempData[MessageConstants.SuccessMessage].ToString()))
+@if (TempData[MessageConstants.SuccessMessage] != null)
 {
     <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <small>@DateTime.Now</small><br />
         @TempData[MessageConstants.SuccessMessage]
         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
             <span aria-hidden="true">&times;</span>
@@ -18,9 +20,10 @@
     </div>
 }
 
-@if (!string.IsNullOrWhiteSpace(TempData[MessageConstants.WarningMessage].ToString()))
+@if (TempData[MessageConstants.WarningMessage] != null)
 {
     <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        <small>@DateTime.Now</small><br />
         <strong>Warning:</strong> @TempData[MessageConstants.WarningMessage]
         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
             <span aria-hidden="true">&times;</span>
@@ -28,9 +31,10 @@
     </div>
 }
 
-@if (!string.IsNullOrWhiteSpace(TempData[MessageConstants.DangerMessage].ToString()))
+@if (TempData[MessageConstants.DangerMessage] != null)
 {
     <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <small>@DateTime.Now</small><br />
         <strong>Error:</strong> @TempData[MessageConstants.DangerMessage]
         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
             <span aria-hidden="true">&times;</span>
