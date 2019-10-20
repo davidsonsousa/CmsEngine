@@ -16,14 +16,17 @@ namespace CmsEngine.Ui.Controllers
         private readonly IEmailSender _emailSender;
         private readonly IPageService _pageService;
         private readonly IXmlService _xmlService;
+        private readonly IEmailService _emailService;
 
         public HomeController(ILoggerFactory loggerFactory, IEmailSender emailSender, IPageService pageService, IXmlService xmlService,
-                              ICategoryService categoryService, ITagService tagService, IService service, IPostService postService)
+                              ICategoryService categoryService, ITagService tagService, IService service, IPostService postService,
+                              IEmailService emailService)
                              : base(loggerFactory, service, categoryService, pageService, postService, tagService)
         {
             _emailSender = emailSender;
             _pageService = pageService;
             _xmlService = xmlService;
+            _emailService = emailService;
         }
 
         public IActionResult Index()
@@ -71,6 +74,11 @@ namespace CmsEngine.Ui.Controllers
 
             try
             {
+                if ((await _emailService.Save(contactForm)).IsError)
+                {
+                    throw new Exception("Error when saving e-mail");
+                }
+
                 await _emailSender.SendEmailAsync(contactForm);
                 TempData[MessageConstants.SuccessMessage] = "Your message was sent. I will answer as soon as I can.";
             }
