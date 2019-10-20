@@ -4,14 +4,14 @@ namespace CmsEngine.Application.Helpers.Email
 {
     public class ContactForm
     {
-        public string From { get; }
-        public string To { get; }
-        public string Subject { get; }
-        public string Message { get; }
+        public string From { get; set; }
+        public string To { get; set; }
+        public string Subject { get; set; }
+        public string Message { get; set; }
 
-        public ContactForm(string from, string to, string subject, string message) : this(to, subject, message)
+        public ContactForm()
         {
-            From = from;
+
         }
 
         public ContactForm(string to, string subject, string message)
@@ -25,6 +25,7 @@ namespace CmsEngine.Application.Helpers.Email
         {
             var jsonResult = new JObject(
                                         new JProperty("From", From),
+                                        new JProperty("To", To),
                                         new JProperty("Subject", Subject),
                                         new JProperty("Message", Message)
                                     );
