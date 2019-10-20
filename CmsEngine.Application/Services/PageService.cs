@@ -154,15 +154,15 @@ namespace CmsEngine.Application.Services
                     logger.LogInformation("New page");
                     var page = pageEditModel.MapToModel();
                     page.WebsiteId = Instance.Id;
-                    PrepareRelatedProperties(page);
+                    await PrepareRelatedProperties(page);
                     await unitOfWork.Pages.Insert(page);
                 }
                 else
                 {
                     logger.LogInformation("Update page");
-                    var page = pageEditModel.MapToModel(await unitOfWork.Pages.GetByIdAsync(pageEditModel.VanityId));
+                    var page = pageEditModel.MapToModel(await unitOfWork.Pages.GetForSavingById(pageEditModel.VanityId));
                     page.WebsiteId = Instance.Id;
-                    PrepareRelatedProperties(page);
+                    await PrepareRelatedProperties(page);
                     _unitOfWork.Pages.Update(page);
                 }
 
