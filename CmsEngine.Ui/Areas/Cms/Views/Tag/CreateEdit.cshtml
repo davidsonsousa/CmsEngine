@@ -23,22 +23,19 @@
                     {
                         <input asp-for="Id" type="hidden" />
                     }
-
-                    <div asp-validation-summary="All" class="text-danger"></div>
                     <div class="form-group row">
                         <label asp-for="Name" class="col-md-2 form-control-label"></label>
                         <div class="col-md-10">
                             <input asp-for="Name" class="form-control slugify" />
-                            <span asp-validation-for="Name" class="text-danger"></span>
                         </div>
                     </div>
                     <div class="form-group row">
                         <label asp-for="Slug" class="col-md-2 form-control-label"></label>
                         <div class="col-md-10">
                             <input asp-for="Slug" class="form-control slug" />
-                            <span asp-validation-for="Slug" class="text-danger"></span>
                         </div>
                     </div>
+                    <div asp-validation-summary="All" class="text-danger"></div>
                 </div>
                 <div class="card-footer">
                     <button type="submit" class="btn btn-primary"><i class="fa fa-dot-circle-o"></i> Save</button>
