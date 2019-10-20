@@ -1,12 +1,18 @@
+using System.ComponentModel.DataAnnotations;
 using Newtonsoft.Json.Linq;
 
 namespace CmsEngine.Application.Helpers.Email
 {
     public class ContactForm
     {
+        [Required]
+        [DataType(DataType.EmailAddress)]
         public string From { get; set; }
+        [DataType(DataType.EmailAddress)]
         public string To { get; set; }
+        [Required]
         public string Subject { get; set; }
+        [Required]
         public string Message { get; set; }
 
         public ContactForm()
