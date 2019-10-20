@@ -49,7 +49,7 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
                 return View("CreateEdit", websiteEditModel);
             }
 
-            return await Save(websiteEditModel);
+            return await Save(websiteEditModel, nameof(WebsiteController.Create));
         }
 
         public async Task<IActionResult> Edit(Guid vanityId)
@@ -74,10 +74,10 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
 
             if (await TryUpdateModelAsync(websiteToUpdate))
             {
-                return await Save(websiteEditModel);
+                return await Save(websiteEditModel, nameof(WebsiteController.Edit));
             }
-
-            return View("CreateEdit", websiteEditModel);
+            TempData[MessageConstants.WarningMessage] = "The model could not be updated.";
+            return RedirectToAction(nameof(WebsiteController.Edit), websiteEditModel);
         }
 
         [HttpPost]
@@ -107,20 +107,20 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
             return await PrepareAndUploadFiles(_env.WebRootPath, "Website");
         }
 
-        private async Task<IActionResult> Save(WebsiteEditModel websiteEditModel)
+        private async Task<IActionResult> Save(WebsiteEditModel websiteEditModel, string sender)
         {
             var returnValue = await _websiteService.Save(websiteEditModel);
 
             if (!returnValue.IsError)
             {
                 TempData[MessageConstants.SuccessMessage] = returnValue.Message;
+                return RedirectToAction(nameof(WebsiteController.Index));
             }
             else
             {
-                return View("CreateEdit", websiteEditModel);
+                TempData[MessageConstants.DangerMessage] = returnValue.Message;
+                return RedirectToAction(sender);
             }
-
-            return RedirectToAction("Index");
         }
     }
 }

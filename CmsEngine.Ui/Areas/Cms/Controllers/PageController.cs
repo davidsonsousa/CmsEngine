@@ -49,7 +49,7 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
                 return View("CreateEdit", pageEditModel);
             }
 
-            return await Save(pageEditModel);
+            return await Save(pageEditModel, nameof(PageController.Create));
         }
 
         public async Task<IActionResult> Edit(Guid vanityId)
@@ -67,6 +67,7 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
             if (!ModelState.IsValid)
             {
                 SetupMessages("Pages", PageType.Edit, panelTitle: "Edit an existing page");
+                TempData[MessageConstants.WarningMessage] = "Please double check the information in the form and try again.";
                 return View("CreateEdit", pageEditModel);
             }
 
@@ -74,10 +75,11 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
 
             if (await TryUpdateModelAsync(pageToUpdate))
             {
-                return await Save(pageEditModel);
+                return await Save(pageEditModel, nameof(PageController.Edit));
             }
 
-            return View("CreateEdit", pageEditModel);
+            TempData[MessageConstants.WarningMessage] = "The model could not be updated.";
+            return RedirectToAction(nameof(PageController.Edit), pageEditModel);
         }
 
         [HttpPost]
@@ -107,20 +109,20 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
             return await PrepareAndUploadFiles(_env.WebRootPath, "Page");
         }
 
-        private async Task<IActionResult> Save(PageEditModel pageEditModel)
+        private async Task<IActionResult> Save(PageEditModel pageEditModel, string sender)
         {
             var returnValue = await _pageService.Save(pageEditModel);
 
             if (!returnValue.IsError)
             {
                 TempData[MessageConstants.SuccessMessage] = returnValue.Message;
+                return RedirectToAction(nameof(PageController.Index));
             }
             else
             {
-                return View("CreateEdit", pageEditModel);
+                TempData[MessageConstants.DangerMessage] = returnValue.Message;
+                return RedirectToAction(sender);
             }
-
-            return RedirectToAction("Index");
         }
     }
 }

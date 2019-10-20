@@ -46,7 +46,7 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
                 return View("CreateEdit", categoryEditModel);
             }
 
-            return await Save(categoryEditModel);
+            return await Save(categoryEditModel, nameof(CategoryController.Create));
         }
 
         public async Task<IActionResult> Edit(Guid vanityId)
@@ -64,6 +64,7 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
             if (!ModelState.IsValid)
             {
                 SetupMessages("Categories", PageType.Edit, panelTitle: "Edit an existing category");
+                TempData[MessageConstants.WarningMessage] = "Please double check the information in the form and try again.";
                 return View("CreateEdit", categoryEditModel);
             }
 
@@ -71,10 +72,11 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
 
             if (await TryUpdateModelAsync(categoryToUpdate))
             {
-                return await Save(categoryEditModel);
+                return await Save(categoryEditModel, nameof(CategoryController.Edit));
             }
 
-            return View("CreateEdit", categoryEditModel);
+            TempData[MessageConstants.WarningMessage] = "The model could not be updated.";
+            return RedirectToAction(nameof(CategoryController.Edit), categoryEditModel);
         }
 
         [HttpPost]
@@ -98,20 +100,20 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
             return Ok(dataTable);
         }
 
-        private async Task<IActionResult> Save(CategoryEditModel categoryEditModel)
+        private async Task<IActionResult> Save(CategoryEditModel categoryEditModel, string sender)
         {
             var returnValue = await _categoryService.Save(categoryEditModel);
 
             if (!returnValue.IsError)
             {
                 TempData[MessageConstants.SuccessMessage] = returnValue.Message;
+                return RedirectToAction(nameof(CategoryController.Index));
             }
             else
             {
-                return View("CreateEdit", categoryEditModel);
+                TempData[MessageConstants.DangerMessage] = returnValue.Message;
+                return RedirectToAction(sender);
             }
-
-            return RedirectToAction("Index");
         }
     }
 }

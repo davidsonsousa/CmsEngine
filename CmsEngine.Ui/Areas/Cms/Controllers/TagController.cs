@@ -47,7 +47,7 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
                 return View("CreateEdit", tagEditModel);
             }
 
-            return await Save(tagEditModel);
+            return await Save(tagEditModel, nameof(TagController.Create));
         }
 
         public async Task<IActionResult> Edit(Guid vanityId)
@@ -72,10 +72,10 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
 
             if (await TryUpdateModelAsync(tagToUpdate))
             {
-                return await Save(tagEditModel);
+                return await Save(tagEditModel, nameof(TagController.Edit));
             }
-
-            return View("CreateEdit", tagEditModel);
+            TempData[MessageConstants.WarningMessage] = "The model could not be updated.";
+            return RedirectToAction(nameof(TagController.Edit), tagEditModel);
         }
 
         [HttpPost]
@@ -99,20 +99,20 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
             return Ok(dataTable);
         }
 
-        private async Task<IActionResult> Save(TagEditModel tagEditModel)
+        private async Task<IActionResult> Save(TagEditModel tagEditModel, string sender)
         {
             var returnValue = await _tagService.Save(tagEditModel);
 
             if (!returnValue.IsError)
             {
                 TempData[MessageConstants.SuccessMessage] = returnValue.Message;
+                return RedirectToAction(nameof(TagController.Index));
             }
             else
             {
-                return View("CreateEdit", tagEditModel);
+                TempData[MessageConstants.DangerMessage] = returnValue.Message;
+                return RedirectToAction(sender);
             }
-
-            return RedirectToAction("Index");
         }
     }
 }
