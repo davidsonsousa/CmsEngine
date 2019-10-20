@@ -43,7 +43,7 @@ namespace CmsEngine.Application.Services
 
         internal async Task<ApplicationUser> GetCurrentUserAsync()
         {
-            logger.LogInformation("GetCurrentUser()");
+            logger.LogInformation("GetCurrentUserAsync() for {0}", _httpContextAccessor.HttpContext.User.Identity.Name);
 
             try
             {
