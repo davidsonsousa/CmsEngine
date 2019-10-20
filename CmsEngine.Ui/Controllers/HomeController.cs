@@ -1,3 +1,4 @@
+using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using CmsEngine.Application.Helpers.Email;
@@ -51,7 +52,6 @@ namespace CmsEngine.Ui.Controllers
 
         public IActionResult Contact()
         {
-            ViewData["Message"] = "Your contact page.";
             instance.PageTitle = $"Contact - {instance.Name}";
             return View(instance);
         }
@@ -60,16 +60,19 @@ namespace CmsEngine.Ui.Controllers
         public async Task<IActionResult> Contact(ContactForm contactForm, string returnUrl = null)
         {
             ViewData["ReturnUrl"] = returnUrl;
-            await _emailSender.SendEmailAsync(contactForm);
 
-            if (Url.IsLocalUrl(returnUrl))
+            contactForm.To = instance.ContactDetails.Email;
+
+            try
             {
-                return Redirect(returnUrl);
+                await _emailSender.SendEmailAsync(contactForm);
             }
-            else
+            catch (Exception ex)
             {
-                return RedirectToAction(nameof(HomeController.Index), "Home");
+                TempData["DangerMessage"] = "We could not send the e-mail";
             }
+
+            return RedirectToAction(nameof(HomeController.Contact), "Contact");
         }
 
         public async Task<IActionResult> Sitemap()
