@@ -34,6 +34,9 @@ namespace CmsEngine.Data.Entities
         public string FacebookAppId { get; set; }
         public string FacebookApiVersion { get; set; }
         public string DisqusShortName { get; set; }
+        public string GoogleAnalytics { get; set; }
+        public string GoogleRecaptchaSiteKey { get; set; }
+        public string GoogleRecaptchaSecretKey { get; set; }
 
         public override string ToString()
         {

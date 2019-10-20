@@ -65,5 +65,9 @@ namespace CmsEngine.Application.EditModels
 
         [MaxLength(30)]
         public string DisqusShortName { get; set; }
+
+        public string GoogleAnalytics { get; set; }
+        public string GoogleRecaptchaSiteKey { get; set; }
+        public string GoogleRecaptchaSecretKey { get; set; }
     }
 }
