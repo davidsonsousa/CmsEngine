@@ -128,6 +128,8 @@
             @RenderSection("Breadcrumb", false)
 
             <div class="container-fluid">
+                @{ await Html.RenderPartialAsync("_Messages"); }
+
                 @RenderBody()
             </div>
             <!-- /.conainer-fluid -->
