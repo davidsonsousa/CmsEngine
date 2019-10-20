@@ -13,5 +13,6 @@ namespace CmsEngine.Data.Repositories
         Task<IEnumerable<Page>> GetByStatusOrderByDescending(DocumentStatus documentStatus);
         Task<IEnumerable<Page>> GetForDataTable();
         Task<Page> GetBySlug(string slug);
+        Task<Page> GetForSavingById(Guid id);
     }
 }

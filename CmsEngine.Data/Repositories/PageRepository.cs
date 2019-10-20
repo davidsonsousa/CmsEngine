@@ -68,5 +68,11 @@ namespace CmsEngine.Data.Repositories
                 })
             }).ToListAsync();
         }
+
+        public async Task<Page> GetForSavingById(Guid id)
+        {
+            return await Get(q => q.VanityId == id).Include(p => p.PageApplicationUsers)
+                                                   .SingleAsync();
+        }
     }
 }
