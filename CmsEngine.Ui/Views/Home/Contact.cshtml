@@ -4,6 +4,7 @@
     <div class="row">
         <main class="col-lg-8">
             <div class="container">
+                @{ await Html.RenderPartialAsync("_Messages"); }
                 <h1>Contact</h1>
                 <div class="card">
                     <form asp-controller="Home" asp-action="Contact" asp-route-returnurl="@ViewData[" ReturnUrl"]" method="post" class="form-horizontal">
