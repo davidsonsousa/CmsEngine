@@ -21,7 +21,7 @@ namespace CmsEngine.Data.Repositories
         public async Task<IEnumerable<Category>> GetCategoriesWithPostCountOrderedByName()
         {
             return await Get().Include(c => c.PostCategories)
-                              .Where(q => q.PostCategories.Any(pc => pc.Post.Status == DocumentStatus.Published))
+                              .Where(q => q.PostCategories.Any(pc => pc.Post.Status == DocumentStatus.Published && pc.Post.IsDeleted == false))
                               .Select(c => new Category
                               {
                                   VanityId = c.VanityId,
@@ -40,13 +40,14 @@ namespace CmsEngine.Data.Repositories
         public async Task<IEnumerable<Category>> GetCategoriesWithPostOrderedByName()
         {
             return await Get().Include(c => c.PostCategories)
-                              .Where(q => q.PostCategories.Any(pc => pc.Post.Status == DocumentStatus.Published))
+                                .ThenInclude(pc => pc.Post)
+                              .Where(q => q.PostCategories.Any(pc => pc.Post.Status == DocumentStatus.Published && pc.Post.IsDeleted == false))
                               .Select(c => new Category
                               {
                                   VanityId = c.VanityId,
                                   Name = c.Name,
                                   Slug = c.Slug,
-                                  Posts = c.PostCategories.Select(pc => pc.Post).Select(p => new Post
+                                  Posts = c.PostCategories.Select(pc => pc.Post).Where(q => q.IsDeleted == false).Select(p => new Post
                                   {
                                       VanityId = p.VanityId,
                                       Title = p.Title,
