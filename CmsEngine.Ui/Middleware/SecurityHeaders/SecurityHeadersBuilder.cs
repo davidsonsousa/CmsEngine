@@ -37,6 +37,8 @@ namespace CmsEngine.Ui.Middleware.SecurityHeaders
                                                        "style-src 'self' 'unsafe-inline' github.githubassets.com www.google.com platform.twitter.com cdn.syndication.twimg.com fonts.googleapis.com;" +
                                                        "script-src 'self' 'unsafe-inline' 'unsafe-eval' www.gstatic.com gist.github.com *.disqus.com www.googletagmanager.com www.google.com cse.google.com cdn.syndication.twimg.com platform.twitter.com cdn1.developermedia.com cdn2.developermedia.com apis.google.com www.googletagservices.com adservice.google.com securepubads.g.doubleclick.net ajax.aspnetcdn.com *.google-analytics.com");
 
+            RemoveHeader("X-Powered-By");
+
             return this;
         }
 
