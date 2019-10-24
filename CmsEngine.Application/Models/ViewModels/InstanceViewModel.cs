@@ -16,6 +16,7 @@ namespace CmsEngine.Application.ViewModels
         public string DateFormat { get; set; }
         public string SiteUrl { get; set; }
         public int ArticleLimit { get; set; }
+        public string GoogleAnalytics { get; set; }
         public ContactDetailsViewModel ContactDetails { get; set; }
         public ApiDetailsViewModel ApiDetails { get; set; }
         public DocumentViewModel SelectedDocument { get; set; }
