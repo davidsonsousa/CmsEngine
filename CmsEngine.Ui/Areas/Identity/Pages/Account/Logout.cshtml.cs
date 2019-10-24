@@ -1,5 +1,5 @@
 using System.Threading.Tasks;
-using CmsEngine.Data.Models;
+using CmsEngine.Data.Entities;
 using CmsEngine.Ui.Admin.Controllers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;

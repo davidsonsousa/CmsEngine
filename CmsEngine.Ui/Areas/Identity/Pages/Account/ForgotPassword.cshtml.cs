@@ -1,9 +1,9 @@
 using System.ComponentModel.DataAnnotations;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
-using CmsEngine.Data.Models;
-using CmsEngine.Extensions;
-using CmsEngine.Helpers.Email;
+using CmsEngine.Application.Helpers.Email;
+using CmsEngine.Data.Entities;
+using CmsEngine.Ui.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;

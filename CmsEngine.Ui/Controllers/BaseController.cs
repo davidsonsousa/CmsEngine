@@ -1,10 +1,7 @@
 using System.Globalization;
-using AutoMapper;
-using CmsEngine.Data.AccessLayer;
-using CmsEngine.Data.Models;
-using CmsEngine.Data.ViewModels;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
+using System.Threading.Tasks;
+using CmsEngine.Application.Services;
+using CmsEngine.Application.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Logging;
@@ -13,15 +10,24 @@ namespace CmsEngine.Ui.Controllers
 {
     public class BaseController : Controller
     {
-        protected readonly CmsService service;
+        //protected readonly IService service;
         protected readonly InstanceViewModel instance;
         protected readonly ILogger logger;
 
-        public BaseController(IUnitOfWork uow, IMapper mapper, IHttpContextAccessor hca, UserManager<ApplicationUser> userManager, ILogger logger)
+        private readonly ICategoryService _categoryService;
+        private readonly IPageService _pageService;
+        private readonly IPostService _postService;
+        private readonly ITagService _tagService;
+
+        public BaseController(ILoggerFactory loggerFactory, IService service, ICategoryService categoryService, IPageService pageService, IPostService postService, ITagService tagService)
         {
-            service = new CmsService(uow, mapper, hca, userManager, logger);
             instance = service.Instance;
-            this.logger = logger;
+            logger = loggerFactory.CreateLogger("BaseController");
+
+            _categoryService = categoryService;
+            _pageService = pageService;
+            _postService = postService;
+            _tagService = tagService;
 
             var cultureInfo = new CultureInfo(instance.Culture);
 
@@ -29,33 +35,35 @@ namespace CmsEngine.Ui.Controllers
             CultureInfo.DefaultThreadCurrentUICulture = cultureInfo;
         }
 
-        public override void OnActionExecuting(ActionExecutingContext context)
+        public override async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
-            base.OnActionExecuting(context);
-
             if (context.ActionArguments.TryGetValue("q", out object searchValue))
             {
                 // Showing searched posts
-                instance.PagedPosts = service.GetPagedPostsFullTextSearch<PostViewModel>(DocumentStatus.Published, 1, searchValue.ToString());
+                instance.PagedPosts = await _postService.FindPublishedForPaginationOrderByDateDescending(searchValue.ToString());
             }
             else
             {
                 if (context.ActionArguments.TryGetValue("page", out object value) && int.TryParse(value.ToString(), out int page))
                 {
                     // Showing posts after paging
-                    instance.PagedPosts = service.GetPagedPostsByStatusReadOnly<PostViewModel>(DocumentStatus.Published, page);
+                    instance.PagedPosts = await _postService.GetPublishedForPagination(page);
                 }
                 else
                 {
                     // Showing regular posts
-                    instance.PagedPosts = service.GetPagedPostsByStatusReadOnly<PostViewModel>(DocumentStatus.Published);
+                    instance.PagedPosts = await _postService.GetPublishedForPagination();
                 }
             }
 
-            instance.LatestPosts = service.GetPostsByStatusReadOnly<PostViewModel>(DocumentStatus.Published, 3);
-            instance.Pages = service.GetPagesByStatusReadOnly<PageViewModel>(DocumentStatus.Published);
-            instance.Categories = service.GetCategoriesWithPosts<CategoryViewModel>();
-            instance.Tags = service.GetAllTagsReadOnly<TagViewModel>();
+            instance.LatestPosts = await _postService.GetPublishedLatestPosts(3);
+            instance.Pages = await _pageService.GetAllPublished();
+            instance.Categories = await _categoryService.GetCategoriesWithPostCount();
+            instance.CategoriesWithPosts = await _categoryService.GetCategoriesWithPost();
+            instance.Tags = await _tagService.GetAllTags();
+
+
+            await base.OnActionExecutionAsync(context, next);
         }
     }
 }

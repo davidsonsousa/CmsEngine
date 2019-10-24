@@ -40,3 +40,11 @@ img{
 ul{
     margin: auto 2rem 1rem 2rem;
 }
+
+.form-control.input-validation-error {
+    @extend .is-invalid;
+}
+
+.form-control.valid{
+    @extend .is-valid;
+}

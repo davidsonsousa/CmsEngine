@@ -1,11 +1,11 @@
+using System;
 using System.Diagnostics;
-using AutoMapper;
-using CmsEngine.Data.AccessLayer;
-using CmsEngine.Data.Models;
-using CmsEngine.Data.ViewModels;
-using CmsEngine.Helpers.Email;
+using System.Threading.Tasks;
+using CmsEngine.Application.Helpers.Email;
+using CmsEngine.Application.Services;
+using CmsEngine.Application.ViewModels;
+using CmsEngine.Core.Constants;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -14,22 +14,30 @@ namespace CmsEngine.Ui.Controllers
     public class HomeController : BaseController
     {
         private readonly IEmailSender _emailSender;
+        private readonly IPageService _pageService;
+        private readonly IXmlService _xmlService;
+        private readonly IEmailService _emailService;
 
-        public HomeController(IUnitOfWork uow, IMapper mapper, IHttpContextAccessor hca, UserManager<ApplicationUser> userManager,
-                              IEmailSender emailSender, ILogger<HomeController> logger)
-                       : base(uow, mapper, hca, userManager, logger)
+        public HomeController(ILoggerFactory loggerFactory, IEmailSender emailSender, IPageService pageService, IXmlService xmlService,
+                              ICategoryService categoryService, ITagService tagService, IService service, IPostService postService,
+                              IEmailService emailService)
+                             : base(loggerFactory, service, categoryService, pageService, postService, tagService)
         {
             _emailSender = emailSender;
+            _pageService = pageService;
+            _xmlService = xmlService;
+            _emailService = emailService;
         }
 
         public IActionResult Index()
         {
+            instance.PageTitle = $"{instance.Name}";
             return View(instance);
         }
 
-        public IActionResult Page(string slug)
+        public async Task<IActionResult> Page(string slug)
         {
-            instance.SelectedDocument = (PageViewModel)service.GetPageBySlug(slug);
+            instance.SelectedDocument = await _pageService.GetBySlug(slug);
 
             if (instance.SelectedDocument == null)
             {
@@ -48,32 +56,47 @@ namespace CmsEngine.Ui.Controllers
 
         public IActionResult Contact()
         {
-            ViewData["Message"] = "Your contact page.";
             instance.PageTitle = $"Contact - {instance.Name}";
             return View(instance);
         }
 
         [HttpPost]
-        public IActionResult Contact(ContactForm contactForm, string returnUrl = null)
+        public async Task<IActionResult> Contact(ContactForm contactForm, string returnUrl = null)
         {
+            if (!ModelState.IsValid)
+            {
+                TempData[MessageConstants.WarningMessage] = "Please double check the information in the form and try again.";
+                return View(instance);
+            }
+
             ViewData["ReturnUrl"] = returnUrl;
-            _emailSender.SendEmailAsync(contactForm);
+            contactForm.To = instance.ContactDetails.Email;
 
-            if (Url.IsLocalUrl(returnUrl))
+            try
             {
-                return Redirect(returnUrl);
+                if ((await _emailService.Save(contactForm)).IsError)
+                {
+                    throw new Exception("Error when saving e-mail");
+                }
+
+                await _emailSender.SendEmailAsync(contactForm);
+                TempData[MessageConstants.SuccessMessage] = "Your message was sent. I will answer as soon as I can.";
             }
-            else
+            catch (Exception ex)
             {
-                return RedirectToAction(nameof(HomeController.Index), "Home");
+                TempData[MessageConstants.DangerMessage] = "We could not send the messsage. Please try other communication channels.";
             }
+
+            return RedirectToAction(nameof(HomeController.Contact));
         }
 
-        public IActionResult Sitemap()
+        public async Task<IActionResult> Sitemap()
         {
-            return Content(service.GenerateSitemap().ToString(), "text/xml");
+            var sitemap = await _xmlService.GenerateSitemap();
+            return Content(sitemap.ToString(), "text/xml");
         }
 
+        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
             instance.PageTitle = $"Error - {instance.Name}";

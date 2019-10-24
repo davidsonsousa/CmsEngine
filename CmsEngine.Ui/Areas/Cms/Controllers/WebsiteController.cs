@@ -1,13 +1,12 @@
 using System;
 using System.Threading.Tasks;
-using AutoMapper;
-using CmsEngine.Data.AccessLayer;
-using CmsEngine.Data.EditModels;
-using CmsEngine.Data.Models;
-using CmsEngine.Data.ViewModels.DataTableViewModels;
+using CmsEngine.Application.EditModels;
+using CmsEngine.Application.Helpers;
+using CmsEngine.Application.Services;
+using CmsEngine.Application.ViewModels.DataTableViewModels;
+using CmsEngine.Core;
+using CmsEngine.Core.Constants;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -16,25 +15,26 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
     [Area("Cms")]
     public class WebsiteController : BaseController
     {
-        private readonly IHostingEnvironment _env;
+        private readonly IWebHostEnvironment _env;
+        private readonly IWebsiteService _websiteService;
 
-        public WebsiteController(IUnitOfWork uow, IMapper mapper, IHttpContextAccessor hca, UserManager<ApplicationUser> userManager,
-                                 IHostingEnvironment env, ILogger<WebsiteController> logger) : base(uow, mapper, hca, userManager, logger)
+        public WebsiteController(ILoggerFactory loggerFactory, IService service,
+                                 IWebHostEnvironment env, IWebsiteService websiteService) : base(loggerFactory, service)
         {
             _env = env;
+            _websiteService = websiteService;
         }
 
         public IActionResult Index()
         {
-            this.SetupMessages("Websites", PageType.List, panelTitle: "List of websites");
-            //var websiteViewModel = service.SetupViewModel();
+            SetupMessages("Websites", PageType.List, panelTitle: "List of websites");
             return View("List");
         }
 
         public IActionResult Create()
         {
-            this.SetupMessages("Website", PageType.Create, panelTitle: "Create a new website");
-            var websiteEditModel = service.SetupWebsiteEditModel();
+            SetupMessages("Website", PageType.Create, panelTitle: "Create a new website");
+            var websiteEditModel = _websiteService.SetupEditModel();
 
             return View("CreateEdit", websiteEditModel);
         }
@@ -45,17 +45,17 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
         {
             if (!ModelState.IsValid)
             {
-                this.SetupMessages("Websites", PageType.Create, panelTitle: "Create a new website");
+                SetupMessages("Websites", PageType.Create, panelTitle: "Create a new website");
                 return View("CreateEdit", websiteEditModel);
             }
 
-            return await Save(websiteEditModel);
+            return await Save(websiteEditModel, nameof(WebsiteController.Create));
         }
 
-        public IActionResult Edit(Guid vanityId)
+        public async Task<IActionResult> Edit(Guid vanityId)
         {
-            this.SetupMessages("Websites", PageType.Edit, panelTitle: "Edit an existing website");
-            var websiteEditModel = service.SetupWebsiteEditModel(vanityId);
+            SetupMessages("Websites", PageType.Edit, panelTitle: "Edit an existing website");
+            var websiteEditModel = await _websiteService.SetupEditModel(vanityId);
 
             return View("CreateEdit", websiteEditModel);
         }
@@ -66,39 +66,37 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
         {
             if (!ModelState.IsValid)
             {
-                this.SetupMessages("Websites", PageType.Edit, panelTitle: "Edit an existing website");
+                SetupMessages("Websites", PageType.Edit, panelTitle: "Edit an existing website");
                 return View("CreateEdit", websiteEditModel);
             }
 
-            var websiteToUpdate = await service.SetupWebsiteEditModel(websiteEditModel.VanityId);
+            var websiteToUpdate = await _websiteService.SetupEditModel(websiteEditModel.VanityId);
 
-            if (await TryUpdateModelAsync((WebsiteEditModel)websiteToUpdate))
+            if (await TryUpdateModelAsync(websiteToUpdate))
             {
-                return await Save(websiteEditModel);
+                return await Save(websiteEditModel, nameof(WebsiteController.Edit));
             }
-
-            return View("CreateEdit", websiteEditModel);
+            TempData[MessageConstants.WarningMessage] = "The model could not be updated.";
+            return RedirectToAction(nameof(WebsiteController.Edit), websiteEditModel);
         }
 
         [HttpPost]
-        public IActionResult Delete(Guid vanityId)
+        public async Task<IActionResult> Delete(Guid vanityId)
         {
-            return Ok(service.DeleteWebsite(vanityId));
+            return Ok(await _websiteService.Delete(vanityId));
         }
 
         [HttpPost("cms/website/bulk-delete")]
-        public IActionResult BulkDelete([FromForm]Guid[] vanityId)
+        public async Task<IActionResult> BulkDelete([FromForm]Guid[] vanityId)
         {
-            return Ok(service.BulkDelete<Website>(vanityId));
+            return Ok(await _websiteService.DeleteRange(vanityId));
         }
 
         [HttpPost]
         public async Task<IActionResult> GetData([FromForm]DataParameters parameters)
         {
-            var items = service.GetWebsitesForDataTable(parameters);
-
-            var dataTable = await service.BuildDataTable<Website>(items.Data, items.RecordsCount);
-            dataTable.Draw = parameters.Draw;
+            var items = await _websiteService.GetForDataTable(parameters);
+            var dataTable = DataTableHelper.BuildDataTable(items.Data, items.RecordsTotal, items.RecordsFiltered, parameters.Draw);
 
             return Ok(dataTable);
         }
@@ -106,23 +104,23 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
         [HttpPost]
         public async Task<IActionResult> UploadFiles()
         {
-            return await this.PrepareAndUploadFiles(_env.WebRootPath, "Website");
+            return await PrepareAndUploadFiles(_env.WebRootPath, "Website");
         }
 
-        private async Task<IActionResult> Save(WebsiteEditModel websiteEditModel)
+        private async Task<IActionResult> Save(WebsiteEditModel websiteEditModel, string sender)
         {
-            var returnValue = await service.SaveWebsite(websiteEditModel);
+            var returnValue = await _websiteService.Save(websiteEditModel);
 
             if (!returnValue.IsError)
             {
-                TempData["SuccessMessage"] = returnValue.Message;
+                TempData[MessageConstants.SuccessMessage] = returnValue.Message;
+                return RedirectToAction(nameof(WebsiteController.Index));
             }
             else
             {
-                return View("CreateEdit", websiteEditModel);
+                TempData[MessageConstants.DangerMessage] = returnValue.Message;
+                return RedirectToAction(sender);
             }
-
-            return RedirectToAction("Index");
         }
     }
 }

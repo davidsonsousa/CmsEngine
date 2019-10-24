@@ -1,13 +1,12 @@
 using System;
 using System.Threading.Tasks;
-using AutoMapper;
-using CmsEngine.Data.AccessLayer;
-using CmsEngine.Data.EditModels;
-using CmsEngine.Data.Models;
-using CmsEngine.Data.ViewModels.DataTableViewModels;
+using CmsEngine.Application.EditModels;
+using CmsEngine.Application.Helpers;
+using CmsEngine.Application.Services;
+using CmsEngine.Application.ViewModels.DataTableViewModels;
+using CmsEngine.Core;
+using CmsEngine.Core.Constants;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -16,25 +15,26 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
     [Area("Cms")]
     public class PostController : BaseController
     {
-        private readonly IHostingEnvironment _env;
+        private readonly IWebHostEnvironment _env;
+        private readonly IPostService _postService;
 
-        public PostController(IUnitOfWork uow, IMapper mapper, IHttpContextAccessor hca, UserManager<ApplicationUser> userManager,
-                              IHostingEnvironment env, ILogger<PostController> logger) : base(uow, mapper, hca, userManager, logger)
+        public PostController(ILoggerFactory loggerFactory, IService service,
+                              IWebHostEnvironment env, IPostService postService) : base(loggerFactory, service)
         {
             _env = env;
+            _postService = postService;
         }
 
         public IActionResult Index()
         {
-            this.SetupMessages("Posts", PageType.List, panelTitle: "List of posts");
-            //var postViewModel = service.SetupViewModel();
+            SetupMessages("Posts", PageType.List, panelTitle: "List of posts");
             return View("List");
         }
 
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            this.SetupMessages("Post", PageType.Create, panelTitle: "Create a new post");
-            var postEditModel = service.SetupPostEditModel();
+            SetupMessages("Post", PageType.Create, panelTitle: "Create a new post");
+            var postEditModel = await _postService.SetupEditModel();
 
             return View("CreateEdit", postEditModel);
         }
@@ -45,17 +45,17 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
         {
             if (!ModelState.IsValid)
             {
-                this.SetupMessages("Posts", PageType.Create, panelTitle: "Create a new post");
+                SetupMessages("Posts", PageType.Create, panelTitle: "Create a new post");
                 return View("CreateEdit", postEditModel);
             }
 
-            return await Save(postEditModel);
+            return await Save(postEditModel, nameof(PostController.Create));
         }
 
-        public IActionResult Edit(Guid vanityId)
+        public async Task<IActionResult> Edit(Guid vanityId)
         {
-            this.SetupMessages("Posts", PageType.Edit, panelTitle: "Edit an existing post");
-            var postEditModel = service.SetupPostEditModel(vanityId);
+            SetupMessages("Posts", PageType.Edit, panelTitle: "Edit an existing post");
+            var postEditModel = await _postService.SetupEditModel(vanityId);
 
             return View("CreateEdit", postEditModel);
         }
@@ -66,39 +66,39 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
         {
             if (!ModelState.IsValid)
             {
-                this.SetupMessages("Posts", PageType.Edit, panelTitle: "Edit an existing post");
+                SetupMessages("Posts", PageType.Edit, panelTitle: "Edit an existing post");
+                TempData[MessageConstants.WarningMessage] = "Please double check the information in the form and try again.";
                 return View("CreateEdit", postEditModel);
             }
 
-            var postToUpdate = await service.SetupPostEditModel(postEditModel.VanityId);
+            var postToUpdate = await _postService.SetupEditModel(postEditModel.VanityId);
 
-            if (await TryUpdateModelAsync((PostEditModel)postToUpdate))
+            if (await TryUpdateModelAsync(postToUpdate))
             {
-                return await Save(postEditModel);
+                return await Save(postEditModel, nameof(PostController.Edit));
             }
 
-            return View("CreateEdit", postEditModel);
+            TempData[MessageConstants.WarningMessage] = "The model could not be updated.";
+            return RedirectToAction(nameof(PostController.Edit), postEditModel);
         }
 
         [HttpPost]
-        public IActionResult Delete(Guid vanityId)
+        public async Task<IActionResult> Delete(Guid vanityId)
         {
-            return Ok(service.DeletePost(vanityId));
+            return Ok(await _postService.Delete(vanityId));
         }
 
         [HttpPost("cms/post/bulk-delete")]
-        public IActionResult BulkDelete([FromForm]Guid[] vanityId)
+        public async Task<IActionResult> BulkDelete([FromForm]Guid[] vanityId)
         {
-            return Ok(service.BulkDelete<Post>(vanityId));
+            return Ok(await _postService.DeleteRange(vanityId));
         }
 
         [HttpPost]
         public async Task<IActionResult> GetData([FromForm]DataParameters parameters)
         {
-            var items = service.GetPostsForDataTable(parameters);
-
-            var dataTable = await service.BuildDataTable<Post>(items.Data, items.RecordsCount);
-            dataTable.Draw = parameters.Draw;
+            var items = await _postService.GetForDataTable(parameters);
+            var dataTable = DataTableHelper.BuildDataTable(items.Data, items.RecordsTotal, items.RecordsFiltered, parameters.Draw);
 
             return Ok(dataTable);
         }
@@ -106,23 +106,23 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
         [HttpPost]
         public async Task<IActionResult> UploadFiles()
         {
-            return await this.PrepareAndUploadFiles(_env.WebRootPath, "Post");
+            return await PrepareAndUploadFiles(_env.WebRootPath, "Post");
         }
 
-        private async Task<IActionResult> Save(PostEditModel postEditModel)
+        private async Task<IActionResult> Save(PostEditModel postEditModel, string sender)
         {
-            var returnValue = await service.SavePost(postEditModel);
+            var returnValue = await _postService.Save(postEditModel);
 
             if (!returnValue.IsError)
             {
-                TempData["SuccessMessage"] = returnValue.Message;
+                TempData[MessageConstants.SuccessMessage] = returnValue.Message;
+                return RedirectToAction(nameof(PostController.Index));
             }
             else
             {
-                return View("CreateEdit", postEditModel);
+                TempData[MessageConstants.DangerMessage] = returnValue.Message;
+                return RedirectToAction(sender);
             }
-
-            return RedirectToAction("Index");
         }
     }
 }

@@ -2,12 +2,10 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
-using AutoMapper;
-using CmsEngine.Data.AccessLayer;
-using CmsEngine.Data.Models;
-using CmsEngine.Extensions;
-using CmsEngine.Helpers.Email;
-using Microsoft.AspNetCore.Http;
+using CmsEngine.Application.Helpers.Email;
+using CmsEngine.Application.Services;
+using CmsEngine.Data.Entities;
+using CmsEngine.Ui.Extensions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -20,20 +18,20 @@ namespace CmsEngine.Ui.Areas.Identity.Pages.Account.Manage
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IEmailSender _emailSender;
-        private readonly CmsService _service;
+        private readonly IService _service;
         private readonly ILogger<IndexModel> _logger;
 
         public IndexModel(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
             IEmailSender emailSender,
-            IUnitOfWork uow, IMapper mapper, IHttpContextAccessor hca, ILogger<IndexModel> logger)
+            IService service, ILogger<IndexModel> logger)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _emailSender = emailSender;
+            _service = service;
             _logger = logger;
-            _service = new CmsService(uow, mapper, hca, userManager, logger);
         }
 
         public string Username { get; set; }
@@ -170,6 +168,7 @@ namespace CmsEngine.Ui.Areas.Identity.Pages.Account.Manage
                 pageHandler: null,
                 values: new { userId = userId, code = code },
                 protocol: Request.Scheme);
+
             await _emailSender.SendEmailConfirmationAsync(email, HtmlEncoder.Default.Encode(callbackUrl));
 
             StatusMessage = "Verification email sent. Please check your email.";

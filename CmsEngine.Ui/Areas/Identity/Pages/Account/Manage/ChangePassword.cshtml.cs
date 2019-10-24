@@ -1,9 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
-using AutoMapper;
-using CmsEngine.Data.AccessLayer;
-using CmsEngine.Data.Models;
-using Microsoft.AspNetCore.Http;
+using CmsEngine.Application.Services;
+using CmsEngine.Data.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -15,18 +13,18 @@ namespace CmsEngine.Ui.Areas.Identity.Pages.Account.Manage
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly ILogger<ChangePasswordModel> _logger;
-        private readonly CmsService _service;
+        private readonly IService _service;
 
         public ChangePasswordModel(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
             ILogger<ChangePasswordModel> logger,
-            IUnitOfWork uow, IMapper mapper, IHttpContextAccessor hca)
+            IService service)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _logger = logger;
-            _service = new CmsService(uow, mapper, hca, userManager, logger);
+            _service = service;
         }
 
         [BindProperty]

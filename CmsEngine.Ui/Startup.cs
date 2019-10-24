@@ -1,34 +1,36 @@
-using System;
 using System.IO;
-using System.Net;
-using AutoMapper;
+using CmsEngine.Application.Helpers.Email;
+using CmsEngine.Application.Services;
 using CmsEngine.Data;
-using CmsEngine.Data.AccessLayer;
-using CmsEngine.Data.Models;
-using CmsEngine.Helpers.Email;
-using CmsEngine.Ui.Middleware.RewriteRules;
+using CmsEngine.Data.Entities;
+using CmsEngine.Data.Repositories;
+using CmsEngine.Ui.Middleware;
+using CmsEngine.Ui.Middleware.SecurityHeaders;
+using CmsEngine.Ui.RewriteRules;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Rewrite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.FileProviders;
+using Microsoft.Extensions.Hosting;
 
 namespace CmsEngine.Ui
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration, IWebHostEnvironment environment)
         {
             Configuration = configuration;
+            Environment = environment;
         }
 
         public IConfiguration Configuration { get; }
+        public IWebHostEnvironment Environment { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -40,53 +42,64 @@ namespace CmsEngine.Ui
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
+            services.Configure<EmailSettings>(Configuration.GetSection("EmailSettings"));
+
             // Add CmsEngineContext
-            services.AddDbContextPool<CmsEngineContext>(options =>
-                options.UseLazyLoadingProxies()
-                       .EnableSensitiveDataLogging(true) // TODO: Perhaps use a flag from appsettings instead of a hard-coded value
-                       .UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddDbContext<CmsEngineContext>(options => options.EnableSensitiveDataLogging(true) // TODO: Perhaps use a flag from appsettings instead of a hard-coded value
+                                                                      .UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddIdentity<ApplicationUser, IdentityRole>()
-                    .AddEntityFrameworkStores<CmsEngineContext>();
+                    .AddEntityFrameworkStores<CmsEngineContext>()
+                    .AddDefaultTokenProviders();
 
             // Add HttpContextAccessor as .NET Core doesn't have HttpContext.Current anymore
             services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
-            // Add AutoMapper
-            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+            // Add Repositories
+            services.AddScoped<ICategoryRepository, CategoryRepository>();
+            services.AddScoped<IPageRepository, PageRepository>();
+            services.AddScoped<IPostRepository, PostRepository>();
+            services.AddScoped<ITagRepository, TagRepository>();
+            services.AddScoped<IWebsiteRepository, WebsiteRepository>();
+            services.AddScoped<IEmailRepository, EmailRepository>();
 
-            // Add Unit of Work
+            //// Add services
+            services.AddScoped<IService, Service>();
+            services.AddScoped<ICategoryService, CategoryService>();
+            services.AddScoped<IPageService, PageService>();
+            services.AddScoped<IPostService, PostService>();
+            services.AddScoped<ITagService, TagService>();
+            services.AddScoped<IWebsiteService, WebsiteService>();
+            services.AddScoped<IXmlService, XmlService>();
+            services.AddScoped<IEmailService, EmailService>();
+
+            //// Add Unit of Work
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
-            services.AddRouting(options =>
-            {
-                options.LowercaseUrls = true;
-                options.AppendTrailingSlash = false;
-            });
+            services.AddSingleton<IEmailSender, EmailSender>();
 
-            services.AddMvc()
-                    .SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
-                    .AddRazorPagesOptions(options =>
-                    {
-                        options.AllowAreas = true;
-                        options.Conventions.AuthorizeAreaFolder("Identity", "/Account/Manage");
-                        options.Conventions.AuthorizeAreaPage("Identity", "/Account/Logout");
-                    });
+            services.AddControllersWithViews();
+            services.AddRazorPages();
 
             services.ConfigureApplicationCookie(options =>
             {
-                options.LoginPath = "/Identity/Account/Login";
-                options.LogoutPath = "/Identity/Account/Logout";
-                options.AccessDeniedPath = "/Identity/Account/AccessDenied";
+                options.LoginPath = $"/Identity/Account/Login";
+                options.LogoutPath = $"/Identity/Account/Logout";
+                options.AccessDeniedPath = $"/Identity/Account/AccessDenied";
             });
 
-            // Add application services.
-            services.AddSingleton<IEmailSender, EmailSender>();
-            services.Configure<EmailSettings>(Configuration.GetSection("EmailSettings"));
+            if (!Environment.IsDevelopment())
+            {
+                services.AddHttpsRedirection(options =>
+                {
+                    options.RedirectStatusCode = StatusCodes.Status308PermanentRedirect;
+                    options.HttpsPort = 443;
+                });
+            }
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {
@@ -96,32 +109,35 @@ namespace CmsEngine.Ui
             else
             {
                 app.UseExceptionHandler("/Home/Error");
+                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
 
-            const int http301 = (int)HttpStatusCode.MovedPermanently;
+            const int http301 = StatusCodes.Status301MovedPermanently;
 
-            // Added compatibility to the old davidsonsousa.net
+            // Added compatibility with the old davidsonsousa.net
             var rewriteOptions = new RewriteOptions().Add(new RedirectToNonWwwRule(http301))
+                                                     .Add(new RedirectLowerCaseRule(http301))
                                                      .AddRedirect("^en/(.*)", "blog/$1", http301)
                                                      .AddRedirect("^pt/(.*)", "blog/$1", http301)
                                                      .AddRedirect("^image/articles/(.*)", "image/post/$1", http301)
                                                      .AddRedirect("^image/pages/(.*)", "image/page/$1", http301)
                                                      .AddRedirect("^file/articles/(.*)", "file/post/$1", http301)
-                                                     .AddRedirect("^file/pages/(.*)", "file/page/$1", http301)
-                                                     .AddRedirectToHttps(http301);
+                                                     .AddRedirect("^file/pages/(.*)", "file/page/$1", http301);
             app.UseRewriter(rewriteOptions);
+            app.UseHttpsRedirection();
 
             // wwwroot
             app.UseStaticFiles();
 
-            // Uploaded files
-            string uploadPath = Path.Combine(env.WebRootPath, "UploadedFiles");
 
-            if (!Directory.Exists(uploadPath))
-            {
-                Directory.CreateDirectory(uploadPath);
-            }
+            // TODO: Fix this
+            //// Uploaded files
+            //app.ConfigureFileUpload(new FileUploadOptions
+            //{
+            //    Root = env.WebRootPath,
+            //    Folder = "UploadedFiles"
+            //});
 
             app.UseStaticFiles(new StaticFileOptions
             {
@@ -135,44 +151,55 @@ namespace CmsEngine.Ui
                 RequestPath = "/file"
             });
 
+            app.UseSecurityHeaders(new SecurityHeadersBuilder().AddDefaultSecurePolicy());
+
             app.UseCookiePolicy();
 
+            app.UseRouting();
+
             app.UseAuthentication();
+            app.UseAuthorization();
 
-            app.UseMvc(routes =>
+            app.UseEndpoints(endpoints =>
             {
-                routes.MapRoute(
+                endpoints.MapControllerRoute(
                     name: "areaRoute",
-                    template: "{area:exists}/{controller=Home}/{action=Index}/{vanityId?}");
+                    pattern: "{area:exists}/{controller=Home}/{action=Index}/{vanityId?}");
 
-                routes.MapRoute(
+                endpoints.MapControllerRoute(
                     name: "blog",
-                    template: "blog/{action}/{slug?}",
+                    pattern: "blog/{action}/{slug?}",
                     defaults: new { controller = "Blog", action = "Index" });
 
-                routes.MapRoute(
+                endpoints.MapControllerRoute(
                     name: "main",
-                    template: "",
+                    pattern: "",
                     defaults: new { controller = "Home", action = "Index" });
 
-                routes.MapRoute(
+                endpoints.MapControllerRoute(
                     name: "sitemap",
-                    template: "sitemap",
+                    pattern: "sitemap",
                     defaults: new { controller = "Home", action = "Sitemap" });
 
-                routes.MapRoute(
+                endpoints.MapControllerRoute(
                     name: "archive",
-                    template: "archive",
+                    pattern: "archive",
                     defaults: new { controller = "Home", action = "Archive" });
 
-                routes.MapRoute(
+                endpoints.MapControllerRoute(
+                    name: "contact",
+                    pattern: "contact",
+                    defaults: new { controller = "Home", action = "Contact" });
+
+                endpoints.MapControllerRoute(
                     name: "page",
-                    template: "{slug}",
+                    pattern: "{slug}",
                     defaults: new { controller = "Home", action = "Page" });
 
-                routes.MapRoute(
+                endpoints.MapControllerRoute(
                     name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                endpoints.MapRazorPages();
             });
         }
     }

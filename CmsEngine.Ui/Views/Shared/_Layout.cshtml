@@ -1,7 +1,12 @@
+@using CmsEngine.Ui.Extensions
 @model InstanceViewModel
 <!DOCTYPE html>
 <html>
 <head>
+    @if (Model.Google.HasAnalytics)
+    {
+        @Html.Raw(Model.Google.GoogleAnalytics)
+    }
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>@Model.PageTitle</title>
@@ -83,9 +88,9 @@
                         <li class="nav-item">
                             <a asp-controller="Home" asp-action="Archive" class="nav-link @Html.IsSelected(controllers: "Home", actions: "Archive")">Archive</a>
                         </li>
-                        @*<li class="nav-item">
-                                <a asp-controller="Home" asp-action="Contact" class="nav-link">Contact</a>
-                            </li>*@
+                        <li class="nav-item">
+                            <a asp-controller="Home" asp-action="Contact" class="nav-link @Html.IsSelected(controllers: "Home", actions: "Contact")">Contact</a>
+                        </li>
                     </ul>
                     <div class="navbar-text"><a href="#" class="search-btn"><i class="icon-search-1"></i></a></div>
                 </div>
