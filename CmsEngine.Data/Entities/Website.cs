@@ -21,8 +21,6 @@ namespace CmsEngine.Data.Entities
         public string SiteUrl { get; set; }
         public int ArticleLimit { get; set; }
 
-        public string GoogleAnalytics { get; set; }
-
         // Contact details
         public string Address { get; set; }
         public string Phone { get; set; }

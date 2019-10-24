@@ -1,6 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace CmsEngine.Migrations
+namespace CmsEngine.Data.Migrations
 {
     public partial class Added_GoogleAnalytics : Migration
     {
