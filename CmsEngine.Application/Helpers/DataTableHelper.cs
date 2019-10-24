@@ -12,11 +12,11 @@ namespace CmsEngine.Application.Helpers
 {
     public static class DataTableHelper
     {
-        public static DataTableViewModel BuildDataTable(IEnumerable<IViewModel> listItems, int recordsTotal, int recordsFiltered, int draw)
+        public static DataTableViewModel BuildDataTable(IEnumerable<IViewModel> listItems, int recordsTotal, int recordsFiltered, int draw, int start, int length)
         {
             var listString = new List<List<string>>();
 
-            foreach (var item in listItems)
+            foreach (var item in listItems.Skip(start).Take(length))
             {
                 // Get the properties which should appear in the DataTable
                 var itemProperties = item.GetType()
