@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Text.Encodings.Web;
 using CmsEngine.Application.Attributes;
 using CmsEngine.Application.ViewModels;
 using CmsEngine.Application.ViewModels.DataTableViewModels;
@@ -73,7 +74,7 @@ namespace CmsEngine.Application.Helpers
                     var author = (UserViewModel)item.GetType().GetProperty(property.Name).GetValue(item);
                     return author?.FullName ?? ""; // TODO: Apply HTML encoding
                 default:
-                    return item.GetType().GetProperty(property.Name).GetValue(item)?.ToString() ?? "";  // TODO: Apply HTML encoding
+                    return HtmlEncoder.Default.Encode(item.GetType().GetProperty(property.Name).GetValue(item)?.ToString()) ?? "";
             }
         }
     }
