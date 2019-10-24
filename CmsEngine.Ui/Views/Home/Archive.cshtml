@@ -2,7 +2,7 @@
 
 @{
     string imagePath = !string.IsNullOrWhiteSpace(Model.HeaderImage)
-                       ? string.Format(Constants.ImagePath, "page", Model.HeaderImage)
+                       ? string.Format(CmsEngineConstants.ImagePath.Default, "page", Model.HeaderImage)
                        : "/img/no-image.png";
 }
 
@@ -30,7 +30,7 @@
                             <ul class="list-unstyled">
                                 @if (Model.Categories.Count() > 0)
                                 {
-                                    foreach (var category in Model.Categories)
+                                    foreach (var category in Model.CategoriesWithPosts)
                                     {
                                         <li>
                                             <p class="h2">@category.Name</p>

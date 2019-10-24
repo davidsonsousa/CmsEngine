@@ -1,1 +1,40 @@
-Hello world
+@model IEnumerable<CmsEngine.Application.Helpers.Email.ContactForm>
+@section Breadcrumb {
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item active">@ViewBag.PageTitle</li>
+    </ol>
+}
+
+<div class="row">
+    <div class="col-sm-4 col-md-3">
+        <div class="card">
+            <div class="card-header">
+                <i class="fa fa-info"></i> Information
+            </div>
+            <div class="card-body">
+                <ul>
+                    <li>
+                        .NET version: @Environment.Version.ToString()
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-8 col-md-9">
+        <div class="card">
+            <div class="card-header">
+                <i class="icon-envelope-letter"></i> E-mails
+            </div>
+            <div class="card-body">
+                @foreach (var item in Model)
+                {
+                <ul>
+                    <li>From: @item.From</li>
+                    <li>Subject: @item.Subject</li>
+                    <li>Message: @item.Message</li>
+                </ul>
+                }
+            </div>
+        </div>
+    </div>
+</div>

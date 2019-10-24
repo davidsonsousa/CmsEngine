@@ -1,13 +1,12 @@
 using System;
 using System.Threading.Tasks;
-using AutoMapper;
-using CmsEngine.Data.AccessLayer;
-using CmsEngine.Data.EditModels;
-using CmsEngine.Data.Models;
-using CmsEngine.Data.ViewModels.DataTableViewModels;
+using CmsEngine.Application.EditModels;
+using CmsEngine.Application.Helpers;
+using CmsEngine.Application.Services;
+using CmsEngine.Application.ViewModels.DataTableViewModels;
+using CmsEngine.Core;
+using CmsEngine.Core.Constants;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -16,46 +15,47 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
     [Area("Cms")]
     public class PageController : BaseController
     {
-        private readonly IHostingEnvironment _env;
+        private readonly IWebHostEnvironment _env;
+        private readonly IPageService _pageService;
 
-        public PageController(IUnitOfWork uow, IMapper mapper, IHttpContextAccessor hca, UserManager<ApplicationUser> userManager,
-                              IHostingEnvironment env, ILogger<PageController> logger) : base(uow, mapper, hca, userManager, logger)
+        public PageController(ILoggerFactory loggerFactory, IService service,
+                              IWebHostEnvironment env, IPageService pageService) : base(loggerFactory, service)
         {
             _env = env;
+            _pageService = pageService;
         }
 
         public IActionResult Index()
         {
-            this.SetupMessages("Pages", PageType.List, panelTitle: "List of pages");
-            //var pageViewModel = service.SetupViewModel();
+            SetupMessages("Pages", PageType.List, panelTitle: "List of pages");
             return View("List");
         }
 
         public IActionResult Create()
         {
-            this.SetupMessages("Page", PageType.Create, panelTitle: "Create a new page");
-            var pageEditModel = service.SetupPageEditModel();
+            SetupMessages("Page", PageType.Create, panelTitle: "Create a new page");
+            var pageEditModel = _pageService.SetupEditModel();
 
             return View("CreateEdit", pageEditModel);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(PageEditModel pageEditModel)
+        public async Task<IActionResult> Create(PageEditModel pageEditModel)
         {
             if (!ModelState.IsValid)
             {
-                this.SetupMessages("Pages", PageType.Create, panelTitle: "Create a new page");
+                SetupMessages("Pages", PageType.Create, panelTitle: "Create a new page");
                 return View("CreateEdit", pageEditModel);
             }
 
-            return this.Save(pageEditModel);
+            return await Save(pageEditModel, nameof(PageController.Create));
         }
 
-        public IActionResult Edit(Guid vanityId)
+        public async Task<IActionResult> Edit(Guid vanityId)
         {
-            this.SetupMessages("Pages", PageType.Edit, panelTitle: "Edit an existing page");
-            var pageEditModel = service.SetupPageEditModel(vanityId);
+            SetupMessages("Pages", PageType.Edit, panelTitle: "Edit an existing page");
+            var pageEditModel = await _pageService.SetupEditModel(vanityId);
 
             return View("CreateEdit", pageEditModel);
         }
@@ -66,39 +66,39 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
         {
             if (!ModelState.IsValid)
             {
-                this.SetupMessages("Pages", PageType.Edit, panelTitle: "Edit an existing page");
+                SetupMessages("Pages", PageType.Edit, panelTitle: "Edit an existing page");
+                TempData[MessageConstants.WarningMessage] = "Please double check the information in the form and try again.";
                 return View("CreateEdit", pageEditModel);
             }
 
-            var pageToUpdate = (PageEditModel)service.SetupPageEditModel(pageEditModel.VanityId);
+            var pageToUpdate = await _pageService.SetupEditModel(pageEditModel.VanityId);
 
             if (await TryUpdateModelAsync(pageToUpdate))
             {
-                return this.Save(pageEditModel);
+                return await Save(pageEditModel, nameof(PageController.Edit));
             }
 
-            return View("CreateEdit", pageEditModel);
+            TempData[MessageConstants.WarningMessage] = "The model could not be updated.";
+            return RedirectToAction(nameof(PageController.Edit), pageEditModel);
         }
 
         [HttpPost]
-        public IActionResult Delete(Guid vanityId)
+        public async Task<IActionResult> Delete(Guid vanityId)
         {
-            return Ok(service.DeletePage(vanityId));
+            return Ok(await _pageService.Delete(vanityId));
         }
 
         [HttpPost("cms/page/bulk-delete")]
-        public IActionResult BulkDelete([FromForm]Guid[] vanityId)
+        public async Task<IActionResult> BulkDelete([FromForm]Guid[] vanityId)
         {
-            return Ok(service.BulkDelete<Page>(vanityId));
+            return Ok(await _pageService.DeleteRange(vanityId));
         }
 
         [HttpPost]
-        public IActionResult GetData([FromForm]DataParameters parameters)
+        public async Task<IActionResult> GetData([FromForm]DataParameters parameters)
         {
-            var items = service.GetPagesForDataTable(parameters);
-
-            var dataTable = service.BuildDataTable<Page>(items.Data, items.RecordsCount);
-            dataTable.Draw = parameters.Draw;
+            var items = await _pageService.GetForDataTable(parameters);
+            var dataTable = DataTableHelper.BuildDataTable(items.Data, items.RecordsTotal, items.RecordsFiltered, parameters.Draw);
 
             return Ok(dataTable);
         }
@@ -106,23 +106,23 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
         [HttpPost]
         public async Task<IActionResult> UploadFiles()
         {
-            return await this.PrepareAndUploadFiles(_env.WebRootPath, "Page");
+            return await PrepareAndUploadFiles(_env.WebRootPath, "Page");
         }
 
-        private IActionResult Save(PageEditModel pageEditModel)
+        private async Task<IActionResult> Save(PageEditModel pageEditModel, string sender)
         {
-            var returnValue = service.SavePage(pageEditModel);
+            var returnValue = await _pageService.Save(pageEditModel);
 
             if (!returnValue.IsError)
             {
-                TempData["SuccessMessage"] = returnValue.Message;
+                TempData[MessageConstants.SuccessMessage] = returnValue.Message;
+                return RedirectToAction(nameof(PageController.Index));
             }
             else
             {
-                return View("CreateEdit", pageEditModel);
+                TempData[MessageConstants.DangerMessage] = returnValue.Message;
+                return RedirectToAction(sender);
             }
-
-            return RedirectToAction("Index");
         }
     }
 }

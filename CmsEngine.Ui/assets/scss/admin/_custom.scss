@@ -11,3 +11,11 @@ input[type="radio"], input[type="checkbox"] {
     overflow:auto;
     max-height:300px;
 }
+
+.form-control.input-validation-error {
+    @extend .is-invalid;
+}
+
+.form-control.valid {
+    @extend .is-valid;
+}

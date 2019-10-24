@@ -1,9 +1,6 @@
-using AutoMapper;
-using CmsEngine.Data.AccessLayer;
-using CmsEngine.Data.Models;
+using System.Threading.Tasks;
+using CmsEngine.Application.Services;
 using CmsEngine.Ui.Areas.Cms.Controllers;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -12,14 +9,18 @@ namespace CmsEngine.Ui.Admin.Controllers
     [Area("Cms")]
     public class HomeController : BaseController
     {
-        public HomeController(IUnitOfWork uow, IMapper mapper, IHttpContextAccessor hca, UserManager<ApplicationUser> userManager,
-                              ILogger<HomeController> logger)
-                       : base(uow, mapper, hca, userManager, logger) { }
+        private readonly IEmailService _emailService;
 
-        public IActionResult Index()
+        public HomeController(ILoggerFactory loggerFactory, IService service, IEmailService emailService)
+                             : base(loggerFactory, service)
         {
-            this.SetupMessages("Dashboard");
-            return View();
+            _emailService = emailService;
+        }
+
+        public async Task<IActionResult> Index()
+        {
+            SetupMessages("Dashboard");
+            return View(await _emailService.GetOrderedByDate());
         }
     }
 }

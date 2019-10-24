@@ -2,14 +2,12 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Threading.Tasks;
-using AutoMapper;
-using CmsEngine.Data.AccessLayer;
-using CmsEngine.Data.Models;
-using CmsEngine.Helpers;
-using CmsEngine.Utils;
+using CmsEngine.Application.Helpers;
+using CmsEngine.Application.Services;
+using CmsEngine.Core;
+using CmsEngine.Core.Constants;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Logging;
@@ -20,7 +18,7 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
     [Authorize]
     public class BaseController : Controller
     {
-        protected readonly CmsService service;
+        protected readonly IService service;
         protected List<UploadFilesResult> fileList;
         protected readonly ILogger logger;
 
@@ -29,10 +27,10 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
             this.logger = logger;
         }
 
-        public BaseController(IUnitOfWork uow, IMapper mapper, IHttpContextAccessor hca, UserManager<ApplicationUser> userManager, ILogger logger)
+        public BaseController(ILoggerFactory loggerFactory, IService service)
         {
-            service = new CmsService(uow, mapper, hca, userManager, logger);
-            this.logger = logger;
+            this.service = service;
+            logger = loggerFactory.CreateLogger("CmsBaseController");
 
             var cultureInfo = new CultureInfo(service.Instance.Culture);
 
@@ -54,7 +52,7 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
 
         protected void SetupMessages(string pageTitle, PageType pageType, string description = "", string panelTitle = "")
         {
-            this.SetupMessages(pageTitle);
+            SetupMessages(pageTitle);
 
             ViewBag.PageType = pageType.ToString();
             ViewBag.PageDescription = description;
@@ -63,14 +61,14 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
 
         protected void SetupMessages(string pageTitle, PageType pageType, string modelError, string generalError, string description = "", string panelTitle = "")
         {
-            this.SetupMessages(pageTitle, pageType, description, panelTitle);
+            SetupMessages(pageTitle, pageType, description, panelTitle);
 
             if (!string.IsNullOrWhiteSpace(modelError))
             {
                 ModelState.AddModelError("", modelError);
             }
 
-            TempData["DangerMessage"] = generalError;
+            TempData[MessageConstants.DangerMessage] = generalError;
         }
 
         protected async Task<ContentResult> PrepareAndUploadFiles(string webrootPath, string folderName)

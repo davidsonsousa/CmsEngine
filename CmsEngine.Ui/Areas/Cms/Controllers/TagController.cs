@@ -1,12 +1,11 @@
 using System;
 using System.Threading.Tasks;
-using AutoMapper;
-using CmsEngine.Data.AccessLayer;
-using CmsEngine.Data.EditModels;
-using CmsEngine.Data.Models;
-using CmsEngine.Data.ViewModels.DataTableViewModels;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
+using CmsEngine.Application.EditModels;
+using CmsEngine.Application.Helpers;
+using CmsEngine.Application.Services;
+using CmsEngine.Application.ViewModels.DataTableViewModels;
+using CmsEngine.Core;
+using CmsEngine.Core.Constants;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -15,42 +14,46 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
     [Area("Cms")]
     public class TagController : BaseController
     {
-        public TagController(IUnitOfWork uow, IMapper mapper, IHttpContextAccessor hca, UserManager<ApplicationUser> userManager,
-                             ILogger<TagController> logger)
-                      : base(uow, mapper, hca, userManager, logger) { }
+        private readonly ITagService _tagService;
+
+        public TagController(ILoggerFactory loggerFactory, IService service, ITagService tagService)
+                            : base(loggerFactory, service)
+        {
+            _tagService = tagService;
+        }
 
         public IActionResult Index()
         {
-            this.SetupMessages("Tags", PageType.List, panelTitle: "List of tags");
+            SetupMessages("Tags", PageType.List, panelTitle: "List of tags");
             //var tagViewModel = service.SetupViewModel();
             return View("List");
         }
 
         public IActionResult Create()
         {
-            this.SetupMessages("Tag", PageType.Create, panelTitle: "Create a new tag");
-            var tagEditModel = service.SetupTagEditModel();
+            SetupMessages("Tag", PageType.Create, panelTitle: "Create a new tag");
+            var tagEditModel = _tagService.SetupEditModel();
 
             return View("CreateEdit", tagEditModel);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(TagEditModel tagEditModel)
+        public async Task<IActionResult> Create(TagEditModel tagEditModel)
         {
             if (!ModelState.IsValid)
             {
-                this.SetupMessages("Tags", PageType.Create, panelTitle: "Create a new tag");
+                SetupMessages("Tags", PageType.Create, panelTitle: "Create a new tag");
                 return View("CreateEdit", tagEditModel);
             }
 
-            return this.Save(tagEditModel);
+            return await Save(tagEditModel, nameof(TagController.Create));
         }
 
-        public IActionResult Edit(Guid vanityId)
+        public async Task<IActionResult> Edit(Guid vanityId)
         {
-            this.SetupMessages("Tags", PageType.Edit, panelTitle: "Edit an existing tag");
-            var tagEditModel = service.SetupTagEditModel(vanityId);
+            SetupMessages("Tags", PageType.Edit, panelTitle: "Edit an existing tag");
+            var tagEditModel = await _tagService.SetupEditModel(vanityId);
 
             return View("CreateEdit", tagEditModel);
         }
@@ -61,57 +64,55 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
         {
             if (!ModelState.IsValid)
             {
-                this.SetupMessages("Tags", PageType.Edit, panelTitle: "Edit an existing tag");
+                SetupMessages("Tags", PageType.Edit, panelTitle: "Edit an existing tag");
                 return View("CreateEdit", tagEditModel);
             }
 
-            var tagToUpdate = (TagEditModel)service.SetupTagEditModel(tagEditModel.VanityId);
+            var tagToUpdate = await _tagService.SetupEditModel(tagEditModel.VanityId);
 
             if (await TryUpdateModelAsync(tagToUpdate))
             {
-                return this.Save(tagEditModel);
+                return await Save(tagEditModel, nameof(TagController.Edit));
             }
-
-            return View("CreateEdit", tagEditModel);
+            TempData[MessageConstants.WarningMessage] = "The model could not be updated.";
+            return RedirectToAction(nameof(TagController.Edit), tagEditModel);
         }
 
         [HttpPost]
-        public IActionResult Delete(Guid vanityId)
+        public async Task<IActionResult> Delete(Guid vanityId)
         {
-            return Ok(service.DeleteTag(vanityId));
+            return Ok(await _tagService.Delete(vanityId));
         }
 
         [HttpPost("cms/tag/bulk-delete")]
-        public IActionResult BulkDelete([FromForm]Guid[] vanityId)
+        public async Task<IActionResult> BulkDelete([FromForm]Guid[] vanityId)
         {
-            return Ok(service.BulkDelete<Tag>(vanityId));
+            return Ok(await _tagService.DeleteRange(vanityId));
         }
 
         [HttpPost]
-        public IActionResult GetData([FromForm]DataParameters parameters)
+        public async Task<IActionResult> GetData([FromForm]DataParameters parameters)
         {
-            var items = service.GetTagsForDataTable(parameters);
-
-            var dataTable = service.BuildDataTable<Tag>(items.Data, items.RecordsCount);
-            dataTable.Draw = parameters.Draw;
+            var items = await _tagService.GetForDataTable(parameters);
+            var dataTable = DataTableHelper.BuildDataTable(items.Data, items.RecordsTotal, items.RecordsFiltered, parameters.Draw);
 
             return Ok(dataTable);
         }
 
-        private IActionResult Save(TagEditModel tagEditModel)
+        private async Task<IActionResult> Save(TagEditModel tagEditModel, string sender)
         {
-            var returnValue = service.SaveTag(tagEditModel);
+            var returnValue = await _tagService.Save(tagEditModel);
 
             if (!returnValue.IsError)
             {
-                TempData["SuccessMessage"] = returnValue.Message;
+                TempData[MessageConstants.SuccessMessage] = returnValue.Message;
+                return RedirectToAction(nameof(TagController.Index));
             }
             else
             {
-                return View("CreateEdit", tagEditModel);
+                TempData[MessageConstants.DangerMessage] = returnValue.Message;
+                return RedirectToAction(sender);
             }
-
-            return RedirectToAction("Index");
         }
     }
 }
