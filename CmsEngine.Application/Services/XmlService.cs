@@ -26,7 +26,7 @@ namespace CmsEngine.Application.Services
 
             foreach (var item in await _unitOfWork.Posts.GetPublishedPostsOrderByDescending(o => o.PublishedOn))
             {
-                string url = FormatUrl("feed", item.Slug);
+                string url = FormatUrl("blog/post", item.Slug);
                 articleList.Add(new XElement("item",
                                           new XElement("title", item.Title),
                                           new XElement("link", url),
@@ -54,14 +54,14 @@ namespace CmsEngine.Application.Services
             var orderedPosts = await _unitOfWork.Posts.GetPublishedPostsOrderByDescending(o => o.PublishedOn);
             items.AddRange(orderedPosts.Select(x => new SitemapViewModel
             {
-                Url = FormatUrl("post", x.Slug),
+                Url = FormatUrl("blog/post", x.Slug),
                 PublishedOn = x.PublishedOn.ToString("yyyy-MM-dd")
             }));
 
             var orderedPages = await _unitOfWork.Pages.GetOrderByDescending(o => o.PublishedOn);
             items.AddRange(orderedPages.Select(x => new SitemapViewModel
             {
-                Url = FormatUrl("post", x.Slug),
+                Url = FormatUrl("page", x.Slug),
                 PublishedOn = x.PublishedOn.ToString("yyyy-MM-dd")
             }));
 

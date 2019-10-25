@@ -98,7 +98,7 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
         public async Task<IActionResult> GetData([FromForm]DataParameters parameters)
         {
             var items = await _postService.GetForDataTable(parameters);
-            var dataTable = DataTableHelper.BuildDataTable(items.Data, items.RecordsTotal, items.RecordsFiltered, parameters.Draw);
+            var dataTable = DataTableHelper.BuildDataTable(items.Data, items.RecordsTotal, items.RecordsFiltered, parameters.Draw, parameters.Start, parameters.Length);
 
             return Ok(dataTable);
         }

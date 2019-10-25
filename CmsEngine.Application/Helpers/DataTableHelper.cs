@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Text.Encodings.Web;
 using CmsEngine.Application.Attributes;
 using CmsEngine.Application.ViewModels;
 using CmsEngine.Application.ViewModels.DataTableViewModels;
@@ -12,11 +13,11 @@ namespace CmsEngine.Application.Helpers
 {
     public static class DataTableHelper
     {
-        public static DataTableViewModel BuildDataTable(IEnumerable<IViewModel> listItems, int recordsTotal, int recordsFiltered, int draw)
+        public static DataTableViewModel BuildDataTable(IEnumerable<IViewModel> listItems, int recordsTotal, int recordsFiltered, int draw, int start, int length)
         {
             var listString = new List<List<string>>();
 
-            foreach (var item in listItems)
+            foreach (var item in listItems.Skip(start).Take(length))
             {
                 // Get the properties which should appear in the DataTable
                 var itemProperties = item.GetType()
@@ -73,7 +74,7 @@ namespace CmsEngine.Application.Helpers
                     var author = (UserViewModel)item.GetType().GetProperty(property.Name).GetValue(item);
                     return author?.FullName ?? ""; // TODO: Apply HTML encoding
                 default:
-                    return item.GetType().GetProperty(property.Name).GetValue(item)?.ToString() ?? "";  // TODO: Apply HTML encoding
+                    return HtmlEncoder.Default.Encode(item.GetType().GetProperty(property.Name).GetValue(item)?.ToString()) ?? "";
             }
         }
     }
