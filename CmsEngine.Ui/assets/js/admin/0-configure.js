@@ -116,23 +116,32 @@ CmsEngine.Configure.TinyMCE = function (selector, height) {
         selector: selector,
         height: height,
         content_css: "",
-        //encoding: "xml",
-        //entity_encoding: "raw",
         relative_urls: false,
         remove_script_host: true,
         document_base_url: "/",
         convert_urls: true,
-        plugins: [
-            "advlist autolink lists link image charmap print preview anchor",
-            "searchreplace visualblocks code fullscreen",
-            "insertdatetime media table contextmenu paste"
-        ],
+        plugins: 'print preview fullpage paste importcss searchreplace autolink autosave save directionality code visualblocks visualchars fullscreen image link media template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists wordcount imagetools textpattern noneditable help charmap quickbars emoticons',
+        //plugins: [
+            //"advlist autolink lists link image imagetools charmap print preview anchor",
+            //"searchreplace visualblocks code fullscreen",
+            //"insertdatetime media table contextmenu paste"
+        //],
+        imagetools_cors_hosts: ['picsum.photos'],
+        //toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | code",
+        toolbar: 'undo redo | bold italic underline | formatselect | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist | removeformat | fullscreen  preview | insertfile link codesample code',
+        menubar: 'file edit view insert format tools table',
+        extended_valid_elements: 'script[language|type|src]',
+        autosave_ask_before_unload: true,
+        autosave_interval: "30s",
+        autosave_prefix: "{path}{query}-{id}-",
+        autosave_restore_when_empty: false,
+        autosave_retention: "2m",
+        image_advtab: true,
+        contextmenu: "link image imagetools table",
         setup: function (editor) {
             editor.on('SaveContent', function (e) {
                 e.content = e.content.replace(/&#39/g, "&apos");
             });
-        },
-        toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | code",
-        extended_valid_elements: 'script[language|type|src]'
+        }
     });
 };
