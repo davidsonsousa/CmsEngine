@@ -5,16 +5,10 @@
 }
 
 <div class="input-group date" id="@htmlAttributes["containerId"]">
-  @Html.TextBox("", ViewData.TemplateInfo.FormattedModelValue.ToString(), htmlAttributes)
-  <span class="input-group-addon">
-    <i class="fa fa-calendar"></i>
-  </span>
+    @Html.TextBox("", ViewData.TemplateInfo.FormattedModelValue.ToString(), htmlAttributes)
+    <div class="input-group-append datepickerbutton">
+        <div class="input-group-text">
+            <i class="fa fa-calendar"></i>
+        </div>
+    </div>
 </div>
-
-
-@*<div class="input-group date" id="published-on">
-    <input asp-for="PublishedOn" class="form-control" />
-    <span class="input-group-addon">
-      <i class="fa fa-calendar"></i>
-    </span>
-  </div>*@

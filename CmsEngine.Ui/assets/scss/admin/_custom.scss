@@ -9,7 +9,7 @@ input[type="radio"], input[type="checkbox"] {
 
 .checkbox-list{
     overflow:auto;
-    max-height:300px;
+    max-height:400px;
 }
 
 .form-control.input-validation-error {
@@ -18,4 +18,8 @@ input[type="radio"], input[type="checkbox"] {
 
 .form-control.valid {
     @extend .is-valid;
+}
+
+.header-preview img {
+    max-width:100%;
 }
