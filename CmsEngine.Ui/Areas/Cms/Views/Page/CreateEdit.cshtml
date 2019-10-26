@@ -120,7 +120,7 @@
     <script>
         $(function () {
             CmsEngine.Configure.DateTimePicker('#published-on');
-            CmsEngine.Configure.TinyMCE('textarea', 600);
+            CmsEngine.Configure.TinyMCE('textarea', 600, 'Page');
             CmsEngine.FileUpload.UploadHeader('#uploadHeadImage', '@Url.Action("uploadfiles")', '.header-preview', '#HeaderImage');
             CmsEngine.FileUpload.UploadImagesToEditor('#uploadEditorImages', '@Url.Action("uploadfiles")');
             CmsEngine.FileUpload.UploadFilesToEditor('#uploadEditorFiles', '@Url.Action("uploadfiles")');
