@@ -71,6 +71,29 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
             TempData[MessageConstants.DangerMessage] = generalError;
         }
 
+        protected async Task<ContentResult> UploadImage(string webrootPath, string folderName)
+        {
+            string folderPath = GetUploadFolderPath(webrootPath, folderName);
+
+            var formFile = Request.Form.Files[0];
+
+            if (formFile.Length == 0)
+            {
+                return null;
+            }
+
+            _ = await UploadFile(folderPath, formFile);
+
+            string pathUrl = $"/image/{folderName}/";
+
+            var returnImage = new TinyMceUploadResult
+            {
+                Location = $"{pathUrl}{formFile.FileName}"
+            };
+
+            return Content(JsonConvert.SerializeObject(returnImage).ToLowerInvariant(), "application/json");
+        }
+
         protected async Task<ContentResult> PrepareAndUploadFiles(string webrootPath, string folderName)
         {
             string folderPath = GetUploadFolderPath(webrootPath, folderName);
