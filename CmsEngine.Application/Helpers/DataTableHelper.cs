@@ -8,6 +8,7 @@ using CmsEngine.Application.ViewModels;
 using CmsEngine.Application.ViewModels.DataTableViewModels;
 using CmsEngine.Core;
 using CmsEngine.Core.Extensions;
+using CmsEngine.Extensions;
 
 namespace CmsEngine.Application.Helpers
 {
@@ -51,11 +52,13 @@ namespace CmsEngine.Application.Helpers
 
         private static string PrepareProperty(IViewModel item, PropertyInfo property)
         {
+            GeneralStatus generalStatus;
+            object value = item.GetType().GetProperty(property.Name).GetValue(item);
+
             switch (property.PropertyType.Name)
             {
                 case "DocumentStatus":
-                    GeneralStatus generalStatus;
-                    string documentStatus = item.GetType().GetProperty(property.Name).GetValue(item)?.ToString() ?? "";
+                    string documentStatus = value?.ToString() ?? "";
                     switch (documentStatus)
                     {
                         case "Published":
@@ -71,10 +74,13 @@ namespace CmsEngine.Application.Helpers
 
                     return $"<span class=\"badge badge-{generalStatus.ToString().ToLowerInvariant()}\">{documentStatus.ToEnum<DocumentStatus>().GetName()}</status-label>";
                 case "UserViewModel":
-                    var author = (UserViewModel)item.GetType().GetProperty(property.Name).GetValue(item);
-                    return author?.FullName ?? ""; // TODO: Apply HTML encoding
+                    var author = (UserViewModel)value;
+                    return HtmlEncoder.Default.Encode(author?.FullName ?? "");
+                case "Boolean":
+                    generalStatus = (bool)value ? GeneralStatus.Success : GeneralStatus.Danger;
+                    return $"<span class=\"badge badge-{generalStatus.ToString().ToLowerInvariant()}\">{((bool)value).ToYesNo()}</status-label>";
                 default:
-                    return HtmlEncoder.Default.Encode(item.GetType().GetProperty(property.Name).GetValue(item)?.ToString()) ?? "";
+                    return HtmlEncoder.Default.Encode(value?.ToString() ?? "");
             }
         }
     }

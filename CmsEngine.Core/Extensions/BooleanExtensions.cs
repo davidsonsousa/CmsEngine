@@ -7,7 +7,7 @@ namespace CmsEngine.Extensions
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
-        public static string ToReadableString(this bool value)
+        public static string ToYesNo(this bool value)
         {
             return value ? "Yes" : "No";
         }
