@@ -13,6 +13,7 @@
 // Custom styles
 @import "fontastic.scss";
 @import "style.blue.scss";
+@import "prism.scss"; // Syntax highlighter
 
 .widget.categories, .widget.tags {
     max-height: 300px;
