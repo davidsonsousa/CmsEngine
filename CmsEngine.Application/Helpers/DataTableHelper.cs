@@ -78,7 +78,7 @@ namespace CmsEngine.Application.Helpers
                     return HtmlEncoder.Default.Encode(author?.FullName ?? "");
                 case "Boolean":
                     generalStatus = (bool)value ? GeneralStatus.Success : GeneralStatus.Danger;
-                    return $"<span class=\"badge badge-{generalStatus.ToString().ToLowerInvariant()}\">{((bool)value).ToYesNo()}</status-label>";
+                    return $"<span class=\"badge badge-{generalStatus.ToString().ToLowerInvariant()}\">{((bool)value).ToYesNo().ToUpper()}</status-label>";
                 default:
                     return HtmlEncoder.Default.Encode(value?.ToString() ?? "");
             }
