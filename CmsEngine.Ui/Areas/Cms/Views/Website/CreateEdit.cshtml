@@ -14,7 +14,7 @@
 }
 
 <div class="row">
-    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-8">
+    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
         <div class="card">
             <div class="card-header">
                 <strong>@ViewBag.PanelTitle</strong>
@@ -25,167 +25,189 @@
                     {
                         <input asp-for="Id" type="hidden" />
                     }
-                    <div class="form-group row">
-                        <div class="col-md-12 offset-md-2">
-                            <div class="header-preview">
-                                @if (!string.IsNullOrWhiteSpace(Model.HeaderImage))
-                                {
-                                    <img src="@string.Format(CmsEngineConstants.ImagePath.Path320, "website", Model.HeaderImage)" alt="Image preview" title="Image preview" />
-                                }
-                            </div>
-                            <input asp-for="HeaderImage" type="hidden" />
 
-                            <div class="upload-bar">
-                                <span class="btn btn-success fileinput-button">
-                                    <i class="fas fa-upload"></i>
-                                    <span>Header image</span>
-                                    <input id="uploadHeadImage" type="file" name="files">
-                                </span>
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-group">
+                                <div class="col-md-12 offset-md-2">
+                                    <div class="header-preview">
+                                        @if (!string.IsNullOrWhiteSpace(Model.HeaderImage))
+                                        {
+                                            <img src="@string.Format(CmsEngineConstants.ImagePath.Path320, "website", Model.HeaderImage)" alt="Image preview" title="Image preview" />
+                                        }
+                                    </div>
+                                    <input asp-for="HeaderImage" type="hidden" />
 
-                                <button class="btn btn-outline-danger" id="removeHeadImage">Remove image</button>
-                                <div id="progress">
-                                    <div class="progress-bar" style="width: 0%;"></div>
+                                    <div class="upload-bar">
+                                        <span class="btn btn-success fileinput-button">
+                                            <i class="fas fa-upload"></i>
+                                            <span>Header image</span>
+                                            <input id="uploadHeadImage" type="file" name="files">
+                                        </span>
+
+                                        <button class="btn btn-outline-danger" id="removeHeadImage">Remove image</button>
+                                        <div id="progress">
+                                            <div class="progress-bar" style="width: 0%;"></div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
 
-                    <div class="form-group row">
-                        <label asp-for="Name" class="col-md-2 form-control-label"></label>
-                        <div class="col-md-10">
-                            <input asp-for="Name" class="form-control" />
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label asp-for="Tagline" class="col-md-2 form-control-label"></label>
-                        <div class="col-md-10">
-                            <input asp-for="Tagline" class="form-control" />
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label asp-for="Description" class="col-md-2 form-control-label"></label>
-                        <div class="col-md-10">
-                            <textarea asp-for="Description" class="form-control texteditor"></textarea>
-                            <div class="upload-bar float-right">
-                                <span class="btn btn-success fileinput-button">
-                                    <i class="fas fa-upload"></i>
-                                    <span>Upload images</span>
-                                    <input id="uploadEditorImages" type="file" name="editorImage" multiple>
-                                </span>
-                                <span class="btn btn-success fileinput-button">
-                                    <i class="fas fa-upload"></i>
-                                    <span>Upload files</span>
-                                    <input id="uploadEditorFiles" type="file" name="editorFile" multiple>
-                                </span>
+                            <div class="form-group">
+                                <label asp-for="Name"></label>
+                                <input asp-for="Name" class="form-control" />
                             </div>
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label asp-for="Culture" class="col-md-2 form-control-label"></label>
-                        <div class="col-md-10">
-                            <input asp-for="Culture" class="form-control" />
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label asp-for="UrlFormat" class="col-md-2 form-control-label"></label>
-                        <div class="col-md-10">
-                            <input asp-for="UrlFormat" class="form-control" />
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label asp-for="DateFormat" class="col-md-2 form-control-label"></label>
-                        <div class="col-md-10">
-                            <input asp-for="DateFormat" class="form-control" />
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label asp-for="SiteUrl" class="col-md-2 form-control-label"></label>
-                        <div class="col-md-10">
-                            <input asp-for="SiteUrl" class="form-control" />
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label asp-for="ArticleLimit" class="col-md-2 form-control-label"></label>
-                        <div class="col-md-10">
-                            <input asp-for="ArticleLimit" class="form-control" />
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label asp-for="Address" class="col-md-2 form-control-label"></label>
-                        <div class="col-md-10">
-                            <input asp-for="Address" class="form-control" />
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label asp-for="Phone" class="col-md-2 form-control-label"></label>
-                        <div class="col-md-10">
-                            <input asp-for="Phone" class="form-control" />
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label asp-for="Email" class="col-md-2 form-control-label"></label>
-                        <div class="col-md-10">
-                            <input asp-for="Email" class="form-control" />
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label asp-for="Facebook" class="col-md-2 form-control-label"></label>
-                        <div class="col-md-10">
-                            <input asp-for="Facebook" class="form-control" />
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label asp-for="Twitter" class="col-md-2 form-control-label"></label>
-                        <div class="col-md-10">
-                            <input asp-for="Twitter" class="form-control" />
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label asp-for="Instagram" class="col-md-2 form-control-label"></label>
-                        <div class="col-md-10">
-                            <input asp-for="Instagram" class="form-control" />
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label asp-for="LinkedIn" class="col-md-2 form-control-label"></label>
-                        <div class="col-md-10">
-                            <input asp-for="LinkedIn" class="form-control" />
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label asp-for="FacebookAppId" class="col-md-2 form-control-label"></label>
-                        <div class="col-md-10">
-                            <input asp-for="FacebookAppId" class="form-control" />
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label asp-for="FacebookApiVersion" class="col-md-2 form-control-label"></label>
-                        <div class="col-md-10">
-                            <input asp-for="FacebookApiVersion" class="form-control" />
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label asp-for="DisqusShortName" class="col-md-2 form-control-label"></label>
-                        <div class="col-md-10">
-                            <input asp-for="DisqusShortName" class="form-control" />
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label asp-for="GoogleAnalytics" class="col-md-2 form-control-label"></label>
-                        <div class="col-md-10">
-                            <textarea asp-for="GoogleAnalytics" class="form-control" rows="10"></textarea>
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label asp-for="GoogleRecaptchaSiteKey" class="col-md-2 form-control-label"></label>
-                        <div class="col-md-10">
-                            <input asp-for="GoogleRecaptchaSiteKey" class="form-control" />
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label asp-for="GoogleRecaptchaSecretKey" class="col-md-2 form-control-label"></label>
-                        <div class="col-md-10">
-                            <input asp-for="GoogleRecaptchaSecretKey" class="form-control" />
+                            <div class="form-group">
+                                <label asp-for="Tagline"></label>
+                                <input asp-for="Tagline" class="form-control" />
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="Description"></label>
+                                <textarea asp-for="Description" class="form-control texteditor"></textarea>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <div class="upload-bar float-right">
+                                        <span class="btn btn-success fileinput-button">
+                                            <i class="fas fa-upload"></i>
+                                            <span>Upload images</span>
+                                            <input id="uploadEditorImages" type="file" name="editorImage" multiple>
+                                        </span>
+                                        <span class="btn btn-success fileinput-button">
+                                            <i class="fas fa-upload"></i>
+                                            <span>Upload files</span>
+                                            <input id="uploadEditorFiles" type="file" name="editorFile" multiple>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-xl-3">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            Configuration
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="form-group">
+                                                <label asp-for="Culture"></label>
+                                                <input asp-for="Culture" class="form-control" />
+                                            </div>
+                                            <div class="form-group">
+                                                <label asp-for="UrlFormat"></label>
+                                                <input asp-for="UrlFormat" class="form-control" />
+                                            </div>
+                                            <div class="form-group">
+                                                <label asp-for="DateFormat"></label>
+                                                <input asp-for="DateFormat" class="form-control" />
+                                            </div>
+                                            <div class="form-group">
+                                                <label asp-for="SiteUrl"></label>
+                                                <input asp-for="SiteUrl" class="form-control" />
+                                            </div>
+                                            <div class="form-group">
+                                                <label asp-for="ArticleLimit"></label>
+                                                <input asp-for="ArticleLimit" class="form-control" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-xl-3">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            Social media
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="form-group">
+                                                <div class="input-group">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text"><i class="fab fa-facebook-f"></i></span>
+                                                    </div>
+                                                    <input asp-for="Facebook" class="form-control" />
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="input-group">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text"><i class="fab fa-twitter"></i></span>
+                                                    </div>
+                                                    <input asp-for="Twitter" class="form-control" />
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="input-group">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text"><i class="fab fa-instagram"></i></span>
+                                                    </div>
+                                                    <input asp-for="Instagram" class="form-control" />
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="input-group">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text"><i class="fab fa-linkedin-in"></i></span>
+                                                    </div>
+                                                    <input asp-for="LinkedIn" class="form-control" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-xl-3">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            APIs
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="form-group">
+                                                <label asp-for="DisqusShortName"></label>
+                                                <input asp-for="DisqusShortName" class="form-control" />
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Facebook API (Id / Version)</label>
+                                                <div class="input-group">
+                                                    <input asp-for="FacebookAppId" class="form-control" />
+                                                    <input asp-for="FacebookApiVersion" class="form-control" />
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label asp-for="GoogleRecaptchaSiteKey"></label>
+                                                <input asp-for="GoogleRecaptchaSiteKey" class="form-control" />
+                                            </div>
+                                            <div class="form-group">
+                                                <label asp-for="GoogleRecaptchaSecretKey"></label>
+                                                <input asp-for="GoogleRecaptchaSecretKey" class="form-control" />
+                                            </div>
+                                            <div class="form-group">
+                                                <label asp-for="GoogleAnalytics"></label>
+                                                <textarea asp-for="GoogleAnalytics" class="form-control" rows="10"></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-xl-3">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            Contact information
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="form-group">
+                                                <label asp-for="Address"></label>
+                                                <input asp-for="Address" class="form-control" />
+                                            </div>
+                                            <div class="form-group">
+                                                <label asp-for="Phone"></label>
+                                                <input asp-for="Phone" class="form-control" />
+                                            </div>
+                                            <div class="form-group">
+                                                <label asp-for="Email"></label>
+                                                <input asp-for="Email" class="form-control" />
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div asp-validation-summary="All" class="text-danger"></div>

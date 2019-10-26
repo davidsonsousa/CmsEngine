@@ -19,3 +19,7 @@ input[type="radio"], input[type="checkbox"] {
 .form-control.valid {
     @extend .is-valid;
 }
+
+.header-preview img {
+    max-width:100%;
+}

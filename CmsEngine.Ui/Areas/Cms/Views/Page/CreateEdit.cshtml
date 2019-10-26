@@ -15,7 +15,7 @@
 }
 
 <div class="row">
-    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-8">
+    <div class="col-12">
         <div class="card">
             <div class="card-header">
                 <strong>@ViewBag.PanelTitle</strong>
@@ -26,76 +26,67 @@
                     {
                         <input asp-for="Id" type="hidden" />
                     }
-                    <div class="form-group row">
-                        <div class="col-md-12 offset-md-2">
-                            <div class="header-preview">
-                                @if (!string.IsNullOrWhiteSpace(Model.HeaderImage))
-                                {
-                                    <img src="@string.Format(CmsEngineConstants.ImagePath.Path320, "page", Model.HeaderImage)" alt="Image preview" title="Image preview" />
-                                }
+
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-group">
+                                <label asp-for="Title"></label>
+                                <input asp-for="Title" class="form-control slugify" />
                             </div>
-                            <input asp-for="HeaderImage" type="hidden" />
-
-                            <div class="upload-bar">
-                                <span class="btn btn-success fileinput-button">
-                                    <i class="fas fa-upload"></i>
-                                    <span>Header image</span>
-                                    <input id="uploadHeadImage" type="file" name="files">
-                                </span>
-
-                                <button class="btn btn-outline-danger" id="removeHeadImage">Remove image</button>
-                                <div id="progress">
-                                    <div class="progress-bar" style="width: 0%;"></div>
+                            <div class="form-group">
+                                <label asp-for="Slug"></label>
+                                <input asp-for="Slug" class="form-control slug" />
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="Description"></label>
+                                <input asp-for="Description" class="form-control" />
+                            </div>
+                            <div class="form-group">
+                                <textarea asp-for="DocumentContent" class="form-control"></textarea>
+                                <div class="upload-bar float-right">
+                                    <span class="btn btn-success fileinput-button">
+                                        <i class="fas fa-upload"></i>
+                                        <span>Upload images</span>
+                                        <input id="uploadEditorImages" type="file" name="editorImage" multiple>
+                                    </span>
+                                    <span class="btn btn-success fileinput-button">
+                                        <i class="fas fa-upload"></i>
+                                        <span>Upload files</span>
+                                        <input id="uploadEditorFiles" type="file" name="editorFile" multiple>
+                                    </span>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                        <div class="col-xl-2">
+                            <div class="form-group">
+                                <h5>Header preview</h5>
+                                <div class="header-preview">
+                                    @if (!string.IsNullOrWhiteSpace(Model.HeaderImage))
+                                    {
+                                        <img src="@string.Format(CmsEngineConstants.ImagePath.Path320, "page", Model.HeaderImage)" alt="Image preview" title="Image preview" />
+                                    }
+                                </div>
+                                <input asp-for="HeaderImage" type="hidden" />
 
-                    <div class="form-group row">
-                        <label asp-for="Title" class="col-md-2 form-control-label"></label>
-                        <div class="col-md-10">
-                            <input asp-for="Title" class="form-control slugify" />
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label asp-for="Slug" class="col-md-2 form-control-label"></label>
-                        <div class="col-md-10">
-                            <input asp-for="Slug" class="form-control slug" />
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label asp-for="Description" class="col-md-2 form-control-label"></label>
-                        <div class="col-md-10">
-                            <input asp-for="Description" class="form-control" />
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <div class="col-md-12">
-                            <textarea asp-for="DocumentContent" class="form-control"></textarea>
-                            <div class="upload-bar float-right">
-                                <span class="btn btn-success fileinput-button">
-                                    <i class="fas fa-upload"></i>
-                                    <span>Upload images</span>
-                                    <input id="uploadEditorImages" type="file" name="editorImage" multiple>
-                                </span>
-                                <span class="btn btn-success fileinput-button">
-                                    <i class="fas fa-upload"></i>
-                                    <span>Upload files</span>
-                                    <input id="uploadEditorFiles" type="file" name="editorFile" multiple>
-                                </span>
+                                <div class="upload-bar">
+                                    <span class="btn btn-success fileinput-button">
+                                        <i class="fas fa-upload"></i> Upload
+                                        <input id="uploadHeadImage" type="file" name="files">
+                                    </span>
+                                    <button class="btn btn-outline-danger" id="removeHeadImage"><i class="fas fa-trash-alt"></i> Remove</button>
+                                    <div id="progress">
+                                        <div class="progress-bar" style="width: 0%;"></div>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label asp-for="Status" class="col-md-2 form-control-label"></label>
-                        <div class="col-md-10">
-                            <select asp-for="Status" asp-items="Html.GetEnumSelectList<DocumentStatus>()" class="form-control"></select>
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label asp-for="PublishedOn" class="col-md-2 form-control-label"></label>
-                        <div class="col-md-10">
-                            @Html.EditorFor(m => m.PublishedOn, new { htmlAttributes = new { @class = "form-control", containerId = "published-on" } })
+                            <div class="form-group">
+                                <label asp-for="Status"></label>
+                                <select asp-for="Status" asp-items="Html.GetEnumSelectList<DocumentStatus>()" class="form-control"></select>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="PublishedOn"></label>
+                                @Html.EditorFor(m => m.PublishedOn, new { htmlAttributes = new { @class = "form-control", containerId = "published-on" } })
+                            </div>
                         </div>
                     </div>
                     <div asp-validation-summary="All" class="text-danger"></div>
