@@ -24,14 +24,14 @@
         <main class="col-lg-8">
             <div class="container">
                 <div class="row">
-                    <h1>Archive</h1>
+                    <h1 class="mb-4">Archive</h1>
                     <div class="container">
                         <div class="row">
                             @if (Model.Categories.Count() > 0)
                             {
                                 foreach (var category in Model.CategoriesWithPosts)
                                 {
-                                    <p class="h3"><a href="~/blog/category/@category.Slug">@category.Name</a></p>
+                                    <p class="h4"><a href="~/blog/category/@category.Slug">@category.Name</a></p>
                                     <table class="table table-sm table-borderless">
                                         <tbody>
                                             @foreach (var post in category.Posts)
