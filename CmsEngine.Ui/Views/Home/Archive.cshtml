@@ -23,39 +23,37 @@
         <!-- Archive -->
         <main class="col-lg-8">
             <div class="container">
-                <div class="row">
-                    <h1 class="mb-4">Archive</h1>
-                    <div class="container">
-                        <div class="row">
-                            @if (Model.Categories.Count() > 0)
+                <h1 class="mb-4">Archive</h1>
+                <div class="container">
+                    <div class="row">
+                        @if (Model.Categories.Count() > 0)
+                        {
+                            foreach (var category in Model.CategoriesWithPosts)
                             {
-                                foreach (var category in Model.CategoriesWithPosts)
-                                {
-                                    <p class="h4"><a href="~/blog/category/@category.Slug">@category.Name</a></p>
-                                    <table class="table table-sm table-borderless">
-                                        <tbody>
-                                            @foreach (var post in category.Posts)
-                                            {
-                                                <tr>
-                                                    <td>@post.PublishedOn</td>
-                                                    <td>
-                                                        <p>
-                                                            <a href="~/blog/post/@post.Slug">@post.Title</a>
-                                                            <br />
-                                                            <small class="text-muted">@post.Description</small>
-                                                        </p>
-                                                    </td>
-                                                </tr>
-                                            }
-                                        </tbody>
-                                    </table>
-                                }
+                                <p class="h4"><a href="~/blog/category/@category.Slug">@category.Name</a></p>
+                                <table class="table table-sm table-borderless">
+                                    <tbody>
+                                        @foreach (var post in category.Posts)
+                                        {
+                                            <tr>
+                                                <td>@post.PublishedOn</td>
+                                                <td>
+                                                    <p>
+                                                        <a href="~/blog/post/@post.Slug">@post.Title</a>
+                                                        <br />
+                                                        <small class="text-muted">@post.Description</small>
+                                                    </p>
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
                             }
-                            else
-                            {
-                                <p class="h4">No articles available</p>
-                            }
-                        </div>
+                        }
+                        else
+                        {
+                            <p class="h4">No articles available</p>
+                        }
                     </div>
                 </div>
             </div>
