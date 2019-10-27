@@ -29,7 +29,7 @@
     <link rel="alternate" type="application/rss+xml" title="Subscribe to Davidson Sousa" href="http://feedpress.me/DavidsonSousa" />
     <link href="~/css/vendors/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700" rel="stylesheet">
-    <link href="~/css/vendors/jquery.fancybox.min.css" rel="stylesheet">
+    @*<link href="~/css/vendors/jquery.fancybox.min.css" rel="stylesheet">*@
 
     <environment include="Development">
         <link href="~/css/site.css" rel="stylesheet" id="theme-stylesheet">
@@ -95,10 +95,10 @@
 
     @await Html.PartialAsync("_Footer")
     <script src="~/js/vendors/jquery.min.js"></script>
-    <script src="~/js/vendors/popper.min.js"></script>
+    @*<script src="~/js/vendors/popper.min.js"></script>*@
     <script src="~/js/vendors/bootstrap.min.js"></script>
     <script src="~/js/vendors/jquery.cookie.min.js"></script>
-    <script src="~/js/vendors/jquery.fancybox.min.js"></script>
+    @*<script src="~/js/vendors/jquery.fancybox.min.js"></script>*@
 
     @if (Model.ApiDetails.HasDisqusDetails)
     {
