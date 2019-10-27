@@ -1,4 +1,3 @@
-using System;
 using CmsEngine.Application.Attributes;
 using CmsEngine.Core;
 
@@ -24,6 +23,6 @@ namespace CmsEngine.Application.ViewModels.DataTableViewModels
         public DocumentStatus Status { get; set; }
 
         [Orderable, ShowOnDataTable(4)]
-        public DateTime PublishedOn { get; set; }
+        public string PublishedOn { get; set; }
     }
 }
