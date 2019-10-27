@@ -104,6 +104,12 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
         }
 
         [HttpPost]
+        public async Task<IActionResult> UploadImages()
+        {
+            return await UploadImage(_env.WebRootPath, "Page");
+        }
+
+        [HttpPost]
         public async Task<IActionResult> UploadFiles()
         {
             return await PrepareAndUploadFiles(_env.WebRootPath, "Page");

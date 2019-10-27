@@ -53,7 +53,7 @@
                             </a>
                             <div class="d-flex align-items-center flex-wrap">
                                 <div class="date">
-                                    <i class="icon-clock"></i> @selectedPost.PublishedOn.ToShortDateString()
+                                    <i class="icon-clock"></i> @selectedPost.PublishedOn
                                 </div>
                                 <div class="comments meta-last">
                                     <i class="icon-comment"></i>
@@ -104,7 +104,7 @@
 
                             (function () { // DON'T EDIT BELOW THIS LINE
                                 var d = document, s = d.createElement('script');
-                                s.src = 'https://davidsonsousa.disqus.com/embed.js';
+                                s.src = 'https://@(Model.ApiDetails.DisqusShortName).disqus.com/embed.js';
                                 s.setAttribute('data-timestamp', +new Date());
                                 (d.head || d.body).appendChild(s);
                             })();

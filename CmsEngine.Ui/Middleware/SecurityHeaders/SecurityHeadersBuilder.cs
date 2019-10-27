@@ -33,7 +33,7 @@ namespace CmsEngine.Ui.Middleware.SecurityHeaders
                                               "microphone 'none';camera 'none';magnetometer 'none';gyroscope 'none';speaker 'self';" +
                                               "vibrate 'none';fullscreen 'self';payment 'none';");
             AddCustomHeader("Content-Security-Policy", "default-src https: 'unsafe-inline' 'unsafe-eval'; " +
-                                                       "img-src * 'self' data: https:;" +
+                                                       "img-src * 'self' data: https: blob:;" +
                                                        "style-src 'self' 'unsafe-inline' github.githubassets.com www.google.com platform.twitter.com cdn.syndication.twimg.com fonts.googleapis.com;" +
                                                        "script-src 'self' 'unsafe-inline' 'unsafe-eval' www.gstatic.com gist.github.com *.disqus.com www.googletagmanager.com www.google.com cse.google.com cdn.syndication.twimg.com platform.twitter.com cdn1.developermedia.com cdn2.developermedia.com apis.google.com www.googletagservices.com adservice.google.com securepubads.g.doubleclick.net ajax.aspnetcdn.com *.google-analytics.com");
 

@@ -1,6 +1,5 @@
 using CmsEngine.Application.Attributes;
 using CmsEngine.Core.Constants;
-using CmsEngine.Extensions;
 
 namespace CmsEngine.Application.ViewModels.DataTableViewModels
 {
@@ -27,11 +26,11 @@ namespace CmsEngine.Application.ViewModels.DataTableViewModels
         public string GoogleAnalytics { get; set; }
 
         [Orderable, ShowOnDataTable(6)]
-        public string HasGoogleAnalytics
+        public bool HasGoogleAnalytics
         {
             get
             {
-                return (!string.IsNullOrWhiteSpace(GoogleAnalytics)).ToReadableString();
+                return !string.IsNullOrWhiteSpace(GoogleAnalytics);
             }
         }
     }

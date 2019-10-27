@@ -75,11 +75,7 @@ CmsEngine.Configure.DataTable = function (route) {
             }],
         "ajax": {
             type: "POST",
-            //contentType: "application/json",
-            url: route + "/getdata",
-            //data: function (d) {
-            //	return JSON.stringify({ parameters: d });
-            //}
+            url: route + "/getdata"
         }
     });
 };
@@ -111,28 +107,35 @@ CmsEngine.Configure.Dialog = function (dialogId, dialogType, title, body, cancel
     //});
 };
 
-CmsEngine.Configure.TinyMCE = function (selector, height) {
+CmsEngine.Configure.TinyMCE = function (selector, height, sender) {
     tinymce.init({
         selector: selector,
         height: height,
-        content_css: "",
-        //encoding: "xml",
-        //entity_encoding: "raw",
+        content_css: '/css/site.css',
         relative_urls: false,
         remove_script_host: true,
         document_base_url: "/",
         convert_urls: true,
-        plugins: [
-            "advlist autolink lists link image charmap print preview anchor",
-            "searchreplace visualblocks code fullscreen",
-            "insertdatetime media table contextmenu paste"
-        ],
+        plugins: 'print preview fullpage paste importcss searchreplace autolink autosave save directionality code visualblocks visualchars fullscreen image link media template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists wordcount imagetools textpattern noneditable help charmap quickbars emoticons',
+        imagetools_cors_hosts: ['picsum.photos'],
+        toolbar: 'undo redo | bold italic underline | formatselect | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist | removeformat | fullscreen  preview | insertfile link codesample code',
+        menubar: 'file edit view insert format tools table',
+        extended_valid_elements: 'script[language|type|src]',
+        autosave_ask_before_unload: true,
+        autosave_interval: "30s",
+        autosave_prefix: "{path}{query}-{id}-",
+        autosave_restore_when_empty: false,
+        autosave_retention: "2m",
+        contextmenu: "link image imagetools table",
+        image_advtab: true,
+        image_title: true,
+        automatic_uploads: true,
+        file_picker_types: 'image',
+        images_upload_url: '/Cms/' + sender + '/UploadImages',
         setup: function (editor) {
             editor.on('SaveContent', function (e) {
                 e.content = e.content.replace(/&#39/g, "&apos");
             });
-        },
-        toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | code",
-        extended_valid_elements: 'script[language|type|src]'
+        }
     });
 };

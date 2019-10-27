@@ -20,7 +20,11 @@ namespace CmsEngine.Data.Repositories
                 VanityId = w.VanityId,
                 Name = w.Name,
                 Tagline = w.Tagline,
-                Culture = w.Culture
+                Culture = w.Culture,
+                UrlFormat = w.UrlFormat,
+                DateFormat = w.DateFormat,
+                SiteUrl = w.SiteUrl,
+                GoogleAnalytics = w.GoogleAnalytics
             }).ToListAsync();
         }
 

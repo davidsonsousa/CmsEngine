@@ -52,7 +52,8 @@ namespace CmsEngine.Data.Repositories
                                       VanityId = p.VanityId,
                                       Title = p.Title,
                                       Description = p.Description,
-                                      Slug = p.Slug
+                                      Slug = p.Slug,
+                                      PublishedOn = p.PublishedOn
                                   })
                               })
                               .OrderBy(o => o.Name).ToListAsync();

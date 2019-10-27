@@ -133,9 +133,10 @@ namespace CmsEngine.Application.Extensions.Mapper
                     Name = item.Name,
                     Tagline = item.Tagline,
                     Culture = item.Culture,
-                    //UrlFormat = item.UrlFormat,
-                    //DateFormat = item.DateFormat,
-                    //SiteUrl = item.SiteUrl
+                    UrlFormat = item.UrlFormat,
+                    DateFormat = item.DateFormat,
+                    SiteUrl = item.SiteUrl,
+                    GoogleAnalytics = item.GoogleAnalytics
                 });
             }
 

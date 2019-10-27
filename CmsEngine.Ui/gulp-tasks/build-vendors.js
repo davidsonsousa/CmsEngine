@@ -155,11 +155,10 @@ gulp.task('node-vendors:copyTinyMCE', done => {
     gulp.src([
         'node_modules/tinymce/tinymce.min.js',
         'node_modules/tinymce/plugins/**',
-        'node_modules/tinymce/themes/modern/theme.min.js',
-        'node_modules/tinymce/skins/lightgray/skin.min.css',
-        'node_modules/tinymce/skins/lightgray/content.min.css',
-        'node_modules/tinymce/skins/lightgray/fonts/tinymce.woff',
-        'node_modules/tinymce/skins/lightgray/fonts/tinymce.ttf'
+        'node_modules/tinymce/themes/silver/theme.min.js',
+        'node_modules/tinymce/skins/ui/oxide/skin.min.css',
+        'node_modules/tinymce/skins/ui/oxide/content.min.css',
+        'node_modules/tinymce/skins/ui/oxide/fonts/tinymce-mobile.woff'
     ], { base: './node_modules' })
         .pipe(gulp.dest(gulp.paths.webroot + gulp.paths.js + gulp.paths.vendors));
     done();

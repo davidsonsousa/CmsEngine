@@ -13,6 +13,7 @@
 // Custom styles
 @import "fontastic.scss";
 @import "style.blue.scss";
+@import "prism.scss"; // Syntax highlighter
 
 .widget.categories, .widget.tags {
     max-height: 300px;
@@ -23,9 +24,9 @@
     text-shadow: black 1px 0 10px;
 }
 
-img{
-    max-width:100%;
-    max-height:100%;
+img {
+    max-width: 100%;
+    max-height: 100%;
 }
 
 .gist {
@@ -37,7 +38,7 @@ img{
     overflow: auto;
 }
 
-ul{
+ul {
     margin: auto 2rem 1rem 2rem;
 }
 
@@ -45,6 +46,10 @@ ul{
     @extend .is-invalid;
 }
 
-.form-control.valid{
+.form-control.valid {
     @extend .is-valid;
+}
+
+section.featured-posts .text-inner {
+    padding: 70px 20px;
 }

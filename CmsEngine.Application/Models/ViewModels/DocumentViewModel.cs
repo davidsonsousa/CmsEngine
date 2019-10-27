@@ -1,4 +1,3 @@
-using System;
 using CmsEngine.Core;
 
 namespace CmsEngine.Application.ViewModels
@@ -11,6 +10,6 @@ namespace CmsEngine.Application.ViewModels
         public string HeaderImage { get; set; }
         public string DocumentContent { get; set; }
         public DocumentStatus Status { get; set; }
-        public DateTime PublishedOn { get; set; }
+        public string PublishedOn { get; set; }
     }
 }
