@@ -1,4 +1,4 @@
-﻿@using CmsEngine.Ui.Extensions
+@using CmsEngine.Ui.Extensions
 @model InstanceViewModel
 <!DOCTYPE html>
 <html>
@@ -14,14 +14,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="robots" content="all,follow">
 
-    @* Facebook *@
     @RenderSection("FacebookMeta", required: false)
     @if (Model.ApiDetails.HasFacebookDetails)
     {
         <meta property="fb:app_id" content="@Model.ApiDetails.FacebookAppId" />
     }
 
-    @* Twitter *@
     @RenderSection("TwitterMeta", required: false)
     @if (Model.SocialMedia.HasTwitter)
     {
@@ -59,12 +57,6 @@
                     <div class="row d-flex justify-content-center">
                         <div class="col-md-8">
                             @await Html.PartialAsync("_SearchForm")
-                            @*<form action="#">
-                                    <div class="form-group">
-                                        <input type="search" name="search" id="search" placeholder="What are you looking for?">
-                                        <button type="submit" class="submit"><i class="icon-search-1"></i></button>
-                                    </div>
-                                </form>*@
                         </div>
                     </div>
                 </div>
