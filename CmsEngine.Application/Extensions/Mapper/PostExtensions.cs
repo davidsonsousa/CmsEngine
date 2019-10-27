@@ -119,7 +119,7 @@ namespace CmsEngine.Application.Extensions.Mapper
                     Title = item.Title,
                     Description = item.Description,
                     Slug = item.Slug,
-                    PublishedOn = item.PublishedOn,
+                    PublishedOn = item.PublishedOn.ToString(),
                     Status = item.Status,
                     Author = item.ApplicationUsers.MapToViewModelSimple().SingleOrDefault()
                 });
@@ -143,7 +143,7 @@ namespace CmsEngine.Application.Extensions.Mapper
                 Description = item.Description,
                 DocumentContent = item.DocumentContent,
                 HeaderImage = item.HeaderImage,
-                PublishedOn = item.PublishedOn,
+                PublishedOn = item.PublishedOn.ToShortDateString(),
                 Categories = item.Categories.MapToViewModelSimple(),
                 Author = item.ApplicationUsers.MapToViewModelSimple().SingleOrDefault()
             };
@@ -169,7 +169,7 @@ namespace CmsEngine.Application.Extensions.Mapper
                     Description = item.Description,
                     DocumentContent = item.DocumentContent,
                     HeaderImage = item.HeaderImage,
-                    PublishedOn = item.PublishedOn,
+                    PublishedOn = item.PublishedOn.ToShortDateString(),
                     Status = item.Status
                 });
             }
@@ -197,7 +197,7 @@ namespace CmsEngine.Application.Extensions.Mapper
                     Description = item.Description,
                     DocumentContent = item.DocumentContent,
                     HeaderImage = item.HeaderImage,
-                    PublishedOn = item.PublishedOn,
+                    PublishedOn = item.PublishedOn.ToShortDateString(),
                     Status = item.Status,
                     Categories = item.PostCategories.Select(x => x.Category).MapToViewModel()
                 });
@@ -226,7 +226,7 @@ namespace CmsEngine.Application.Extensions.Mapper
                     Description = item.Description,
                     DocumentContent = item.DocumentContent,
                     HeaderImage = item.HeaderImage,
-                    PublishedOn = item.PublishedOn,
+                    PublishedOn = item.PublishedOn.ToShortDateString(),
                     Status = item.Status,
                     Tags = item.PostTags.Select(x => x.Tag).MapToViewModel()
                 });
@@ -253,7 +253,7 @@ namespace CmsEngine.Application.Extensions.Mapper
                     Slug = item.Slug,
                     Description = item.Description,
                     HeaderImage = item.HeaderImage,
-                    PublishedOn = item.PublishedOn,
+                    PublishedOn = item.PublishedOn.ToShortDateString(),
                     Categories = item.Categories.MapToViewModelSimple(),
                     Author = item.ApplicationUsers.MapToViewModelSimple().SingleOrDefault()
                 });
@@ -280,7 +280,7 @@ namespace CmsEngine.Application.Extensions.Mapper
                     Slug = item.Slug,
                     Description = item.Description,
                     HeaderImage = item.HeaderImage,
-                    PublishedOn = item.PublishedOn,
+                    PublishedOn = item.PublishedOn.ToShortDateString(),
                     Categories = item.Categories.MapToViewModelSimple(),
                     Tags = item.Tags.MapToViewModelSimple(),
                     Author = item.ApplicationUsers.MapToViewModelSimple().SingleOrDefault()

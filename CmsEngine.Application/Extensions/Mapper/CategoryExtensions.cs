@@ -175,7 +175,8 @@ namespace CmsEngine.Application.Extensions.Mapper
                         VanityId = p.VanityId,
                         Title = p.Title,
                         Description = p.Description,
-                        Slug = p.Slug
+                        Slug = p.Slug,
+                        PublishedOn = p.PublishedOn.ToShortDateString()
                     })
                 });
             }
