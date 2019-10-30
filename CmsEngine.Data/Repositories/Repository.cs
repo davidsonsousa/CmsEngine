@@ -82,26 +82,51 @@ namespace CmsEngine.Data.Repositories
 
         public async Task Insert(TEntity entity)
         {
+            if (entity is null)
+            {
+                throw new ArgumentNullException(nameof(entity));
+            }
+
             await dbContext.Set<TEntity>().AddAsync(entity);
         }
 
         public async Task InsertRange(IEnumerable<TEntity> entities)
         {
+            if (entities is null)
+            {
+                throw new ArgumentNullException(nameof(entities));
+            }
+
             await dbContext.Set<TEntity>().AddRangeAsync(entities);
         }
 
         public void Update(TEntity entity)
         {
+            if (entity is null)
+            {
+                throw new ArgumentNullException(nameof(entity));
+            }
+
             dbContext.Update(entity);
         }
 
         public void UpdateRange(IEnumerable<TEntity> entities)
         {
+            if (entities is null)
+            {
+                throw new ArgumentNullException(nameof(entities));
+            }
+
             dbContext.UpdateRange(entities);
         }
 
         public void Delete(TEntity entity)
         {
+            if (entity is null)
+            {
+                throw new ArgumentNullException(nameof(entity));
+            }
+
             // We never delete anything, only update the IsDelete flag
             entity.IsDeleted = true;
             Update(entity);
@@ -109,6 +134,11 @@ namespace CmsEngine.Data.Repositories
 
         public void DeleteRange(IEnumerable<TEntity> entities)
         {
+            if (entities is null)
+            {
+                throw new ArgumentNullException(nameof(entities));
+            }
+
             for (int i = 0; i < entities.Count(); i++)
             {
                 ((List<TEntity>)entities)[i].IsDeleted = true;
