@@ -82,60 +82,40 @@ namespace CmsEngine.Data.Repositories
 
         public async Task Insert(TEntity entity)
         {
-            if (entity != null)
-            {
-                await dbContext.Set<TEntity>().AddAsync(entity);
-            }
+            await dbContext.Set<TEntity>().AddAsync(entity);
         }
 
         public async Task InsertRange(IEnumerable<TEntity> entities)
         {
-            if (entities != null)
-            {
-                await dbContext.Set<TEntity>().AddRangeAsync(entities);
-            }
+            await dbContext.Set<TEntity>().AddRangeAsync(entities);
         }
 
         public void Update(TEntity entity)
         {
-            if (entity != null)
-            {
-                //Attach(entity);
-                //dbContext.Entry(entity).State = EntityState.Modified;
-                dbContext.Update(entity);
-            }
+            dbContext.Update(entity);
         }
 
         public void UpdateRange(IEnumerable<TEntity> entities)
         {
-            if (entities != null)
-            {
-                dbContext.UpdateRange(entities);
-            }
+            dbContext.UpdateRange(entities);
         }
 
         public void Delete(TEntity entity)
         {
-            if (entity != null)
-            {
-                // We never delete anything
-                entity.IsDeleted = true;
-                Update(entity);
-            }
+            // We never delete anything, only update the IsDelete flag
+            entity.IsDeleted = true;
+            Update(entity);
         }
 
         public void DeleteRange(IEnumerable<TEntity> entities)
         {
-            if (entities != null)
+            for (int i = 0; i < entities.Count(); i++)
             {
-                for (int i = 0; i < entities.Count(); i++)
-                {
-                    ((List<TEntity>)entities)[i].IsDeleted = true;
-                }
-
-                // We never delete anything
-                UpdateRange(entities);
+                ((List<TEntity>)entities)[i].IsDeleted = true;
             }
+
+            // We never delete anything
+            UpdateRange(entities);
         }
 
         private void Attach(TEntity entity)
