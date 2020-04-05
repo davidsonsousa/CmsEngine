@@ -87,7 +87,7 @@ namespace CmsEngine.Data.Repositories
                 throw new ArgumentNullException(nameof(entity));
             }
 
-            await dbContext.Set<TEntity>().AddAsync(entity);
+            await dbContext.AddAsync(entity);
         }
 
         public async Task InsertRange(IEnumerable<TEntity> entities)
@@ -97,7 +97,7 @@ namespace CmsEngine.Data.Repositories
                 throw new ArgumentNullException(nameof(entities));
             }
 
-            await dbContext.Set<TEntity>().AddRangeAsync(entities);
+            await dbContext.AddRangeAsync(entities);
         }
 
         public void Update(TEntity entity)
@@ -153,7 +153,7 @@ namespace CmsEngine.Data.Repositories
             EntityEntry dbEntityEntry = dbContext.Entry(entity);
             if (dbEntityEntry.State == EntityState.Detached)
             {
-                dbContext.Set<TEntity>().Attach(entity);
+                dbContext.Attach(entity);
             }
         }
 
