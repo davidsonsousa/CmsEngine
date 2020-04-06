@@ -20,6 +20,8 @@ namespace CmsEngine.Data
         public CmsEngineContext(DbContextOptions<CmsEngineContext> options) : base(options)
         {
             //Database.SetInitializer(new CmsEngineInitializer());
+
+            ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
         }
 
         protected override void OnModelCreating(ModelBuilder builder)
