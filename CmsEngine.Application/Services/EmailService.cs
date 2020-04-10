@@ -40,6 +40,8 @@ namespace CmsEngine.Application.Services
             {
                 logger.LogInformation("New e-mail");
                 var message = contactForm.MapToModel();
+                message.DateReceived = DateTime.Now;
+
                 await _unitOfWork.Emails.Insert(message);
 
                 await _unitOfWork.Save();

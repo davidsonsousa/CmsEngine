@@ -1,3 +1,4 @@
+using System;
 using Newtonsoft.Json.Linq;
 
 namespace CmsEngine.Data.Entities
@@ -7,6 +8,7 @@ namespace CmsEngine.Data.Entities
         public string From { get; set; }
         public string Subject { get; set; }
         public string Message { get; set; }
+        public DateTime DateReceived { get; set; }
 
         public override string ToString()
         {

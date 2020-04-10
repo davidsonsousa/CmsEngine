@@ -14,7 +14,7 @@ namespace CmsEngine.Data.Repositories
 
         public async Task<IEnumerable<Email>> GetOrderedByDate()
         {
-            return await Get().OrderByDescending(o => o.DateCreated)
+            return await Get().OrderByDescending(o => o.DateReceived)
                               .ToListAsync();
         }
     }
