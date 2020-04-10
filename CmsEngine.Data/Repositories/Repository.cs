@@ -72,12 +72,12 @@ namespace CmsEngine.Data.Repositories
 
         public async Task<IEnumerable<TEntity>> GetByMultipleIdsAsync(Guid[] ids)
         {
-            return await GetByMultipleIdsAsync(ids.ToList());
+            return await Get(q => ids.Contains(q.VanityId)).ToListAsync();
         }
 
-        public async Task<IEnumerable<TEntity>> GetByMultipleIdsAsync(IEnumerable<Guid> ids)
+        public async Task<IEnumerable<int>> GetIdsByMultipleGuidsAsync(IEnumerable<Guid> ids)
         {
-            return await Get(q => ids.Contains(q.VanityId)).ToListAsync();
+            return await Get(q => ids.Contains(q.VanityId)).Select(x => x.Id).ToListAsync();
         }
 
         public async Task Insert(TEntity entity)
@@ -148,7 +148,7 @@ namespace CmsEngine.Data.Repositories
             UpdateRange(entities);
         }
 
-        private void Attach(TEntity entity)
+        public void Attach(TEntity entity)
         {
             EntityEntry dbEntityEntry = dbContext.Entry(entity);
             if (dbEntityEntry.State == EntityState.Detached)
