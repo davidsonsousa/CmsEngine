@@ -272,5 +272,12 @@ namespace CmsEngine.Data.Repositories
                                                        .ThenInclude(pt => pt.Tag)
                                                    .SingleAsync();
         }
+
+        public void RemoveRelatedItems(Post post)
+        {
+            dbContext.RemoveRange(post.PostApplicationUsers);
+            dbContext.RemoveRange(post.PostTags);
+            dbContext.RemoveRange(post.PostCategories);
+        }
     }
 }
