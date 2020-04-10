@@ -13,5 +13,11 @@ namespace CmsEngine.Data.Entities
         [NotMapped]
         public IEnumerable<ApplicationUser> ApplicationUsers { get; set; }
 
+        public Page()
+        {
+            PageApplicationUsers = new List<PageApplicationUser>();
+
+            ApplicationUsers = new List<ApplicationUser>();
+        }
     }
 }
