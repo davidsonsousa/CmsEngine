@@ -74,5 +74,10 @@ namespace CmsEngine.Data.Repositories
             return await Get(q => q.VanityId == id).Include(p => p.PageApplicationUsers)
                                                    .SingleAsync();
         }
+
+        public void RemoveRelatedItems(Page page)
+        {
+            dbContext.RemoveRange(page.PageApplicationUsers);
+        }
     }
 }
