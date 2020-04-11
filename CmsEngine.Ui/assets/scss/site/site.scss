@@ -50,6 +50,18 @@ ul {
     @extend .is-valid;
 }
 
-section.featured-posts .text-inner {
-    padding: 70px 20px;
+section {
+    &.featured-posts {
+        .row {
+            .text-inner {
+                padding: 70px 20px;
+            }
+
+            &:nth-of-type(2n) {
+                -ms-flex-direction: row-reverse;
+                -webkit-flex-direction: row-reverse;
+                flex-direction: row-reverse;
+            }
+        }
+    }
 }
