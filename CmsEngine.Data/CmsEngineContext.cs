@@ -20,14 +20,13 @@ namespace CmsEngine.Data
         public CmsEngineContext(DbContextOptions<CmsEngineContext> options) : base(options)
         {
             //Database.SetInitializer(new CmsEngineInitializer());
+
+            ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
         }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
             //modelBuilder.Conventions.Remove<OneToManyCascadeDeleteConvention>();
-
-            // Forces the database to use the type datetime2
-            //modelBuilder.Properties<DateTime>().Configure(c => c.HasColumnType("datetime2").HasPrecision(0));
 
             // Model configuration
             builder.Entity<Website>(ModelConfiguration.ConfigureWebsite);
@@ -49,17 +48,20 @@ namespace CmsEngine.Data
 
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
-            var saveTime = DateTime.Now;
+            ChangeTracker.DetectChanges();
+
+            var timeStamp = DateTime.Now;
             var entries = ChangeTracker.Entries().Where(e => e.Entity is BaseEntity && (e.State == EntityState.Added || e.State == EntityState.Modified));
             string currentUsername = "";//HttpContext.Current?.User?.Identity?.Name;
             foreach (var entry in entries)
             {
                 if (entry.State == EntityState.Added)
                 {
-                    entry.Property("DateCreated").CurrentValue = saveTime;
+                    entry.Property("DateCreated").CurrentValue = timeStamp;
                     entry.Property("UserCreated").CurrentValue = currentUsername;
                 }
-                entry.Property("DateModified").CurrentValue = saveTime;
+
+                entry.Property("DateModified").CurrentValue = timeStamp;
                 entry.Property("UserModified").CurrentValue = currentUsername;
             }
 

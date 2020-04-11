@@ -1,4 +1,14 @@
 @model PostViewModel
+<div class="image col-lg-5">
+    @{
+        string imagePath = !string.IsNullOrWhiteSpace(Model.HeaderImage)
+                           ? imagePath = string.Format(CmsEngineConstants.ImagePath.Path640, "post", Model.HeaderImage)
+                           : "/img/no-image.png";
+    }
+    <a asp-controller="Blog" asp-action="Post" asp-route-slug="@Model.Slug">
+        <img src="@imagePath" alt="@Model.Title" title="@Model.Title" class="img-fluid">
+    </a>
+</div>
 
 <div class="text col-lg-7">
     <div class="text-inner d-flex align-items-center">

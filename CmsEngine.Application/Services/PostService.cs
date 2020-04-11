@@ -189,6 +189,7 @@ namespace CmsEngine.Application.Services
                     logger.LogInformation("New post");
                     var post = postEditModel.MapToModel();
                     post.WebsiteId = Instance.Id;
+
                     await PrepareRelatedProperties(postEditModel, post);
                     await unitOfWork.Posts.Insert(post);
                 }
@@ -197,6 +198,8 @@ namespace CmsEngine.Application.Services
                     logger.LogInformation("Update post");
                     var post = postEditModel.MapToModel(await unitOfWork.Posts.GetForSavingById(postEditModel.VanityId));
                     post.WebsiteId = Instance.Id;
+
+                    _unitOfWork.Posts.RemoveRelatedItems(post);
                     await PrepareRelatedProperties(postEditModel, post);
                     _unitOfWork.Posts.Update(post);
                 }
@@ -237,37 +240,36 @@ namespace CmsEngine.Application.Services
 
         private async Task PrepareRelatedProperties(PostEditModel postEditModel, Post post)
         {
-            var categories = await _unitOfWork.Categories.GetByMultipleIdsAsync(postEditModel.SelectedCategories.ToList().ConvertAll(Guid.Parse));
-            var tags = await _unitOfWork.Tags.GetByMultipleIdsAsync(postEditModel.SelectedTags.ToList().ConvertAll(Guid.Parse));
+            var categoryIds = await _unitOfWork.Categories.GetIdsByMultipleGuidsAsync(postEditModel.SelectedCategories.ToList().ConvertAll(Guid.Parse));
+            var tagIds = await _unitOfWork.Tags.GetIdsByMultipleGuidsAsync(postEditModel.SelectedTags.ToList().ConvertAll(Guid.Parse));
 
-            post.PostCategories = new List<PostCategory>();
-            foreach (var category in categories)
+            post.PostCategories.Clear();
+            foreach (int categoryId in categoryIds)
             {
                 post.PostCategories.Add(new PostCategory
                 {
-                    Post = post,
-                    Category = category
+                    PostId = post.Id,
+                    CategoryId = categoryId
                 });
             }
 
-            post.PostTags = new List<PostTag>();
-            foreach (var tag in tags)
+            post.PostTags.Clear();
+            foreach (int tagId in tagIds)
             {
                 post.PostTags.Add(new PostTag
                 {
-                    Post = post,
-                    Tag = tag
+                    PostId = post.Id,
+                    TagId = tagId
                 });
             }
 
-            post.PostApplicationUsers = new List<PostApplicationUser>
+            var user = await GetCurrentUserAsync();
+            post.PostApplicationUsers.Clear();
+            post.PostApplicationUsers.Add(new PostApplicationUser
             {
-                new PostApplicationUser
-                {
-                    Post = post,
-                    ApplicationUser = await GetCurrentUserAsync()
-                }
-            };
+                PostId = post.Id,
+                ApplicationUserId = user.Id
+            });
         }
     }
 }

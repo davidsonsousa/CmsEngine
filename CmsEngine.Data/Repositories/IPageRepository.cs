@@ -14,5 +14,6 @@ namespace CmsEngine.Data.Repositories
         Task<IEnumerable<Page>> GetForDataTable();
         Task<Page> GetBySlug(string slug);
         Task<Page> GetForSavingById(Guid id);
+        void RemoveRelatedItems(Page page);
     }
 }

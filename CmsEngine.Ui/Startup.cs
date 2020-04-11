@@ -45,7 +45,7 @@ namespace CmsEngine.Ui
             services.Configure<EmailSettings>(Configuration.GetSection("EmailSettings"));
 
             // Add CmsEngineContext
-            services.AddDbContext<CmsEngineContext>(options => options.EnableSensitiveDataLogging(true) // TODO: Perhaps use a flag from appsettings instead of a hard-coded value
+            services.AddDbContext<CmsEngineContext>(options => options.EnableSensitiveDataLogging(Environment.IsDevelopment())
                                                                       .UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddIdentity<ApplicationUser, IdentityRole>()

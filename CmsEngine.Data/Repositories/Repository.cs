@@ -57,12 +57,12 @@ namespace CmsEngine.Data.Repositories
 
         public async Task<TEntity> GetByIdAsync(int id)
         {
-            return await Get(q => q.Id == id).SingleOrDefaultAsync();
+            return await Get(q => q.Id == id).SingleAsync();
         }
 
         public async Task<TEntity> GetByIdAsync(Guid id)
         {
-            return await Get(q => q.VanityId == id).SingleOrDefaultAsync();
+            return await Get(q => q.VanityId == id).SingleAsync();
         }
 
         public async Task<IEnumerable<TEntity>> GetByMultipleIdsAsync(int[] ids)
@@ -72,78 +72,88 @@ namespace CmsEngine.Data.Repositories
 
         public async Task<IEnumerable<TEntity>> GetByMultipleIdsAsync(Guid[] ids)
         {
-            return await GetByMultipleIdsAsync(ids.ToList());
+            return await Get(q => ids.Contains(q.VanityId)).ToListAsync();
         }
 
-        public async Task<IEnumerable<TEntity>> GetByMultipleIdsAsync(IEnumerable<Guid> ids)
+        public async Task<IEnumerable<int>> GetIdsByMultipleGuidsAsync(IEnumerable<Guid> ids)
         {
-            return await Get(q => ids.Contains(q.VanityId)).ToListAsync();
+            return await Get(q => ids.Contains(q.VanityId)).Select(x => x.Id).ToListAsync();
         }
 
         public async Task Insert(TEntity entity)
         {
-            if (entity != null)
+            if (entity is null)
             {
-                await dbContext.Set<TEntity>().AddAsync(entity);
+                throw new ArgumentNullException(nameof(entity));
             }
+
+            await dbContext.AddAsync(entity);
         }
 
         public async Task InsertRange(IEnumerable<TEntity> entities)
         {
-            if (entities != null)
+            if (entities is null)
             {
-                await dbContext.Set<TEntity>().AddRangeAsync(entities);
+                throw new ArgumentNullException(nameof(entities));
             }
+
+            await dbContext.AddRangeAsync(entities);
         }
 
         public void Update(TEntity entity)
         {
-            if (entity != null)
+            if (entity is null)
             {
-                //Attach(entity);
-                //dbContext.Entry(entity).State = EntityState.Modified;
-                dbContext.Update(entity);
+                throw new ArgumentNullException(nameof(entity));
             }
+
+            dbContext.Update(entity);
         }
 
         public void UpdateRange(IEnumerable<TEntity> entities)
         {
-            if (entities != null)
+            if (entities is null)
             {
-                dbContext.UpdateRange(entities);
+                throw new ArgumentNullException(nameof(entities));
             }
+
+            dbContext.UpdateRange(entities);
         }
 
         public void Delete(TEntity entity)
         {
-            if (entity != null)
+            if (entity is null)
             {
-                // We never delete anything
-                entity.IsDeleted = true;
-                Update(entity);
+                throw new ArgumentNullException(nameof(entity));
             }
+
+            // We never delete anything, only update the IsDelete flag
+            entity.IsDeleted = true;
+            Update(entity);
         }
 
         public void DeleteRange(IEnumerable<TEntity> entities)
         {
-            if (entities != null)
+            if (entities is null)
             {
-                for (int i = 0; i < entities.Count(); i++)
-                {
-                    ((List<TEntity>)entities)[i].IsDeleted = true;
-                }
-
-                // We never delete anything
-                UpdateRange(entities);
+                throw new ArgumentNullException(nameof(entities));
             }
+
+            for (int i = 0; i < entities.Count(); i++)
+            {
+                ((List<TEntity>)entities)[i].IsDeleted = true;
+            }
+
+            // We never delete anything
+            UpdateRange(entities);
         }
 
-        private void Attach(TEntity entity)
+        public void Attach(TEntity entity)
         {
             EntityEntry dbEntityEntry = dbContext.Entry(entity);
             if (dbEntityEntry.State == EntityState.Detached)
             {
-                dbContext.Set<TEntity>().Attach(entity);
+                dbContext.Attach(entity);
             }
         }
 

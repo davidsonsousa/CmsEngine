@@ -121,7 +121,7 @@ namespace CmsEngine.Application.Extensions.Mapper
                     Slug = item.Slug,
                     PublishedOn = item.PublishedOn.ToString(),
                     Status = item.Status,
-                    Author = item.ApplicationUsers.MapToViewModelSimple().SingleOrDefault()
+                    Author = item.ApplicationUsers.MapToViewModelSimple().Single()
                 });
             }
 
@@ -145,7 +145,7 @@ namespace CmsEngine.Application.Extensions.Mapper
                 HeaderImage = item.HeaderImage,
                 PublishedOn = item.PublishedOn.ToShortDateString(),
                 Categories = item.Categories.MapToViewModelSimple(),
-                Author = item.ApplicationUsers.MapToViewModelSimple().SingleOrDefault()
+                Author = item.ApplicationUsers.MapToViewModelSimple().Single()
             };
         }
 
@@ -255,7 +255,7 @@ namespace CmsEngine.Application.Extensions.Mapper
                     HeaderImage = item.HeaderImage,
                     PublishedOn = item.PublishedOn.ToShortDateString(),
                     Categories = item.Categories.MapToViewModelSimple(),
-                    Author = item.ApplicationUsers.MapToViewModelSimple().SingleOrDefault()
+                    Author = item.ApplicationUsers.MapToViewModelSimple().Single()
                 });
             }
 
@@ -283,7 +283,7 @@ namespace CmsEngine.Application.Extensions.Mapper
                     PublishedOn = item.PublishedOn.ToShortDateString(),
                     Categories = item.Categories.MapToViewModelSimple(),
                     Tags = item.Tags.MapToViewModelSimple(),
-                    Author = item.ApplicationUsers.MapToViewModelSimple().SingleOrDefault()
+                    Author = item.ApplicationUsers.MapToViewModelSimple().Single()
                 });
             }
 
