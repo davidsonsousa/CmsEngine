@@ -14,12 +14,12 @@ namespace CmsEngine.Data.Repositories
 
         public async Task<Tag> GetTagBySlug(string slug)
         {
-            return await Get(q => q.Slug == slug).SingleOrDefaultAsync();
+            return await Get(q => q.Slug == slug).SingleAsync();
         }
 
         public async Task<Tag> GetTagBySlugWithPosts(string slug)
         {
-            return await Get(q => q.Slug == slug).Include(t => t.PostTags).SingleOrDefaultAsync();
+            return await Get(q => q.Slug == slug).Include(t => t.PostTags).SingleAsync();
         }
 
         public async Task<IEnumerable<Tag>> GetTagsWithPosts()

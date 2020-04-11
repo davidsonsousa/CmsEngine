@@ -1,3 +1,4 @@
+using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -63,15 +64,11 @@ namespace CmsEngine.Data.Entities
             b.Property(model => model.FacebookApiVersion)
                 .HasMaxLength(10);
 
-            b.Property(model => model.UserCreated)
-                .HasMaxLength(20);
-
-            b.Property(model => model.UserModified)
-                .HasMaxLength(20);
-
             b.Property(model => model.VanityId)
                 .ValueGeneratedOnAdd()
                 .HasDefaultValueSql("newid()");
+
+            AddPropertiesForAuditing(b);
 
             // Relationships
             b.HasMany(model => model.Posts);
@@ -103,21 +100,11 @@ namespace CmsEngine.Data.Entities
             b.Property(model => model.PublishedOn)
                 .IsRequired();
 
-            b.Property(model => model.UserCreated)
-                .HasMaxLength(20);
-
-            b.Property(model => model.UserModified)
-                .HasMaxLength(20);
-
-            b.Property(model => model.UserCreated)
-                .HasMaxLength(20);
-
-            b.Property(model => model.UserModified)
-                .HasMaxLength(20);
-
             b.Property(model => model.VanityId)
                 .ValueGeneratedOnAdd()
                 .HasDefaultValueSql("newid()");
+
+            AddPropertiesForAuditing(b);
 
             // Relationships
             b.HasOne(model => model.Website)
@@ -148,21 +135,11 @@ namespace CmsEngine.Data.Entities
             b.Property(model => model.PublishedOn)
                 .IsRequired();
 
-            b.Property(model => model.UserCreated)
-                .HasMaxLength(20);
-
-            b.Property(model => model.UserModified)
-                .HasMaxLength(20);
-
-            b.Property(model => model.UserCreated)
-                .HasMaxLength(20);
-
-            b.Property(model => model.UserModified)
-                .HasMaxLength(20);
-
             b.Property(model => model.VanityId)
                 .ValueGeneratedOnAdd()
                 .HasDefaultValueSql("newid()");
+
+            AddPropertiesForAuditing(b);
 
             // Relationships
             b.HasOne(model => model.Website)
@@ -185,15 +162,11 @@ namespace CmsEngine.Data.Entities
             b.Property(model => model.Description)
                 .HasMaxLength(200);
 
-            b.Property(model => model.UserCreated)
-                .HasMaxLength(20);
-
-            b.Property(model => model.UserModified)
-                .HasMaxLength(20);
-
             b.Property(model => model.VanityId)
                 .ValueGeneratedOnAdd()
                 .HasDefaultValueSql("newid()");
+
+            AddPropertiesForAuditing(b);
         }
 
         public static void ConfigureTag(EntityTypeBuilder<Tag> b)
@@ -206,13 +179,11 @@ namespace CmsEngine.Data.Entities
             b.Property(model => model.Slug)
                 .HasMaxLength(25)
                 .IsRequired();
-            b.Property(model => model.UserCreated)
-                .HasMaxLength(20);
-            b.Property(model => model.UserModified)
-                .HasMaxLength(20);
             b.Property(model => model.VanityId)
                 .ValueGeneratedOnAdd()
                 .HasDefaultValueSql("newid()");
+
+            AddPropertiesForAuditing(b);
         }
         public static void ConfigureEmail(EntityTypeBuilder<Email> b)
         {
@@ -224,13 +195,11 @@ namespace CmsEngine.Data.Entities
             b.Property(model => model.Message)
                 .HasMaxLength(500)
                 .IsRequired();
-            b.Property(model => model.UserCreated)
-                .HasMaxLength(20);
-            b.Property(model => model.UserModified)
-                .HasMaxLength(20);
             b.Property(model => model.VanityId)
                 .ValueGeneratedOnAdd()
                 .HasDefaultValueSql("newid()");
+
+            AddPropertiesForAuditing(b);
         }
 
         // Many to many
@@ -277,6 +246,14 @@ namespace CmsEngine.Data.Entities
             b.HasOne(model => model.ApplicationUser)
                 .WithMany(c => c.PageApplicationUsers)
                 .HasForeignKey(model => model.ApplicationUserId);
+        }
+
+        private static void AddPropertiesForAuditing<T>(EntityTypeBuilder<T> b) where T : BaseEntity
+        {
+            b.Property<DateTime>("DateCreated");
+            b.Property<DateTime>("DateModified");
+            b.Property<string>("UserCreated").HasMaxLength(20);
+            b.Property<string>("UserModified").HasMaxLength(20);
         }
     }
 }

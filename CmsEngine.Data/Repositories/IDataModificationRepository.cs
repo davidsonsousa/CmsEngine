@@ -21,5 +21,11 @@ namespace CmsEngine.Data.Repositories
         /// </summary>
         /// <param name="entity"></param>
         void Delete(TEntity entity);
+
+        /// <summary>
+        /// Attaches non tracked entity to the DbContext
+        /// </summary>
+        /// <param name="entity"></param>
+        void Attach(TEntity entity);
     }
 }

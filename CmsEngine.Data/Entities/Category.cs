@@ -32,5 +32,10 @@ namespace CmsEngine.Data.Entities
                                     );
             return jsonResult.ToString();
         }
+
+        public Category()
+        {
+            Posts = new List<Post>();
+        }
     }
 }

@@ -23,14 +23,9 @@ namespace CmsEngine.Ui.Controllers
         {
             if (string.IsNullOrWhiteSpace(q))
             {
-                if (page == 1)
-                {
-                    instance.PageTitle = $"Blog - {instance.Name}";
-                }
-                else
-                {
-                    instance.PageTitle = $"Blog - {instance.Name} - Page {page}";
-                }
+                instance.PageTitle = page == 1
+                                        ? $"Blog - {instance.Name}"
+                                        : $"Blog - {instance.Name} - Page {page}";
             }
             else
             {

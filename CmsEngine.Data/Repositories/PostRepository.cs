@@ -52,7 +52,7 @@ namespace CmsEngine.Data.Repositories
                                      Email = au.Email
                                  })
                              })
-                             .SingleOrDefaultAsync();
+                             .SingleAsync();
         }
 
         public async Task<(IEnumerable<Post> Items, int Count)> GetPublishedByCategoryForPagination(string categorySlug, int page, int articleLimit)
@@ -271,6 +271,13 @@ namespace CmsEngine.Data.Repositories
                                                    .Include(p => p.PostTags)
                                                        .ThenInclude(pt => pt.Tag)
                                                    .SingleAsync();
+        }
+
+        public void RemoveRelatedItems(Post post)
+        {
+            dbContext.RemoveRange(post.PostApplicationUsers);
+            dbContext.RemoveRange(post.PostTags);
+            dbContext.RemoveRange(post.PostCategories);
         }
     }
 }

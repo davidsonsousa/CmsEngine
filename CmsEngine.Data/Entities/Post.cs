@@ -18,5 +18,16 @@ namespace CmsEngine.Data.Entities
         public IEnumerable<Tag> Tags { get; set; }
         [NotMapped]
         public IEnumerable<ApplicationUser> ApplicationUsers { get; set; }
+
+        public Post()
+        {
+            PostCategories = new List<PostCategory>();
+            PostTags = new List<PostTag>();
+            PostApplicationUsers = new List<PostApplicationUser>();
+
+            Categories = new List<Category>();
+            Tags = new List<Tag>();
+            ApplicationUsers = new List<ApplicationUser>();
+        }
     }
 }

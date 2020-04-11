@@ -20,5 +20,6 @@ namespace CmsEngine.Data.Repositories
         Task<Post> GetForSavingById(Guid id);
         Task<Post> GetForEditingById(Guid id);
         Task<Post> GetBySlug(string slug);
+        void RemoveRelatedItems(Post post);
     }
 }
