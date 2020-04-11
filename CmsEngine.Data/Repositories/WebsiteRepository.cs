@@ -31,11 +31,7 @@ namespace CmsEngine.Data.Repositories
         public async Task<Website> GetWebsiteInstanceByHost(string host)
         {
             return await Get(q => q.SiteUrl == host)
-                            .Include(i => i.Categories)
-                            .Include(i => i.Pages)
-                            .Include(i => i.Posts)
-                            .Include(i => i.Tags)
-                            .SingleOrDefaultAsync();
+                            .SingleAsync();
         }
     }
 }
