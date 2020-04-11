@@ -52,7 +52,7 @@ namespace CmsEngine.Data.Repositories
                                      Email = au.Email
                                  })
                              })
-                             .SingleOrDefaultAsync();
+                             .SingleAsync();
         }
 
         public async Task<(IEnumerable<Post> Items, int Count)> GetPublishedByCategoryForPagination(string categorySlug, int page, int articleLimit)

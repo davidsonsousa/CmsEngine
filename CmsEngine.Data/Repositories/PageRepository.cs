@@ -46,7 +46,7 @@ namespace CmsEngine.Data.Repositories
                                     Email = au.Email
                                 })
                             })
-                            .SingleOrDefaultAsync();
+                            .SingleAsync();
         }
 
         public async Task<IEnumerable<Page>> GetForDataTable()
