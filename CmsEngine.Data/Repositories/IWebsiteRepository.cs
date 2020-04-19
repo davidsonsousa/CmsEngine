@@ -6,7 +6,7 @@ namespace CmsEngine.Data.Repositories
 {
     public interface IWebsiteRepository : IReadRepository<Website>, IDataModificationRepository<Website>, IDataModificationRangeRepository<Website>
     {
-        Task<Website> GetWebsiteInstanceByHost(string host);
+        Website GetWebsiteInstanceByHost(string host);
         Task<IEnumerable<Website>> GetForDataTable();
     }
 }
