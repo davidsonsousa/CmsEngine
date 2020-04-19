@@ -15,7 +15,7 @@ namespace CmsEngine.Data.Repositories
 
         public async Task<Category> GetCategoryBySlug(string slug)
         {
-            return await Get(q => q.Slug == slug).SingleAsync();
+            return await Get(q => q.Slug == slug).SingleOrDefaultAsync();
         }
 
         public async Task<IEnumerable<Category>> GetCategoriesWithPostCountOrderedByName()
@@ -34,7 +34,7 @@ namespace CmsEngine.Data.Repositories
 
         public async Task<Category> GetCategoryBySlugWithPosts(string slug)
         {
-            return await Get(q => q.Slug == slug).Include(c => c.PostCategories).SingleAsync();
+            return await Get(q => q.Slug == slug).Include(c => c.PostCategories).SingleOrDefaultAsync();
         }
 
         public async Task<IEnumerable<Category>> GetCategoriesWithPostOrderedByName()

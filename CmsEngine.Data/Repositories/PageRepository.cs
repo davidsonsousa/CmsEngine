@@ -46,7 +46,7 @@ namespace CmsEngine.Data.Repositories
                                     Email = au.Email
                                 })
                             })
-                            .SingleAsync();
+                            .SingleOrDefaultAsync();
         }
 
         public async Task<IEnumerable<Page>> GetForDataTable()
@@ -72,7 +72,7 @@ namespace CmsEngine.Data.Repositories
         public async Task<Page> GetForSavingById(Guid id)
         {
             return await Get(q => q.VanityId == id).Include(p => p.PageApplicationUsers)
-                                                   .SingleAsync();
+                                                   .SingleOrDefaultAsync();
         }
 
         public void RemoveRelatedItems(Page page)

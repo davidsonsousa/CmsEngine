@@ -52,7 +52,7 @@ namespace CmsEngine.Data.Repositories
                                      Email = au.Email
                                  })
                              })
-                             .SingleAsync();
+                             .SingleOrDefaultAsync();
         }
 
         public async Task<(IEnumerable<Post> Items, int Count)> GetPublishedByCategoryForPagination(string categorySlug, int page, int articleLimit)
@@ -261,7 +261,7 @@ namespace CmsEngine.Data.Repositories
             return await Get(q => q.VanityId == id).Include(p => p.PostCategories)
                                                    .Include(p => p.PostTags)
                                                    .Include(p => p.PostApplicationUsers)
-                                                   .SingleAsync();
+                                                   .SingleOrDefaultAsync();
         }
 
         public async Task<Post> GetForEditingById(Guid id)
@@ -270,7 +270,7 @@ namespace CmsEngine.Data.Repositories
                                                        .ThenInclude(pc => pc.Category)
                                                    .Include(p => p.PostTags)
                                                        .ThenInclude(pt => pt.Tag)
-                                                   .SingleAsync();
+                                                   .SingleOrDefaultAsync();
         }
 
         public void RemoveRelatedItems(Post post)
