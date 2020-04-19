@@ -89,7 +89,7 @@ namespace CmsEngine.Application.Services
         {
             logger.LogInformation($"PageService > GetBySlug({slug})");
             var item = await _unitOfWork.Pages.GetBySlug(slug);
-            return item.MapToViewModel();
+            return item?.MapToViewModel();
         }
 
         public async Task<(IEnumerable<PageTableViewModel> Data, int RecordsTotal, int RecordsFiltered)> GetForDataTable(DataParameters parameters)
@@ -192,7 +192,7 @@ namespace CmsEngine.Application.Services
             logger.LogInformation("PageService > SetupPageEditModel(id: {0})", id);
             var item = await _unitOfWork.Pages.GetByIdAsync(id);
             logger.LogInformation("Page: {0}", item.ToString());
-            return item.MapToEditModel();
+            return item?.MapToEditModel();
         }
 
         private async Task PrepareRelatedProperties(Page page)
