@@ -15,6 +15,8 @@ namespace CmsEngine.Application.Services
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IMemoryCache _memoryCache;
+        private readonly string instanceHost;
+        private readonly string instanceKey;
 
         protected readonly IUnitOfWork unitOfWork;
         protected readonly ILogger logger;
@@ -40,6 +42,9 @@ namespace CmsEngine.Application.Services
             _httpContextAccessor = hca;
             logger = loggerFactory.CreateLogger("Service");
             _memoryCache = memoryCache;
+
+            instanceHost = _httpContextAccessor.HttpContext.Request.Host.Host;
+            instanceKey = $"{CmsEngineConstants.CacheKey.Instance}_{instanceHost}";
         }
 
         internal async Task<ApplicationUser> GetCurrentUserAsync()
@@ -57,15 +62,20 @@ namespace CmsEngine.Application.Services
             }
         }
 
+        protected void SaveInstanceToCache(object instance)
+        {
+            var timeSpan = TimeSpan.FromDays(7); //TODO: Perhaps set this in the config file. Or DB
+            logger.LogInformation("Adding '{0}' to cache with expiration date to {1}", instanceKey, DateTime.Now.AddMilliseconds(timeSpan.TotalMilliseconds).ToString());
+            var cacheEntryOptions = new MemoryCacheEntryOptions().SetSlidingExpiration(timeSpan);
+            _memoryCache.Set(instanceKey, instance, cacheEntryOptions);
+        }
+
         private InstanceViewModel GetInstance()
         {
             logger.LogInformation("GetInstanceAsync()");
 
             Website website;
             InstanceViewModel instance;
-
-            string instanceHost = _httpContextAccessor.HttpContext.Request.Host.Host;
-            string instanceKey = $"{CmsEngineConstants.CacheKey.Instance}_{instanceHost}";
 
             try
             {
@@ -120,11 +130,7 @@ namespace CmsEngine.Application.Services
                         }
                     };
 
-                    var timeSpan = TimeSpan.FromDays(7); //TODO: Perhaps set this in the config file. Or DB
-
-                    logger.LogInformation("Adding '{0}' to cache with expiration date to {1}", instanceKey, DateTime.Now.AddMilliseconds(timeSpan.TotalMilliseconds).ToString());
-                    var cacheEntryOptions = new MemoryCacheEntryOptions().SetSlidingExpiration(timeSpan);
-                    _memoryCache.Set(CmsEngineConstants.CacheKey.Instance, instance, cacheEntryOptions);
+                    SaveInstanceToCache(instance);
                 }
             }
             catch (Exception ex)
