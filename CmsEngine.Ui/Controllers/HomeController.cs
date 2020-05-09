@@ -1,11 +1,8 @@
 using System;
-using System.Diagnostics;
 using System.Threading.Tasks;
 using CmsEngine.Application.Helpers.Email;
 using CmsEngine.Application.Services;
-using CmsEngine.Application.ViewModels;
 using CmsEngine.Core.Constants;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -94,13 +91,6 @@ namespace CmsEngine.Ui.Controllers
         {
             var sitemap = await _xmlService.GenerateSitemap();
             return Content(sitemap.ToString(), "text/xml");
-        }
-
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            instance.PageTitle = $"Error - {instance.Name}";
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
     }
 }

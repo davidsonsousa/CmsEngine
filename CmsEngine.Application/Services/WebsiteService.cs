@@ -8,7 +8,6 @@ using CmsEngine.Application.Extensions;
 using CmsEngine.Application.Extensions.Mapper;
 using CmsEngine.Application.ViewModels.DataTableViewModels;
 using CmsEngine.Core;
-using CmsEngine.Core.Constants;
 using CmsEngine.Data;
 using CmsEngine.Data.Entities;
 using Microsoft.AspNetCore.Http;
@@ -144,12 +143,7 @@ namespace CmsEngine.Application.Services
 
                 await _unitOfWork.Save();
 
-                // Update Instance cache
-                var timeSpan = TimeSpan.FromDays(7); //TODO: Perhaps set this in the config file. Or DB
-                logger.LogInformation("Updating Instance with expiration date to {0}", DateTime.Now.AddMilliseconds(timeSpan.TotalMilliseconds).ToString());
-                var cacheEntryOptions = new MemoryCacheEntryOptions().SetSlidingExpiration(timeSpan);
-                _memoryCache.Set(CmsEngineConstants.CacheKey.Instance, websiteEditModel, cacheEntryOptions);
-
+                SaveInstanceToCache(websiteEditModel);
                 logger.LogInformation("Website saved");
             }
             catch (Exception ex)
@@ -172,7 +166,7 @@ namespace CmsEngine.Application.Services
             logger.LogInformation("CmsService > SetupEditModel(id: {0})", id);
             var item = await _unitOfWork.Websites.GetByIdAsync(id);
             logger.LogInformation("Website: {0}", item.ToString());
-            return item.MapToEditModel();
+            return item?.MapToEditModel();
         }
     }
 }

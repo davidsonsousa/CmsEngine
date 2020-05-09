@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 using CmsEngine.Application.ViewModels;
 using CmsEngine.Core.Constants;
+using CmsEngine.Core.Exceptions;
 using CmsEngine.Data;
 using CmsEngine.Data.Entities;
 using Microsoft.AspNetCore.Http;
@@ -14,6 +15,8 @@ namespace CmsEngine.Application.Services
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IMemoryCache _memoryCache;
+        private readonly string instanceHost;
+        private readonly string instanceKey;
 
         protected readonly IUnitOfWork unitOfWork;
         protected readonly ILogger logger;
@@ -22,7 +25,7 @@ namespace CmsEngine.Application.Services
         {
             get
             {
-                return GetInstanceAsync().GetAwaiter().GetResult();
+                return GetInstance();
             }
         }
         public UserViewModel CurrentUser
@@ -39,6 +42,9 @@ namespace CmsEngine.Application.Services
             _httpContextAccessor = hca;
             logger = loggerFactory.CreateLogger("Service");
             _memoryCache = memoryCache;
+
+            instanceHost = _httpContextAccessor.HttpContext.Request.Host.Host;
+            instanceKey = $"{CmsEngineConstants.CacheKey.Instance}_{instanceHost}";
         }
 
         internal async Task<ApplicationUser> GetCurrentUserAsync()
@@ -56,7 +62,15 @@ namespace CmsEngine.Application.Services
             }
         }
 
-        private async Task<InstanceViewModel> GetInstanceAsync()
+        protected void SaveInstanceToCache(object instance)
+        {
+            var timeSpan = TimeSpan.FromDays(7); //TODO: Perhaps set this in the config file. Or DB
+            logger.LogInformation("Adding '{0}' to cache with expiration date to {1}", instanceKey, DateTime.Now.AddMilliseconds(timeSpan.TotalMilliseconds).ToString());
+            var cacheEntryOptions = new MemoryCacheEntryOptions().SetSlidingExpiration(timeSpan);
+            _memoryCache.Set(instanceKey, instance, cacheEntryOptions);
+        }
+
+        private InstanceViewModel GetInstance()
         {
             logger.LogInformation("GetInstanceAsync()");
 
@@ -65,65 +79,62 @@ namespace CmsEngine.Application.Services
 
             try
             {
-                logger.LogInformation("Loading Instance from cache");
-                if (!_memoryCache.TryGetValue(CmsEngineConstants.CacheKey.Instance, out instance))
+                logger.LogInformation("Loading '{0}' from cache", instanceKey);
+                if (!_memoryCache.TryGetValue(instanceKey, out instance))
                 {
-                    logger.LogInformation("Empty cache for Instance. Loading instance from DB");
-                    website = await unitOfWork.Websites.GetWebsiteInstanceByHost(_httpContextAccessor.HttpContext.Request.Host.Host);
+                    logger.LogInformation("Empty cache for '{0}'. Loading instance from DB", instanceKey);
+                    website = unitOfWork.Websites.GetWebsiteInstanceByHost(instanceHost);
 
-                    if (website != null)
+                    if (website == null)
                     {
-                        instance = new InstanceViewModel
-                        {
-                            Id = website.Id,
-                            Name = website.Name,
-                            Description = website.Description,
-                            Tagline = website.Tagline,
-                            HeaderImage = website.HeaderImage,
-                            Culture = website.Culture,
-                            UrlFormat = website.UrlFormat,
-                            DateFormat = website.DateFormat,
-                            SiteUrl = website.SiteUrl,
-                            ArticleLimit = website.ArticleLimit,
-                            PageTitle = website.Name,
-                            ContactDetails = new ContactDetailsViewModel
-                            {
-                                Address = website.Address,
-                                Phone = website.Phone,
-                                Email = website.Email,
-                            },
-                            ApiDetails = new ApiDetailsViewModel
-                            {
-                                FacebookAppId = website.FacebookAppId,
-                                FacebookApiVersion = website.FacebookApiVersion,
-                                DisqusShortName = website.DisqusShortName
-                            },
-                            SocialMedia = new SocialMediaViewModel
-                            {
-                                Facebook = website.Facebook,
-                                Twitter = website.Twitter,
-                                Instagram = website.Instagram,
-                                LinkedIn = website.LinkedIn
-                            },
-                            Google = new GoogleViewModel
-                            {
-                                GoogleAnalytics = website.GoogleAnalytics,
-                                GoogleRecaptchaSiteKey = website.GoogleRecaptchaSiteKey,
-                                GoogleRecaptchaSecretKey = website.GoogleRecaptchaSecretKey
-                            }
-                        };
-
-                        var timeSpan = TimeSpan.FromDays(7); //TODO: Perhaps set this in the config file. Or DB
-
-                        logger.LogInformation("Adding Instance to cache with expiration date to {0}", DateTime.Now.AddMilliseconds(timeSpan.TotalMilliseconds).ToString());
-                        var cacheEntryOptions = new MemoryCacheEntryOptions().SetSlidingExpiration(timeSpan);
-                        _memoryCache.Set(CmsEngineConstants.CacheKey.Instance, instance, cacheEntryOptions);
+                        throw new NotFoundException($"Instance for '{instanceHost}' not found");
                     }
+
+                    instance = new InstanceViewModel
+                    {
+                        Id = website.Id,
+                        Name = website.Name,
+                        Description = website.Description,
+                        Tagline = website.Tagline,
+                        HeaderImage = website.HeaderImage,
+                        Culture = website.Culture,
+                        UrlFormat = website.UrlFormat,
+                        DateFormat = website.DateFormat,
+                        SiteUrl = website.SiteUrl,
+                        ArticleLimit = website.ArticleLimit,
+                        PageTitle = website.Name,
+                        ContactDetails = new ContactDetailsViewModel
+                        {
+                            Address = website.Address,
+                            Phone = website.Phone,
+                            Email = website.Email,
+                        },
+                        ApiDetails = new ApiDetailsViewModel
+                        {
+                            FacebookAppId = website.FacebookAppId,
+                            FacebookApiVersion = website.FacebookApiVersion,
+                            DisqusShortName = website.DisqusShortName
+                        },
+                        SocialMedia = new SocialMediaViewModel
+                        {
+                            Facebook = website.Facebook,
+                            Twitter = website.Twitter,
+                            Instagram = website.Instagram,
+                            LinkedIn = website.LinkedIn
+                        },
+                        Google = new GoogleViewModel
+                        {
+                            GoogleAnalytics = website.GoogleAnalytics,
+                            GoogleRecaptchaSiteKey = website.GoogleRecaptchaSiteKey,
+                            GoogleRecaptchaSecretKey = website.GoogleRecaptchaSecretKey
+                        }
+                    };
+
+                    SaveInstanceToCache(instance);
                 }
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, "Error when trying to load Instance");
                 throw ex;
             }
 
