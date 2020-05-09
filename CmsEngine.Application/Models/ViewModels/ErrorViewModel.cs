@@ -2,14 +2,19 @@ namespace CmsEngine.Application.ViewModels
 {
     public class ErrorViewModel
     {
-        public string RequestId { get; set; }
+        public string Title { get; }
+        public string Message { get; }
 
-        public bool ShowRequestId
+        public ErrorViewModel(string message)
         {
-            get
-            {
-                return !string.IsNullOrEmpty(RequestId);
-            }
+            Title = "Error";
+            Message = message;
+        }
+
+        public ErrorViewModel(string pageTitle, string message)
+        {
+            Title = pageTitle;
+            Message = message;
         }
     }
 }
