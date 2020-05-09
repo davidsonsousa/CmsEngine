@@ -81,7 +81,7 @@ namespace CmsEngine.Application.Services
         {
             logger.LogInformation($"PostService > GetBySlug({slug})");
             var item = await _unitOfWork.Posts.GetBySlug(slug);
-            return item.MapToViewModel();
+            return item?.MapToViewModel();
         }
 
         public async Task<IEnumerable<PostEditModel>> GetPublishedOrderedByDate(int count = 0)

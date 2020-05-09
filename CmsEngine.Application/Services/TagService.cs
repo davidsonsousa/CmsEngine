@@ -170,7 +170,7 @@ namespace CmsEngine.Application.Services
             logger.LogInformation("CmsService > SetupTagEditModel(id: {0})", id);
             var item = await _unitOfWork.Tags.GetByIdAsync(id);
             logger.LogInformation("Tag: {0}", item.ToString());
-            return item.MapToEditModel();
+            return item?.MapToEditModel();
         }
     }
 }

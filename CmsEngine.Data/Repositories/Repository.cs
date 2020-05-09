@@ -57,12 +57,12 @@ namespace CmsEngine.Data.Repositories
 
         public async Task<TEntity> GetByIdAsync(int id)
         {
-            return await Get(q => q.Id == id).SingleAsync();
+            return await Get(q => q.Id == id).SingleOrDefaultAsync();
         }
 
         public async Task<TEntity> GetByIdAsync(Guid id)
         {
-            return await Get(q => q.VanityId == id).SingleAsync();
+            return await Get(q => q.VanityId == id).SingleOrDefaultAsync();
         }
 
         public async Task<IEnumerable<TEntity>> GetByMultipleIdsAsync(int[] ids)

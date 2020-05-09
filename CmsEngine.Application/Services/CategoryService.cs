@@ -186,7 +186,7 @@ namespace CmsEngine.Application.Services
             var item = await _unitOfWork.Categories.GetByIdAsync(id);
             logger.LogInformation("Category: {0}", item.ToString());
 
-            return item.MapToEditModel();
+            return item?.MapToEditModel();
         }
     }
 }
