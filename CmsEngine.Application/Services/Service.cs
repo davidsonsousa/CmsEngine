@@ -58,7 +58,7 @@ namespace CmsEngine.Application.Services
             catch (Exception ex)
             {
                 logger.LogError(ex, "Error when trying to load CurrentUser");
-                throw ex;
+                throw;
             }
         }
 
@@ -135,7 +135,8 @@ namespace CmsEngine.Application.Services
             }
             catch (Exception ex)
             {
-                throw ex;
+                logger.LogError(ex, "Error when trying to load Instance");
+                throw;
             }
 
             return instance;
