@@ -748,7 +748,8 @@ section.featured-posts .image {
 }
 
 section.featured-posts .image img {
-  height: 100%;
+    object-fit: cover;
+    height:100%;
 }
 
 section.featured-posts .post-header {
@@ -1326,6 +1327,7 @@ main.posts-listing .post-footer {
 .blog-post .post-thumbnail img {
   width: 100%;
   margin-bottom: 10px;
+  object-fit: cover;
 }
 
 .blog-post h1 {
