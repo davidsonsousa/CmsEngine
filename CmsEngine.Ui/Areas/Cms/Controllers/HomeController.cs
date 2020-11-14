@@ -17,7 +17,7 @@ namespace CmsEngine.Ui.Admin.Controllers
             _emailService = emailService;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> IndexAsync()
         {
             SetupMessages("Dashboard");
             return View(await _emailService.GetOrderedByDate());

@@ -39,7 +39,7 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(CategoryEditModel categoryEditModel)
+        public async Task<IActionResult> CreateAsync(CategoryEditModel categoryEditModel)
         {
             if (!ModelState.IsValid)
             {
@@ -47,10 +47,10 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
                 return View("CreateEdit", categoryEditModel);
             }
 
-            return await Save(categoryEditModel, nameof(CategoryController.Create));
+            return await SaveAsync(categoryEditModel, nameof(CategoryController.Create));
         }
 
-        public async Task<IActionResult> Edit(Guid vanityId)
+        public async Task<IActionResult> EditAsync(Guid vanityId)
         {
             SetupMessages("Categories", PageType.Edit, panelTitle: "Edit an existing category");
             var categoryEditModel = await _categoryService.SetupEditModel(vanityId);
@@ -60,7 +60,7 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(CategoryEditModel categoryEditModel)
+        public async Task<IActionResult> EditAsync(CategoryEditModel categoryEditModel)
         {
             if (!ModelState.IsValid)
             {
@@ -73,27 +73,27 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
 
             if (await TryUpdateModelAsync(categoryToUpdate))
             {
-                return await Save(categoryEditModel, nameof(CategoryController.Edit));
+                return await SaveAsync(categoryEditModel, nameof(CategoryController.EditAsync));
             }
 
             TempData[MessageConstants.WarningMessage] = "The model could not be updated.";
-            return RedirectToAction(nameof(CategoryController.Edit), categoryEditModel);
+            return RedirectToAction(nameof(CategoryController.EditAsync), categoryEditModel);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Delete(Guid vanityId)
+        public async Task<IActionResult> DeleteAsync(Guid vanityId)
         {
             return Ok(await _categoryService.Delete(vanityId));
         }
 
         [HttpPost("cms/category/bulk-delete")]
-        public async Task<IActionResult> BulkDelete([FromForm]Guid[] vanityId)
+        public async Task<IActionResult> BulkDeleteAsync([FromForm]Guid[] vanityId)
         {
             return Ok(await _categoryService.DeleteRange(vanityId));
         }
 
         [HttpPost]
-        public async Task<IActionResult> GetData([FromForm]DataParameters parameters)
+        public async Task<IActionResult> GetDataAsync([FromForm]DataParameters parameters)
         {
             Guard.ThrownExceptionIfNull(parameters, nameof(parameters));
 
@@ -103,7 +103,7 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
             return Ok(dataTable);
         }
 
-        private async Task<IActionResult> Save(CategoryEditModel categoryEditModel, string sender)
+        private async Task<IActionResult> SaveAsync(CategoryEditModel categoryEditModel, string sender)
         {
             var returnValue = await _categoryService.Save(categoryEditModel);
 

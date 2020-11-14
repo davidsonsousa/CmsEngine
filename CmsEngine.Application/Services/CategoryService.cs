@@ -80,17 +80,17 @@ namespace CmsEngine.Application.Services
 
         public async Task<IEnumerable<CategoryViewModel>> GetCategoriesWithPost()
         {
-            logger.LogInformation("CategoryService > GetCategoriesWithPost()");
+            logger.LogDebug("CategoryService > GetCategoriesWithPost()");
             var items = await _unitOfWork.Categories.GetCategoriesWithPostOrderedByName();
-            logger.LogInformation("Categories loaded: {0}", items.Count());
+            logger.LogDebug("Categories loaded: {0}", items.Count());
             return items.MapToViewModelWithPost();
         }
 
         public async Task<IEnumerable<CategoryViewModel>> GetCategoriesWithPostCount()
         {
-            logger.LogInformation("CategoryService > GetCategoriesWithPostCount()");
+            logger.LogDebug("CategoryService > GetCategoriesWithPostCount()");
             var items = await _unitOfWork.Categories.GetCategoriesWithPostCountOrderedByName();
-            logger.LogInformation("Categories loaded: {0}", items.Count());
+            logger.LogDebug("Categories loaded: {0}", items.Count());
             return items.MapToViewModelWithPostCount();
         }
 
@@ -139,7 +139,7 @@ namespace CmsEngine.Application.Services
 
         public async Task<ReturnValue> Save(CategoryEditModel categoryEditModel)
         {
-            logger.LogInformation("CmsService > Save(CategoryEditModel: {0})", categoryEditModel.ToString());
+            logger.LogDebug("CmsService > Save(CategoryEditModel: {0})", categoryEditModel.ToString());
 
             var returnValue = new ReturnValue($"Category '{categoryEditModel.Name}' saved.");
 
@@ -147,7 +147,7 @@ namespace CmsEngine.Application.Services
             {
                 if (categoryEditModel.IsNew)
                 {
-                    logger.LogInformation("New category");
+                    logger.LogDebug("New category");
                     var category = categoryEditModel.MapToModel();
                     category.WebsiteId = Instance.Id;
 
@@ -155,7 +155,7 @@ namespace CmsEngine.Application.Services
                 }
                 else
                 {
-                    logger.LogInformation("Update category");
+                    logger.LogDebug("Update category");
                     var category = categoryEditModel.MapToModel(await unitOfWork.Categories.GetByIdAsync(categoryEditModel.VanityId));
                     category.WebsiteId = Instance.Id;
 
@@ -163,7 +163,7 @@ namespace CmsEngine.Application.Services
                 }
 
                 await _unitOfWork.Save();
-                logger.LogInformation("Category saved");
+                logger.LogDebug("Category saved");
             }
             catch (Exception ex)
             {
@@ -176,15 +176,15 @@ namespace CmsEngine.Application.Services
 
         public CategoryEditModel SetupEditModel()
         {
-            logger.LogInformation("CmsService > SetupEditModel()");
+            logger.LogDebug("CmsService > SetupEditModel()");
             return new CategoryEditModel();
         }
 
         public async Task<CategoryEditModel> SetupEditModel(Guid id)
         {
-            logger.LogInformation("CmsService > SetupCategoryEditModel(id: {0})", id);
+            logger.LogDebug("CmsService > SetupCategoryEditModel(id: {0})", id);
             var item = await _unitOfWork.Categories.GetByIdAsync(id);
-            logger.LogInformation("Category: {0}", item.ToString());
+            logger.LogDebug("Category: {0}", item.ToString());
 
             return item?.MapToEditModel();
         }

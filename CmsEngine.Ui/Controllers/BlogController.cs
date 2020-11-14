@@ -35,7 +35,7 @@ namespace CmsEngine.Ui.Controllers
             return View(Instance);
         }
 
-        public async Task<IActionResult> Post(string slug)
+        public async Task<IActionResult> PostAsync(string slug)
         {
             Instance.SelectedDocument = await _postService.GetBySlug(slug);
 
@@ -48,7 +48,7 @@ namespace CmsEngine.Ui.Controllers
             return View(Instance);
         }
 
-        public async Task<IActionResult> Category(string slug, int page = 1)
+        public async Task<IActionResult> CategoryAsync(string slug, int page = 1)
         {
             Instance.PagedPosts = await _postService.GetPublishedByCategoryForPagination(slug, page);
             string selectedCategory = Instance.PagedPosts.SelectMany(p => p.Categories.Where(c => c.Slug == slug).Select(x => x.Name)).FirstOrDefault();
@@ -62,7 +62,7 @@ namespace CmsEngine.Ui.Controllers
             return View("Index", Instance);
         }
 
-        public async Task<IActionResult> Tag(string slug, int page = 1)
+        public async Task<IActionResult> TagAsync(string slug, int page = 1)
         {
             Instance.PagedPosts = await _postService.GetPublishedByTagForPagination(slug, page);
             string selectedTag = Instance.PagedPosts.SelectMany(p => p.Tags.Where(t => t.Slug == slug).Select(x => x.Name)).FirstOrDefault();
@@ -76,7 +76,7 @@ namespace CmsEngine.Ui.Controllers
             return View("Index", Instance);
         }
 
-        public async Task<IActionResult> Feed()
+        public async Task<IActionResult> FeedAsync()
         {
             var feed = await _xmlService.GenerateFeed();
             return Content(feed.ToString(), "text/xml");

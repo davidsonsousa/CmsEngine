@@ -79,16 +79,16 @@ namespace CmsEngine.Application.Services
 
         public async Task<PostViewModel> GetBySlug(string slug)
         {
-            logger.LogInformation($"PostService > GetBySlug({slug})");
+            logger.LogDebug($"PostService > GetBySlug({slug})");
             var item = await _unitOfWork.Posts.GetBySlug(slug);
             return item?.MapToViewModel();
         }
 
         public async Task<IEnumerable<PostEditModel>> GetPublishedOrderedByDate(int count = 0)
         {
-            logger.LogInformation("PostService > GetByStatus(count: {0})", count);
+            logger.LogDebug("PostService > GetByStatus(count: {0})", count);
             var items = await _unitOfWork.Posts.GetByStatusOrderByDescending(DocumentStatus.Published);
-            logger.LogInformation("Posts loaded: {0}", items.Count());
+            logger.LogDebug("Posts loaded: {0}", items.Count());
 
             return items.MapToEditModel();
         }
@@ -107,35 +107,35 @@ namespace CmsEngine.Application.Services
 
         public async Task<PaginatedList<PostViewModel>> GetPublishedByCategoryForPagination(string categorySlug, int page = 1)
         {
-            logger.LogInformation("CmsService > GetPublishedByCategoryForPagination(categorySlug: {0}, page: {1})", categorySlug, page);
+            logger.LogDebug("CmsService > GetPublishedByCategoryForPagination(categorySlug: {0}, page: {1})", categorySlug, page);
             var posts = await _unitOfWork.Posts.GetPublishedByCategoryForPagination(categorySlug, page, Instance.ArticleLimit);
             return new PaginatedList<PostViewModel>(posts.Items.MapToViewModelForPartialView(), posts.Count, page, Instance.ArticleLimit);
         }
 
         public async Task<PaginatedList<PostViewModel>> GetPublishedByTagForPagination(string tagSlug, int page = 1)
         {
-            logger.LogInformation("CmsService > GetPublishedByTagForPagination(tagSlug: {0}, page: {1})", tagSlug, page);
+            logger.LogDebug("CmsService > GetPublishedByTagForPagination(tagSlug: {0}, page: {1})", tagSlug, page);
             var posts = await _unitOfWork.Posts.GetPublishedByTagForPagination(tagSlug, page, Instance.ArticleLimit);
             return new PaginatedList<PostViewModel>(posts.Items.MapToViewModelForPartialViewForTags(), posts.Count, page, Instance.ArticleLimit);
         }
 
         public async Task<PaginatedList<PostViewModel>> GetPublishedForPagination(int page = 1)
         {
-            logger.LogInformation("CmsService > GetPublishedForPagination(page: {0})", page);
+            logger.LogDebug("CmsService > GetPublishedForPagination(page: {0})", page);
             var posts = await _unitOfWork.Posts.GetPublishedForPagination(page, Instance.ArticleLimit);
             return new PaginatedList<PostViewModel>(posts.Items.MapToViewModelForPartialView(), posts.Count, page, Instance.ArticleLimit);
         }
 
         public async Task<IEnumerable<PostViewModel>> GetPublishedLatestPosts(int count)
         {
-            logger.LogInformation("CmsService > GetPublishedLatestPosts(count: {0})", count);
+            logger.LogDebug("CmsService > GetPublishedLatestPosts(count: {0})", count);
             var posts = await _unitOfWork.Posts.GetPublishedLatestPosts(count);
             return posts.MapToViewModelForPartialView();
         }
 
         public async Task<PaginatedList<PostViewModel>> FindPublishedForPaginationOrderByDateDescending(string searchTerm = "", int page = 1)
         {
-            logger.LogInformation("CmsService > FindPublishedForPaginationOrderByDateDescending(page: {0}, searchTerm: {1})", page, searchTerm);
+            logger.LogDebug("CmsService > FindPublishedForPaginationOrderByDateDescending(page: {0}, searchTerm: {1})", page, searchTerm);
             var posts = await _unitOfWork.Posts.FindPublishedForPaginationOrderByDateDescending(page, searchTerm, Instance.ArticleLimit);
             return new PaginatedList<PostViewModel>(posts.Items.MapToViewModelForPartialView(), posts.Count, page, Instance.ArticleLimit);
         }
@@ -179,33 +179,33 @@ namespace CmsEngine.Application.Services
 
         public async Task<ReturnValue> Save(PostEditModel postEditModel)
         {
-            logger.LogInformation("PostService > Save(PostEditModel: {0})", postEditModel.ToString());
+            logger.LogDebug("PostService > Save(PostEditModel: {0})", postEditModel.ToString());
             var returnValue = new ReturnValue($"Post '{postEditModel.Title}' saved.");
 
             try
             {
                 if (postEditModel.IsNew)
                 {
-                    logger.LogInformation("New post");
+                    logger.LogDebug("New post");
                     var post = postEditModel.MapToModel();
                     post.WebsiteId = Instance.Id;
 
-                    await PrepareRelatedProperties(postEditModel, post);
+                    await PrepareRelatedPropertiesAsync(postEditModel, post);
                     await unitOfWork.Posts.Insert(post);
                 }
                 else
                 {
-                    logger.LogInformation("Update post");
+                    logger.LogDebug("Update post");
                     var post = postEditModel.MapToModel(await unitOfWork.Posts.GetForSavingById(postEditModel.VanityId));
                     post.WebsiteId = Instance.Id;
 
                     _unitOfWork.Posts.RemoveRelatedItems(post);
-                    await PrepareRelatedProperties(postEditModel, post);
+                    await PrepareRelatedPropertiesAsync(postEditModel, post);
                     _unitOfWork.Posts.Update(post);
                 }
 
                 await _unitOfWork.Save();
-                logger.LogInformation("Post saved");
+                logger.LogDebug("Post saved");
             }
             catch (Exception ex)
             {
@@ -218,7 +218,7 @@ namespace CmsEngine.Application.Services
 
         public async Task<PostEditModel> SetupEditModel()
         {
-            logger.LogInformation("PostService > SetupEditModel()");
+            logger.LogDebug("PostService > SetupEditModel()");
             return new PostEditModel
             {
                 Categories = (await unitOfWork.Categories.GetAllAsync()).MapToViewModelSimple().PopulateCheckboxList(),
@@ -228,9 +228,9 @@ namespace CmsEngine.Application.Services
 
         public async Task<PostEditModel> SetupEditModel(Guid id)
         {
-            logger.LogInformation("PostService > SetupPostEditModel(id: {0})", id);
+            logger.LogDebug("PostService > SetupPostEditModel(id: {0})", id);
             var item = await _unitOfWork.Posts.GetForEditingById(id);
-            logger.LogInformation("Post: {0}", item.ToString());
+            logger.LogDebug("Post: {0}", item.ToString());
             var postEditModel = item.MapToEditModel();
             postEditModel.Categories = (await unitOfWork.Categories.GetAllAsync()).MapToViewModelSimple().PopulateCheckboxList(postEditModel.SelectedCategories);
             postEditModel.Tags = (await unitOfWork.Tags.GetAllAsync()).MapToViewModelSimple().PopulateSelectList(postEditModel.SelectedTags);
@@ -238,7 +238,7 @@ namespace CmsEngine.Application.Services
             return postEditModel;
         }
 
-        private async Task PrepareRelatedProperties(PostEditModel postEditModel, Post post)
+        private async Task PrepareRelatedPropertiesAsync(PostEditModel postEditModel, Post post)
         {
             var categoryIds = await _unitOfWork.Categories.GetIdsByMultipleGuidsAsync(postEditModel.SelectedCategories.ToList().ConvertAll(Guid.Parse));
             var tagIds = await _unitOfWork.Tags.GetIdsByMultipleGuidsAsync(postEditModel.SelectedTags.ToList().ConvertAll(Guid.Parse));

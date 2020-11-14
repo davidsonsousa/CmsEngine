@@ -49,7 +49,7 @@ namespace CmsEngine.Application.Services
 
         internal async Task<ApplicationUser> GetCurrentUserAsync()
         {
-            logger.LogInformation("GetCurrentUserAsync() for {0}", httpContextAccessor.HttpContext.User.Identity.Name);
+            logger.LogDebug("GetCurrentUserAsync() for {0}", httpContextAccessor.HttpContext.User.Identity.Name);
 
             try
             {
@@ -65,24 +65,24 @@ namespace CmsEngine.Application.Services
         protected void SaveInstanceToCache(object instance)
         {
             var timeSpan = TimeSpan.FromDays(7); //TODO: Perhaps set this in the config file. Or DB
-            logger.LogInformation("Adding '{0}' to cache with expiration date to {1}", instanceKey, DateTime.Now.AddMilliseconds(timeSpan.TotalMilliseconds).ToString());
+            logger.LogDebug("Adding '{0}' to cache with expiration date to {1}", instanceKey, DateTime.Now.AddMilliseconds(timeSpan.TotalMilliseconds).ToString());
             var cacheEntryOptions = new MemoryCacheEntryOptions().SetSlidingExpiration(timeSpan);
             memoryCache.Set(instanceKey, instance, cacheEntryOptions);
         }
 
         private InstanceViewModel GetInstance()
         {
-            logger.LogInformation("GetInstanceAsync()");
+            logger.LogDebug("GetInstanceAsync()");
 
             Website website;
             InstanceViewModel instance;
 
             try
             {
-                logger.LogInformation("Loading '{0}' from cache", instanceKey);
+                logger.LogDebug("Loading '{0}' from cache", instanceKey);
                 if (!memoryCache.TryGetValue(instanceKey, out instance))
                 {
-                    logger.LogInformation("Empty cache for '{0}'. Loading instance from DB", instanceKey);
+                    logger.LogDebug("Empty cache for '{0}'. Loading instance from DB", instanceKey);
                     website = unitOfWork.Websites.GetWebsiteInstanceByHost(instanceHost);
 
                     if (website == null)

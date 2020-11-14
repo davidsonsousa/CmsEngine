@@ -79,15 +79,15 @@ namespace CmsEngine.Application.Services
 
         public async Task<IEnumerable<PageViewModel>> GetAllPublished()
         {
-            logger.LogInformation("PageService > GetPagesByStatusReadOnly()");
+            logger.LogDebug("PageService > GetPagesByStatusReadOnly()");
             var items = await _unitOfWork.Pages.GetByStatusOrderByDescending(DocumentStatus.Published);
-            logger.LogInformation("Pages loaded: {0}", items.Count());
+            logger.LogDebug("Pages loaded: {0}", items.Count());
             return items.MapToViewModel();
         }
 
         public async Task<PageViewModel> GetBySlug(string slug)
         {
-            logger.LogInformation($"PageService > GetBySlug({slug})");
+            logger.LogDebug($"PageService > GetBySlug({slug})");
             var item = await _unitOfWork.Pages.GetBySlug(slug);
             return item?.MapToViewModel();
         }
@@ -143,7 +143,7 @@ namespace CmsEngine.Application.Services
 
         public async Task<ReturnValue> Save(PageEditModel pageEditModel)
         {
-            logger.LogInformation("PageService > Save(PageEditModel: {0})", pageEditModel.ToString());
+            logger.LogDebug("PageService > Save(PageEditModel: {0})", pageEditModel.ToString());
 
             var returnValue = new ReturnValue($"Page '{pageEditModel.Title}' saved.");
 
@@ -151,26 +151,26 @@ namespace CmsEngine.Application.Services
             {
                 if (pageEditModel.IsNew)
                 {
-                    logger.LogInformation("New page");
+                    logger.LogDebug("New page");
                     var page = pageEditModel.MapToModel();
                     page.WebsiteId = Instance.Id;
 
-                    await PrepareRelatedProperties(page);
+                    await PrepareRelatedPropertiesAsync(page);
                     await unitOfWork.Pages.Insert(page);
                 }
                 else
                 {
-                    logger.LogInformation("Update page");
+                    logger.LogDebug("Update page");
                     var page = pageEditModel.MapToModel(await unitOfWork.Pages.GetForSavingById(pageEditModel.VanityId));
                     page.WebsiteId = Instance.Id;
 
                     _unitOfWork.Pages.RemoveRelatedItems(page);
-                    await PrepareRelatedProperties(page);
+                    await PrepareRelatedPropertiesAsync(page);
                     _unitOfWork.Pages.Update(page);
                 }
 
                 await _unitOfWork.Save();
-                logger.LogInformation("Page saved");
+                logger.LogDebug("Page saved");
             }
             catch (Exception ex)
             {
@@ -183,19 +183,19 @@ namespace CmsEngine.Application.Services
 
         public PageEditModel SetupEditModel()
         {
-            logger.LogInformation("PageService > SetupEditModel()");
+            logger.LogDebug("PageService > SetupEditModel()");
             return new PageEditModel();
         }
 
         public async Task<PageEditModel> SetupEditModel(Guid id)
         {
-            logger.LogInformation("PageService > SetupPageEditModel(id: {0})", id);
+            logger.LogDebug("PageService > SetupPageEditModel(id: {0})", id);
             var item = await _unitOfWork.Pages.GetByIdAsync(id);
-            logger.LogInformation("Page: {0}", item.ToString());
+            logger.LogDebug("Page: {0}", item.ToString());
             return item?.MapToEditModel();
         }
 
-        private async Task PrepareRelatedProperties(Page page)
+        private async Task PrepareRelatedPropertiesAsync(Page page)
         {
             var user = await GetCurrentUserAsync();
             page.PageApplicationUsers.Clear();

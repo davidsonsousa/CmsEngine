@@ -76,7 +76,7 @@ namespace CmsEngine.Ui.Areas.Identity.Pages.Account.Manage
 
             await _signInManager.SignOutAsync();
 
-            _logger.LogInformation("User with ID '{UserId}' deleted themselves.", userId);
+            _logger.LogDebug("User with ID '{UserId}' deleted themselves.", userId);
 
             return Redirect("~/");
         }

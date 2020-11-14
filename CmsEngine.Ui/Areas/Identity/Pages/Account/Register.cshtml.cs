@@ -69,7 +69,7 @@ namespace CmsEngine.Ui.Areas.Identity.Pages.Account
                 var result = await userManager.CreateAsync(user, Input.Password);
                 if (result.Succeeded)
                 {
-                    logger.LogInformation("User created a new account with password.");
+                    logger.LogDebug("User created a new account with password.");
 
                     string code = await userManager.GenerateEmailConfirmationTokenAsync(user);
                     string callbackUrl = Url.Page("/Account/ConfirmEmail",

@@ -42,7 +42,7 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(WebsiteEditModel websiteEditModel)
+        public async Task<IActionResult> CreateAsync(WebsiteEditModel websiteEditModel)
         {
             if (!ModelState.IsValid)
             {
@@ -50,10 +50,10 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
                 return View("CreateEdit", websiteEditModel);
             }
 
-            return await Save(websiteEditModel, nameof(WebsiteController.Create));
+            return await SaveAsync(websiteEditModel, nameof(WebsiteController.Create));
         }
 
-        public async Task<IActionResult> Edit(Guid vanityId)
+        public async Task<IActionResult> EditAsync(Guid vanityId)
         {
             SetupMessages("Websites", PageType.Edit, panelTitle: "Edit an existing website");
             var websiteEditModel = await _websiteService.SetupEditModel(vanityId);
@@ -63,7 +63,7 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(WebsiteEditModel websiteEditModel)
+        public async Task<IActionResult> EditAsync(WebsiteEditModel websiteEditModel)
         {
             if (!ModelState.IsValid)
             {
@@ -75,26 +75,26 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
 
             if (await TryUpdateModelAsync(websiteToUpdate))
             {
-                return await Save(websiteEditModel, nameof(WebsiteController.Edit));
+                return await SaveAsync(websiteEditModel, nameof(WebsiteController.EditAsync));
             }
             TempData[MessageConstants.WarningMessage] = "The model could not be updated.";
-            return RedirectToAction(nameof(WebsiteController.Edit), websiteEditModel);
+            return RedirectToAction(nameof(WebsiteController.EditAsync), websiteEditModel);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Delete(Guid vanityId)
+        public async Task<IActionResult> DeleteAsync(Guid vanityId)
         {
             return Ok(await _websiteService.Delete(vanityId));
         }
 
         [HttpPost("cms/website/bulk-delete")]
-        public async Task<IActionResult> BulkDelete([FromForm]Guid[] vanityId)
+        public async Task<IActionResult> BulkDeleteAsync([FromForm]Guid[] vanityId)
         {
             return Ok(await _websiteService.DeleteRange(vanityId));
         }
 
         [HttpPost]
-        public async Task<IActionResult> GetData([FromForm]DataParameters parameters)
+        public async Task<IActionResult> GetDataAsync([FromForm]DataParameters parameters)
         {
             Guard.ThrownExceptionIfNull(parameters, nameof(parameters));
 
@@ -105,18 +105,18 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> UploadImages()
+        public async Task<IActionResult> UploadImagesAsync()
         {
             return await UploadImageAsync(_env.WebRootPath, "Website");
         }
 
         [HttpPost]
-        public async Task<IActionResult> UploadFiles()
+        public async Task<IActionResult> UploadFilesAsync()
         {
             return await PrepareAndUploadFilesAsync(_env.WebRootPath, "Website");
         }
 
-        private async Task<IActionResult> Save(WebsiteEditModel websiteEditModel, string sender)
+        private async Task<IActionResult> SaveAsync(WebsiteEditModel websiteEditModel, string sender)
         {
             var returnValue = await _websiteService.Save(websiteEditModel);
 

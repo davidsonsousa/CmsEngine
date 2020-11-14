@@ -33,7 +33,7 @@ namespace CmsEngine.Ui.Controllers
             return View(Instance);
         }
 
-        public async Task<IActionResult> Page(string slug)
+        public async Task<IActionResult> PageAsync(string slug)
         {
             Instance.SelectedDocument = await _pageService.GetBySlug(slug);
 
@@ -59,7 +59,7 @@ namespace CmsEngine.Ui.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Contact(ContactForm contactForm, string returnUrl = null)
+        public async Task<IActionResult> ContactAsync(ContactForm contactForm, string returnUrl = null)
         {
             if (!ModelState.IsValid)
             {
@@ -88,7 +88,7 @@ namespace CmsEngine.Ui.Controllers
             return RedirectToAction(nameof(HomeController.Contact));
         }
 
-        public async Task<IActionResult> Sitemap()
+        public async Task<IActionResult> SitemapAsync()
         {
             var sitemap = await _xmlService.GenerateSitemap();
             return Content(sitemap.ToString(), "text/xml");
