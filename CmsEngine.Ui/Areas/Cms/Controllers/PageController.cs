@@ -109,13 +109,13 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
         [HttpPost]
         public async Task<IActionResult> UploadImages()
         {
-            return await UploadImage(_env.WebRootPath, "Page");
+            return await UploadImageAsync(_env.WebRootPath, "Page");
         }
 
         [HttpPost]
         public async Task<IActionResult> UploadFiles()
         {
-            return await PrepareAndUploadFiles(_env.WebRootPath, "Page");
+            return await PrepareAndUploadFilesAsync(_env.WebRootPath, "Page");
         }
 
         private async Task<IActionResult> Save(PageEditModel pageEditModel, string sender)

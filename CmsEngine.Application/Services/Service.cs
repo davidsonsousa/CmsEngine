@@ -13,8 +13,8 @@ namespace CmsEngine.Application.Services
 {
     public class Service : IService
     {
-        private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly IMemoryCache _memoryCache;
+        private readonly IHttpContextAccessor httpContextAccessor;
+        private readonly IMemoryCache memoryCache;
         private readonly string instanceHost;
         private readonly string instanceKey;
 
@@ -39,21 +39,21 @@ namespace CmsEngine.Application.Services
         public Service(IUnitOfWork uow, IHttpContextAccessor hca, ILoggerFactory loggerFactory, IMemoryCache memoryCache)
         {
             unitOfWork = uow ?? throw new ArgumentNullException(nameof(uow));
-            _httpContextAccessor = hca;
+            httpContextAccessor = hca;
             logger = loggerFactory.CreateLogger("Service");
-            _memoryCache = memoryCache;
+            this.memoryCache = memoryCache;
 
-            instanceHost = _httpContextAccessor.HttpContext.Request.Host.Host;
+            instanceHost = httpContextAccessor.HttpContext.Request.Host.Host;
             instanceKey = $"{CmsEngineConstants.CacheKey.Instance}_{instanceHost}";
         }
 
         internal async Task<ApplicationUser> GetCurrentUserAsync()
         {
-            logger.LogInformation("GetCurrentUserAsync() for {0}", _httpContextAccessor.HttpContext.User.Identity.Name);
+            logger.LogInformation("GetCurrentUserAsync() for {0}", httpContextAccessor.HttpContext.User.Identity.Name);
 
             try
             {
-                return await unitOfWork.Users.FindByNameAsync(_httpContextAccessor.HttpContext.User.Identity.Name);
+                return await unitOfWork.Users.FindByNameAsync(httpContextAccessor.HttpContext.User.Identity.Name);
             }
             catch (Exception ex)
             {
@@ -67,7 +67,7 @@ namespace CmsEngine.Application.Services
             var timeSpan = TimeSpan.FromDays(7); //TODO: Perhaps set this in the config file. Or DB
             logger.LogInformation("Adding '{0}' to cache with expiration date to {1}", instanceKey, DateTime.Now.AddMilliseconds(timeSpan.TotalMilliseconds).ToString());
             var cacheEntryOptions = new MemoryCacheEntryOptions().SetSlidingExpiration(timeSpan);
-            _memoryCache.Set(instanceKey, instance, cacheEntryOptions);
+            memoryCache.Set(instanceKey, instance, cacheEntryOptions);
         }
 
         private InstanceViewModel GetInstance()
@@ -80,7 +80,7 @@ namespace CmsEngine.Application.Services
             try
             {
                 logger.LogInformation("Loading '{0}' from cache", instanceKey);
-                if (!_memoryCache.TryGetValue(instanceKey, out instance))
+                if (!memoryCache.TryGetValue(instanceKey, out instance))
                 {
                     logger.LogInformation("Empty cache for '{0}'. Loading instance from DB", instanceKey);
                     website = unitOfWork.Websites.GetWebsiteInstanceByHost(instanceHost);

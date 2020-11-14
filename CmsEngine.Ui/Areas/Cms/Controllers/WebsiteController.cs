@@ -107,13 +107,13 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
         [HttpPost]
         public async Task<IActionResult> UploadImages()
         {
-            return await UploadImage(_env.WebRootPath, "Website");
+            return await UploadImageAsync(_env.WebRootPath, "Website");
         }
 
         [HttpPost]
         public async Task<IActionResult> UploadFiles()
         {
-            return await PrepareAndUploadFiles(_env.WebRootPath, "Website");
+            return await PrepareAndUploadFilesAsync(_env.WebRootPath, "Website");
         }
 
         private async Task<IActionResult> Save(WebsiteEditModel websiteEditModel, string sender)

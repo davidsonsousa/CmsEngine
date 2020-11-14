@@ -10,8 +10,8 @@ namespace CmsEngine.Ui.Middleware
     /// </summary>
     public class SecurityHeadersMiddleware
     {
-        private readonly RequestDelegate _next;
-        private readonly SecurityHeadersPolicy _policy;
+        private readonly RequestDelegate next;
+        private readonly SecurityHeadersPolicy policy;
 
         /// <summary>
         /// Instantiates a new <see cref="SecurityHeadersMiddleware"/>.
@@ -30,8 +30,8 @@ namespace CmsEngine.Ui.Middleware
                 throw new ArgumentNullException(nameof(policy));
             }
 
-            _next = next;
-            _policy = policy;
+            this.next = next;
+            this.policy = policy;
         }
 
         public async Task Invoke(HttpContext context)
@@ -50,17 +50,17 @@ namespace CmsEngine.Ui.Middleware
 
             var headers = response.Headers;
 
-            foreach (var headerValuePair in _policy.SetHeaders)
+            foreach (var headerValuePair in policy.SetHeaders)
             {
                 headers[headerValuePair.Key] = headerValuePair.Value;
             }
 
-            foreach (var header in _policy.RemoveHeaders)
+            foreach (var header in policy.RemoveHeaders)
             {
                 headers.Remove(header);
             }
 
-            await _next(context);
+            await next(context);
         }
     }
 }
