@@ -6,6 +6,7 @@ using CmsEngine.Application.Services;
 using CmsEngine.Application.ViewModels.DataTableViewModels;
 using CmsEngine.Core;
 using CmsEngine.Core.Constants;
+using CmsEngine.Core.Utils;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -95,6 +96,8 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
         [HttpPost]
         public async Task<IActionResult> GetData([FromForm]DataParameters parameters)
         {
+            Guard.ThrownExceptionIfNull(parameters, nameof(parameters));
+
             var items = await _websiteService.GetForDataTable(parameters);
             var dataTable = DataTableHelper.BuildDataTable(items.Data, items.RecordsTotal, items.RecordsFiltered, parameters.Draw, parameters.Start, parameters.Length);
 

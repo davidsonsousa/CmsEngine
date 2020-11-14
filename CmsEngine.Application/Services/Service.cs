@@ -38,7 +38,7 @@ namespace CmsEngine.Application.Services
 
         public Service(IUnitOfWork uow, IHttpContextAccessor hca, ILoggerFactory loggerFactory, IMemoryCache memoryCache)
         {
-            unitOfWork = uow ?? throw new ArgumentNullException("Service");
+            unitOfWork = uow ?? throw new ArgumentNullException(nameof(uow));
             _httpContextAccessor = hca;
             logger = loggerFactory.CreateLogger("Service");
             _memoryCache = memoryCache;

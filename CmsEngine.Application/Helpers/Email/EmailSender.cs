@@ -3,6 +3,7 @@ using System.Net;
 using System.Net.Mail;
 using System.Text;
 using System.Threading.Tasks;
+using CmsEngine.Core.Exceptions;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
@@ -33,7 +34,6 @@ namespace CmsEngine.Application.Helpers.Email
 
             try
             {
-
                 MailMessage message = new MailMessage
                 {
                     From = new MailAddress(from),
@@ -75,7 +75,7 @@ namespace CmsEngine.Application.Helpers.Email
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error when sending e-mail");
-                throw;
+                throw new EmailException("Error when sending e-mail", ex);
             }
         }
     }

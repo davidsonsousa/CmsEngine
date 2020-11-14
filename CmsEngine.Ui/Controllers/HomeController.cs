@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using CmsEngine.Application.Helpers.Email;
 using CmsEngine.Application.Services;
 using CmsEngine.Core.Constants;
+using CmsEngine.Core.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -28,33 +29,33 @@ namespace CmsEngine.Ui.Controllers
 
         public IActionResult Index()
         {
-            instance.PageTitle = $"{instance.Name}";
-            return View(instance);
+            Instance.PageTitle = $"{Instance.Name}";
+            return View(Instance);
         }
 
         public async Task<IActionResult> Page(string slug)
         {
-            instance.SelectedDocument = await _pageService.GetBySlug(slug);
+            Instance.SelectedDocument = await _pageService.GetBySlug(slug);
 
-            if (instance.SelectedDocument == null)
+            if (Instance.SelectedDocument == null)
             {
                 return NotFound();
             }
 
-            instance.PageTitle = $"{instance.SelectedDocument.Title} - {instance.Name}";
-            return View(instance);
+            Instance.PageTitle = $"{Instance.SelectedDocument.Title} - {Instance.Name}";
+            return View(Instance);
         }
 
         public IActionResult Archive()
         {
-            instance.PageTitle = $"Archive - {instance.Name}";
-            return View(instance);
+            Instance.PageTitle = $"Archive - {Instance.Name}";
+            return View(Instance);
         }
 
         public IActionResult Contact()
         {
-            instance.PageTitle = $"Contact - {instance.Name}";
-            return View(instance);
+            Instance.PageTitle = $"Contact - {Instance.Name}";
+            return View(Instance);
         }
 
         [HttpPost]
@@ -63,11 +64,11 @@ namespace CmsEngine.Ui.Controllers
             if (!ModelState.IsValid)
             {
                 TempData[MessageConstants.WarningMessage] = "Please double check the information in the form and try again.";
-                return View(instance);
+                return View(Instance);
             }
 
             ViewData["ReturnUrl"] = returnUrl;
-            contactForm.To = instance.ContactDetails.Email;
+            contactForm.To = Instance.ContactDetails.Email;
 
             try
             {
@@ -79,7 +80,7 @@ namespace CmsEngine.Ui.Controllers
                 await _emailSender.SendEmailAsync(contactForm);
                 TempData[MessageConstants.SuccessMessage] = "Your message was sent. I will answer as soon as I can.";
             }
-            catch (Exception ex)
+            catch (EmailException)
             {
                 TempData[MessageConstants.DangerMessage] = "We could not send the messsage. Please try other communication channels.";
             }

@@ -6,6 +6,7 @@ using CmsEngine.Application.Helpers;
 using CmsEngine.Application.Services;
 using CmsEngine.Core;
 using CmsEngine.Core.Constants;
+using CmsEngine.Core.Utils;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -18,19 +19,21 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
     [Authorize]
     public class BaseController : Controller
     {
-        protected readonly IService service;
-        protected List<UploadFilesResult> fileList;
-        protected readonly ILogger logger;
+        public IService Service { get; private set; }
+        public ILogger Logger { get; private set; }
 
         public BaseController(ILogger logger)
         {
-            this.logger = logger;
+            Logger = logger;
         }
 
         public BaseController(ILoggerFactory loggerFactory, IService service)
         {
-            this.service = service;
-            logger = loggerFactory.CreateLogger("CmsBaseController");
+            Guard.ThrownExceptionIfNull(loggerFactory, nameof(loggerFactory));
+            Guard.ThrownExceptionIfNull(service, nameof(service));
+
+            Logger = loggerFactory.CreateLogger("CmsBaseController");
+            Service = service;
 
             var cultureInfo = new CultureInfo(service.Instance.Culture);
 
@@ -42,7 +45,7 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
         {
             base.OnActionExecuting(context);
 
-            ViewBag.CurrentUser = service?.CurrentUser;
+            ViewBag.CurrentUser = Service?.CurrentUser;
         }
 
         protected void SetupMessages(string pageTitle)
@@ -98,7 +101,7 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
         {
             string folderPath = GetUploadFolderPath(webrootPath, folderName);
 
-            fileList = new List<UploadFilesResult>();
+            var fileList = new List<UploadFilesResult>();
 
             foreach (var formFile in Request.Form.Files)
             {

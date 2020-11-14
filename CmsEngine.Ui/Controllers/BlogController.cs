@@ -23,57 +23,57 @@ namespace CmsEngine.Ui.Controllers
         {
             if (string.IsNullOrWhiteSpace(q))
             {
-                instance.PageTitle = page == 1
-                                        ? $"Blog - {instance.Name}"
-                                        : $"Blog - {instance.Name} - Page {page}";
+                Instance.PageTitle = page == 1
+                                        ? $"Blog - {Instance.Name}"
+                                        : $"Blog - {Instance.Name} - Page {page}";
             }
             else
             {
-                instance.PageTitle = $"Results for '{q}' - {instance.Name}";
+                Instance.PageTitle = $"Results for '{q}' - {Instance.Name}";
             }
 
-            return View(instance);
+            return View(Instance);
         }
 
         public async Task<IActionResult> Post(string slug)
         {
-            instance.SelectedDocument = await _postService.GetBySlug(slug);
+            Instance.SelectedDocument = await _postService.GetBySlug(slug);
 
-            if (instance.SelectedDocument == null)
+            if (Instance.SelectedDocument == null)
             {
                 return NotFound();
             }
 
-            instance.PageTitle = $"{instance.SelectedDocument.Title} - {instance.Name}";
-            return View(instance);
+            Instance.PageTitle = $"{Instance.SelectedDocument.Title} - {Instance.Name}";
+            return View(Instance);
         }
 
         public async Task<IActionResult> Category(string slug, int page = 1)
         {
-            instance.PagedPosts = await _postService.GetPublishedByCategoryForPagination(slug, page);
-            string selectedCategory = instance.PagedPosts.SelectMany(p => p.Categories.Where(c => c.Slug == slug).Select(x => x.Name)).FirstOrDefault();
+            Instance.PagedPosts = await _postService.GetPublishedByCategoryForPagination(slug, page);
+            string selectedCategory = Instance.PagedPosts.SelectMany(p => p.Categories.Where(c => c.Slug == slug).Select(x => x.Name)).FirstOrDefault();
 
             if (selectedCategory == null)
             {
                 return NotFound();
             }
 
-            instance.PageTitle = $"{selectedCategory} - {instance.Name}";
-            return View("Index", instance);
+            Instance.PageTitle = $"{selectedCategory} - {Instance.Name}";
+            return View("Index", Instance);
         }
 
         public async Task<IActionResult> Tag(string slug, int page = 1)
         {
-            instance.PagedPosts = await _postService.GetPublishedByTagForPagination(slug, page);
-            string selectedTag = instance.PagedPosts.SelectMany(p => p.Tags.Where(t => t.Slug == slug).Select(x => x.Name)).FirstOrDefault();
+            Instance.PagedPosts = await _postService.GetPublishedByTagForPagination(slug, page);
+            string selectedTag = Instance.PagedPosts.SelectMany(p => p.Tags.Where(t => t.Slug == slug).Select(x => x.Name)).FirstOrDefault();
 
             if (selectedTag == null)
             {
                 return NotFound();
             }
 
-            instance.PageTitle = $"#{selectedTag} - {instance.Name}";
-            return View("Index", instance);
+            Instance.PageTitle = $"#{selectedTag} - {Instance.Name}";
+            return View("Index", Instance);
         }
 
         public async Task<IActionResult> Feed()

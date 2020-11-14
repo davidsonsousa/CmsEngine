@@ -39,6 +39,11 @@ namespace CmsEngine.Ui.TagHelpers
 
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
+            if (output is null)
+            {
+                throw new ArgumentNullException(nameof(output));
+            }
+
             output.TagName = "img";
             string email = string.IsNullOrWhiteSpace(EmailAddress) ? string.Empty : EmailAddress.ToLower();
 
