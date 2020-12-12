@@ -49,7 +49,8 @@ namespace CmsEngine.Ui
             // Add CmsEngineContext
             services.AddDbContext<CmsEngineContext>(options => options.EnableSensitiveDataLogging(Environment.IsDevelopment())
                                                                       .UseSqlServer(Configuration.GetConnectionString("DefaultConnection"),
-                                                                                    x => x.MigrationsAssembly("CmsEngine.Data")));
+                                                                                    o => o.MigrationsAssembly("CmsEngine.Data")
+                                                                                          .UseQuerySplittingBehavior(QuerySplittingBehavior.SingleQuery)));
 
             services.AddIdentity<ApplicationUser, IdentityRole>()
                     .AddEntityFrameworkStores<CmsEngineContext>()
