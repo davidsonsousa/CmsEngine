@@ -67,7 +67,7 @@ namespace CmsEngine.Ui
             services.AddScoped<IWebsiteRepository, WebsiteRepository>();
             services.AddScoped<IEmailRepository, EmailRepository>();
 
-            //// Add services
+            // Add services
             services.AddScoped<IService, Service>();
             services.AddScoped<ICategoryService, CategoryService>();
             services.AddScoped<IPageService, PageService>();
@@ -77,7 +77,7 @@ namespace CmsEngine.Ui
             services.AddScoped<IXmlService, XmlService>();
             services.AddScoped<IEmailService, EmailService>();
 
-            //// Add Unit of Work
+            // Add Unit of Work
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             services.AddSingleton<IEmailSender, EmailSender>();
