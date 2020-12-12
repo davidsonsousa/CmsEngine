@@ -120,7 +120,7 @@ namespace CmsEngine.Application.Services
 
         public async Task<ReturnValue> Save(WebsiteEditModel websiteEditModel)
         {
-            logger.LogInformation("CmsService > Save(WebsiteEditModel: {0})", websiteEditModel.ToString());
+            logger.LogDebug("CmsService > Save(WebsiteEditModel: {0})", websiteEditModel.ToString());
 
             var returnValue = new ReturnValue($"Website '{websiteEditModel.Name}' saved.");
 
@@ -128,14 +128,14 @@ namespace CmsEngine.Application.Services
             {
                 if (websiteEditModel.IsNew)
                 {
-                    logger.LogInformation("New website");
+                    logger.LogDebug("New website");
                     var website = websiteEditModel.MapToModel();
 
                     await unitOfWork.Websites.Insert(website);
                 }
                 else
                 {
-                    logger.LogInformation("Update website");
+                    logger.LogDebug("Update website");
                     var website = websiteEditModel.MapToModel(await unitOfWork.Websites.GetByIdAsync(websiteEditModel.VanityId));
 
                     _unitOfWork.Websites.Update(website);
@@ -144,7 +144,7 @@ namespace CmsEngine.Application.Services
                 await _unitOfWork.Save();
 
                 SaveInstanceToCache(websiteEditModel);
-                logger.LogInformation("Website saved");
+                logger.LogDebug("Website saved");
             }
             catch (Exception ex)
             {
@@ -157,15 +157,15 @@ namespace CmsEngine.Application.Services
 
         public WebsiteEditModel SetupEditModel()
         {
-            logger.LogInformation("CmsService > SetupEditModel()");
+            logger.LogDebug("CmsService > SetupEditModel()");
             return new WebsiteEditModel();
         }
 
         public async Task<WebsiteEditModel> SetupEditModel(Guid id)
         {
-            logger.LogInformation("CmsService > SetupEditModel(id: {0})", id);
+            logger.LogDebug("CmsService > SetupEditModel(id: {0})", id);
             var item = await _unitOfWork.Websites.GetByIdAsync(id);
-            logger.LogInformation("Website: {0}", item.ToString());
+            logger.LogDebug("Website: {0}", item.ToString());
             return item?.MapToEditModel();
         }
     }

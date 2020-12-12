@@ -8,18 +8,11 @@ namespace CmsEngine.Application.Attributes
     [AttributeUsage(AttributeTargets.Property)]
     public sealed class ShowOnDataTable : Attribute
     {
-        private readonly int order;
-        public int Order
-        {
-            get
-            {
-                return order;
-            }
-        }
+        public int Order { get; }
 
-        public ShowOnDataTable(int Order)
+        public ShowOnDataTable(int order)
         {
-            order = Order;
+            Order = order;
         }
     }
 }

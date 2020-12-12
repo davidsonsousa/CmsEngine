@@ -91,9 +91,9 @@ namespace CmsEngine.Application.Services
 
         public async Task<IEnumerable<TagViewModel>> GetAllTags()
         {
-            logger.LogInformation("TagService > GetAllTags()");
+            logger.LogDebug("TagService > GetAllTags()");
             var items = await _unitOfWork.Tags.GetAllAsync();
-            logger.LogInformation("Tags loaded: {0}", items.Count());
+            logger.LogDebug("Tags loaded: {0}", items.Count());
             return items.MapToViewModel();
         }
 
@@ -124,7 +124,7 @@ namespace CmsEngine.Application.Services
 
         public async Task<ReturnValue> Save(TagEditModel tagEditModel)
         {
-            logger.LogInformation("CmsService > Save(TagEditModel: {0})", tagEditModel.ToString());
+            logger.LogDebug("CmsService > Save(TagEditModel: {0})", tagEditModel.ToString());
 
             var returnValue = new ReturnValue($"Tag '{tagEditModel.Name}' saved.");
 
@@ -132,7 +132,7 @@ namespace CmsEngine.Application.Services
             {
                 if (tagEditModel.IsNew)
                 {
-                    logger.LogInformation("New tag");
+                    logger.LogDebug("New tag");
                     var tag = tagEditModel.MapToModel();
                     tag.WebsiteId = Instance.Id;
 
@@ -140,7 +140,7 @@ namespace CmsEngine.Application.Services
                 }
                 else
                 {
-                    logger.LogInformation("Update tag");
+                    logger.LogDebug("Update tag");
                     var tag = tagEditModel.MapToModel(await unitOfWork.Tags.GetByIdAsync(tagEditModel.VanityId));
                     tag.WebsiteId = Instance.Id;
 
@@ -148,7 +148,7 @@ namespace CmsEngine.Application.Services
                 }
 
                 await _unitOfWork.Save();
-                logger.LogInformation("Tag saved");
+                logger.LogDebug("Tag saved");
             }
             catch (Exception ex)
             {
@@ -161,15 +161,15 @@ namespace CmsEngine.Application.Services
 
         public TagEditModel SetupEditModel()
         {
-            logger.LogInformation("CmsService > SetupEditModel()");
+            logger.LogDebug("CmsService > SetupEditModel()");
             return new TagEditModel();
         }
 
         public async Task<TagEditModel> SetupEditModel(Guid id)
         {
-            logger.LogInformation("CmsService > SetupTagEditModel(id: {0})", id);
+            logger.LogDebug("CmsService > SetupTagEditModel(id: {0})", id);
             var item = await _unitOfWork.Tags.GetByIdAsync(id);
-            logger.LogInformation("Tag: {0}", item.ToString());
+            logger.LogDebug("Tag: {0}", item.ToString());
             return item?.MapToEditModel();
         }
     }

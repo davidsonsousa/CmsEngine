@@ -93,19 +93,19 @@ namespace CmsEngine.Ui.Areas.Identity.Pages.Account.Manage
 
         public async Task<IActionResult> OnPostAsync()
         {
-            _logger.LogInformation("Account > Manage > OnPostAsync()");
+            _logger.LogDebug("Account > Manage > OnPostAsync()");
             ViewData["CurrentUser"] = _service?.CurrentUser;
 
             if (!ModelState.IsValid)
             {
-                _logger.LogInformation("Invalid ModelState");
+                _logger.LogDebug("Invalid ModelState");
                 return Page();
             }
 
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
             {
-                _logger.LogInformation($"User not found. Id: {_userManager.GetUserId(User)}");
+                _logger.LogDebug($"User not found. Id: {_userManager.GetUserId(User)}");
                 return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
             }
 
@@ -141,7 +141,7 @@ namespace CmsEngine.Ui.Areas.Identity.Pages.Account.Manage
             await _signInManager.RefreshSignInAsync(user);
             StatusMessage = "Your profile has been updated";
 
-            _logger.LogInformation($"User {_userManager.GetUserId(User)} updated");
+            _logger.LogDebug($"User {_userManager.GetUserId(User)} updated");
 
             return RedirectToPage();
         }

@@ -26,9 +26,8 @@ Since this is a .NET Core project you can run in 2 ways:
   - `dotnet -d watch run` (`-d` runs the project in diagnostic mode)
   - Open your favorite browser and load `https://cmsengine.test:5001` (make sure this url is mapped to localhost in your hosts file)
 - Database migrations
-  - Make that sure you are in the **library folder (CmsEngine\CmsEngine.Data)**
-  - `dotnet ef migrations add MIGRATION_NAME --startup-project ..\CmsEngine.Ui\`
-  - Go back to the **web project folder (CmsEngine\CmsEngine.Ui)**
+  - Make that sure you are in the **ASP.NET Core project folder (CmsEngine\CmsEngine.Ui)**
+  - `dotnet ef migrations add MigrationName --project ..\CmsEngine.Data\`
   - `dotnet ef database update`
 
 ### IIS Express

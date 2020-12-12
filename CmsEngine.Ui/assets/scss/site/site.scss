@@ -29,6 +29,10 @@ img {
     max-height: 100%;
 }
 
+.post-body img {
+    object-fit: contain;
+}
+
 .gist {
     overflow: auto;
 }

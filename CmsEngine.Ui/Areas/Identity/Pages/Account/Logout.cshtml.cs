@@ -24,8 +24,8 @@ namespace CmsEngine.Ui.Areas.Identity.Pages.Account
         public async Task<IActionResult> OnGet()
         {
             await _signInManager.SignOutAsync();
-            _logger.LogInformation("User logged out.");
-            return RedirectToAction(nameof(HomeController.Index), "Home", new { area = "cms" });
+            _logger.LogDebug("User logged out.");
+            return RedirectToAction(nameof(HomeController.IndexAsync), "Home", new { area = "cms" });
         }
     }
 }

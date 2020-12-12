@@ -3,6 +3,7 @@ using System.Net;
 using System.Net.Mail;
 using System.Text;
 using System.Threading.Tasks;
+using CmsEngine.Core.Exceptions;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
@@ -21,19 +22,18 @@ namespace CmsEngine.Application.Helpers.Email
 
         public async Task SendEmailAsync(ContactForm contactForm)
         {
-            await Execute(contactForm);
+            await ExecuteAsync(contactForm);
         }
 
-        private async Task Execute(ContactForm contactForm)
+        private async Task ExecuteAsync(ContactForm contactForm)
         {
-            _logger.LogInformation("SendEmailAsync(contactForm: {0})", contactForm.ToString());
+            _logger.LogDebug("SendEmailAsync(contactForm: {0})", contactForm.ToString());
 
             string from = contactForm.From ?? _emailSettings.Username;
             string body = $"From: {from}\r\nTo: {contactForm.To}\r\n-----\r\n\r\n{contactForm.Message}";
 
             try
             {
-
                 MailMessage message = new MailMessage
                 {
                     From = new MailAddress(from),
@@ -67,15 +67,16 @@ namespace CmsEngine.Application.Helpers.Email
                     smtp.UseDefaultCredentials = false;
                     smtp.Credentials = new NetworkCredential(_emailSettings.Username, _emailSettings.Password);
 
+                    _logger.LogDebug("Message {0}", message.ToString());
                     await smtp.SendMailAsync(message);
                 }
 
-                _logger.LogInformation("Email sent from {0} to {1}", message.From, message.To[0]);
+                _logger.LogDebug("Email sent from {0} to {1}", message.From, message.To[0]);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error when sending e-mail");
-                throw;
+                throw new EmailException("Error when sending e-mail", ex);
             }
         }
     }

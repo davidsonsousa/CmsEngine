@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using CmsEngine.Data.Entities;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,6 +11,8 @@ namespace CmsEngine.Data
 {
     public class CmsEngineContext : IdentityDbContext<ApplicationUser>
     {
+        private readonly IHttpContextAccessor httpContextAccessor;
+
         public DbSet<Website> Websites { get; set; }
         public DbSet<Page> Pages { get; set; }
         public DbSet<Post> Posts { get; set; }
@@ -17,11 +20,12 @@ namespace CmsEngine.Data
         public DbSet<Category> Categories { get; set; }
         public DbSet<Email> Emails { get; set; }
 
-        public CmsEngineContext(DbContextOptions<CmsEngineContext> options) : base(options)
+        public CmsEngineContext(DbContextOptions<CmsEngineContext> options, IHttpContextAccessor hca) : base(options)
         {
             //Database.SetInitializer(new CmsEngineInitializer());
 
             ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
+            httpContextAccessor = hca;
         }
 
         protected override void OnModelCreating(ModelBuilder builder)
@@ -40,9 +44,6 @@ namespace CmsEngine.Data
             builder.Entity<PostApplicationUser>(ModelConfiguration.ConfigurePostApplicationUser);
             builder.Entity<PageApplicationUser>(ModelConfiguration.ConfigurePageApplicationUser);
 
-            // TODO: Commenting seed out since it forces to remove all demo data
-            //builder.Seed();
-
             base.OnModelCreating(builder);
         }
 
@@ -52,7 +53,8 @@ namespace CmsEngine.Data
 
             var timeStamp = DateTime.Now;
             var entries = ChangeTracker.Entries().Where(e => e.Entity is BaseEntity && (e.State == EntityState.Added || e.State == EntityState.Modified));
-            string currentUsername = "";//HttpContext.Current?.User?.Identity?.Name;
+            // TODO: Find a better way to get the user
+            string currentUsername = httpContextAccessor.HttpContext.User.Identity.Name;
             foreach (var entry in entries)
             {
                 if (entry.State == EntityState.Added)
