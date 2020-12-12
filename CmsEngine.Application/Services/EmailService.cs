@@ -24,28 +24,28 @@ namespace CmsEngine.Application.Services
 
         public async Task<IEnumerable<ContactForm>> GetOrderedByDate()
         {
-            logger.LogInformation("EmailService > GetOrderedByDate()");
+            logger.LogDebug("EmailService > GetOrderedByDate()");
             var items = await _unitOfWork.Emails.GetOrderedByDate();
-            logger.LogInformation("E-mails loaded: {0}", items.Count());
+            logger.LogDebug("E-mails loaded: {0}", items.Count());
             return items.MapToViewModel();
         }
 
         public async Task<ReturnValue> Save(ContactForm contactForm)
         {
-            logger.LogInformation("CmsService > Save(contactForm: {0})", contactForm.ToString());
+            logger.LogDebug("CmsService > Save(contactForm: {0})", contactForm.ToString());
 
             var returnValue = new ReturnValue($"E-mail saved.");
 
             try
             {
-                logger.LogInformation("New e-mail");
+                logger.LogDebug("New e-mail");
                 var message = contactForm.MapToModel();
                 message.DateReceived = DateTime.Now;
 
                 await _unitOfWork.Emails.Insert(message);
 
                 await _unitOfWork.Save();
-                logger.LogInformation("E-mail saved");
+                logger.LogDebug("E-mail saved");
             }
             catch (Exception ex)
             {

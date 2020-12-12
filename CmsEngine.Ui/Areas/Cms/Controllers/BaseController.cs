@@ -6,6 +6,7 @@ using CmsEngine.Application.Helpers;
 using CmsEngine.Application.Services;
 using CmsEngine.Core;
 using CmsEngine.Core.Constants;
+using CmsEngine.Core.Utils;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -18,19 +19,21 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
     [Authorize]
     public class BaseController : Controller
     {
-        protected readonly IService service;
-        protected List<UploadFilesResult> fileList;
-        protected readonly ILogger logger;
+        public IService Service { get; private set; }
+        public ILogger Logger { get; private set; }
 
         public BaseController(ILogger logger)
         {
-            this.logger = logger;
+            Logger = logger;
         }
 
         public BaseController(ILoggerFactory loggerFactory, IService service)
         {
-            this.service = service;
-            logger = loggerFactory.CreateLogger("CmsBaseController");
+            Guard.ThrownExceptionIfNull(loggerFactory, nameof(loggerFactory));
+            Guard.ThrownExceptionIfNull(service, nameof(service));
+
+            Logger = loggerFactory.CreateLogger("CmsBaseController");
+            Service = service;
 
             var cultureInfo = new CultureInfo(service.Instance.Culture);
 
@@ -42,7 +45,7 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
         {
             base.OnActionExecuting(context);
 
-            ViewBag.CurrentUser = service?.CurrentUser;
+            ViewBag.CurrentUser = Service?.CurrentUser;
         }
 
         protected void SetupMessages(string pageTitle)
@@ -71,7 +74,7 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
             TempData[MessageConstants.DangerMessage] = generalError;
         }
 
-        protected async Task<ContentResult> UploadImage(string webrootPath, string folderName)
+        protected async Task<ContentResult> UploadImageAsync(string webrootPath, string folderName)
         {
             string folderPath = GetUploadFolderPath(webrootPath, folderName);
 
@@ -82,7 +85,7 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
                 return null;
             }
 
-            _ = await UploadFile(folderPath, formFile);
+            _ = await UploadFileAsync(folderPath, formFile);
 
             string pathUrl = $"/image/{folderName}/";
 
@@ -94,11 +97,11 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
             return Content(JsonConvert.SerializeObject(returnImage).ToLowerInvariant(), "application/json");
         }
 
-        protected async Task<ContentResult> PrepareAndUploadFiles(string webrootPath, string folderName)
+        protected async Task<ContentResult> PrepareAndUploadFilesAsync(string webrootPath, string folderName)
         {
             string folderPath = GetUploadFolderPath(webrootPath, folderName);
 
-            fileList = new List<UploadFilesResult>();
+            var fileList = new List<UploadFilesResult>();
 
             foreach (var formFile in Request.Form.Files)
             {
@@ -107,12 +110,12 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
                     continue;
                 }
 
-                string originalFile = await UploadFile(folderPath, formFile);
+                string originalFile = await UploadFileAsync(folderPath, formFile);
 
                 string fileSize = FileHelper.FormatFileSize(originalFile);
-                string pathUrl = "";
-
                 bool isImage = FileHelper.IsImage(formFile.FileName);
+                string pathUrl;
+
                 if (isImage)
                 {
                     var imageSizes = new List<(int Width, int Height)>
@@ -147,13 +150,13 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
             return Content(JsonConvert.SerializeObject(fileList).ToLowerInvariant(), "application/json");
         }
 
-        private void ResizeImages(string folderPath, IFormFile formFile, string originalFile, int width, int height)
+        private static void ResizeImages(string folderPath, IFormFile formFile, string originalFile, int width, int height)
         {
             string thumbnailFileName = Path.Combine(folderPath, $"{width}x{height}_{formFile.FileName}");
             FileHelper.ResizeImage(originalFile, thumbnailFileName, width, height, true);
         }
 
-        private async Task<string> UploadFile(string folderPath, IFormFile formFile)
+        private static async Task<string> UploadFileAsync(string folderPath, IFormFile formFile)
         {
             string filePath = Path.Combine(folderPath, Path.GetFileName(formFile.FileName));
             using (var stream = new FileStream(filePath, FileMode.Create))
@@ -164,7 +167,7 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
             return filePath;
         }
 
-        private string GetUploadFolderPath(string webrootPath, string folderName)
+        private static string GetUploadFolderPath(string webrootPath, string folderName)
         {
             string folder = Path.Combine(webrootPath, "UploadedFiles", folderName);
 

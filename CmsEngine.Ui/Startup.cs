@@ -35,6 +35,8 @@ namespace CmsEngine.Ui
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDatabaseDeveloperPageExceptionFilter();
+
             services.Configure<CookiePolicyOptions>(options =>
             {
                 // This lambda determines whether user consent for non-essential cookies is needed for a given request.
@@ -46,7 +48,9 @@ namespace CmsEngine.Ui
 
             // Add CmsEngineContext
             services.AddDbContext<CmsEngineContext>(options => options.EnableSensitiveDataLogging(Environment.IsDevelopment())
-                                                                      .UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+                                                                      .UseSqlServer(Configuration.GetConnectionString("DefaultConnection"),
+                                                                                    o => o.MigrationsAssembly("CmsEngine.Data")
+                                                                                          .UseQuerySplittingBehavior(QuerySplittingBehavior.SingleQuery)));
 
             services.AddIdentity<ApplicationUser, IdentityRole>()
                     .AddEntityFrameworkStores<CmsEngineContext>()
@@ -63,7 +67,7 @@ namespace CmsEngine.Ui
             services.AddScoped<IWebsiteRepository, WebsiteRepository>();
             services.AddScoped<IEmailRepository, EmailRepository>();
 
-            //// Add services
+            // Add services
             services.AddScoped<IService, Service>();
             services.AddScoped<ICategoryService, CategoryService>();
             services.AddScoped<IPageService, PageService>();
@@ -73,7 +77,7 @@ namespace CmsEngine.Ui
             services.AddScoped<IXmlService, XmlService>();
             services.AddScoped<IEmailService, EmailService>();
 
-            //// Add Unit of Work
+            // Add Unit of Work
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             services.AddSingleton<IEmailSender, EmailSender>();
@@ -104,7 +108,7 @@ namespace CmsEngine.Ui
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseDatabaseErrorPage();
+                app.UseMigrationsEndPoint();
             }
             else
             {

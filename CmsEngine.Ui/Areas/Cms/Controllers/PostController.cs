@@ -6,6 +6,7 @@ using CmsEngine.Application.Services;
 using CmsEngine.Application.ViewModels.DataTableViewModels;
 using CmsEngine.Core;
 using CmsEngine.Core.Constants;
+using CmsEngine.Core.Utils;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -31,7 +32,7 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
             return View("List");
         }
 
-        public async Task<IActionResult> Create()
+        public async Task<IActionResult> CreateAsync()
         {
             SetupMessages("Post", PageType.Create, panelTitle: "Create a new post");
             var postEditModel = await _postService.SetupEditModel();
@@ -41,7 +42,7 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(PostEditModel postEditModel)
+        public async Task<IActionResult> CreateAsync(PostEditModel postEditModel)
         {
             if (!ModelState.IsValid)
             {
@@ -49,10 +50,10 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
                 return View("CreateEdit", postEditModel);
             }
 
-            return await Save(postEditModel, nameof(PostController.Create));
+            return await SaveAsync(postEditModel, nameof(PostController.CreateAsync));
         }
 
-        public async Task<IActionResult> Edit(Guid vanityId)
+        public async Task<IActionResult> EditAsync(Guid vanityId)
         {
             SetupMessages("Posts", PageType.Edit, panelTitle: "Edit an existing post");
             var postEditModel = await _postService.SetupEditModel(vanityId);
@@ -62,7 +63,7 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(PostEditModel postEditModel)
+        public async Task<IActionResult> EditAsync(PostEditModel postEditModel)
         {
             if (!ModelState.IsValid)
             {
@@ -75,28 +76,30 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
 
             if (await TryUpdateModelAsync(postToUpdate))
             {
-                return await Save(postEditModel, nameof(PostController.Edit));
+                return await SaveAsync(postEditModel, nameof(PostController.EditAsync));
             }
 
             TempData[MessageConstants.WarningMessage] = "The model could not be updated.";
-            return RedirectToAction(nameof(PostController.Edit), postEditModel);
+            return RedirectToAction(nameof(PostController.EditAsync), postEditModel);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Delete(Guid vanityId)
+        public async Task<IActionResult> DeleteAsync(Guid vanityId)
         {
             return Ok(await _postService.Delete(vanityId));
         }
 
         [HttpPost("cms/post/bulk-delete")]
-        public async Task<IActionResult> BulkDelete([FromForm]Guid[] vanityId)
+        public async Task<IActionResult> BulkDeleteAsync([FromForm]Guid[] vanityId)
         {
             return Ok(await _postService.DeleteRange(vanityId));
         }
 
         [HttpPost]
-        public async Task<IActionResult> GetData([FromForm]DataParameters parameters)
+        public async Task<IActionResult> GetDataAsync([FromForm]DataParameters parameters)
         {
+            Guard.ThrownExceptionIfNull(parameters, nameof(parameters));
+
             var items = await _postService.GetForDataTable(parameters);
             var dataTable = DataTableHelper.BuildDataTable(items.Data, items.RecordsTotal, items.RecordsFiltered, parameters.Draw, parameters.Start, parameters.Length);
 
@@ -104,18 +107,18 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> UploadImages()
+        public async Task<IActionResult> UploadImagesAsync()
         {
-            return await UploadImage(_env.WebRootPath, "Post");
+            return await UploadImageAsync(_env.WebRootPath, "Post");
         }
 
         [HttpPost]
-        public async Task<IActionResult> UploadFiles()
+        public async Task<IActionResult> UploadFilesAsync()
         {
-            return await PrepareAndUploadFiles(_env.WebRootPath, "Post");
+            return await PrepareAndUploadFilesAsync(_env.WebRootPath, "Post");
         }
 
-        private async Task<IActionResult> Save(PostEditModel postEditModel, string sender)
+        private async Task<IActionResult> SaveAsync(PostEditModel postEditModel, string sender)
         {
             var returnValue = await _postService.Save(postEditModel);
 

@@ -6,6 +6,7 @@ using CmsEngine.Application.Services;
 using CmsEngine.Application.ViewModels.DataTableViewModels;
 using CmsEngine.Core;
 using CmsEngine.Core.Constants;
+using CmsEngine.Core.Utils;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -41,7 +42,7 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(PageEditModel pageEditModel)
+        public async Task<IActionResult> CreateAsync(PageEditModel pageEditModel)
         {
             if (!ModelState.IsValid)
             {
@@ -49,10 +50,10 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
                 return View("CreateEdit", pageEditModel);
             }
 
-            return await Save(pageEditModel, nameof(PageController.Create));
+            return await SaveAsync(pageEditModel, nameof(PageController.Create));
         }
 
-        public async Task<IActionResult> Edit(Guid vanityId)
+        public async Task<IActionResult> EditAsync(Guid vanityId)
         {
             SetupMessages("Pages", PageType.Edit, panelTitle: "Edit an existing page");
             var pageEditModel = await _pageService.SetupEditModel(vanityId);
@@ -62,7 +63,7 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(PageEditModel pageEditModel)
+        public async Task<IActionResult> EditAsync(PageEditModel pageEditModel)
         {
             if (!ModelState.IsValid)
             {
@@ -75,28 +76,30 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
 
             if (await TryUpdateModelAsync(pageToUpdate))
             {
-                return await Save(pageEditModel, nameof(PageController.Edit));
+                return await SaveAsync(pageEditModel, nameof(PageController.EditAsync));
             }
 
             TempData[MessageConstants.WarningMessage] = "The model could not be updated.";
-            return RedirectToAction(nameof(PageController.Edit), pageEditModel);
+            return RedirectToAction(nameof(PageController.EditAsync), pageEditModel);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Delete(Guid vanityId)
+        public async Task<IActionResult> DeleteAsync(Guid vanityId)
         {
             return Ok(await _pageService.Delete(vanityId));
         }
 
         [HttpPost("cms/page/bulk-delete")]
-        public async Task<IActionResult> BulkDelete([FromForm]Guid[] vanityId)
+        public async Task<IActionResult> BulkDeleteAsync([FromForm]Guid[] vanityId)
         {
             return Ok(await _pageService.DeleteRange(vanityId));
         }
 
         [HttpPost]
-        public async Task<IActionResult> GetData([FromForm]DataParameters parameters)
+        public async Task<IActionResult> GetDataAsync([FromForm]DataParameters parameters)
         {
+            Guard.ThrownExceptionIfNull(parameters, nameof(parameters));
+
             var items = await _pageService.GetForDataTable(parameters);
             var dataTable = DataTableHelper.BuildDataTable(items.Data, items.RecordsTotal, items.RecordsFiltered, parameters.Draw, parameters.Start, parameters.Length);
 
@@ -104,18 +107,18 @@ namespace CmsEngine.Ui.Areas.Cms.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> UploadImages()
+        public async Task<IActionResult> UploadImagesAsync()
         {
-            return await UploadImage(_env.WebRootPath, "Page");
+            return await UploadImageAsync(_env.WebRootPath, "Page");
         }
 
         [HttpPost]
-        public async Task<IActionResult> UploadFiles()
+        public async Task<IActionResult> UploadFilesAsync()
         {
-            return await PrepareAndUploadFiles(_env.WebRootPath, "Page");
+            return await PrepareAndUploadFilesAsync(_env.WebRootPath, "Page");
         }
 
-        private async Task<IActionResult> Save(PageEditModel pageEditModel, string sender)
+        private async Task<IActionResult> SaveAsync(PageEditModel pageEditModel, string sender)
         {
             var returnValue = await _pageService.Save(pageEditModel);
 

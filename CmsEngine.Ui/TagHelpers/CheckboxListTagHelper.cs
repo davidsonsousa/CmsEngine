@@ -59,10 +59,10 @@ namespace CmsEngine.Ui.TagHelpers
             {
                 isChecked = item.Selected ? " checked" : "";
                 isEnabled = item.Enabled ? "" : " disabled";
-                sb.Append("<div").Append(InnerContainerClass).Append(isEnabled).Append(">");
-                sb.Append("<label").Append(LabelClass).Append(">");
+                sb.Append("<div").Append(InnerContainerClass).Append(isEnabled).Append('>');
+                sb.Append("<label").Append(LabelClass).Append('>');
                 sb.Append("<input type=\"checkbox\" id=\"").Append(item.Value).Append("\" value=\"").Append(item.Value).Append("\" name=\"")
-                  .Append(Name).Append("\"").Append(InputClass).Append(isChecked).Append(">").Append(item.Label);
+                  .Append(Name).Append('"').Append(InputClass).Append(isChecked).Append('>').Append(item.Label);
                 sb.Append("</label></div>");
             }
 

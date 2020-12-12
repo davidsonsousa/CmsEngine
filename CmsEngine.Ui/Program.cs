@@ -35,7 +35,7 @@ namespace CmsEngine.Ui
                                                            .Enrich.FromLogContext().CreateLogger();
             try
             {
-                Log.Information("Starting host");
+                Log.Debug("Starting host");
                 CreateHostBuilder(args).Build().Run();
             }
             catch (Exception ex)
@@ -59,7 +59,7 @@ namespace CmsEngine.Ui
                        {
                            if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Development")
                            {
-                               Log.Information("Dev environment: Using Kestrel with port 5001");
+                               Log.Debug("Dev environment: Using Kestrel with port 5001");
                                webBuilder.ConfigureKestrel(options =>
                                {
                                    options.AddServerHeader = false;
