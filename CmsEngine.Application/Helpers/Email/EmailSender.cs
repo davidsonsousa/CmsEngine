@@ -67,6 +67,7 @@ namespace CmsEngine.Application.Helpers.Email
                     smtp.UseDefaultCredentials = false;
                     smtp.Credentials = new NetworkCredential(_emailSettings.Username, _emailSettings.Password);
 
+                    _logger.LogDebug("Message {0}", message.ToString());
                     await smtp.SendMailAsync(message);
                 }
 
