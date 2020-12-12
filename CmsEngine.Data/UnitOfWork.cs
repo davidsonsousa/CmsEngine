@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 using CmsEngine.Data.Entities;
 using CmsEngine.Data.Repositories;
@@ -63,7 +62,7 @@ namespace CmsEngine.Data
             //}
             catch (DbUpdateConcurrencyException ex)
             {
-                ex.Entries.First().Reload();
+                ex.Entries[0].Reload();
             }
             catch (DbUpdateException ex)
             {
