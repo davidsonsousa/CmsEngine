@@ -240,27 +240,32 @@ namespace CmsEngine.Application.Services
 
         private async Task PrepareRelatedPropertiesAsync(PostEditModel postEditModel, Post post)
         {
-            var categoryIds = await _unitOfWork.Categories.GetIdsByMultipleGuidsAsync(postEditModel.SelectedCategories.ToList().ConvertAll(Guid.Parse));
-            var tagIds = await _unitOfWork.Tags.GetIdsByMultipleGuidsAsync(postEditModel.SelectedTags.ToList().ConvertAll(Guid.Parse));
-
             post.PostCategories.Clear();
-            foreach (int categoryId in categoryIds)
+            if (postEditModel.SelectedCategories != null)
             {
-                post.PostCategories.Add(new PostCategory
+                var categoryIds = await _unitOfWork.Categories.GetIdsByMultipleGuidsAsync(postEditModel.SelectedCategories.ToList().ConvertAll(Guid.Parse));
+                foreach (int categoryId in categoryIds)
                 {
-                    PostId = post.Id,
-                    CategoryId = categoryId
-                });
+                    post.PostCategories.Add(new PostCategory
+                    {
+                        PostId = post.Id,
+                        CategoryId = categoryId
+                    });
+                }
             }
 
             post.PostTags.Clear();
-            foreach (int tagId in tagIds)
+            if (postEditModel.SelectedTags != null)
             {
-                post.PostTags.Add(new PostTag
+                var tagIds = await _unitOfWork.Tags.GetIdsByMultipleGuidsAsync(postEditModel.SelectedTags.ToList().ConvertAll(Guid.Parse));
+                foreach (int tagId in tagIds)
                 {
-                    PostId = post.Id,
-                    TagId = tagId
-                });
+                    post.PostTags.Add(new PostTag
+                    {
+                        PostId = post.Id,
+                        TagId = tagId
+                    });
+                }
             }
 
             var user = await GetCurrentUserAsync();
