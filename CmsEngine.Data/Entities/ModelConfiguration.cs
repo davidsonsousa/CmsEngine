@@ -252,8 +252,8 @@ namespace CmsEngine.Data.Entities
         {
             b.Property<DateTime>("DateCreated");
             b.Property<DateTime>("DateModified");
-            b.Property<string>("UserCreated").HasMaxLength(20);
-            b.Property<string>("UserModified").HasMaxLength(20);
+            b.Property<string>("UserCreated").HasMaxLength(50);
+            b.Property<string>("UserModified").HasMaxLength(50);
         }
     }
 }
