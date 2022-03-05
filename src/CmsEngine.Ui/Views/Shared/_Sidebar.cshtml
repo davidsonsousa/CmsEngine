@@ -1,0 +1,67 @@
+@model InstanceViewModel
+<aside class="col-lg-4">
+    <!-- Widget [Search Bar Widget]-->
+    <div class="widget search">
+        <header>
+            <h3 class="h6">Search the blog</h3>
+        </header>
+        @await Html.PartialAsync("_SearchForm")
+    </div>
+
+    <!-- Widget [Latest Posts Widget] -->
+    <div class="widget latest-posts">
+        <header>
+            <h3 class="h6">Latest Posts</h3>
+        </header>
+        <div class="blog-posts">
+            @foreach (var latestPost in Model.LatestPosts)
+            {
+                <a asp-controller="Blog" asp-action="Post" asp-route-slug="@latestPost.Slug">
+                    <div class="item d-flex align-items-center">
+                        <div class="image">
+                            @{
+                                string imagePath = !string.IsNullOrWhiteSpace(latestPost.HeaderImage)
+                                                   ? imagePath = string.Format(Main.ImagePath.Path120, "post", latestPost.HeaderImage)
+                                                   : "/img/no-image.png";
+                            }
+                            <img src="@imagePath" alt="@latestPost.Title" title="@latestPost.Title" class="img-fluid">
+                        </div>
+                        <div class="title">
+                            <strong>@latestPost.Title</strong>
+                            <div class="d-flex align-items-center">
+                                <div class="comments">
+                                    <i class="icon-comment"></i>
+                                    <span class="disqus-comment-count" data-disqus-identifier="@latestPost.VanityId">0</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            }
+        </div>
+    </div>
+
+    <!-- Widget [Categories Widget]-->
+    <div class="widget categories">
+        <header>
+            <h3 class="h6">Categories</h3>
+        </header>
+        @foreach (var category in Model.Categories)
+        {
+            <div class="item d-flex justify-content-between"><a asp-controller="Blog" asp-action="Category" asp-route-slug="@category.Slug">@category.Name</a><span>@category.PostCount</span></div>
+        }
+    </div>
+
+    <!-- Widget [Tags Cloud Widget]-->
+    <div class="widget tags">
+        <header>
+            <h3 class="h6">Tags</h3>
+        </header>
+        <ul class="list-inline">
+            @foreach (var tag in Model.Tags)
+            {
+                <li class="list-inline-item"><a asp-controller="Blog" asp-action="Tag" asp-route-slug="@tag.Slug" class="tag">#@tag.Name</a></li>
+            }
+        </ul>
+    </div>
+</aside>

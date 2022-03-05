@@ -1,0 +1,71 @@
+// Override Boostrap variables
+/*@import "bootstrap-variables";*/
+
+// Import Bootstrap source files
+/*@import "bootstrap/bootstrap";*/
+
+// If you want you can import bootstrap scss files directly from node_modules.
+// To do this please remove @import "bootstrap/bootstrap"; and uncomment proper line.
+
+// Import Bootstrap source files from node_modules
+@import "node_modules/bootstrap/scss/bootstrap";
+
+// Custom styles
+@import "fontastic.scss";
+@import "style.blue.scss";
+@import "prism.scss"; // Syntax highlighter
+
+.widget.categories, .widget.tags {
+    max-height: 300px;
+    overflow: auto;
+}
+
+.section.hero {
+    text-shadow: black 1px 0 10px;
+}
+
+img {
+    max-width: 100%;
+    max-height: 100%;
+}
+
+.post-body img {
+    object-fit: contain;
+}
+
+.gist {
+    overflow: auto;
+}
+
+.gist .blob-wrapper.data {
+    max-height: 400px;
+    overflow: auto;
+}
+
+ul {
+    margin: auto 2rem 1rem 2rem;
+}
+
+.form-control.input-validation-error {
+    @extend .is-invalid;
+}
+
+.form-control.valid {
+    @extend .is-valid;
+}
+
+section {
+    &.featured-posts {
+        .row {
+            .text-inner {
+                padding: 70px 20px;
+            }
+
+            &:nth-of-type(2n) {
+                -ms-flex-direction: row-reverse;
+                -webkit-flex-direction: row-reverse;
+                flex-direction: row-reverse;
+            }
+        }
+    }
+}

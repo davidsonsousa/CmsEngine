@@ -1,0 +1,121 @@
+@model InstanceViewModel
+@{
+    var selectedPost = (PostViewModel)Model.SelectedDocument;
+    string imagePath = !string.IsNullOrWhiteSpace(selectedPost.HeaderImage)
+                       ? string.Format(Main.ImagePath.Default, "post", selectedPost.HeaderImage)
+                       : "/img/no-image.png";
+}
+
+@section FacebookMeta {
+    <meta property="og:url" content="@string.Format("{0}://{1}{2}", Context.Request.Scheme, Context.Request.Host, Context.Request.Path)" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="@Model.PageTitle" />
+    <meta property="og:description" content="@selectedPost.Description" />
+    <meta property="og:image" content="@string.Format("{0}://{1}{2}", Context.Request.Scheme, Context.Request.Host, imagePath)" />
+}
+
+@section TwitterMeta {
+    <meta name="twitter:card" content="summary_large_image">
+}
+
+<div class="container">
+    <div class="row">
+        <!-- Latest Posts -->
+        <main class="post blog-post col-lg-8">
+            <div class="container">
+                <div class="post-single">
+                    <div class="post-thumbnail">
+                        @if (!string.IsNullOrWhiteSpace(selectedPost.HeaderImage))
+                        {
+                            <img src="@string.Format(Main.ImagePath.Default, "post", selectedPost.HeaderImage)" alt="@selectedPost.Title" title="@selectedPost.Title" class="img-fluid">
+                        }
+
+                    </div>
+                    <div class="post-details">
+                        <div class="post-meta d-flex justify-content-between">
+                            @if (selectedPost.Categories.Count() > 0)
+                            {
+                                <div class="category">
+                                    @foreach (var category in selectedPost.Categories)
+                                    {
+                                        <a asp-controller="Blog" asp-action="Category" asp-route-slug="@category.Slug">@category.Name</a>
+                                    }
+                                </div>
+                            }
+                        </div>
+                        <h1>@selectedPost.Title</h1>
+                        <div class="post-footer d-flex align-items-center flex-column flex-sm-row">
+                            <a href="#" class="author d-flex align-items-center flex-wrap">
+                                <div class="avatar">
+                                    <gravatar email-address="@selectedPost.Author.Email" image-size="40" additional-css-classes="img-avatar"></gravatar>
+                                </div>
+                                <div class="title"><span>@selectedPost.Author.FullName</span></div>
+                            </a>
+                            <div class="d-flex align-items-center flex-wrap">
+                                <div class="date">
+                                    <i class="icon-clock"></i> @selectedPost.PublishedOn
+                                </div>
+                                <div class="comments meta-last">
+                                    <i class="icon-comment"></i>
+                                    <span class="disqus-comment-count" data-disqus-identifier="@selectedPost.VanityId">0</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="post-body">
+                            <p class="lead">@selectedPost.Description</p>
+                            @Html.Raw(selectedPost.DocumentContent)
+                        </div>
+                        @if (selectedPost.Tags.Count() > 0)
+                        {
+                            <div class="post-tags">
+                                @foreach (var tag in selectedPost.Tags)
+                                {
+                                    <a asp-controller="Blog" asp-action="Tag" asp-route-slug="@tag.Slug">#@tag.Name</a>
+                                }
+                            </div>
+                        }
+
+                        @*
+                            <div class="posts-nav d-flex justify-content-between align-items-stretch flex-column flex-md-row">
+                                <a href="#" class="prev-post text-left d-flex align-items-center">
+                                    <div class="icon prev"><i class="fa fa-angle-left"></i></div>
+                                    <div class="text">
+                                        <strong class="text-primary">Previous Post </strong>
+                                        <h6>I Bought a Wedding Dress.</h6>
+                                    </div>
+                                </a><a href="#" class="next-post text-right d-flex align-items-center justify-content-end">
+                                    <div class="text">
+                                        <strong class="text-primary">Next Post </strong>
+                                        <h6>I Bought a Wedding Dress.</h6>
+                                    </div>
+                                    <div class="icon next"><i class="fa fa-angle-right">   </i></div>
+                                </a>
+                            </div>
+                        *@
+
+                        @if (Model.ApiDetails.HasDisqusDetails)
+                        {
+                            <div id="disqus_thread"></div>
+                            <script>
+                            var disqus_config = function () {
+                                this.page.url = '@Url.Link("blog", new {Controller = "Blog", Action = "Post", Slug = selectedPost.Slug })';
+                                this.page.identifier = '@selectedPost.VanityId';
+                            };
+
+                            (function () { // DON'T EDIT BELOW THIS LINE
+                                var d = document, s = d.createElement('script');
+                                s.src = 'https://@(Model.ApiDetails.DisqusShortName).disqus.com/embed.js';
+                                s.setAttribute('data-timestamp', +new Date());
+                                (d.head || d.body).appendChild(s);
+                            })();
+                            </script>
+                            <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                        }
+
+                    </div>
+                </div>
+            </div>
+        </main>
+        @await Html.PartialAsync("_Sidebar", Model)
+    </div>
+</div>

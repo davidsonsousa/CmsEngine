@@ -1,0 +1,25 @@
+input[type="radio"], input[type="checkbox"] {
+  margin-right: 3px; // workaround for checkbox and radio buttons
+}
+
+.upload-bar {
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+.checkbox-list{
+    overflow:auto;
+    max-height:400px;
+}
+
+.form-control.input-validation-error {
+    @extend .is-invalid;
+}
+
+.form-control.valid {
+    @extend .is-valid;
+}
+
+.header-preview img {
+    max-width:100%;
+}

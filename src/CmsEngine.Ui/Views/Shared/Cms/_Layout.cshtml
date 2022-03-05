@@ -1,0 +1,162 @@
+@{
+    var currentUser = (UserViewModel)ViewBag.CurrentUser;
+}
+
+<!--
+ * CoreUI - Open Source Bootstrap Admin Template
+ * version v1.0.2
+ * link http://coreui.io
+ * Copyright (c) 2017 creativeLabs Łukasz Holeczek
+ * license MIT
+ -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="CoreUI - Open Source Bootstrap Admin Template">
+    <meta name="author" content="Łukasz Holeczek">
+    <meta name="keyword" content="Bootstrap,Admin,Template,Open,Source,AngularJS,Angular,Angular2,Angular 2,Angular4,Angular 4,jQuery,CSS,HTML,RWD,Dashboard,React,React.js,Vue,Vue.js">
+    <link rel="shortcut icon" href="~/img/favicon.png">
+    <title>@ViewData["PageTitle"] - CmsEngine</title>
+
+    <link href="~/css/vendors/all.min.css" rel="stylesheet">
+    <link href="~/css/vendors/simple-line-icons.min.css" rel="stylesheet">
+
+    <environment include="Development">
+        <link href="~/css/admin.css" rel="stylesheet">
+    </environment>
+    <environment exclude="Development">
+        <link href="~/css/admin.min.css" rel="stylesheet">
+    </environment>
+
+    <!-- Extra header items required by views -->
+    @RenderSection("PageHead", required: false)
+</head>
+<body class="app header-fixed sidebar-fixed aside-menu-fixed aside-menu-hidden">
+    <header class="app-header navbar">
+        <button class="navbar-toggler mobile-sidebar-toggler d-lg-none mr-auto" type="button">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <a class="navbar-brand" href="#"></a>
+        <button class="navbar-toggler sidebar-toggler d-md-down-none" type="button">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <ul class="nav navbar-nav d-md-down-none">
+            <li class="nav-item px-3">
+                <a class="nav-link" href="#">Dashboard</a>
+            </li>
+            <li class="nav-item px-3">
+                <a class="nav-link" href="#">Users</a>
+            </li>
+            <li class="nav-item px-3">
+                <a class="nav-link" href="#">Settings</a>
+            </li>
+        </ul>
+
+        <ul class="nav navbar-nav ml-auto">
+            <li class="nav-item d-md-down-none">
+                <a class="nav-link" href="#"><i class="icon-bell"></i><span class="badge badge-pill badge-danger">5</span></a>
+            </li>
+            <li class="nav-item d-md-down-none">
+                <a class="nav-link" href="#"><i class="icon-list"></i></a>
+            </li>
+            <li class="nav-item d-md-down-none">
+                <a class="nav-link" href="#"><i class="icon-location-pin"></i></a>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle nav-link" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+                    @*<img src="~/img/avatars/6.jpg" class="img-avatar" alt="@currentUser.Email">*@
+                    <gravatar email-address="@currentUser.Email" image-size="35" additional-css-classes="img-avatar"></gravatar>
+                    <span class="d-md-down-none">@currentUser.FullName</span>
+                </a>
+                <div class="dropdown-menu dropdown-menu-right">
+                    @*<div class="dropdown-header text-center">
+                            <strong>Account</strong>
+                        </div>*@
+                    <a class="dropdown-item" asp-area="Identity" asp-page="/Account/Manage/Index"><i class="fa fa-user"></i> Profile</a>
+                    <a class="dropdown-item" asp-area="Identity" asp-page="/Account/Manage/ChangePassword"><i class="fa fa-key"></i> Change password</a>
+                    @*<a class="dropdown-item" href="#"><i class="fa fa-bell-o"></i> Updates<span class="badge badge-info">42</span></a>
+                        <a class="dropdown-item" href="#"><i class="fa fa-envelope-o"></i> Messages<span class="badge badge-success">42</span></a>
+                        <a class="dropdown-item" href="#"><i class="fa fa-tasks"></i> Tasks<span class="badge badge-danger">42</span></a>
+                        <a class="dropdown-item" href="#"><i class="fa fa-comments"></i> Comments<span class="badge badge-warning">42</span></a>*@
+                    @*<div class="dropdown-header text-center">
+                            <strong>Settings</strong>
+                        </div>*@
+                    @*<a class="dropdown-item" href="#"><i class="fa fa-wrench"></i> Settings</a>*@
+                    <div class="divider"></div>
+                    @*<a class="dropdown-item" href="#"><i class="fa fa-shield"></i> Lock Account</a>*@
+                    <a class="dropdown-item" asp-area="Identity" asp-page="/Account/Logout"><i class="fa fa-lock"></i> Logout</a>
+                </div>
+            </li>
+        </ul>
+        @*<button class="navbar-toggler aside-menu-toggler" type="button">
+                <span class="navbar-toggler-icon"></span>
+            </button>*@
+    </header>
+    <div class="app-body">
+        <div class="sidebar">
+            <nav class="sidebar-nav">
+                <ul class="nav">
+                    <li class="nav-item">
+                        <a class="nav-link" asp-area="Cms" asp-controller="Home" asp-action="Index"><i class="fa fa-tachometer"></i> Dashboard <span class="badge badge-primary">NEW</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-area="Cms" asp-controller="Post" asp-action="Index"><i class="far fa-file-alt"></i> Posts</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-area="Cms" asp-controller="Page" asp-action="Index"><i class="fa fa-file"></i> Pages</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-area="Cms" asp-controller="Category" asp-action="Index"><i class="fa fa-tasks"></i> Categories</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-area="Cms" asp-controller="Tag" asp-action="Index"><i class="fa fa-tags"></i> Tags</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-area="Cms" asp-controller="Website" asp-action="Index"><i class="fa fa-cog"></i> Websites</a>
+                    </li>
+                </ul>
+            </nav>
+            <button class="sidebar-minimizer brand-minimizer" type="button"></button>
+        </div>
+        <!-- Main content -->
+        <main class="main">
+            <!-- Breadcrumb -->
+            @RenderSection("Breadcrumb", false)
+
+            <div class="container-fluid">
+                @{ await Html.RenderPartialAsync("_Messages"); }
+
+                @RenderBody()
+            </div>
+            <!-- /.conainer-fluid -->
+        </main>
+    </div>
+    <footer class="app-footer">
+        <span>© @DateTime.Now.Year <a href="http://davidsonsousa.net">Davidson Sousa</a></span>
+        <span class="ml-auto"><a href="http://coreui.io">CoreUI</a> template by creativeLabs</span>
+    </footer>
+
+    @await Html.PartialAsync("Cms/_Dialog")
+
+    <script src="~/js/vendors/jquery.min.js"></script>
+    <script src="~/js/vendors/popper.min.js"></script>
+    <script src="~/js/vendors/bootstrap.min.js"></script>
+    <script src="~/js/vendors/pace.min.js"></script>
+
+    <environment include="Development">
+        <script src="~/js/admin.js"></script>
+    </environment>
+    <environment exclude="Development">
+        <script src="~/js/admin.min.js"></script>
+    </environment>
+
+    <!-- Plugins and scripts required by this views -->
+    <!-- Custom scripts required by this view -->
+    @*<script src="~/js/views/main.js"></script>*@
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

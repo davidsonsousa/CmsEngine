@@ -1,0 +1,110 @@
+@model InstanceViewModel
+<footer class="main-footer">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-5">
+                <div class="logo">
+                    <h6 class="text-white">@Model.Name</h6>
+                </div>
+                <div class="contact-details">
+                    @if (!string.IsNullOrWhiteSpace(Model.ContactDetails.Address))
+                    {
+                        <p>@Model.ContactDetails.Address</p>
+                    }
+                    @if (!string.IsNullOrWhiteSpace(Model.ContactDetails.Phone))
+                    {
+                        <p>Phone: @Model.ContactDetails.Phone</p>
+                    }
+
+                    @if (Model.SocialMedia.HasSocialMedia || Model.ContactDetails.HasEmail)
+                    {
+                        <ul class="social-menu">
+                            @if (!string.IsNullOrWhiteSpace(Model.ContactDetails.Email))
+                            {
+                                <li class="list-inline-item">
+                                    <a asp-controller="Home" asp-action="Contact"><i class="fa fa-envelope"></i></a>
+                                </li>
+                            }
+                            @if (!string.IsNullOrWhiteSpace(Model.SocialMedia.Facebook))
+                            {
+                                <li class="list-inline-item">
+                                    <a href="https://www.facebook.com/@Model.SocialMedia.Facebook"><i class="fab fa-facebook"></i></a>
+                                </li>
+                            }
+                            @if (!string.IsNullOrWhiteSpace(Model.SocialMedia.Twitter))
+                            {
+                                <li class="list-inline-item">
+                                    <a href="https://twitter.com/@Model.SocialMedia.Twitter"><i class="fab fa-twitter"></i></a>
+                                </li>
+                            }
+                            @if (!string.IsNullOrWhiteSpace(Model.SocialMedia.Instagram))
+                            {
+                                <li class="list-inline-item">
+                                    <a href="https://www.instagram.com/@Model.SocialMedia.Instagram"><i class="fab fa-instagram"></i></a>
+                                </li>
+                            }
+                            @if (!string.IsNullOrWhiteSpace(Model.SocialMedia.LinkedIn))
+                            {
+                                <li class="list-inline-item">
+                                    <a href="https://www.linkedin.com/in/@Model.SocialMedia.LinkedIn"><i class="fab fa-linkedin"></i></a>
+                                </li>
+                            }
+                        </ul>
+                    }
+
+                </div>
+            </div>
+            @*<div class="col-md-4">
+                    <div class="menus d-flex">
+                        <ul class="list-unstyled">
+                            <li> <a href="#">My Account</a></li>
+                            <li> <a href="#">Add Listing</a></li>
+                            <li> <a href="#">Pricing</a></li>
+                            <li> <a href="#">Privacy &amp; Policy</a></li>
+                        </ul>
+                        <ul class="list-unstyled">
+                            <li> <a href="#">Our Partners</a></li>
+                            <li> <a href="#">FAQ</a></li>
+                            <li> <a href="#">How It Works</a></li>
+                            <li> <a href="#">Contact</a></li>
+                        </ul>
+                    </div>
+                </div>*@
+            <div class="col-md-7">
+                <div class="latest-posts">
+                    @foreach (var latestPost in Model.LatestPosts)
+                    {
+                        <a asp-controller="Blog" asp-action="Post" asp-route-slug="@latestPost.Slug">
+                            <div class="post d-flex align-items-center">
+                                <div class="image">
+                                    @{
+                                        string imagePath = !string.IsNullOrWhiteSpace(latestPost.HeaderImage)
+                                                           ? imagePath = string.Format(Main.ImagePath.Path120, "post", latestPost.HeaderImage)
+                                                           : "/img/no-image.png";
+                                    }
+                                    <img src="@imagePath" alt="@latestPost.Title" title="@latestPost.Title" class="img-fluid">
+
+                                </div>
+                                <div class="title"><strong>@latestPost.Title</strong><span class="date last-meta">@latestPost.PublishedOn</span></div>
+                            </div>
+                        </a>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="copyrights">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <p>&copy; @DateTime.Now.Year. All rights reserved.</p>
+                </div>
+                <div class="col-md-6 text-right">
+                    <p>
+                        Developed by <a href="//davidsonsousa.net">Davidson Sousa</a> | Template By <a href="https://bootstraptemple.com" class="text-white">Bootstrap Temple</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
