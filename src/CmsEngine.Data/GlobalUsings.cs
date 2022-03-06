@@ -1,0 +1,15 @@
+global using System.ComponentModel.DataAnnotations;
+global using System.ComponentModel.DataAnnotations.Schema;
+global using System.Linq.Expressions;
+global using CmsEngine.Core.Constants;
+global using CmsEngine.Core.Extensions;
+global using CmsEngine.Core.Utils;
+global using CmsEngine.Data.Entities;
+global using CmsEngine.Data.Repositories.Interfaces;
+global using Microsoft.AspNetCore.Http;
+global using Microsoft.AspNetCore.Identity;
+global using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+global using Microsoft.EntityFrameworkCore;
+global using Microsoft.EntityFrameworkCore.ChangeTracking;
+global using Microsoft.EntityFrameworkCore.Metadata.Builders;
+global using Newtonsoft.Json.Linq;

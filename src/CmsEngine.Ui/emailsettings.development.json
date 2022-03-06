@@ -1,0 +1,23 @@
+{
+  "EmailSettings": {
+    "Domain": "smtp.gmail.com",
+    "Port": "587",
+    "Username": "diegoseculo@gmail.com",
+    "Password": "d#sousa12",
+    "FromEmail": "diegoseculo@gmail.com",
+    "CcEmail": "",
+    "BccEmail": ""
+  }
+}
+
+//{
+//  "EmailSettings": {
+//    "Domain": "m1.aspify.com",
+//    "Port": "465",
+//    "Username": "fromblog@davidsonsousa.net",
+//    "Password": "fWJUOFw2E677",
+//    "FromEmail": "fromblog@davidsonsousa.net",
+//    "CcEmail": "",
+//    "BccEmail": ""
+//  }
+//}

@@ -1,8 +1,0 @@
-{
-  // A self-signed certificate is used for development
-  // Check this link for guidance: https://www.humankode.com/asp-net-core/develop-locally-with-https-self-signed-certificates-and-asp-net-core
-  "certificateSettings": {
-    "fileName": "",
-    "password": ""
-  }
-}
