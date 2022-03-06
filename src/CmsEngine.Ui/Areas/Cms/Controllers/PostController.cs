@@ -61,7 +61,8 @@ public class PostController : BaseController
 
         var postToUpdate = await _postService.SetupEditModel(postEditModel.VanityId);
 
-        if (await TryUpdateModelAsync(postToUpdate))
+        // TODO: Understand why I needed to use TryUpdateModelAsync like this
+        if (await TryUpdateModelAsync<PostEditModel>(postToUpdate, "", p => p.Id))
         {
             return await SaveAsync(postEditModel, nameof(PostController.EditAsync));
         }
