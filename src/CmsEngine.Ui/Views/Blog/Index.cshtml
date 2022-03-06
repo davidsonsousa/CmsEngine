@@ -1,0 +1,78 @@
+@model InstanceViewModel
+
+@{
+    string headerImagePath = !string.IsNullOrWhiteSpace(Model.HeaderImage)
+                             ? string.Format(Main.ImagePath.Path640, "website", Model.HeaderImage)
+                             : "/img/no-image.png";
+
+}
+
+@section FacebookMeta {
+    <meta property="og:url" content="@string.Format("{0}://{1}", Context.Request.Scheme, Context.Request.Host)" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="@Model.PageTitle" />
+    <meta property="og:description" content="@Model.Description" />
+    <meta property="og:image" content="@string.Format("{0}://{1}{2}", Context.Request.Scheme, Context.Request.Host, headerImagePath)" />
+}
+
+@section TwitterMeta {
+    <meta name="twitter:card" content="summary_large_image">
+}
+
+<div class="container">
+    <div class="row">
+        <!-- Latest Posts -->
+        <main class="posts-listing col-lg-8">
+            <div class="container">
+                <div class="row">
+                    @if (Model.PagedPosts.Count() > 0)
+                    {
+                        foreach (var pagedPost in Model.PagedPosts)
+                        {
+                            await Html.RenderPartialAsync("_PagedPost", pagedPost);
+                        }
+                    }
+                    else
+                    {
+                        <h3>No articles available</h3>
+                    }
+                </div>
+                <!-- Pagination -->
+                @{
+                    string prevDisabled = !Model.PagedPosts.HasPreviousPage ? "disabled" : "";
+                    string nextDisabled = !Model.PagedPosts.HasNextPage ? "disabled" : "";
+                }
+
+                <nav aria-label="Page navigation">
+                    <ul class="pagination pagination-template d-flex justify-content-center">
+                        <li class="page-item">
+                            <a asp-controller="blog"
+                               asp-action="index"
+                               asp-route-page="@(Model.PagedPosts.PageIndex - 1)" class="btn btn-default page-link @prevDisabled">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+                        </li>
+                        @*@for (int i = 1; i <= Model.PagedPosts.TotalPages; i++)
+                            {
+                                <li class="page-item">
+                                    <a asp-controller="blog"
+                                       asp-action="index"
+                                       asp-route-page="@i" class="btn btn-default page-link">
+                                        @i
+                                    </a>
+                                </li>
+                            }*@
+                        <li class="page-item">
+                            <a asp-controller="blog"
+                               asp-action="index"
+                               asp-route-page="@(Model.PagedPosts.PageIndex + 1)" class="btn btn-default page-link @nextDisabled">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </main>
+        @await Html.PartialAsync("_Sidebar", Model)
+    </div>
+</div>
