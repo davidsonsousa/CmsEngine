@@ -4,26 +4,15 @@ public class Post : Document
 {
     public int WebsiteId { get; set; }
     public virtual Website Website { get; set; }
-    public virtual ICollection<PostCategory> PostCategories { get; set; }
-    public virtual ICollection<PostTag> PostTags { get; set; }
-    public virtual ICollection<PostApplicationUser> PostApplicationUsers { get; set; }
+    public virtual ICollection<PostCategory> PostCategories { get; set; } = new List<PostCategory>();
+    public virtual ICollection<PostTag> PostTags { get; set; } = new List<PostTag>();
+    public virtual ICollection<PostApplicationUser> PostApplicationUsers { get; set; } = new List<PostApplicationUser>();
 
     // Properties used for data projection only
     [NotMapped]
-    public IEnumerable<Category> Categories { get; set; }
+    public IEnumerable<Category> Categories { get; set; } = new List<Category>();
     [NotMapped]
-    public IEnumerable<Tag> Tags { get; set; }
+    public IEnumerable<Tag> Tags { get; set; } = new List<Tag>();
     [NotMapped]
-    public IEnumerable<ApplicationUser> ApplicationUsers { get; set; }
-
-    public Post()
-    {
-        PostCategories = new List<PostCategory>();
-        PostTags = new List<PostTag>();
-        PostApplicationUsers = new List<PostApplicationUser>();
-
-        Categories = new List<Category>();
-        Tags = new List<Tag>();
-        ApplicationUsers = new List<ApplicationUser>();
-    }
+    public IEnumerable<ApplicationUser> ApplicationUsers { get; set; } = new List<ApplicationUser>();
 }
