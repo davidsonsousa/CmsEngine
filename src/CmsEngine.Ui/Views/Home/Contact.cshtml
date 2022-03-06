@@ -7,7 +7,7 @@
                 @{ await Html.RenderPartialAsync("_Messages"); }
                 <h1 class="mb-4">Contact</h1>
                 <div class="card">
-                    <form asp-controller="Home" asp-action="Contact" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post" class="form-horizontal">
+                    <form asp-controller="Home" asp-action="Contact" method="post" class="form-horizontal">
                         <input type="hidden" id="g-recaptcha-response" name="g-recaptcha-response" />
                         <div class="card-body">
                             <div class="form-group row">

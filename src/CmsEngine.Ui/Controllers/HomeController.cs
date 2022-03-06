@@ -50,7 +50,7 @@ public class HomeController : BaseController
     }
 
     [HttpPost]
-    public async Task<IActionResult> ContactAsync(ContactForm contactForm, string returnUrl = null)
+    public async Task<IActionResult> ContactAsync(ContactForm contactForm)
     {
         if (!ModelState.IsValid)
         {
@@ -58,7 +58,6 @@ public class HomeController : BaseController
             return View(Instance);
         }
 
-        ViewData["ReturnUrl"] = returnUrl;
         contactForm.To = Instance.ContactDetails.Email;
 
         try

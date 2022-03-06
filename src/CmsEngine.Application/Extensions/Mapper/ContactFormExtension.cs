@@ -28,12 +28,7 @@ public static class ContactFormExtension
 
         foreach (var item in emails)
         {
-            viewModel.Add(new ContactForm
-            {
-                From = item.From,
-                Subject = item.Subject,
-                Message = item.Message
-            });
+            viewModel.Add(new ContactForm(item.From, item.Subject, item.Message));
         }
 
         return viewModel;
