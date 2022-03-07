@@ -20,54 +20,52 @@ public class CmsEngineEmailSender : ICmsEngineEmailSender
     {
         _logger.LogDebug("SendEmailAsync(contactForm: {0})", contactForm.ToString());
 
-        var from = contactForm.From ?? _emailSettings.Username;
-        var body = $"From: {from}\r\nTo: {contactForm.To}\r\n-----\r\n\r\n{contactForm.Message}";
+        var message = PrepareMailMessage(contactForm);
 
         try
         {
-            var message = new MailMessage
+            using (var smtpClient = new SmtpClient())
             {
-                From = new MailAddress(from),
-                Subject = $"🌐 CmsEngine - {contactForm.Subject}",
-                SubjectEncoding = Encoding.UTF8,
-                IsBodyHtml = false,
-                Body = body,
-                BodyEncoding = Encoding.UTF8,
-                Priority = MailPriority.Normal
-            };
-
-            if (!string.IsNullOrWhiteSpace(contactForm.To))
-            {
-                message.To.Add(contactForm.To);
+                await smtpClient.ConnectAsync(_emailSettings.Domain, _emailSettings.Port, true);
+                await smtpClient.AuthenticateAsync(_emailSettings.Username, _emailSettings.Password);
+                await smtpClient.SendAsync(message);
+                await smtpClient.DisconnectAsync(true);
             }
 
-            if (!string.IsNullOrWhiteSpace(_emailSettings.CcEmail))
-            {
-                message.CC.Add(_emailSettings.CcEmail);
-            }
-
-            if (!string.IsNullOrWhiteSpace(_emailSettings.BccEmail))
-            {
-                message.Bcc.Add(_emailSettings.BccEmail);
-            }
-
-            using (var smtp = new SmtpClient(_emailSettings.Domain, _emailSettings.Port))
-            {
-                smtp.EnableSsl = true;
-                smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
-                smtp.UseDefaultCredentials = false;
-                smtp.Credentials = new NetworkCredential(_emailSettings.Username, _emailSettings.Password);
-
-                _logger.LogDebug("Message {0}", message.ToString());
-                await smtp.SendMailAsync(message);
-            }
-
-            _logger.LogDebug("Email sent from {0} to {1}", message.From, message.To[0]);
+            _logger.LogDebug("Email sent from {0} to {1}", message.From[0], message.To[0]);
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error when sending e-mail");
             throw new EmailException("Error when sending e-mail", ex);
         }
+    }
+
+    private MimeMessage PrepareMailMessage(ContactForm contactForm)
+    {
+        var from = contactForm.From;
+        var body = contactForm.Message;
+
+        if (string.IsNullOrWhiteSpace(from))
+        {
+            from = _emailSettings.Username;
+            body = $"From: {from}\r\nTo: {contactForm.To}\r\n-----\r\n\r\n{body}";
+        }
+
+        var message = new MimeMessage();
+        message.From.Add(new MailboxAddress(from, from));
+        message.Subject = $"🌐 CmsEngine - {contactForm.Subject}";
+
+        message.Body = new TextPart("plain")
+        {
+            Text = body
+        };
+
+        if (!string.IsNullOrWhiteSpace(contactForm.To))
+        {
+            message.To.Add(new MailboxAddress(contactForm.To, contactForm.To));
+        }
+
+        return message;
     }
 }
