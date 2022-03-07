@@ -257,8 +257,7 @@ paket-files/
 # CmsEngine
 PublishOutput/
 package-lock.json
-/CmsEngine.Ui/certificate.Development.json
-/CmsEngine.Ui/emailsettings.Development.json
+*.Development.json
 [Rr]eadme.md
-/CmsEngine.Ui/_logs
+CmsEngine.Ui/_logs
 global.json
