@@ -72,13 +72,16 @@
                 <div id="navbarcollapse" class="collapse navbar-collapse">
                     <ul class="navbar-nav ml-auto">
                         <li class="nav-item">
-                            <a asp-controller="Home" asp-action="Index" class="nav-link @Html.IsSelected(controllers: "Home", actions: "Index, Page")">Home</a>
+                            <a asp-controller="Home" asp-action="Index" class="nav-link @Html.IsSelected(controllers: "Home", actions: "Index")">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a asp-controller="Blog" asp-action="Index" class="nav-link @Html.IsSelected(controllers: "Blog", actions: "Index, Post")">Blog</a>
+                            <a asp-controller="Blog" asp-action="Index" class="nav-link @Html.IsSelected(controllers: "Blog", actions: "Index, Post, Category, Tag")">Blog</a>
                         </li>
                         <li class="nav-item">
                             <a asp-controller="Home" asp-action="Archive" class="nav-link @Html.IsSelected(controllers: "Home", actions: "Archive")">Archive</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/about-me" class="nav-link @Html.IsSelected(slugs: "about-me")">About me</a>
                         </li>
                         <li class="nav-item">
                             <a asp-controller="Home" asp-action="Contact" class="nav-link @Html.IsSelected(controllers: "Home", actions: "Contact")">Contact</a>
