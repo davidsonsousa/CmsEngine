@@ -260,4 +260,3 @@ package-lock.json
 *.Development.json
 [Rr]eadme.md
 CmsEngine.Ui/_logs
-global.json
