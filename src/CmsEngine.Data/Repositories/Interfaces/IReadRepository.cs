@@ -22,7 +22,7 @@ public interface IReadRepository<TEntity> where TEntity : class
     /// <param name="filter"></param>
     /// <param name="count"></param>
     /// <returns></returns>
-    Task<IEnumerable<TEntity>> GetReadOnlyAsync(Expression<Func<TEntity, bool>> filter = null);
+    Task<IEnumerable<TEntity>> GetReadOnlyAsync(Expression<Func<TEntity, bool>>? filter = null);
 
     /// <summary>
     /// Get record by id

@@ -15,8 +15,9 @@ public class WebsiteService : Service, IWebsiteService
     public async Task<ReturnValue> Delete(Guid id)
     {
         var item = await _unitOfWork.Websites.GetByIdAsync(id);
+        Guard.Against.Null(item);
 
-        var returnValue = new ReturnValue($"Website '{item.Name}' deleted at {DateTime.Now.ToString("T")}.");
+        var returnValue = new ReturnValue($"Website '{item.Name}' deleted at {DateTime.Now:T}.");
 
         try
         {
@@ -36,7 +37,7 @@ public class WebsiteService : Service, IWebsiteService
     {
         var items = await _unitOfWork.Websites.GetByMultipleIdsAsync(ids);
 
-        var returnValue = new ReturnValue($"Websites deleted at {DateTime.Now.ToString("T")}.");
+        var returnValue = new ReturnValue($"Websites deleted at {DateTime.Now:T}.");
 
         try
         {
@@ -57,19 +58,25 @@ public class WebsiteService : Service, IWebsiteService
         if (!string.IsNullOrWhiteSpace(searchValue))
         {
             var searchableProperties = typeof(WebsiteTableViewModel).GetProperties().Where(p => Attribute.IsDefined(p, typeof(Searchable)));
-            items = items.Where(items.GetSearchExpression(searchValue, searchableProperties).Compile());
+            var searchExpression = items.GetSearchExpression(searchValue, searchableProperties);
+            Guard.Against.Null(searchExpression);
+
+            items = items.Where(searchExpression.Compile());
         }
+
         return items;
     }
 
     public async Task<(IEnumerable<WebsiteTableViewModel> Data, int RecordsTotal, int RecordsFiltered)> GetForDataTable(DataParameters parameters)
     {
         var items = await _unitOfWork.Websites.GetForDataTable();
-        int recordsTotal = items.Count();
-        if (!string.IsNullOrWhiteSpace(parameters.Search.Value))
+        var recordsTotal = items.Count();
+        if (!string.IsNullOrWhiteSpace(parameters.Search?.Value))
         {
             items = FilterForDataTable(parameters.Search.Value, items);
         }
+
+        Guard.Against.Null(parameters.Order);
         items = OrderForDataTable(parameters.Order[0].Column, parameters.Order[0].Dir, items);
         return (items.MapToTableViewModel(), recordsTotal, items.Count());
     }
@@ -104,7 +111,7 @@ public class WebsiteService : Service, IWebsiteService
 
     public async Task<ReturnValue> Save(WebsiteEditModel websiteEditModel)
     {
-        logger.LogDebug("CmsService > Save(WebsiteEditModel: {0})", websiteEditModel.ToString());
+        logger.LogDebug("CmsService > Save(WebsiteEditModel: {websiteEditModel})", websiteEditModel.ToString());
 
         var returnValue = new ReturnValue($"Website '{websiteEditModel.Name}' saved.");
 
@@ -120,9 +127,15 @@ public class WebsiteService : Service, IWebsiteService
             else
             {
                 logger.LogDebug("Update website");
-                var website = websiteEditModel.MapToModel(await unitOfWork.Websites.GetByIdAsync(websiteEditModel.VanityId));
+                var website = await unitOfWork.Websites.GetByIdAsync(websiteEditModel.VanityId);
+                if (website is null)
+                {
+                    throw new Exception($"Website not found. VanityId: {websiteEditModel.VanityId}");
+                }
 
-                _unitOfWork.Websites.Update(website);
+                var websiteToUpdate = websiteEditModel.MapToModel(website);
+
+                _unitOfWork.Websites.Update(websiteToUpdate);
             }
 
             await _unitOfWork.Save();
@@ -147,9 +160,9 @@ public class WebsiteService : Service, IWebsiteService
 
     public async Task<WebsiteEditModel?> SetupEditModel(Guid id)
     {
-        logger.LogDebug("CmsService > SetupEditModel(id: {0})", id);
+        logger.LogDebug("CmsService > SetupEditModel(id: {id})", id);
         var item = await _unitOfWork.Websites.GetByIdAsync(id);
-        logger.LogDebug("Website: {0}", item?.ToString());
+        logger.LogDebug("Website: {item}", item?.ToString());
         return item?.MapToEditModel();
     }
 }

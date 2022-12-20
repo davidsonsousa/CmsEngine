@@ -1,12 +1,12 @@
 namespace CmsEngine.Core.Exceptions;
 
-public class NotFoundException : Exception
+public class ItemNotFoundException : Exception
 {
-    public NotFoundException(string message) : base(message)
+    public ItemNotFoundException(string message) : base(message)
     {
     }
 
-    public NotFoundException(string message, Exception innerException) : base(message, innerException)
+    public ItemNotFoundException(string message, Exception innerException) : base(message, innerException)
     {
     }
 }

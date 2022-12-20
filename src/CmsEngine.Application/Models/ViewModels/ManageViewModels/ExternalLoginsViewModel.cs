@@ -8,5 +8,5 @@ public class ExternalLoginsViewModel
 
     public bool ShowRemoveButton { get; set; }
 
-    public string StatusMessage { get; set; }
+    public string StatusMessage { get; set; } = string.Empty;
 }

@@ -34,7 +34,7 @@ public class Repository<TEntity> : IReadRepository<TEntity>,
         return recods;
     }
 
-    public async Task<IEnumerable<TEntity>> GetReadOnlyAsync(Expression<Func<TEntity, bool>> filter = null)
+    public async Task<IEnumerable<TEntity>> GetReadOnlyAsync(Expression<Func<TEntity, bool>>? filter = null)
     {
         var records = GetValidRecords();
 

@@ -8,6 +8,7 @@ global using System.Reflection;
 global using System.Runtime.Versioning;
 global using System.Text.Encodings.Web;
 global using System.Xml.Linq;
+global using Ardalis.GuardClauses;
 global using CmsEngine.Application.Attributes;
 global using CmsEngine.Application.Extensions;
 global using CmsEngine.Application.Extensions.Mapper;
