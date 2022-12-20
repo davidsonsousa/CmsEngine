@@ -7,7 +7,7 @@ public class ApplicationUser : IdentityUser
 
     public string Surname { get; set; } = string.Empty;
 
-    public virtual ICollection<PostApplicationUser> PostApplicationUsers { get; set; }
+    public virtual ICollection<PostApplicationUser> PostApplicationUsers { get; set; } = null!;
 
-    public virtual ICollection<PageApplicationUser> PageApplicationUsers { get; set; }
+    public virtual ICollection<PageApplicationUser> PageApplicationUsers { get; set; } = null!;
 }

@@ -13,6 +13,7 @@ public class PostService : Service, IPostService
     public async Task<ReturnValue> Delete(Guid id)
     {
         var item = await _unitOfWork.Posts.GetByIdAsync(id);
+        Guard.Against.Null(item);
 
         var returnValue = new ReturnValue($"Post '{item.Title}' deleted at {DateTime.Now.ToString("T")}.");
 
@@ -55,16 +56,22 @@ public class PostService : Service, IPostService
         if (!string.IsNullOrWhiteSpace(searchValue))
         {
             var searchableProperties = typeof(PostTableViewModel).GetProperties().Where(p => Attribute.IsDefined(p, typeof(Searchable)));
-            items = items.Where(items.GetSearchExpression(searchValue, searchableProperties).Compile());
+            var searchExpression = items.GetSearchExpression(searchValue, searchableProperties);
+            Guard.Against.Null(searchExpression);
+
+            items = items.Where(searchExpression.Compile());
         }
+
         return items;
     }
 
     public async Task<PostViewModel> GetBySlug(string slug)
     {
-        logger.LogDebug($"PostService > GetBySlug({slug})");
+        logger.LogDebug("PostService > GetBySlug({slug})", slug);
         var item = await _unitOfWork.Posts.GetBySlug(slug);
-        return item?.MapToViewModel();
+        Guard.Against.Null(item, nameof(item), $"Post not found. Slug: {slug}");
+
+        return item.MapToViewModel();
     }
 
     public async Task<IEnumerable<PostEditModel>> GetPublishedOrderedByDate(int count = 0)
@@ -80,10 +87,12 @@ public class PostService : Service, IPostService
     {
         var items = await _unitOfWork.Posts.GetForDataTable();
         int recordsTotal = items.Count();
-        if (!string.IsNullOrWhiteSpace(parameters.Search.Value))
+        if (!string.IsNullOrWhiteSpace(parameters.Search?.Value))
         {
             items = FilterForDataTable(parameters.Search.Value, items);
         }
+
+        Guard.Against.Null(parameters.Order);
         items = OrderForDataTable(parameters.Order[0].Column, parameters.Order[0].Dir, items);
         return (items.MapToTableViewModel(), recordsTotal, items.Count());
     }
@@ -179,12 +188,15 @@ public class PostService : Service, IPostService
             else
             {
                 logger.LogDebug("Update post");
-                var post = postEditModel.MapToModel(await unitOfWork.Posts.GetForSavingById(postEditModel.VanityId));
-                post.WebsiteId = Instance.Id;
+                var post = await unitOfWork.Posts.GetForSavingById(postEditModel.VanityId);
+                Guard.Against.Null(post, nameof(post), $"Post not found. VanityId: {postEditModel.VanityId}");
 
-                _unitOfWork.Posts.RemoveRelatedItems(post);
-                await PrepareRelatedPropertiesAsync(postEditModel, post);
-                _unitOfWork.Posts.Update(post);
+                var postToUpdate = postEditModel.MapToModel();
+                postToUpdate.WebsiteId = Instance.Id;
+
+                _unitOfWork.Posts.RemoveRelatedItems(postToUpdate);
+                await PrepareRelatedPropertiesAsync(postEditModel, postToUpdate);
+                _unitOfWork.Posts.Update(postToUpdate);
             }
 
             await _unitOfWork.Save();
@@ -211,9 +223,12 @@ public class PostService : Service, IPostService
 
     public async Task<PostEditModel> SetupEditModel(Guid id)
     {
-        logger.LogDebug("PostService > SetupPostEditModel(id: {0})", id);
+        logger.LogDebug("PostService > SetupPostEditModel(id: {id})", id);
         var item = await _unitOfWork.Posts.GetForEditingById(id);
-        logger.LogDebug("Post: {0}", item.ToString());
+        Guard.Against.Null(item, nameof(item), $"Post not found. Vanity id: {id}");
+
+        logger.LogDebug("Post: {item}", item.ToString());
+
         var postEditModel = item.MapToEditModel();
         postEditModel.Categories = (await unitOfWork.Categories.GetAllAsync()).MapToViewModelSimple().PopulateCheckboxList(postEditModel.SelectedCategories);
         postEditModel.Tags = (await unitOfWork.Tags.GetAllAsync()).MapToViewModelSimple().PopulateSelectList(postEditModel.SelectedTags);

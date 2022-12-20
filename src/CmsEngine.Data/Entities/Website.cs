@@ -2,13 +2,13 @@ namespace CmsEngine.Data.Entities;
 
 public class Website : BaseEntity
 {
-    public virtual ICollection<Page> Pages { get; set; }
+    public virtual ICollection<Page> Pages { get; set; } = null!;
 
-    public virtual ICollection<Post> Posts { get; set; }
+    public virtual ICollection<Post> Posts { get; set; } = null!;
 
-    public virtual ICollection<Tag> Tags { get; set; }
+    public virtual ICollection<Tag> Tags { get; set; } = null!;
 
-    public virtual ICollection<Category> Categories { get; set; }
+    public virtual ICollection<Category> Categories { get; set; } = null!;
 
     public string Name { get; set; } = string.Empty;
 

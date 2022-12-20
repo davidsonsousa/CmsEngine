@@ -13,6 +13,7 @@ public class TagService : Service, ITagService
     public async Task<ReturnValue> Delete(Guid id)
     {
         var item = await _unitOfWork.Tags.GetByIdAsync(id);
+        Guard.Against.Null(item);
 
         var returnValue = new ReturnValue($"Tag '{item.Name}' deleted at {DateTime.Now.ToString("T")}.");
 
@@ -55,7 +56,10 @@ public class TagService : Service, ITagService
         if (!string.IsNullOrWhiteSpace(searchValue))
         {
             var searchableProperties = typeof(TagTableViewModel).GetProperties().Where(p => Attribute.IsDefined(p, typeof(Searchable)));
-            items = items.Where(items.GetSearchExpression(searchValue, searchableProperties).Compile());
+            var searchExpression = items.GetSearchExpression(searchValue, searchableProperties);
+            Guard.Against.Null(searchExpression);
+
+            items = items.Where(searchExpression.Compile());
         }
         return items;
     }
@@ -64,10 +68,12 @@ public class TagService : Service, ITagService
     {
         var items = await _unitOfWork.Tags.GetAllAsync();
         int recordsTotal = items.Count();
-        if (!string.IsNullOrWhiteSpace(parameters.Search.Value))
+        if (!string.IsNullOrWhiteSpace(parameters.Search?.Value))
         {
             items = FilterForDataTable(parameters.Search.Value, items);
         }
+
+        Guard.Against.Null(parameters.Order);
         items = OrderForDataTable(parameters.Order[0].Column, parameters.Order[0].Dir, items);
         return (items.MapToTableViewModel(), recordsTotal, items.Count());
     }
@@ -124,10 +130,13 @@ public class TagService : Service, ITagService
             else
             {
                 logger.LogDebug("Update tag");
-                var tag = tagEditModel.MapToModel(await unitOfWork.Tags.GetByIdAsync(tagEditModel.VanityId));
-                tag.WebsiteId = Instance.Id;
+                var tag = await unitOfWork.Tags.GetByIdAsync(tagEditModel.VanityId);
+                Guard.Against.Null(tag, nameof(tag), $"Tag not found. VanityId: {tagEditModel.VanityId}");
 
-                _unitOfWork.Tags.Update(tag);
+                var tagToUpdate = tagEditModel.MapToModel(tag);
+                tagToUpdate.WebsiteId = Instance.Id;
+
+                _unitOfWork.Tags.Update(tagToUpdate);
             }
 
             await _unitOfWork.Save();
@@ -150,9 +159,12 @@ public class TagService : Service, ITagService
 
     public async Task<TagEditModel> SetupEditModel(Guid id)
     {
-        logger.LogDebug("CmsService > SetupTagEditModel(id: {0})", id);
+        logger.LogDebug("CmsService > SetupTagEditModel(id: {id})", id);
         var item = await _unitOfWork.Tags.GetByIdAsync(id);
-        logger.LogDebug("Tag: {0}", item.ToString());
-        return item?.MapToEditModel();
+        Guard.Against.Null(item, nameof(item), $"Tag not found. Vanity id: {id}");
+
+        logger.LogDebug("Tag: {item}", item.ToString());
+
+        return item.MapToEditModel();
     }
 }

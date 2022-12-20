@@ -17,7 +17,7 @@ public class PageRepository : Repository<Page>, IPageRepository
         return await Get(q => q.Status == documentStatus).OrderByDescending(o => o.PublishedOn).ToListAsync();
     }
 
-    public async Task<Page> GetBySlug(string slug)
+    public async Task<Page?> GetBySlug(string slug)
     {
         return await Get(q => q.Slug == slug)
                         .Select(p => new Page
@@ -60,7 +60,7 @@ public class PageRepository : Repository<Page>, IPageRepository
         }).ToListAsync();
     }
 
-    public async Task<Page> GetForSavingById(Guid id)
+    public async Task<Page?> GetForSavingById(Guid id)
     {
         return await Get(q => q.VanityId == id).Include(p => p.PageApplicationUsers)
                                                .SingleOrDefaultAsync();

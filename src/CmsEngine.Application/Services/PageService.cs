@@ -13,6 +13,7 @@ public class PageService : Service, IPageService
     public async Task<ReturnValue> Delete(Guid id)
     {
         var item = await _unitOfWork.Pages.GetByIdAsync(id);
+        Guard.Against.Null(item);
 
         var returnValue = new ReturnValue($"Page '{item.Title}' deleted at {DateTime.Now:T}.");
 
@@ -55,8 +56,12 @@ public class PageService : Service, IPageService
         if (!string.IsNullOrWhiteSpace(searchValue))
         {
             var searchableProperties = typeof(PageTableViewModel).GetProperties().Where(p => Attribute.IsDefined(p, typeof(Searchable)));
-            items = items.Where(items.GetSearchExpression(searchValue, searchableProperties).Compile());
+            var searchExpression = items.GetSearchExpression(searchValue, searchableProperties);
+            Guard.Against.Null(searchExpression);
+
+            items = items.Where(searchExpression.Compile());
         }
+
         return items;
     }
 
@@ -72,17 +77,21 @@ public class PageService : Service, IPageService
     {
         logger.LogDebug($"PageService > GetBySlug({slug})");
         var item = await _unitOfWork.Pages.GetBySlug(slug);
-        return item?.MapToViewModel();
+        Guard.Against.Null(item);
+
+        return item.MapToViewModel();
     }
 
     public async Task<(IEnumerable<PageTableViewModel> Data, int RecordsTotal, int RecordsFiltered)> GetForDataTable(DataParameters parameters)
     {
         var items = await _unitOfWork.Pages.GetForDataTable();
         var recordsTotal = items.Count();
-        if (!string.IsNullOrWhiteSpace(parameters.Search.Value))
+        if (!string.IsNullOrWhiteSpace(parameters.Search?.Value))
         {
             items = FilterForDataTable(parameters.Search.Value, items);
         }
+
+        Guard.Against.Null(parameters.Order);
         items = OrderForDataTable(parameters.Order[0].Column, parameters.Order[0].Dir, items);
         return (items.MapToTableViewModel(), recordsTotal, items.Count());
     }
@@ -144,12 +153,15 @@ public class PageService : Service, IPageService
             else
             {
                 logger.LogDebug("Update page");
-                var page = pageEditModel.MapToModel(await unitOfWork.Pages.GetForSavingById(pageEditModel.VanityId));
-                page.WebsiteId = Instance.Id;
+                var page = await unitOfWork.Pages.GetForSavingById(pageEditModel.VanityId);
+                Guard.Against.Null(page, nameof(page), $"Page not found. VanityId: {pageEditModel.VanityId}");
 
-                _unitOfWork.Pages.RemoveRelatedItems(page);
-                await PrepareRelatedPropertiesAsync(page);
-                _unitOfWork.Pages.Update(page);
+                var pageToUpdate = pageEditModel.MapToModel(page);
+                pageToUpdate.WebsiteId = Instance.Id;
+
+                _unitOfWork.Pages.RemoveRelatedItems(pageToUpdate);
+                await PrepareRelatedPropertiesAsync(pageToUpdate);
+                _unitOfWork.Pages.Update(pageToUpdate);
             }
 
             await _unitOfWork.Save();
@@ -172,10 +184,13 @@ public class PageService : Service, IPageService
 
     public async Task<PageEditModel> SetupEditModel(Guid id)
     {
-        logger.LogDebug("PageService > SetupPageEditModel(id: {0})", id);
+        logger.LogDebug("PageService > SetupPageEditModel(id: {id})", id);
         var item = await _unitOfWork.Pages.GetByIdAsync(id);
-        logger.LogDebug("Page: {0}", item.ToString());
-        return item?.MapToEditModel();
+        Guard.Against.Null(item, nameof(item), $"Page not found. Vanity id: {id}");
+
+        logger.LogDebug("Page: {item}", item.ToString());
+
+        return item.MapToEditModel();
     }
 
     private async Task PrepareRelatedPropertiesAsync(Page page)

@@ -7,46 +7,46 @@
                     <h6 class="text-white">@Model.Name</h6>
                 </div>
                 <div class="contact-details">
-                    @if (!string.IsNullOrWhiteSpace(Model.ContactDetails.Address))
+                    @if (Model.HasAddress)
                     {
-                        <p>@Model.ContactDetails.Address</p>
+                        <p>@Model.ContactDetails?.Address</p>
                     }
-                    @if (!string.IsNullOrWhiteSpace(Model.ContactDetails.Phone))
+                    @if (Model.HasPhone)
                     {
-                        <p>Phone: @Model.ContactDetails.Phone</p>
+                        <p>Phone: @Model.ContactDetails?.Phone</p>
                     }
 
-                    @if (Model.SocialMedia.HasSocialMedia || Model.ContactDetails.HasEmail)
+                    @if (Model.HasSocialMedia || Model.HasEmail)
                     {
                         <ul class="social-menu">
-                            @if (!string.IsNullOrWhiteSpace(Model.ContactDetails.Email))
+                            @if (Model.HasEmail)
                             {
                                 <li class="list-inline-item">
                                     <a asp-controller="Home" asp-action="Contact"><i class="fa fa-envelope"></i></a>
                                 </li>
                             }
-                            @if (!string.IsNullOrWhiteSpace(Model.SocialMedia.Facebook))
+                            @if (Model.HasFacebook)
                             {
                                 <li class="list-inline-item">
-                                    <a href="https://www.facebook.com/@Model.SocialMedia.Facebook"><i class="fab fa-facebook"></i></a>
+                                    <a href="https://www.facebook.com/@Model.SocialMedia?.Facebook"><i class="fab fa-facebook"></i></a>
                                 </li>
                             }
-                            @if (!string.IsNullOrWhiteSpace(Model.SocialMedia.Twitter))
+                            @if (Model.HasTwitter)
                             {
                                 <li class="list-inline-item">
-                                    <a href="https://twitter.com/@Model.SocialMedia.Twitter"><i class="fab fa-twitter"></i></a>
+                                    <a href="https://twitter.com/@Model.SocialMedia?.Twitter"><i class="fab fa-twitter"></i></a>
                                 </li>
                             }
-                            @if (!string.IsNullOrWhiteSpace(Model.SocialMedia.Instagram))
+                            @if (Model.HasInstagram)
                             {
                                 <li class="list-inline-item">
-                                    <a href="https://www.instagram.com/@Model.SocialMedia.Instagram"><i class="fab fa-instagram"></i></a>
+                                    <a href="https://www.instagram.com/@Model.SocialMedia?.Instagram"><i class="fab fa-instagram"></i></a>
                                 </li>
                             }
-                            @if (!string.IsNullOrWhiteSpace(Model.SocialMedia.LinkedIn))
+                            @if (Model.HasLinkedIn)
                             {
                                 <li class="list-inline-item">
-                                    <a href="https://www.linkedin.com/in/@Model.SocialMedia.LinkedIn"><i class="fab fa-linkedin"></i></a>
+                                    <a href="https://www.linkedin.com/in/@Model.SocialMedia?.LinkedIn"><i class="fab fa-linkedin"></i></a>
                                 </li>
                             }
                         </ul>

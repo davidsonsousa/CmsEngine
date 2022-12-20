@@ -36,12 +36,12 @@
 @section Scripts{
     @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
 
-    @if (Model.Google.HasRecaptchaSiteKey)
+    @if (Model.HasRecaptchaSiteKey)
     {
-        <script src="https://www.google.com/recaptcha/api.js?render=@Model.Google.GoogleRecaptchaSiteKey"></script>
+        <script src="https://www.google.com/recaptcha/api.js?render=@Model.Google?.GoogleRecaptchaSiteKey"></script>
         <script>
             grecaptcha.ready(function () {
-                grecaptcha.execute('@Model.Google.GoogleRecaptchaSiteKey', { action: 'homepage' }).then(function (token) {
+                grecaptcha.execute('@Model.Google?.GoogleRecaptchaSiteKey', { action: 'homepage' }).then(function (token) {
                     console.log(token)
                     document.getElementById('g-recaptcha-response').value = token;
                 });

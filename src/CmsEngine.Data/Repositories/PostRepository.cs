@@ -17,7 +17,7 @@ public class PostRepository : Repository<Post>, IPostRepository
         return await Get(q => q.Status == documentStatus).OrderByDescending(o => o.PublishedOn).ToListAsync();
     }
 
-    public async Task<Post> GetBySlug(string slug)
+    public async Task<Post?> GetBySlug(string slug)
     {
         return await Get(q => q.Slug == slug)
                          .Select(p => new Post
@@ -247,7 +247,7 @@ public class PostRepository : Repository<Post>, IPostRepository
         }).ToListAsync();
     }
 
-    public async Task<Post> GetForSavingById(Guid id)
+    public async Task<Post?> GetForSavingById(Guid id)
     {
         return await Get(q => q.VanityId == id).Include(p => p.PostCategories)
                                                .Include(p => p.PostTags)
@@ -255,7 +255,7 @@ public class PostRepository : Repository<Post>, IPostRepository
                                                .SingleOrDefaultAsync();
     }
 
-    public async Task<Post> GetForEditingById(Guid id)
+    public async Task<Post?> GetForEditingById(Guid id)
     {
         return await Get(q => q.VanityId == id).Include(p => p.PostCategories)
                                                    .ThenInclude(pc => pc.Category)

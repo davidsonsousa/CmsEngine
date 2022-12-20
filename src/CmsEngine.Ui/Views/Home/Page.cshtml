@@ -1,7 +1,10 @@
 @model InstanceViewModel
 
 @{
-    var selectedPage = (PageViewModel)Model.SelectedDocument;
+    var selectedDocument = Model.SelectedDocument;
+    Guard.Against.Null(selectedDocument, nameof(selectedDocument), "Page not found");
+
+    var selectedPage = (PageViewModel)selectedDocument;
     string imagePath = !string.IsNullOrWhiteSpace(selectedPage.HeaderImage)
                        ? string.Format(Main.ImagePath.Default, "page", selectedPage.HeaderImage)
                        : "/img/no-image.png";

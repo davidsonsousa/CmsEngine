@@ -128,10 +128,7 @@ public class WebsiteService : Service, IWebsiteService
             {
                 logger.LogDebug("Update website");
                 var website = await unitOfWork.Websites.GetByIdAsync(websiteEditModel.VanityId);
-                if (website is null)
-                {
-                    throw new Exception($"Website not found. VanityId: {websiteEditModel.VanityId}");
-                }
+                Guard.Against.Null(website, nameof(website), $"Website not found. VanityId: {websiteEditModel.VanityId}");
 
                 var websiteToUpdate = websiteEditModel.MapToModel(website);
 

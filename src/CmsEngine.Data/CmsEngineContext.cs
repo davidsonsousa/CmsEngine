@@ -4,17 +4,17 @@ public class CmsEngineContext : IdentityDbContext<ApplicationUser>
 {
     private readonly IHttpContextAccessor httpContextAccessor;
 
-    public DbSet<Website> Websites { get; set; }
+    public DbSet<Website> Websites => Set<Website>();
 
-    public DbSet<Page> Pages { get; set; }
+    public DbSet<Page> Pages => Set<Page>();
 
-    public DbSet<Post> Posts { get; set; }
+    public DbSet<Post> Posts => Set<Post>();
 
-    public DbSet<Tag> Tags { get; set; }
+    public DbSet<Tag> Tags => Set<Tag>();
 
-    public DbSet<Category> Categories { get; set; }
+    public DbSet<Category> Categories => Set<Category>();
 
-    public DbSet<Email> Emails { get; set; }
+    public DbSet<Email> Emails => Set<Email>();
 
     public CmsEngineContext(DbContextOptions<CmsEngineContext> options, IHttpContextAccessor hca) : base(options)
     {

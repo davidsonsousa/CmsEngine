@@ -6,7 +6,7 @@ public class Category : BaseEntity
 
     public virtual Website? Website { get; set; }
 
-    public virtual ICollection<PostCategory>? PostCategories { get; set; }
+    public virtual ICollection<PostCategory> PostCategories { get; set; } = null!;
 
     public string Name { get; set; } = string.Empty;
 

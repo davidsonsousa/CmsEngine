@@ -1,6 +1,9 @@
 @model InstanceViewModel
 @{
-    var selectedPost = (PostViewModel)Model.SelectedDocument;
+    var selectedDocument = Model.SelectedDocument;
+    Guard.Against.Null(selectedDocument, nameof(selectedDocument), "Post not found");
+
+    var selectedPost = (PostViewModel)selectedDocument;
     string imagePath = !string.IsNullOrWhiteSpace(selectedPost.HeaderImage)
                        ? string.Format(Main.ImagePath.Default, "post", selectedPost.HeaderImage)
                        : "/img/no-image.png";
@@ -93,7 +96,7 @@
                             </div>
                         *@
 
-                        @if (Model.ApiDetails.HasDisqusDetails)
+                        @if (Model.HasDisqusDetails)
                         {
                             <div id="disqus_thread"></div>
                             <script>
@@ -104,7 +107,7 @@
 
                             (function () { // DON'T EDIT BELOW THIS LINE
                                 var d = document, s = d.createElement('script');
-                                s.src = 'https://@(Model.ApiDetails.DisqusShortName).disqus.com/embed.js';
+                                s.src = 'https://@(Model.ApiDetails?.DisqusShortName).disqus.com/embed.js';
                                 s.setAttribute('data-timestamp', +new Date());
                                 (d.head || d.body).appendChild(s);
                             })();
