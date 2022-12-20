@@ -95,7 +95,7 @@ public static class CategoryExtensions
                 Name = item.Name,
                 Description = item.Description,
                 Slug = item.Slug,
-                Posts = item.PostCategories.Select(x => x.Post).MapToViewModel()
+                Posts = item.PostCategories?.Select(x => x.Post).MapToViewModel()
             });
         }
 

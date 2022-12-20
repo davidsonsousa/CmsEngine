@@ -4,18 +4,18 @@ public class ContactForm
 {
     [Required]
     [DataType(DataType.EmailAddress)]
-    public string From { get; set; }
+    public string From { get; set; } = string.Empty;
 
     [DataType(DataType.EmailAddress)]
     public string? To { get; set; }
 
     [Required]
     [MaxLength(150)]
-    public string Subject { get; set; }
+    public string Subject { get; set; } = string.Empty;
 
     [Required]
     [MaxLength(500)]
-    public string Message { get; set; }
+    public string Message { get; set; } = string.Empty;
 
     public ContactForm()
     {

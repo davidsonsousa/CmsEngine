@@ -55,8 +55,9 @@ public static class ManageNavPages
     {
         Guard.Against.Null(viewContext);
 
-        string activePage = viewContext.ViewData["ActivePage"] as string
-                            ?? System.IO.Path.GetFileNameWithoutExtension(viewContext.ActionDescriptor.DisplayName);
-        return string.Equals(activePage, page, StringComparison.OrdinalIgnoreCase) ? "active" : null;
+        var activePage = viewContext.ViewData["ActivePage"] as string
+                         ?? Path.GetFileNameWithoutExtension(viewContext.ActionDescriptor.DisplayName);
+
+        return string.Equals(activePage, page, StringComparison.OrdinalIgnoreCase) ? "active" : string.Empty;
     }
 }

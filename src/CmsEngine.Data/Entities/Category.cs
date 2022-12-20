@@ -3,12 +3,15 @@ namespace CmsEngine.Data.Entities;
 public class Category : BaseEntity
 {
     public int? WebsiteId { get; set; }
+
     public virtual Website? Website { get; set; }
 
     public virtual ICollection<PostCategory>? PostCategories { get; set; }
 
-    public string Name { get; set; }
-    public string Slug { get; set; }
+    public string Name { get; set; } = string.Empty;
+
+    public string Slug { get; set; } = string.Empty;
+
     public string? Description { get; set; }
 
     // Properties for data projection only

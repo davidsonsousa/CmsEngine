@@ -41,7 +41,12 @@ public static class DataTableHelper
     private static string PrepareProperty(IViewModel item, PropertyInfo property)
     {
         GeneralStatus generalStatus;
-        var value = item.GetType().GetProperty(property.Name).GetValue(item);
+        var value = item.GetType().GetProperty(property.Name)?.GetValue(item);
+
+        if (value == null)
+        {
+            return string.Empty;
+        }
 
         switch (property.PropertyType.Name)
         {
@@ -63,12 +68,12 @@ public static class DataTableHelper
                 return $"<span class=\"badge badge-{generalStatus.ToString().ToLowerInvariant()}\">{documentStatus.ToEnum<DocumentStatus>().GetName()}</status-label>";
             case "UserViewModel":
                 var author = (UserViewModel)value;
-                return HtmlEncoder.Default.Encode(author?.FullName ?? "");
+                return HtmlEncoder.Default.Encode(author?.FullName ?? string.Empty);
             case "Boolean":
                 generalStatus = (bool)value ? GeneralStatus.Success : GeneralStatus.Danger;
                 return $"<span class=\"badge badge-{generalStatus.ToString().ToLowerInvariant()}\">{((bool)value).ToYesNo().ToUpper()}</status-label>";
             default:
-                return HtmlEncoder.Default.Encode(value?.ToString() ?? "");
+                return HtmlEncoder.Default.Encode(value?.ToString() ?? string.Empty);
         }
     }
 }

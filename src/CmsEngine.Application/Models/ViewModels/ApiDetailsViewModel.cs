@@ -2,8 +2,9 @@ namespace CmsEngine.Application.Models.ViewModels;
 
 public class ApiDetailsViewModel
 {
-    public string FacebookAppId { get; set; }
-    public string FacebookApiVersion { get; set; }
+    public string? FacebookAppId { get; set; }
+
+    public string? FacebookApiVersion { get; set; }
 
     public bool HasFacebookDetails {
         get {
@@ -11,7 +12,7 @@ public class ApiDetailsViewModel
         }
     }
 
-    public string DisqusShortName { get; set; }
+    public string? DisqusShortName { get; set; }
 
     public bool HasDisqusDetails {
         get {

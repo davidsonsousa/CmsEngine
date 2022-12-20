@@ -5,10 +5,15 @@ public class CmsEngineContext : IdentityDbContext<ApplicationUser>
     private readonly IHttpContextAccessor httpContextAccessor;
 
     public DbSet<Website> Websites { get; set; }
+
     public DbSet<Page> Pages { get; set; }
+
     public DbSet<Post> Posts { get; set; }
+
     public DbSet<Tag> Tags { get; set; }
+
     public DbSet<Category> Categories { get; set; }
+
     public DbSet<Email> Emails { get; set; }
 
     public CmsEngineContext(DbContextOptions<CmsEngineContext> options, IHttpContextAccessor hca) : base(options)
@@ -45,7 +50,7 @@ public class CmsEngineContext : IdentityDbContext<ApplicationUser>
         var timeStamp = DateTime.Now;
         var entries = ChangeTracker.Entries().Where(e => e.Entity is BaseEntity && (e.State == EntityState.Added || e.State == EntityState.Modified));
         // TODO: Find a better way to get the user
-        var currentUsername = httpContextAccessor.HttpContext.User.Identity.Name;
+        var currentUsername = httpContextAccessor.HttpContext.User.Identity?.Name;
         foreach (var entry in entries)
         {
             if (entry.State == EntityState.Added)

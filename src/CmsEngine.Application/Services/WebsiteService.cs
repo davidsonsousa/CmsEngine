@@ -145,11 +145,11 @@ public class WebsiteService : Service, IWebsiteService
         return new WebsiteEditModel();
     }
 
-    public async Task<WebsiteEditModel> SetupEditModel(Guid id)
+    public async Task<WebsiteEditModel?> SetupEditModel(Guid id)
     {
         logger.LogDebug("CmsService > SetupEditModel(id: {0})", id);
         var item = await _unitOfWork.Websites.GetByIdAsync(id);
-        logger.LogDebug("Website: {0}", item.ToString());
+        logger.LogDebug("Website: {0}", item?.ToString());
         return item?.MapToEditModel();
     }
 }

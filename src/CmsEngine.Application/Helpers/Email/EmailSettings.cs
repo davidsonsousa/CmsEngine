@@ -2,19 +2,19 @@ namespace CmsEngine.Application.Helpers.Email;
 
 public class EmailSettings
 {
-    public string Domain { get; set; }
+    public string Domain { get; set; } = string.Empty;
 
     public int Port { get; set; }
 
-    public string Username { get; set; }
+    public string Username { get; set; } = string.Empty;
 
-    public string Password { get; set; }
+    public string Password { get; set; } = string.Empty;
 
-    public string FromEmail { get; set; }
+    public string FromEmail { get; set; } = string.Empty;
 
-    public string CcEmail { get; set; }
+    public string CcEmail { get; set; } = string.Empty;
 
-    public string BccEmail { get; set; }
+    public string BccEmail { get; set; } = string.Empty;
 
     public override string ToString()
     {

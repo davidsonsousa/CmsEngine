@@ -7,7 +7,7 @@ public static class ExpressionBuilder
     private static readonly MethodInfo endsWithMethod = typeof(string).GetMethod("EndsWith", new Type[] { typeof(string) });
 
 
-    public static Expression<Func<T, bool>> GetExpression<T>(IList<ExpressionFilter> filters, LogicalOperator logicalOperator)
+    public static Expression<Func<T, bool>>? GetExpression<T>(IList<ExpressionFilter> filters, LogicalOperator logicalOperator)
     {
         if (filters.Count == 0)
         {

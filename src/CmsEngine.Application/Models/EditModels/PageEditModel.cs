@@ -10,17 +10,17 @@ public class PageEditModel : BaseEditModel, IEditModel
 
     [Required]
     [MaxLength(100, ErrorMessage = "The title must have less than 100 characters")]
-    public string Title { get; set; }
+    public string Title { get; set; } = string.Empty;
 
-    public string Slug { get; set; }
+    public string Slug { get; set; } = string.Empty;
 
-    public string HeaderImage { get; set; }
+    public string? HeaderImage { get; set; }
 
     [Required]
     [MaxLength(150, ErrorMessage = "The description must have less than 150 characters")]
-    public string Description { get; set; }
+    public string Description { get; set; } = string.Empty;
 
-    public string DocumentContent { get; set; }
+    public string DocumentContent { get; set; } = string.Empty;
 
     public DocumentStatus Status { get; set; }
 
