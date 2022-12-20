@@ -3,7 +3,7 @@
 # You can modify the rules from these initially generated values to suit your own policies
 # You can learn more about editorconfig here: https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-code-style-settings-reference
 
-[/src/CmsEngine.Data/Migrations/**]
+[/src/CmsEngine.{Data/Migrations,Ui/Areas/Identity/Pages}/**]
 generated_code = true
 dotnet_analyzer_diagnostic.severity = none
 
