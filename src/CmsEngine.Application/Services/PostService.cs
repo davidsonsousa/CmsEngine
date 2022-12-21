@@ -242,7 +242,7 @@ public class PostService : Service, IPostService
         if (postEditModel.SelectedCategories != null)
         {
             var categoryIds = await _unitOfWork.Categories.GetIdsByMultipleGuidsAsync(postEditModel.SelectedCategories.ToList().ConvertAll(Guid.Parse));
-            foreach (int categoryId in categoryIds)
+            foreach (var categoryId in categoryIds)
             {
                 post.PostCategories.Add(new PostCategory
                 {
@@ -256,7 +256,7 @@ public class PostService : Service, IPostService
         if (postEditModel.SelectedTags != null)
         {
             var tagIds = await _unitOfWork.Tags.GetIdsByMultipleGuidsAsync(postEditModel.SelectedTags.ToList().ConvertAll(Guid.Parse));
-            foreach (int tagId in tagIds)
+            foreach (var tagId in tagIds)
             {
                 post.PostTags.Add(new PostTag
                 {
