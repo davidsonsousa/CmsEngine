@@ -197,7 +197,7 @@ public class PostRepository : Repository<Post>, IPostRepository
 
     public async Task<IEnumerable<Post>> GetPublishedLatestPosts(int count)
     {
-        return await Get(q => q.Status == DocumentStatus.Published)
+        return await Get(q => q.Status == DocumentStatus.Published && q.PublishedOn < DateTime.Now)
                         .Include(p => p.PostCategories)
                             .ThenInclude(pc => pc.Category)
                         .Include(p => p.PostApplicationUsers)
