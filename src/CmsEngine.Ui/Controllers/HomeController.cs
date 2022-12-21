@@ -58,7 +58,7 @@ public class HomeController : BaseController
             return View(Instance);
         }
 
-        contactForm.To = Instance.ContactDetails.Email;
+        contactForm.To = Instance.ContactDetails?.Email;
 
         try
         {

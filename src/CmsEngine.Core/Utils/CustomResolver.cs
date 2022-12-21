@@ -6,7 +6,7 @@ public sealed class CustomResolver : DefaultContractResolver
     {
         var prop = base.CreateProperty(member, memberSerialization);
         var propInfo = member as PropertyInfo;
-        if (propInfo != null)
+        if (propInfo is not null && propInfo.GetMethod is not null)
         {
             if (propInfo.GetMethod.IsVirtual && !propInfo.GetMethod.IsFinal)
             {

@@ -2,8 +2,8 @@ namespace CmsEngine.Ui.Controllers;
 
 public class BaseController : Controller
 {
-    //protected readonly IService service;
     public InstanceViewModel Instance { get; private set; }
+
     public ILogger Logger { get; private set; }
 
     private readonly ICategoryService _categoryService;
@@ -34,14 +34,14 @@ public class BaseController : Controller
     {
         Guard.Against.Null(context);
 
-        if (context.ActionArguments.TryGetValue("q", out object searchValue))
+        if (context.ActionArguments.TryGetValue("q", out var searchValue))
         {
             // Showing searched posts
-            Instance.PagedPosts = await _postService.FindPublishedForPaginationOrderByDateDescending(searchValue.ToString());
+            Instance.PagedPosts = await _postService.FindPublishedForPaginationOrderByDateDescending(searchValue?.ToString() ?? string.Empty);
         }
         else
         {
-            if (context.ActionArguments.TryGetValue("page", out object value) && int.TryParse(value.ToString(), out int page))
+            if (context.ActionArguments.TryGetValue("page", out var value) && value is not null && int.TryParse(value.ToString(), out var page))
             {
                 // Showing posts after paging
                 Instance.PagedPosts = await _postService.GetPublishedForPagination(page);

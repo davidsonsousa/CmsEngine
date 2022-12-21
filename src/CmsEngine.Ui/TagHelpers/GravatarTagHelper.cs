@@ -5,7 +5,7 @@ public class GravatarTagHelper : TagHelper
     /// <summary>
     /// E-mail address registered on gravatar.com
     /// </summary>
-    public string EmailAddress { get; set; }
+    public string EmailAddress { get; set; } = string.Empty;
 
     /// <summary>
     /// Image size (default is 80)
@@ -20,15 +20,18 @@ public class GravatarTagHelper : TagHelper
     /// <summary>
     /// Default image url loaded from gravatar.com (default is "")
     /// </summary>
-    public string DefaultImageUrl { get; set; } = "";
+    public string DefaultImageUrl { get; set; } = string.Empty;
+
     public bool ForceDefaultImage { get; set; }
 
     /// <summary>
     /// Image rating (default is G)
     /// </summary>
     public Rating Rating { get; set; } = Rating.G;
+
     public bool ForceSecureRequest { get; set; }
-    public string AdditionalCssClasses { get; set; }
+
+    public string? AdditionalCssClasses { get; set; }
 
     public override void Process(TagHelperContext context, TagHelperOutput output)
     {
@@ -38,7 +41,7 @@ public class GravatarTagHelper : TagHelper
         }
 
         output.TagName = "img";
-        string email = string.IsNullOrWhiteSpace(EmailAddress) ? string.Empty : EmailAddress.ToLower();
+        var email = string.IsNullOrWhiteSpace(EmailAddress) ? string.Empty : EmailAddress.ToLower();
 
         output.Attributes.Add("src",
             string.Format("{0}://{1}.gravatar.com/avatar/{2}?s={3}{4}{5}{6}",

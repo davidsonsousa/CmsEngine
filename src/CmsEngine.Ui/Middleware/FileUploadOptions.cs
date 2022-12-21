@@ -2,6 +2,7 @@
 
 public class FileUploadOptions
 {
-    public string Root { get; set; }
-    public string Folder { get; set; }
+    public string Root { get; set; } = string.Empty;
+
+    public string Folder { get; set; } = string.Empty;
 }

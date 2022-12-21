@@ -33,18 +33,21 @@
                                 <p class="h4"><a href="~/blog/category/@category.Slug">@category.Name</a></p>
                                 <table class="table table-sm table-borderless">
                                     <tbody>
-                                        @foreach (var post in category.Posts)
+                                        @if (category.Posts is not null)
                                         {
-                                            <tr>
-                                                <td>@post.PublishedOn</td>
-                                                <td>
-                                                    <p>
-                                                        <a href="~/blog/post/@post.Slug">@post.Title</a>
-                                                        <br />
-                                                        <small class="text-muted">@post.Description</small>
-                                                    </p>
-                                                </td>
-                                            </tr>
+                                            foreach (var post in category.Posts)
+                                            {
+                                                <tr>
+                                                    <td>@post.PublishedOn</td>
+                                                    <td>
+                                                        <p>
+                                                            <a href="~/blog/post/@post.Slug">@post.Title</a>
+                                                            <br />
+                                                            <small class="text-muted">@post.Description</small>
+                                                        </p>
+                                                    </td>
+                                                </tr>
+                                            }
                                         }
                                     </tbody>
                                 </table>

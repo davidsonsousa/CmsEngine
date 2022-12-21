@@ -13,6 +13,7 @@ public class CategoryService : Service, ICategoryService
     public async Task<ReturnValue> Delete(Guid id)
     {
         var item = await _unitOfWork.Categories.GetByIdAsync(id);
+        Guard.Against.Null(item);
 
         var returnValue = new ReturnValue($"Category '{item.Name}' deleted at {DateTime.Now:T}.");
 
@@ -55,7 +56,10 @@ public class CategoryService : Service, ICategoryService
         if (!string.IsNullOrWhiteSpace(searchValue))
         {
             var searchableProperties = typeof(CategoryTableViewModel).GetProperties().Where(p => Attribute.IsDefined(p, typeof(Searchable)));
-            items = items.Where(items.GetSearchExpression(searchValue, searchableProperties).Compile());
+            var searchExpression = items.GetSearchExpression(searchValue, searchableProperties);
+            Guard.Against.Null(searchExpression);
+
+            items = items.Where(searchExpression.Compile());
         }
 
         return items;
@@ -66,7 +70,7 @@ public class CategoryService : Service, ICategoryService
         logger.LogDebug("CategoryService > GetCategoriesWithPost()");
         var items = await _unitOfWork.Categories.GetCategoriesWithPostOrderedByName();
         logger.LogDebug("Categories loaded: {0}", items.Count());
-        return items.MapToViewModelWithPost();
+        return items.MapToViewModelWithPost(Instance.DateFormat);
     }
 
     public async Task<IEnumerable<CategoryViewModel>> GetCategoriesWithPostCount()
@@ -82,11 +86,12 @@ public class CategoryService : Service, ICategoryService
         var items = await _unitOfWork.Categories.GetAllAsync();
         var recordsTotal = items.Count();
 
-        if (!string.IsNullOrWhiteSpace(parameters.Search.Value))
+        if (!string.IsNullOrWhiteSpace(parameters.Search?.Value))
         {
             items = FilterForDataTable(parameters.Search.Value, items);
         }
 
+        Guard.Against.Null(parameters.Order);
         items = OrderForDataTable(parameters.Order[0].Column, parameters.Order[0].Dir, items);
 
         return (items.MapToTableViewModel(), recordsTotal, items.Count());
@@ -139,10 +144,13 @@ public class CategoryService : Service, ICategoryService
             else
             {
                 logger.LogDebug("Update category");
-                var category = categoryEditModel.MapToModel(await unitOfWork.Categories.GetByIdAsync(categoryEditModel.VanityId));
-                category.WebsiteId = Instance.Id;
+                var category = await unitOfWork.Categories.GetByIdAsync(categoryEditModel.VanityId);
+                Guard.Against.Null(category, nameof(category), $"Category not found. VanityId: {categoryEditModel.VanityId}");
 
-                _unitOfWork.Categories.Update(category);
+                var categoryToUpdate = categoryEditModel.MapToModel(category);
+                categoryToUpdate.WebsiteId = Instance.Id;
+
+                _unitOfWork.Categories.Update(categoryToUpdate);
             }
 
             await _unitOfWork.Save();
@@ -167,8 +175,10 @@ public class CategoryService : Service, ICategoryService
     {
         logger.LogDebug("CmsService > SetupCategoryEditModel(id: {0})", id);
         var item = await _unitOfWork.Categories.GetByIdAsync(id);
+        Guard.Against.Null(item, nameof(item), $"Category not found. Vanity id: {id}");
+
         logger.LogDebug("Category: {0}", item.ToString());
 
-        return item?.MapToEditModel();
+        return item.MapToEditModel();
     }
 }

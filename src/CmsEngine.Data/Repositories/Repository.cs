@@ -1,9 +1,9 @@
 namespace CmsEngine.Data.Repositories;
 
 public class Repository<TEntity> : IReadRepository<TEntity>,
-                                       IDataModificationRepository<TEntity>,
-                                       IDataModificationRangeRepository<TEntity>
-                                       where TEntity : BaseEntity
+                                   IDataModificationRepository<TEntity>,
+                                   IDataModificationRangeRepository<TEntity>
+                                   where TEntity : BaseEntity
 {
     protected readonly CmsEngineContext dbContext;
 
@@ -17,7 +17,7 @@ public class Repository<TEntity> : IReadRepository<TEntity>,
         return await GetValidRecords().ToListAsync();
     }
 
-    public IQueryable<TEntity> Get(Expression<Func<TEntity, bool>> filter = null, int count = 0)
+    public IQueryable<TEntity> Get(Expression<Func<TEntity, bool>>? filter = null, int count = 0)
     {
         var recods = GetValidRecords();
 
@@ -34,7 +34,7 @@ public class Repository<TEntity> : IReadRepository<TEntity>,
         return recods;
     }
 
-    public async Task<IEnumerable<TEntity>> GetReadOnlyAsync(Expression<Func<TEntity, bool>> filter = null)
+    public async Task<IEnumerable<TEntity>> GetReadOnlyAsync(Expression<Func<TEntity, bool>>? filter = null)
     {
         var records = GetValidRecords();
 
@@ -46,12 +46,12 @@ public class Repository<TEntity> : IReadRepository<TEntity>,
         return await records.ToListAsync();
     }
 
-    public async Task<TEntity> GetByIdAsync(int id)
+    public async Task<TEntity?> GetByIdAsync(int id)
     {
         return await Get(q => q.Id == id).SingleOrDefaultAsync();
     }
 
-    public async Task<TEntity> GetByIdAsync(Guid id)
+    public async Task<TEntity?> GetByIdAsync(Guid id)
     {
         return await Get(q => q.VanityId == id).SingleOrDefaultAsync();
     }

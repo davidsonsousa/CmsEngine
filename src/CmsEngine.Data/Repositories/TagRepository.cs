@@ -7,12 +7,12 @@ public class TagRepository : Repository<Tag>, ITagRepository
 
     }
 
-    public async Task<Tag> GetTagBySlug(string slug)
+    public async Task<Tag?> GetTagBySlug(string slug)
     {
         return await Get(q => q.Slug == slug).SingleOrDefaultAsync();
     }
 
-    public async Task<Tag> GetTagBySlugWithPosts(string slug)
+    public async Task<Tag?> GetTagBySlugWithPosts(string slug)
     {
         return await Get(q => q.Slug == slug).Include(t => t.PostTags).SingleOrDefaultAsync();
     }

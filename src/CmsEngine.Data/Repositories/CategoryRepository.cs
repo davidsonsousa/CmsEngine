@@ -6,7 +6,7 @@ public class CategoryRepository : Repository<Category>, ICategoryRepository
     {
     }
 
-    public async Task<Category> GetCategoryBySlug(string slug)
+    public async Task<Category?> GetCategoryBySlug(string slug)
     {
         return await Get(q => q.Slug == slug).SingleOrDefaultAsync();
     }
@@ -25,7 +25,7 @@ public class CategoryRepository : Repository<Category>, ICategoryRepository
                           .OrderBy(o => o.Name).ToListAsync();
     }
 
-    public async Task<Category> GetCategoryBySlugWithPosts(string slug)
+    public async Task<Category?> GetCategoryBySlugWithPosts(string slug)
     {
         return await Get(q => q.Slug == slug).Include(c => c.PostCategories).SingleOrDefaultAsync();
     }

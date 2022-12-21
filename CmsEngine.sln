@@ -7,17 +7,18 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution files", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
 		.gitignore = .gitignore
+		global.json = global.json
 		LICENSE = LICENSE
 		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CmsEngine.Core", "src\CmsEngine.Core\CmsEngine.Core.csproj", "{0DCFFE7F-6BF0-40F5-B8ED-B0A213B415C4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CmsEngine.Core", "src\CmsEngine.Core\CmsEngine.Core.csproj", "{0DCFFE7F-6BF0-40F5-B8ED-B0A213B415C4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CmsEngine.Data", "src\CmsEngine.Data\CmsEngine.Data.csproj", "{9D472F52-7D5D-4956-9DE2-DB5546262DAB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CmsEngine.Data", "src\CmsEngine.Data\CmsEngine.Data.csproj", "{9D472F52-7D5D-4956-9DE2-DB5546262DAB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CmsEngine.Application", "src\CmsEngine.Application\CmsEngine.Application.csproj", "{081C9102-37CB-4873-97D2-0A5063FFA4A3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CmsEngine.Application", "src\CmsEngine.Application\CmsEngine.Application.csproj", "{081C9102-37CB-4873-97D2-0A5063FFA4A3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CmsEngine.Ui", "src\CmsEngine.Ui\CmsEngine.Ui.csproj", "{AEED8BDE-0C8A-43BC-91B8-77B967511921}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CmsEngine.Ui", "src\CmsEngine.Ui\CmsEngine.Ui.csproj", "{AEED8BDE-0C8A-43BC-91B8-77B967511921}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

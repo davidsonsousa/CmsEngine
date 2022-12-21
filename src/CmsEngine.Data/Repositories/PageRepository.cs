@@ -9,17 +9,17 @@ public class PageRepository : Repository<Page>, IPageRepository
 
     public async Task<IEnumerable<Page>> GetOrderByDescending(Expression<Func<Page, DateTime>> orderBy)
     {
-        return await Get().OrderByDescending(orderBy).ToListAsync();
+        return await Get(q => q.Status == DocumentStatus.Published && q.PublishedOn < DateTime.Now).OrderByDescending(orderBy).ToListAsync();
     }
 
     public async Task<IEnumerable<Page>> GetByStatusOrderByDescending(DocumentStatus documentStatus)
     {
-        return await Get(q => q.Status == documentStatus).OrderByDescending(o => o.PublishedOn).ToListAsync();
+        return await Get(q => q.Status == documentStatus && q.PublishedOn < DateTime.Now).OrderByDescending(o => o.PublishedOn).ToListAsync();
     }
 
-    public async Task<Page> GetBySlug(string slug)
+    public async Task<Page?> GetBySlug(string slug)
     {
-        return await Get(q => q.Slug == slug)
+        return await Get(q => q.Slug == slug && q.PublishedOn < DateTime.Now)
                         .Select(p => new Page
                         {
                             VanityId = p.VanityId,
@@ -60,7 +60,7 @@ public class PageRepository : Repository<Page>, IPageRepository
         }).ToListAsync();
     }
 
-    public async Task<Page> GetForSavingById(Guid id)
+    public async Task<Page?> GetForSavingById(Guid id)
     {
         return await Get(q => q.VanityId == id).Include(p => p.PageApplicationUsers)
                                                .SingleOrDefaultAsync();

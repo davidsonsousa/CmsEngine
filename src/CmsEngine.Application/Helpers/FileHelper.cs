@@ -26,6 +26,7 @@ public static class FileHelper
             || fileName.EndsWith(".bmp", true, CultureInfo.InvariantCulture);
     }
 
+    [SupportedOSPlatform("windows")]
     public static void ResizeImage(string originalFile, string newFile, int newWidth, int maxHeight, bool onlyResizeIfWider)
     {
         var fullsizeImage = Image.FromFile(originalFile);
@@ -53,13 +54,14 @@ public static class FileHelper
         fullsizeImage.Dispose();
 
         var encoderParameters = new EncoderParameters(1);
-        encoderParameters.Param[0] = new EncoderParameter(System.Drawing.Imaging.Encoder.Quality, 75L);
+        encoderParameters.Param[0] = new EncoderParameter(Encoder.Quality, 75L);
 
         // Save resized picture
-        newImage.Save(newFile, GetEncoderInfo("image/jpeg"), encoderParameters);
+        newImage.Save(newFile, GetEncoderInfo("image/jpeg")!, encoderParameters);
     }
 
-    private static ImageCodecInfo GetEncoderInfo(string mimeType)
+    [SupportedOSPlatform("windows")]
+    private static ImageCodecInfo? GetEncoderInfo(string mimeType)
     {
         var encoders = ImageCodecInfo.GetImageEncoders();
         for (var j = 0; j < encoders.Length; ++j)
@@ -72,6 +74,7 @@ public static class FileHelper
         return null;
     }
 
+    [SupportedOSPlatform("windows")]
     public static Bitmap CropImage(Image img, Rectangle cropArea)
     {
         var bmpImage = new Bitmap(img);

@@ -14,7 +14,7 @@ public interface IReadRepository<TEntity> where TEntity : class
     /// <param name="filter"></param>
     /// <param name="count"></param>
     /// <returns></returns>
-    IQueryable<TEntity> Get(Expression<Func<TEntity, bool>> filter = null, int count = 0);
+    IQueryable<TEntity> Get(Expression<Func<TEntity, bool>>? filter = null, int count = 0);
 
     /// <summary>
     /// Gets items based on condition for read-only
@@ -22,21 +22,21 @@ public interface IReadRepository<TEntity> where TEntity : class
     /// <param name="filter"></param>
     /// <param name="count"></param>
     /// <returns></returns>
-    Task<IEnumerable<TEntity>> GetReadOnlyAsync(Expression<Func<TEntity, bool>> filter = null);
+    Task<IEnumerable<TEntity>> GetReadOnlyAsync(Expression<Func<TEntity, bool>>? filter = null);
 
     /// <summary>
     /// Get record by id
     /// </summary>
     /// <param name="id"></param>
     /// <returns></returns>
-    Task<TEntity> GetByIdAsync(int id);
+    Task<TEntity?> GetByIdAsync(int id);
 
     /// <summary>
     /// Gets record by vanity id
     /// </summary>
     /// <param name="id"></param>
     /// <returns></returns>
-    Task<TEntity> GetByIdAsync(Guid id);
+    Task<TEntity?> GetByIdAsync(Guid id);
 
     /// <summary>
     /// Get multiple records by an array of ids

@@ -6,10 +6,10 @@ public class DataParameters
     public int Draw { get; set; }
 
     [JsonProperty(PropertyName = "columns")]
-    public List<DataColumn> Columns { get; set; }
+    public List<DataColumn>? Columns { get; set; }
 
     [JsonProperty(PropertyName = "order")]
-    public List<DataOrder> Order { get; set; }
+    public List<DataOrder>? Order { get; set; }
 
     [JsonProperty(PropertyName = "start")]
     public int Start { get; set; }
@@ -18,5 +18,5 @@ public class DataParameters
     public int Length { get; set; }
 
     [JsonProperty(PropertyName = "search")]
-    public Search Search { get; set; }
+    public Search? Search { get; set; }
 }
