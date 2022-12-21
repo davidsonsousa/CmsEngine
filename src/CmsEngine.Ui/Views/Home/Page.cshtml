@@ -34,12 +34,7 @@
                     <div class="post-details">
                         <h1>@selectedPage.Title</h1>
                         <div class="post-footer d-flex align-items-center flex-column flex-sm-row">
-                            <a href="#" class="author d-flex align-items-center flex-wrap">
-                                <div class="avatar">
-                                    <gravatar email-address="@selectedPage.Author.Email" image-size="40" additional-css-classes="img-avatar"></gravatar>
-                                </div>
-                                <div class="title"><span>@selectedPage.Author.FullName</span></div>
-                            </a>
+                            @await Html.PartialAsync("_Author", selectedPage.Author)
                             <div class="d-flex align-items-center flex-wrap">
                                 <div class="date meta-last"><i class="icon-clock"></i> @selectedPage.PublishedOn</div>
                             </div>

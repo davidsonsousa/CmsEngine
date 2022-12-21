@@ -1,0 +1,8 @@
+﻿@model CmsEngine.Application.Models.ViewModels.UserViewModel
+
+<a href="/about-me" class="author d-flex align-items-center flex-wrap">
+    <div class="avatar">
+        <gravatar email-address="@Model.Email" image-size="40" additional-css-classes="img-avatar"></gravatar>
+    </div>
+    <div class="title"><span>@Model.FullName</span></div>
+</a>
