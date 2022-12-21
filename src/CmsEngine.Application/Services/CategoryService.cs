@@ -70,7 +70,7 @@ public class CategoryService : Service, ICategoryService
         logger.LogDebug("CategoryService > GetCategoriesWithPost()");
         var items = await _unitOfWork.Categories.GetCategoriesWithPostOrderedByName();
         logger.LogDebug("Categories loaded: {0}", items.Count());
-        return items.MapToViewModelWithPost();
+        return items.MapToViewModelWithPost(Instance.DateFormat);
     }
 
     public async Task<IEnumerable<CategoryViewModel>> GetCategoriesWithPostCount()

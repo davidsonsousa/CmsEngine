@@ -71,7 +71,7 @@ public class PostService : Service, IPostService
         var item = await _unitOfWork.Posts.GetBySlug(slug);
         Guard.Against.Null(item, nameof(item), $"Post not found. Slug: {slug}");
 
-        return item.MapToViewModel();
+        return item.MapToViewModel(Instance.DateFormat);
     }
 
     public async Task<IEnumerable<PostEditModel>> GetPublishedOrderedByDate(int count = 0)
@@ -101,35 +101,35 @@ public class PostService : Service, IPostService
     {
         logger.LogDebug("CmsService > GetPublishedByCategoryForPagination(categorySlug: {0}, page: {1})", categorySlug, page);
         var posts = await _unitOfWork.Posts.GetPublishedByCategoryForPagination(categorySlug, page, Instance.ArticleLimit);
-        return new PaginatedList<PostViewModel>(posts.Items.MapToViewModelForPartialView(), posts.Count, page, Instance.ArticleLimit);
+        return new PaginatedList<PostViewModel>(posts.Items.MapToViewModelForPartialView(Instance.DateFormat), posts.Count, page, Instance.ArticleLimit);
     }
 
     public async Task<PaginatedList<PostViewModel>> GetPublishedByTagForPagination(string tagSlug, int page = 1)
     {
         logger.LogDebug("CmsService > GetPublishedByTagForPagination(tagSlug: {0}, page: {1})", tagSlug, page);
         var posts = await _unitOfWork.Posts.GetPublishedByTagForPagination(tagSlug, page, Instance.ArticleLimit);
-        return new PaginatedList<PostViewModel>(posts.Items.MapToViewModelForPartialViewForTags(), posts.Count, page, Instance.ArticleLimit);
+        return new PaginatedList<PostViewModel>(posts.Items.MapToViewModelForPartialViewForTags(Instance.DateFormat), posts.Count, page, Instance.ArticleLimit);
     }
 
     public async Task<PaginatedList<PostViewModel>> GetPublishedForPagination(int page = 1)
     {
         logger.LogDebug("CmsService > GetPublishedForPagination(page: {0})", page);
         var posts = await _unitOfWork.Posts.GetPublishedForPagination(page, Instance.ArticleLimit);
-        return new PaginatedList<PostViewModel>(posts.Items.MapToViewModelForPartialView(), posts.Count, page, Instance.ArticleLimit);
+        return new PaginatedList<PostViewModel>(posts.Items.MapToViewModelForPartialView(Instance.DateFormat), posts.Count, page, Instance.ArticleLimit);
     }
 
     public async Task<IEnumerable<PostViewModel>> GetPublishedLatestPosts(int count)
     {
         logger.LogDebug("CmsService > GetPublishedLatestPosts(count: {0})", count);
         var posts = await _unitOfWork.Posts.GetPublishedLatestPosts(count);
-        return posts.MapToViewModelForPartialView();
+        return posts.MapToViewModelForPartialView(Instance.DateFormat);
     }
 
     public async Task<PaginatedList<PostViewModel>> FindPublishedForPaginationOrderByDateDescending(string searchTerm = "", int page = 1)
     {
         logger.LogDebug("CmsService > FindPublishedForPaginationOrderByDateDescending(page: {0}, searchTerm: {1})", page, searchTerm);
         var posts = await _unitOfWork.Posts.FindPublishedForPaginationOrderByDateDescending(page, searchTerm, Instance.ArticleLimit);
-        return new PaginatedList<PostViewModel>(posts.Items.MapToViewModelForPartialView(), posts.Count, page, Instance.ArticleLimit);
+        return new PaginatedList<PostViewModel>(posts.Items.MapToViewModelForPartialView(Instance.DateFormat), posts.Count, page, Instance.ArticleLimit);
     }
 
     public IEnumerable<Post> OrderForDataTable(int column, string direction, IEnumerable<Post> items)

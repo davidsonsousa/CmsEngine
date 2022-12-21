@@ -70,7 +70,7 @@ public class PageService : Service, IPageService
         logger.LogDebug("PageService > GetPagesByStatusReadOnly()");
         var items = await _unitOfWork.Pages.GetByStatusOrderByDescending(DocumentStatus.Published);
         logger.LogDebug("Pages loaded: {0}", items.Count());
-        return items.MapToViewModel();
+        return items.MapToViewModel(Instance.DateFormat);
     }
 
     public async Task<PageViewModel> GetBySlug(string slug)
@@ -79,7 +79,7 @@ public class PageService : Service, IPageService
         var item = await _unitOfWork.Pages.GetBySlug(slug);
         Guard.Against.Null(item);
 
-        return item.MapToViewModel();
+        return item.MapToViewModel(Instance.DateFormat);
     }
 
     public async Task<(IEnumerable<PageTableViewModel> Data, int RecordsTotal, int RecordsFiltered)> GetForDataTable(DataParameters parameters)

@@ -110,7 +110,7 @@ public static class PageExtensions
                 Title = item.Title,
                 Description = item.Description,
                 Slug = item.Slug,
-                PublishedOn = item.PublishedOn.ToString(),
+                PublishedOn = item.PublishedOn.ToString("yyyy-MM-dd HH:mm:ss"),
                 Status = item.Status,
                 Author = item.ApplicationUsers.MapToViewModelSimple().Single()
             });
@@ -124,7 +124,7 @@ public static class PageExtensions
     /// </summary>
     /// <param name="item"></param>
     /// <returns></returns>
-    public static PageViewModel MapToViewModel(this Page item)
+    public static PageViewModel MapToViewModel(this Page item, string dateFormat)
     {
         return new PageViewModel
         {
@@ -134,7 +134,7 @@ public static class PageExtensions
             Description = item.Description,
             DocumentContent = item.DocumentContent,
             HeaderImage = item.HeaderImage,
-            PublishedOn = item.PublishedOn.ToShortDateString(),
+            PublishedOn = item.PublishedOn.ToString(dateFormat),
             Author = item.ApplicationUsers.MapToViewModelSimple().Single()
         };
     }
@@ -144,7 +144,7 @@ public static class PageExtensions
     /// </summary>
     /// <param name="pages"></param>
     /// <returns></returns>
-    public static IEnumerable<PageViewModel> MapToViewModel(this IEnumerable<Page> pages)
+    public static IEnumerable<PageViewModel> MapToViewModel(this IEnumerable<Page> pages, string dateFormat)
     {
         var editModels = new List<PageViewModel>();
 
@@ -159,7 +159,7 @@ public static class PageExtensions
                 Description = item.Description,
                 DocumentContent = item.DocumentContent,
                 HeaderImage = item.HeaderImage,
-                PublishedOn = item.PublishedOn.ToShortDateString(),
+                PublishedOn = item.PublishedOn.ToString(dateFormat),
                 Status = item.Status
             });
         }
