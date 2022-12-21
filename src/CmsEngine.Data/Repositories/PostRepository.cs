@@ -2,6 +2,8 @@ namespace CmsEngine.Data.Repositories;
 
 public class PostRepository : Repository<Post>, IPostRepository
 {
+    private readonly Expression<Func<Post, bool>> filterPublished = q => q.Status == DocumentStatus.Published && q.PublishedOn < DateTime.Now;
+
     public PostRepository(CmsEngineContext context) : base(context)
     {
 
@@ -9,17 +11,17 @@ public class PostRepository : Repository<Post>, IPostRepository
 
     public async Task<IEnumerable<Post>> GetPublishedPostsOrderByDescending(Expression<Func<Post, DateTime>> orderBy)
     {
-        return await Get(q => q.Status == DocumentStatus.Published).OrderByDescending(orderBy).ToListAsync();
+        return await Get(filterPublished).OrderByDescending(orderBy).ToListAsync();
     }
 
     public async Task<IEnumerable<Post>> GetByStatusOrderByDescending(DocumentStatus documentStatus)
     {
-        return await Get(q => q.Status == documentStatus).OrderByDescending(o => o.PublishedOn).ToListAsync();
+        return await Get(q => q.Status == documentStatus && q.PublishedOn < DateTime.Now).OrderByDescending(o => o.PublishedOn).ToListAsync();
     }
 
     public async Task<Post?> GetBySlug(string slug)
     {
-        return await Get(q => q.Slug == slug)
+        return await Get(q => q.Slug == slug && q.PublishedOn < DateTime.Now)
                          .Select(p => new Post
                          {
                              VanityId = p.VanityId,
@@ -48,7 +50,7 @@ public class PostRepository : Repository<Post>, IPostRepository
 
     public async Task<(IEnumerable<Post> Items, int Count)> GetPublishedByCategoryForPagination(string categorySlug, int page, int articleLimit)
     {
-        var posts = Get(q => q.Status == DocumentStatus.Published)
+        var posts = Get(filterPublished)
                         .Include(p => p.PostCategories)
                             .ThenInclude(pc => pc.Category)
                         .Include(p => p.PostApplicationUsers)
@@ -85,7 +87,7 @@ public class PostRepository : Repository<Post>, IPostRepository
 
     public async Task<(IEnumerable<Post> Items, int Count)> GetPublishedByTagForPagination(string tagSlug, int page, int articleLimit)
     {
-        var posts = Get(q => q.Status == DocumentStatus.Published).Include(p => p.PostTags)
+        var posts = Get(filterPublished).Include(p => p.PostTags)
                                                                       .ThenInclude(pt => pt.Tag)
                                                                   .Include(p => p.PostCategories)
                                                                       .ThenInclude(pc => pc.Category)
@@ -130,10 +132,10 @@ public class PostRepository : Repository<Post>, IPostRepository
     public async Task<(IEnumerable<Post> Items, int Count)> FindPublishedForPaginationOrderByDateDescending(int page, string searchTerm, int articleLimit)
     {
         var posts = string.IsNullOrWhiteSpace(searchTerm)
-                    ? Get(q => q.Status == DocumentStatus.Published)
+                    ? Get(filterPublished)
                         .Include(p => p.PostApplicationUsers)
                             .ThenInclude(pau => pau.ApplicationUser)
-                    : Get(q => (q.Title.Contains(searchTerm) || q.DocumentContent.Contains(searchTerm)) && q.Status == DocumentStatus.Published)
+                    : Get(q => (q.Title.Contains(searchTerm) || q.DocumentContent.Contains(searchTerm)) && q.Status == DocumentStatus.Published && q.PublishedOn < DateTime.Now)
                         .Include(p => p.PostApplicationUsers)
                             .ThenInclude(pau => pau.ApplicationUser);
 
@@ -166,7 +168,7 @@ public class PostRepository : Repository<Post>, IPostRepository
 
     public async Task<(IEnumerable<Post> Items, int Count)> GetPublishedForPagination(int page, int articleLimit)
     {
-        var posts = Get(q => q.Status == DocumentStatus.Published).Include(p => p.PostApplicationUsers)
+        var posts = Get(filterPublished).Include(p => p.PostApplicationUsers)
                                                                     .ThenInclude(pau => pau.ApplicationUser);
         var count = posts.Count();
         var items = await posts.Select(p => new Post
@@ -197,7 +199,7 @@ public class PostRepository : Repository<Post>, IPostRepository
 
     public async Task<IEnumerable<Post>> GetPublishedLatestPosts(int count)
     {
-        return await Get(q => q.Status == DocumentStatus.Published && q.PublishedOn < DateTime.Now)
+        return await Get(filterPublished)
                         .Include(p => p.PostCategories)
                             .ThenInclude(pc => pc.Category)
                         .Include(p => p.PostApplicationUsers)
