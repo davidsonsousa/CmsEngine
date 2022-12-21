@@ -4,7 +4,7 @@ var gulp = require('gulp');
 var uglify = require('gulp-uglify');
 var del = require('del');
 var rename = require("gulp-rename");
-var sass = require('gulp-sass');
+var sass = require('gulp-sass')(require('sass'));
 var autoprefixer = require('gulp-autoprefixer');
 var cssmin = require('gulp-cssmin');
 
