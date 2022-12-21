@@ -191,7 +191,7 @@ public class PostService : Service, IPostService
                 var post = await unitOfWork.Posts.GetForSavingById(postEditModel.VanityId);
                 Guard.Against.Null(post, nameof(post), $"Post not found. VanityId: {postEditModel.VanityId}");
 
-                var postToUpdate = postEditModel.MapToModel();
+                var postToUpdate = postEditModel.MapToModel(post);
                 postToUpdate.WebsiteId = Instance.Id;
 
                 _unitOfWork.Posts.RemoveRelatedItems(postToUpdate);
