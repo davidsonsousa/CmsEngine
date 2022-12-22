@@ -2,14 +2,28 @@ namespace CmsEngine.Ui.Extensions;
 
 public static class HtmlHelperExtensions
 {
-    public static string IsSelected(this IHtmlHelper htmlHelper, string controllers, string actions, string cssClass = "active")
+    public static string IsSelected(this IHtmlHelper htmlHelper, string? controllers = null, string? actions = null, string? slugs = null, string cssClass = "active")
     {
-        Guard.Against.Null(htmlHelper);
+        var hasSlugs = !string.IsNullOrWhiteSpace(slugs) && CheckValues(htmlHelper, "slug", slugs);
+        var hasActions = !string.IsNullOrWhiteSpace(actions) && CheckValues(htmlHelper, "action", actions);
+        var hasController = !string.IsNullOrWhiteSpace(controllers) && CheckValues(htmlHelper, "controller", controllers);
 
-        string currentAction = (htmlHelper.ViewContext.RouteData.Values["action"] as string)?.ToLower();
-        string currentController = (htmlHelper.ViewContext.RouteData.Values["controller"] as string)?.ToLower();
-        var acceptedActions = (actions ?? currentAction).Split(',').Select(x => x.Trim().ToLower());
-        var acceptedControllers = (controllers ?? currentController).Split(',').Select(x => x.Trim().ToLower());
-        return acceptedActions.Contains(currentAction) && acceptedControllers.Contains(currentController) ? cssClass : string.Empty;
+        return hasSlugs || (hasActions && hasController)
+               ? cssClass
+               : string.Empty;
+    }
+
+    private static bool CheckValues(IHtmlHelper htmlHelper, string valueName, string? values)
+    {
+        var currentValue = htmlHelper.ViewContext.RouteData.Values[valueName] as string;
+
+        if (string.IsNullOrWhiteSpace(currentValue))
+        {
+            return false;
+        }
+
+        var acceptedValues = (values ?? currentValue).Split(',').Select(x => x.Trim());
+
+        return acceptedValues.Contains(currentValue, StringComparer.OrdinalIgnoreCase);
     }
 }

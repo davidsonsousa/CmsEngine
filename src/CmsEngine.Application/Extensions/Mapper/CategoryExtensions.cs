@@ -82,7 +82,7 @@ public static class CategoryExtensions
     /// </summary>
     /// <param name="categories"></param>
     /// <returns></returns>
-    public static IEnumerable<CategoryViewModel> MapToViewModel(this IEnumerable<Category> categories)
+    public static IEnumerable<CategoryViewModel> MapToViewModel(this IEnumerable<Category> categories, string dateFormat)
     {
         var viewModel = new List<CategoryViewModel>();
 
@@ -95,7 +95,7 @@ public static class CategoryExtensions
                 Name = item.Name,
                 Description = item.Description,
                 Slug = item.Slug,
-                Posts = item.PostCategories.Select(x => x.Post).MapToViewModel()
+                Posts = item.PostCategories?.Select(x => x.Post).MapToViewModel(dateFormat)
             });
         }
 
@@ -152,7 +152,7 @@ public static class CategoryExtensions
     /// </summary>
     /// <param name="categories"></param>
     /// <returns></returns>
-    public static IEnumerable<CategoryViewModel> MapToViewModelWithPost(this IEnumerable<Category> categories)
+    public static IEnumerable<CategoryViewModel> MapToViewModelWithPost(this IEnumerable<Category> categories, string dateFormat)
     {
         var viewModel = new List<CategoryViewModel>();
 
@@ -169,7 +169,7 @@ public static class CategoryExtensions
                     Title = p.Title,
                     Description = p.Description,
                     Slug = p.Slug,
-                    PublishedOn = p.PublishedOn.ToShortDateString()
+                    PublishedOn = p.PublishedOn.ToString(dateFormat)
                 })
             });
         }

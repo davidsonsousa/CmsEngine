@@ -1,3 +1,5 @@
+using System.Runtime.Versioning;
+
 namespace CmsEngine.Ui.Areas.Cms.Controllers;
 
 [Authorize]
@@ -55,18 +57,18 @@ public class BaseController : Controller
 
     protected async Task<ContentResult> UploadImageAsync(string webrootPath, string folderName)
     {
-        string folderPath = GetUploadFolderPath(webrootPath, folderName);
+        var folderPath = GetUploadFolderPath(webrootPath, folderName);
 
         var formFile = Request.Form.Files[0];
 
         if (formFile.Length == 0)
         {
-            return null;
+            return Content(string.Empty);
         }
 
         _ = await UploadFileAsync(folderPath, formFile);
 
-        string pathUrl = $"/image/{folderName}/";
+        var pathUrl = $"/image/{folderName}/";
 
         var returnImage = new TinyMceUploadResult
         {
@@ -76,9 +78,10 @@ public class BaseController : Controller
         return Content(JsonConvert.SerializeObject(returnImage).ToLowerInvariant(), "application/json");
     }
 
+    [SupportedOSPlatform("windows")]
     protected async Task<ContentResult> PrepareAndUploadFilesAsync(string webrootPath, string folderName)
     {
-        string folderPath = GetUploadFolderPath(webrootPath, folderName);
+        var folderPath = GetUploadFolderPath(webrootPath, folderName);
 
         var fileList = new List<UploadFilesResult>();
 
@@ -89,11 +92,11 @@ public class BaseController : Controller
                 continue;
             }
 
-            string originalFile = await UploadFileAsync(folderPath, formFile);
+            var originalFile = await UploadFileAsync(folderPath, formFile);
 
-            string fileSize = FileHelper.FormatFileSize(originalFile);
-            bool isImage = FileHelper.IsImage(formFile.FileName);
-            string pathUrl;
+            var fileSize = FileHelper.FormatFileSize(originalFile);
+            var isImage = FileHelper.IsImage(formFile.FileName);
+            var pathUrl = string.Empty;
 
             if (isImage)
             {
@@ -129,15 +132,16 @@ public class BaseController : Controller
         return Content(JsonConvert.SerializeObject(fileList).ToLowerInvariant(), "application/json");
     }
 
+    [SupportedOSPlatform("windows")]
     private static void ResizeImages(string folderPath, IFormFile formFile, string originalFile, int width, int height)
     {
-        string thumbnailFileName = Path.Combine(folderPath, $"{width}x{height}_{formFile.FileName}");
+        var thumbnailFileName = Path.Combine(folderPath, $"{width}x{height}_{formFile.FileName}");
         FileHelper.ResizeImage(originalFile, thumbnailFileName, width, height, true);
     }
 
-    private static async Task<string> UploadFileAsync(string folderPath, IFormFile formFile)
+    private async static Task<string> UploadFileAsync(string folderPath, IFormFile formFile)
     {
-        string filePath = Path.Combine(folderPath, Path.GetFileName(formFile.FileName));
+        var filePath = Path.Combine(folderPath, Path.GetFileName(formFile.FileName));
         using (var stream = new FileStream(filePath, FileMode.Create))
         {
             await formFile.CopyToAsync(stream);
@@ -148,7 +152,7 @@ public class BaseController : Controller
 
     private static string GetUploadFolderPath(string webrootPath, string folderName)
     {
-        string folder = Path.Combine(webrootPath, "UploadedFiles", folderName);
+        var folder = Path.Combine(webrootPath, "UploadedFiles", folderName);
 
         if (!Directory.Exists(folder))
         {

@@ -6,5 +6,5 @@ public class DataOrder
     public int Column { get; set; }
 
     [JsonProperty(PropertyName = "dir")]
-    public string Dir { get; set; }
+    public string Dir { get; set; } = string.Empty;
 }

@@ -112,7 +112,7 @@ public static class PostExtensions
                 Title = item.Title,
                 Description = item.Description,
                 Slug = item.Slug,
-                PublishedOn = item.PublishedOn.ToString(),
+                PublishedOn = item.PublishedOn.ToString("yyyy-MM-dd HH:mm:ss"),
                 Status = item.Status,
                 Author = item.ApplicationUsers.MapToViewModelSimple().Single()
             });
@@ -126,7 +126,7 @@ public static class PostExtensions
     /// </summary>
     /// <param name="item"></param>
     /// <returns></returns>
-    public static PostViewModel MapToViewModel(this Post item)
+    public static PostViewModel MapToViewModel(this Post item, string dateFormat)
     {
         return new PostViewModel
         {
@@ -136,7 +136,7 @@ public static class PostExtensions
             Description = item.Description,
             DocumentContent = item.DocumentContent,
             HeaderImage = item.HeaderImage,
-            PublishedOn = item.PublishedOn.ToShortDateString(),
+            PublishedOn = item.PublishedOn.ToString(dateFormat),
             Categories = item.Categories.MapToViewModelSimple(),
             Author = item.ApplicationUsers.MapToViewModelSimple().Single()
         };
@@ -147,7 +147,7 @@ public static class PostExtensions
     /// </summary>
     /// <param name="item"></param>
     /// <returns></returns>
-    public static IEnumerable<PostViewModel> MapToViewModel(this IEnumerable<Post> posts)
+    public static IEnumerable<PostViewModel> MapToViewModel(this IEnumerable<Post> posts, string dateFormat)
     {
         var viewModels = new List<PostViewModel>();
 
@@ -162,7 +162,7 @@ public static class PostExtensions
                 Description = item.Description,
                 DocumentContent = item.DocumentContent,
                 HeaderImage = item.HeaderImage,
-                PublishedOn = item.PublishedOn.ToShortDateString(),
+                PublishedOn = item.PublishedOn.ToString(dateFormat),
                 Status = item.Status
             });
         }
@@ -175,7 +175,7 @@ public static class PostExtensions
     /// </summary>
     /// <param name="item"></param>
     /// <returns></returns>
-    public static IEnumerable<PostViewModel> MapToViewModelWithCategories(this IEnumerable<Post> posts)
+    public static IEnumerable<PostViewModel> MapToViewModelWithCategories(this IEnumerable<Post> posts, string dateFormat)
     {
         var viewModels = new List<PostViewModel>();
 
@@ -190,9 +190,9 @@ public static class PostExtensions
                 Description = item.Description,
                 DocumentContent = item.DocumentContent,
                 HeaderImage = item.HeaderImage,
-                PublishedOn = item.PublishedOn.ToShortDateString(),
+                PublishedOn = item.PublishedOn.ToString(dateFormat),
                 Status = item.Status,
-                Categories = item.PostCategories.Select(x => x.Category).MapToViewModel()
+                Categories = item.PostCategories.Select(x => x.Category).MapToViewModel(dateFormat)
             });
         }
 
@@ -204,7 +204,7 @@ public static class PostExtensions
     /// </summary>
     /// <param name="item"></param>
     /// <returns></returns>
-    public static IEnumerable<PostViewModel> MapToViewModelWithTags(this IEnumerable<Post> posts)
+    public static IEnumerable<PostViewModel> MapToViewModelWithTags(this IEnumerable<Post> posts, string dateFormat)
     {
         var viewModels = new List<PostViewModel>();
 
@@ -219,7 +219,7 @@ public static class PostExtensions
                 Description = item.Description,
                 DocumentContent = item.DocumentContent,
                 HeaderImage = item.HeaderImage,
-                PublishedOn = item.PublishedOn.ToShortDateString(),
+                PublishedOn = item.PublishedOn.ToString(dateFormat),
                 Status = item.Status,
                 Tags = item.PostTags.Select(x => x.Tag).MapToViewModel()
             });
@@ -233,7 +233,7 @@ public static class PostExtensions
     /// </summary>
     /// <param name="item"></param>
     /// <returns></returns>
-    public static IEnumerable<PostViewModel> MapToViewModelForPartialView(this IEnumerable<Post> posts)
+    public static IEnumerable<PostViewModel> MapToViewModelForPartialView(this IEnumerable<Post> posts, string dateFormat)
     {
         var viewModels = new List<PostViewModel>();
 
@@ -246,7 +246,7 @@ public static class PostExtensions
                 Slug = item.Slug,
                 Description = item.Description,
                 HeaderImage = item.HeaderImage,
-                PublishedOn = item.PublishedOn.ToShortDateString(),
+                PublishedOn = item.PublishedOn.ToString(dateFormat),
                 Categories = item.Categories.MapToViewModelSimple(),
                 Author = item.ApplicationUsers.MapToViewModelSimple().Single()
             });
@@ -260,7 +260,7 @@ public static class PostExtensions
     /// </summary>
     /// <param name="item"></param>
     /// <returns></returns>
-    public static IEnumerable<PostViewModel> MapToViewModelForPartialViewForTags(this IEnumerable<Post> posts)
+    public static IEnumerable<PostViewModel> MapToViewModelForPartialViewForTags(this IEnumerable<Post> posts, string dateFormat)
     {
         var viewModels = new List<PostViewModel>();
 
@@ -273,7 +273,7 @@ public static class PostExtensions
                 Slug = item.Slug,
                 Description = item.Description,
                 HeaderImage = item.HeaderImage,
-                PublishedOn = item.PublishedOn.ToShortDateString(),
+                PublishedOn = item.PublishedOn.ToString(dateFormat),
                 Categories = item.Categories.MapToViewModelSimple(),
                 Tags = item.Tags.MapToViewModelSimple(),
                 Author = item.ApplicationUsers.MapToViewModelSimple().Single()

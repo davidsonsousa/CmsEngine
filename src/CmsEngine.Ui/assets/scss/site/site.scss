@@ -58,7 +58,7 @@ section {
     &.featured-posts {
         .row {
             .text-inner {
-                padding: 70px 20px;
+                padding: 10px 20px;
             }
 
             &:nth-of-type(2n) {
@@ -68,4 +68,8 @@ section {
             }
         }
     }
+}
+
+section.featured-posts .image{
+    max-height: 100%;
 }

@@ -12,5 +12,5 @@ public class DataTableViewModel
     public int RecordsFiltered { get; set; }
 
     [JsonProperty(PropertyName = "data")]
-    public List<List<string>> Data { get; set; }
+    public List<List<string>>? Data { get; set; }
 }

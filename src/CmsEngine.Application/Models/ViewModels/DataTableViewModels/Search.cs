@@ -6,5 +6,5 @@ public class Search
     public bool Regex { get; set; }
 
     [JsonProperty(PropertyName = "value")]
-    public string Value { get; set; }
+    public string? Value { get; set; }
 }

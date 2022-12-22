@@ -5,7 +5,7 @@ public class ReturnValue
     public ReturnValue(string message, bool isError = false)
     {
         Message = message;
-        IsError = IsError;
+        IsError = isError;
     }
 
     [JsonProperty(PropertyName = "message")]
@@ -15,10 +15,10 @@ public class ReturnValue
     public bool IsError { get; private set; }
 
     [JsonProperty(PropertyName = "exception")]
-    public string Exception { get; private set; }
+    public string Exception { get; private set; } = string.Empty;
 
-    [JsonProperty(PropertyName = "value")]
-    public object Value { get; set; }
+    //[JsonProperty(PropertyName = "value")]
+    //public object Value { get; set; }
 
     public void SetErrorMessage(string message, string exception = "")
     {

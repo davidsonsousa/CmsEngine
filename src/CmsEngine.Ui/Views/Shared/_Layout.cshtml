@@ -2,9 +2,9 @@
 <!DOCTYPE html>
 <html>
 <head>
-    @if (Model.Google.HasAnalytics)
+    @if (Model.HasGoogleAnalytics)
     {
-        @Html.Raw(Model.Google.GoogleAnalytics)
+        @Html.Raw(Model.Google?.GoogleAnalytics)
     }
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -14,15 +14,15 @@
     <meta name="robots" content="all,follow">
 
     @RenderSection("FacebookMeta", required: false)
-    @if (Model.ApiDetails.HasFacebookDetails)
+    @if (Model.HasFacebookDetails)
     {
-        <meta property="fb:app_id" content="@Model.ApiDetails.FacebookAppId" />
+        <meta property="fb:app_id" content="@Model.ApiDetails?.FacebookAppId" />
     }
 
     @RenderSection("TwitterMeta", required: false)
-    @if (Model.SocialMedia.HasTwitter)
+    @if (Model.HasTwitter)
     {
-        <meta name="twitter:site" content="@@@Model.SocialMedia.Twitter">
+        <meta name="twitter:site" content="@@@Model.SocialMedia?.Twitter">
     }
 
     <link rel="alternate" type="application/rss+xml" title="Subscribe to Davidson Sousa" href="http://feedpress.me/DavidsonSousa" />
@@ -72,16 +72,19 @@
                 <div id="navbarcollapse" class="collapse navbar-collapse">
                     <ul class="navbar-nav ml-auto">
                         <li class="nav-item">
-                            <a asp-controller="Home" asp-action="Index" class="nav-link @Html.IsSelected(controllers: "Home", actions: "Index, Page")">Home</a>
+                            <a href="/about-me" class="nav-link @Html.IsSelected(slugs: "about-me")">About</a>
                         </li>
                         <li class="nav-item">
-                            <a asp-controller="Blog" asp-action="Index" class="nav-link @Html.IsSelected(controllers: "Blog", actions: "Index, Post")">Blog</a>
+                            <a asp-controller="Blog" asp-action="Index" class="nav-link @Html.IsSelected(controllers: "Blog", actions: "Index, Post, Category, Tag")">Blog</a>
                         </li>
                         <li class="nav-item">
                             <a asp-controller="Home" asp-action="Archive" class="nav-link @Html.IsSelected(controllers: "Home", actions: "Archive")">Archive</a>
                         </li>
                         <li class="nav-item">
                             <a asp-controller="Home" asp-action="Contact" class="nav-link @Html.IsSelected(controllers: "Home", actions: "Contact")">Contact</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/subscribe" class="nav-link @Html.IsSelected(slugs: "subscribe")">Subscribe</a>
                         </li>
                     </ul>
                     <div class="navbar-text"><a href="#" class="search-btn"><i class="icon-search-1"></i></a></div>
@@ -99,9 +102,9 @@
     <script src="~/js/vendors/jquery.cookie.min.js"></script>
     @*<script src="~/js/vendors/jquery.fancybox.min.js"></script>*@
 
-    @if (Model.ApiDetails.HasDisqusDetails)
+    @if (Model.HasDisqusDetails)
     {
-        <script id="dsq-count-scr" src="//@(Model.ApiDetails.DisqusShortName).disqus.com/count.js" async></script>
+        <script id="dsq-count-scr" src="//@(Model.ApiDetails?.DisqusShortName).disqus.com/count.js" async></script>
     }
 
     <environment include="Development">

@@ -6,7 +6,7 @@ public class DataColumn
     public int Data { get; set; }
 
     [JsonProperty(PropertyName = "name")]
-    public string Name { get; set; }
+    public string Name { get; set; } = string.Empty;
 
     [JsonProperty(PropertyName = "searchable")]
     public bool Searchable { get; set; }
@@ -15,5 +15,5 @@ public class DataColumn
     public bool Orderable { get; set; }
 
     [JsonProperty(PropertyName = "search")]
-    public Search Search { get; set; }
+    public Search? Search { get; set; }
 }

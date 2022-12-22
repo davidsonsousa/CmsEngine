@@ -1,6 +1,9 @@
 @model InstanceViewModel
 @{
-    var selectedPost = (PostViewModel)Model.SelectedDocument;
+    var selectedDocument = Model.SelectedDocument;
+    Guard.Against.Null(selectedDocument, nameof(selectedDocument), "Post not found");
+
+    var selectedPost = (PostViewModel)selectedDocument;
     string imagePath = !string.IsNullOrWhiteSpace(selectedPost.HeaderImage)
                        ? string.Format(Main.ImagePath.Default, "post", selectedPost.HeaderImage)
                        : "/img/no-image.png";
@@ -45,12 +48,7 @@
                         </div>
                         <h1>@selectedPost.Title</h1>
                         <div class="post-footer d-flex align-items-center flex-column flex-sm-row">
-                            <a href="#" class="author d-flex align-items-center flex-wrap">
-                                <div class="avatar">
-                                    <gravatar email-address="@selectedPost.Author.Email" image-size="40" additional-css-classes="img-avatar"></gravatar>
-                                </div>
-                                <div class="title"><span>@selectedPost.Author.FullName</span></div>
-                            </a>
+                            @await Html.PartialAsync("_Author", selectedPost.Author)
                             <div class="d-flex align-items-center flex-wrap">
                                 <div class="date">
                                     <i class="icon-clock"></i> @selectedPost.PublishedOn
@@ -76,38 +74,38 @@
                         }
 
                         @*
-                            <div class="posts-nav d-flex justify-content-between align-items-stretch flex-column flex-md-row">
-                                <a href="#" class="prev-post text-left d-flex align-items-center">
-                                    <div class="icon prev"><i class="fa fa-angle-left"></i></div>
-                                    <div class="text">
-                                        <strong class="text-primary">Previous Post </strong>
-                                        <h6>I Bought a Wedding Dress.</h6>
-                                    </div>
-                                </a><a href="#" class="next-post text-right d-flex align-items-center justify-content-end">
-                                    <div class="text">
-                                        <strong class="text-primary">Next Post </strong>
-                                        <h6>I Bought a Wedding Dress.</h6>
-                                    </div>
-                                    <div class="icon next"><i class="fa fa-angle-right">   </i></div>
-                                </a>
-                            </div>
+                        <div class="posts-nav d-flex justify-content-between align-items-stretch flex-column flex-md-row">
+                        <a href="#" class="prev-post text-left d-flex align-items-center">
+                        <div class="icon prev"><i class="fa fa-angle-left"></i></div>
+                        <div class="text">
+                        <strong class="text-primary">Previous Post </strong>
+                        <h6>I Bought a Wedding Dress.</h6>
+                        </div>
+                        </a><a href="#" class="next-post text-right d-flex align-items-center justify-content-end">
+                        <div class="text">
+                        <strong class="text-primary">Next Post </strong>
+                        <h6>I Bought a Wedding Dress.</h6>
+                        </div>
+                        <div class="icon next"><i class="fa fa-angle-right">   </i></div>
+                        </a>
+                        </div>
                         *@
 
-                        @if (Model.ApiDetails.HasDisqusDetails)
+                        @if (Model.HasDisqusDetails)
                         {
                             <div id="disqus_thread"></div>
                             <script>
-                            var disqus_config = function () {
-                                this.page.url = '@Url.Link("blog", new {Controller = "Blog", Action = "Post", Slug = selectedPost.Slug })';
-                                this.page.identifier = '@selectedPost.VanityId';
-                            };
+                                var disqus_config = function () {
+                                    this.page.url = '@Url.Link("blog", new {Controller = "Blog", Action = "Post", Slug = selectedPost.Slug })';
+                                    this.page.identifier = '@selectedPost.VanityId';
+                                };
 
-                            (function () { // DON'T EDIT BELOW THIS LINE
-                                var d = document, s = d.createElement('script');
-                                s.src = 'https://@(Model.ApiDetails.DisqusShortName).disqus.com/embed.js';
-                                s.setAttribute('data-timestamp', +new Date());
-                                (d.head || d.body).appendChild(s);
-                            })();
+                                (function () { // DON'T EDIT BELOW THIS LINE
+                                    var d = document, s = d.createElement('script');
+                                    s.src = 'https://@(Model.ApiDetails?.DisqusShortName).disqus.com/embed.js';
+                                    s.setAttribute('data-timestamp', +new Date());
+                                    (d.head || d.body).appendChild(s);
+                                })();
                             </script>
                             <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
                         }

@@ -4,7 +4,7 @@ public class WebsiteEditModel : BaseEditModel, IEditModel
 {
     [Required]
     [MaxLength(25)]
-    public string Name { get; set; }
+    public string Name { get; set; } = string.Empty;
 
     [MaxLength(200)]
     public string? Tagline { get; set; }
@@ -15,7 +15,7 @@ public class WebsiteEditModel : BaseEditModel, IEditModel
 
     [Required]
     [MaxLength(5)]
-    public string Culture { get; set; }
+    public string Culture { get; set; } = string.Empty;
 
     [Required]
     [MaxLength(100)]
@@ -27,7 +27,7 @@ public class WebsiteEditModel : BaseEditModel, IEditModel
 
     [Required]
     [MaxLength(250)]
-    public string SiteUrl { get; set; }
+    public string SiteUrl { get; set; } = string.Empty;
 
     [Required]
     public int ArticleLimit { get; set; }
@@ -64,6 +64,8 @@ public class WebsiteEditModel : BaseEditModel, IEditModel
     public string? DisqusShortName { get; set; }
 
     public string? GoogleAnalytics { get; set; }
+
     public string? GoogleRecaptchaSiteKey { get; set; }
+
     public string? GoogleRecaptchaSecretKey { get; set; }
 }

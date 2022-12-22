@@ -5,32 +5,32 @@ public class CheckboxListTagHelper : TagHelper
     /// <summary>
     /// Checkbox name, used to group all checkboxes in the list
     /// </summary>
-    public string Name { get; set; }
+    public string Name { get; set; } = string.Empty;
 
     /// <summary>
     /// Class to be assigned to the outer <div> container
     /// </summary>
-    public string OuterContainerClass { get; set; }
+    public string OuterContainerClass { get; set; } = string.Empty;
 
     /// <summary>
     /// Class to be assigned to the inner <div> container
     /// </summary>
-    public string InnerContainerClass { get; set; }
+    public string InnerContainerClass { get; set; } = string.Empty;
 
     /// <summary>
     /// Class to be assigned to the <label>
     /// </summary>
-    public string LabelClass { get; set; }
+    public string LabelClass { get; set; } = string.Empty;
 
     /// <summary>
     /// Class to be assigned to the <checkbox>
     /// </summary>
-    public string InputClass { get; set; }
+    public string InputClass { get; set; } = string.Empty;
 
     /// <summary>
     /// Items to appear in the checkbox list
     /// </summary>
-    public IEnumerable<CheckboxEditModel> Items { get; set; }
+    public IEnumerable<CheckboxEditModel>? Items { get; set; }
 
     public override void Process(TagHelperContext context, TagHelperOutput output)
     {

@@ -2,12 +2,11 @@ namespace CmsEngine.Application.Helpers;
 
 public static class ExpressionBuilder
 {
-    private static readonly MethodInfo containsMethod = typeof(string).GetMethod("Contains", new Type[] { typeof(string) });
-    private static readonly MethodInfo startsWithMethod = typeof(string).GetMethod("StartsWith", new Type[] { typeof(string) });
-    private static readonly MethodInfo endsWithMethod = typeof(string).GetMethod("EndsWith", new Type[] { typeof(string) });
+    private static readonly MethodInfo containsMethod = typeof(string).GetMethod("Contains", new Type[] { typeof(string) })!;
+    private static readonly MethodInfo startsWithMethod = typeof(string).GetMethod("StartsWith", new Type[] { typeof(string) })!;
+    private static readonly MethodInfo endsWithMethod = typeof(string).GetMethod("EndsWith", new Type[] { typeof(string) })!;
 
-
-    public static Expression<Func<T, bool>> GetExpression<T>(IList<ExpressionFilter> filters, LogicalOperator logicalOperator)
+    public static Expression<Func<T, bool>>? GetExpression<T>(IList<ExpressionFilter> filters, LogicalOperator logicalOperator)
     {
         if (filters.Count == 0)
         {
@@ -27,7 +26,7 @@ public static class ExpressionBuilder
                 Value = null
             };
 
-            if (exp == null)
+            if (exp is null)
             {
                 exp = GetExpression<T>(param, nullCheck, filters[0], LogicalOperator.AndAlso);
             }
@@ -54,10 +53,10 @@ public static class ExpressionBuilder
             filters.Remove(f1);
         }
 
-        return Expression.Lambda<Func<T, bool>>(exp, param);
+        return Expression.Lambda<Func<T, bool>>(exp!, param);
     }
 
-    private static Expression GetExpression<T>(ParameterExpression param, ExpressionFilter filter)
+    private static Expression? GetExpression<T>(ParameterExpression param, ExpressionFilter filter)
     {
         var member = Expression.Property(param, filter.PropertyName);
         var constant = Expression.Constant(filter.Value);
@@ -98,23 +97,28 @@ public static class ExpressionBuilder
         return null;
     }
 
-    private static BinaryExpression GetExpression<T>
-    (ParameterExpression param, ExpressionFilter filter1, ExpressionFilter filter2, LogicalOperator logicalOperator)
+    private static BinaryExpression GetExpression<T>(ParameterExpression param,
+                                                     ExpressionFilter filter1,
+                                                     ExpressionFilter filter2,
+                                                     LogicalOperator logicalOperator)
     {
-        var bin1 = GetExpression<T>(param, filter1);
-        var bin2 = GetExpression<T>(param, filter2);
+        var binaryExpression1 = GetExpression<T>(param, filter1);
+        var binaryExpression2 = GetExpression<T>(param, filter2);
+
+        Guard.Against.Null(binaryExpression1, nameof(binaryExpression1));
+        Guard.Against.Null(binaryExpression2, nameof(binaryExpression2));
 
         switch (logicalOperator)
         {
             case LogicalOperator.And:
-                return Expression.And(bin1, bin2);
+                return Expression.And(binaryExpression1, binaryExpression2);
             case LogicalOperator.Or:
-                return Expression.Or(bin1, bin2);
+                return Expression.Or(binaryExpression1, binaryExpression2);
             case LogicalOperator.OrElse:
-                return Expression.OrElse(bin1, bin2);
+                return Expression.OrElse(binaryExpression1, binaryExpression2);
             case LogicalOperator.AndAlso:
             default:
-                return Expression.AndAlso(bin1, bin2);
+                return Expression.AndAlso(binaryExpression1, binaryExpression2);
         }
     }
 }

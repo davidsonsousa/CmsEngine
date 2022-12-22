@@ -15,9 +15,13 @@ public class Service : IService
             return GetInstance();
         }
     }
+
     public UserViewModel CurrentUser {
         get {
-            return GetCurrentUserViewModelAsync().GetAwaiter().GetResult();
+            var currentUser = GetCurrentUserViewModelAsync().GetAwaiter().GetResult();
+            return currentUser is null
+                   ? throw new Exception("Current user not found")
+                   : currentUser;
         }
     }
 
@@ -32,13 +36,14 @@ public class Service : IService
         instanceKey = $"{Main.CacheKey.Instance}_{instanceHost}";
     }
 
-    internal async Task<ApplicationUser> GetCurrentUserAsync()
+    async internal Task<ApplicationUser> GetCurrentUserAsync()
     {
-        logger.LogDebug("GetCurrentUserAsync() for {0}", httpContextAccessor.HttpContext.User.Identity.Name);
+        var userName = httpContextAccessor.HttpContext.User.Identity?.Name;
+        logger.LogDebug("GetCurrentUserAsync() for {userName}", userName);
 
         try
         {
-            return await unitOfWork.Users.FindByNameAsync(httpContextAccessor.HttpContext.User.Identity.Name);
+            return await unitOfWork.Users.FindByNameAsync(userName);
         }
         catch (Exception ex)
         {
@@ -50,7 +55,7 @@ public class Service : IService
     protected void SaveInstanceToCache(object instance)
     {
         var timeSpan = TimeSpan.FromDays(7); //TODO: Perhaps set this in the config file. Or DB
-        logger.LogDebug("Adding '{0}' to cache with expiration date to {1}", instanceKey, DateTime.Now.AddMilliseconds(timeSpan.TotalMilliseconds).ToString());
+        logger.LogDebug("Adding '{instanceKey}' to cache with expiration date to {dateTimeNow}", instanceKey, DateTime.Now.AddMilliseconds(timeSpan.TotalMilliseconds).ToString());
         var cacheEntryOptions = new MemoryCacheEntryOptions().SetSlidingExpiration(timeSpan);
         memoryCache.Set(instanceKey, instance, cacheEntryOptions);
     }
@@ -59,20 +64,20 @@ public class Service : IService
     {
         logger.LogDebug("GetInstanceAsync()");
 
-        Website website;
+        Website? website;
         InstanceViewModel instance;
 
         try
         {
-            logger.LogDebug("Loading '{0}' from cache", instanceKey);
+            logger.LogDebug("Loading '{instanceKey}' from cache", instanceKey);
             if (!memoryCache.TryGetValue(instanceKey, out instance))
             {
-                logger.LogDebug("Empty cache for '{0}'. Loading instance from DB", instanceKey);
+                logger.LogDebug("Empty cache for '{instanceKey}'. Loading instance from DB", instanceKey);
                 website = unitOfWork.Websites.GetWebsiteInstanceByHost(instanceHost);
 
                 if (website == null)
                 {
-                    throw new NotFoundException($"Instance for '{instanceHost}' not found");
+                    throw new ItemNotFoundException($"Instance for '{instanceHost}' not found");
                 }
 
                 instance = new InstanceViewModel
@@ -127,7 +132,7 @@ public class Service : IService
         return instance;
     }
 
-    private async Task<UserViewModel> GetCurrentUserViewModelAsync()
+    private async Task<UserViewModel?> GetCurrentUserViewModelAsync()
     {
         var user = await GetCurrentUserAsync();
 

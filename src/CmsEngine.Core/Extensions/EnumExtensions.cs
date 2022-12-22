@@ -11,6 +11,12 @@ public static class EnumExtensions
     {
         // Get attributes
         var field = value.GetType().GetField(value.ToString());
+
+        if (field is null)
+        {
+            return string.Empty;
+        }
+
         var attributes = field.GetCustomAttributes(false);
 
         dynamic? displayAttribute = null;

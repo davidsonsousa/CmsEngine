@@ -1,3 +1,5 @@
+using System.Runtime.Versioning;
+
 namespace CmsEngine.Ui.Areas.Cms.Controllers;
 
 [Area("Cms")]
@@ -100,6 +102,7 @@ public class PageController : BaseController
     }
 
     [HttpPost]
+    [SupportedOSPlatform("windows")]
     public async Task<IActionResult> UploadFilesAsync()
     {
         return await PrepareAndUploadFilesAsync(_env.WebRootPath, "Page");

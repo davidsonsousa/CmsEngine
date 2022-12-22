@@ -13,6 +13,7 @@ public class PostService : Service, IPostService
     public async Task<ReturnValue> Delete(Guid id)
     {
         var item = await _unitOfWork.Posts.GetByIdAsync(id);
+        Guard.Against.Null(item);
 
         var returnValue = new ReturnValue($"Post '{item.Title}' deleted at {DateTime.Now.ToString("T")}.");
 
@@ -55,16 +56,22 @@ public class PostService : Service, IPostService
         if (!string.IsNullOrWhiteSpace(searchValue))
         {
             var searchableProperties = typeof(PostTableViewModel).GetProperties().Where(p => Attribute.IsDefined(p, typeof(Searchable)));
-            items = items.Where(items.GetSearchExpression(searchValue, searchableProperties).Compile());
+            var searchExpression = items.GetSearchExpression(searchValue, searchableProperties);
+            Guard.Against.Null(searchExpression);
+
+            items = items.Where(searchExpression.Compile());
         }
+
         return items;
     }
 
     public async Task<PostViewModel> GetBySlug(string slug)
     {
-        logger.LogDebug($"PostService > GetBySlug({slug})");
+        logger.LogDebug("PostService > GetBySlug({slug})", slug);
         var item = await _unitOfWork.Posts.GetBySlug(slug);
-        return item?.MapToViewModel();
+        Guard.Against.Null(item, nameof(item), $"Post not found. Slug: {slug}");
+
+        return item.MapToViewModel(Instance.DateFormat);
     }
 
     public async Task<IEnumerable<PostEditModel>> GetPublishedOrderedByDate(int count = 0)
@@ -80,10 +87,12 @@ public class PostService : Service, IPostService
     {
         var items = await _unitOfWork.Posts.GetForDataTable();
         int recordsTotal = items.Count();
-        if (!string.IsNullOrWhiteSpace(parameters.Search.Value))
+        if (!string.IsNullOrWhiteSpace(parameters.Search?.Value))
         {
             items = FilterForDataTable(parameters.Search.Value, items);
         }
+
+        Guard.Against.Null(parameters.Order);
         items = OrderForDataTable(parameters.Order[0].Column, parameters.Order[0].Dir, items);
         return (items.MapToTableViewModel(), recordsTotal, items.Count());
     }
@@ -92,35 +101,35 @@ public class PostService : Service, IPostService
     {
         logger.LogDebug("CmsService > GetPublishedByCategoryForPagination(categorySlug: {0}, page: {1})", categorySlug, page);
         var posts = await _unitOfWork.Posts.GetPublishedByCategoryForPagination(categorySlug, page, Instance.ArticleLimit);
-        return new PaginatedList<PostViewModel>(posts.Items.MapToViewModelForPartialView(), posts.Count, page, Instance.ArticleLimit);
+        return new PaginatedList<PostViewModel>(posts.Items.MapToViewModelForPartialView(Instance.DateFormat), posts.Count, page, Instance.ArticleLimit);
     }
 
     public async Task<PaginatedList<PostViewModel>> GetPublishedByTagForPagination(string tagSlug, int page = 1)
     {
         logger.LogDebug("CmsService > GetPublishedByTagForPagination(tagSlug: {0}, page: {1})", tagSlug, page);
         var posts = await _unitOfWork.Posts.GetPublishedByTagForPagination(tagSlug, page, Instance.ArticleLimit);
-        return new PaginatedList<PostViewModel>(posts.Items.MapToViewModelForPartialViewForTags(), posts.Count, page, Instance.ArticleLimit);
+        return new PaginatedList<PostViewModel>(posts.Items.MapToViewModelForPartialViewForTags(Instance.DateFormat), posts.Count, page, Instance.ArticleLimit);
     }
 
     public async Task<PaginatedList<PostViewModel>> GetPublishedForPagination(int page = 1)
     {
         logger.LogDebug("CmsService > GetPublishedForPagination(page: {0})", page);
         var posts = await _unitOfWork.Posts.GetPublishedForPagination(page, Instance.ArticleLimit);
-        return new PaginatedList<PostViewModel>(posts.Items.MapToViewModelForPartialView(), posts.Count, page, Instance.ArticleLimit);
+        return new PaginatedList<PostViewModel>(posts.Items.MapToViewModelForPartialView(Instance.DateFormat), posts.Count, page, Instance.ArticleLimit);
     }
 
     public async Task<IEnumerable<PostViewModel>> GetPublishedLatestPosts(int count)
     {
         logger.LogDebug("CmsService > GetPublishedLatestPosts(count: {0})", count);
         var posts = await _unitOfWork.Posts.GetPublishedLatestPosts(count);
-        return posts.MapToViewModelForPartialView();
+        return posts.MapToViewModelForPartialView(Instance.DateFormat);
     }
 
     public async Task<PaginatedList<PostViewModel>> FindPublishedForPaginationOrderByDateDescending(string searchTerm = "", int page = 1)
     {
         logger.LogDebug("CmsService > FindPublishedForPaginationOrderByDateDescending(page: {0}, searchTerm: {1})", page, searchTerm);
         var posts = await _unitOfWork.Posts.FindPublishedForPaginationOrderByDateDescending(page, searchTerm, Instance.ArticleLimit);
-        return new PaginatedList<PostViewModel>(posts.Items.MapToViewModelForPartialView(), posts.Count, page, Instance.ArticleLimit);
+        return new PaginatedList<PostViewModel>(posts.Items.MapToViewModelForPartialView(Instance.DateFormat), posts.Count, page, Instance.ArticleLimit);
     }
 
     public IEnumerable<Post> OrderForDataTable(int column, string direction, IEnumerable<Post> items)
@@ -179,12 +188,15 @@ public class PostService : Service, IPostService
             else
             {
                 logger.LogDebug("Update post");
-                var post = postEditModel.MapToModel(await unitOfWork.Posts.GetForSavingById(postEditModel.VanityId));
-                post.WebsiteId = Instance.Id;
+                var post = await unitOfWork.Posts.GetForSavingById(postEditModel.VanityId);
+                Guard.Against.Null(post, nameof(post), $"Post not found. VanityId: {postEditModel.VanityId}");
 
-                _unitOfWork.Posts.RemoveRelatedItems(post);
-                await PrepareRelatedPropertiesAsync(postEditModel, post);
-                _unitOfWork.Posts.Update(post);
+                var postToUpdate = postEditModel.MapToModel(post);
+                postToUpdate.WebsiteId = Instance.Id;
+
+                _unitOfWork.Posts.RemoveRelatedItems(postToUpdate);
+                await PrepareRelatedPropertiesAsync(postEditModel, postToUpdate);
+                _unitOfWork.Posts.Update(postToUpdate);
             }
 
             await _unitOfWork.Save();
@@ -211,9 +223,12 @@ public class PostService : Service, IPostService
 
     public async Task<PostEditModel> SetupEditModel(Guid id)
     {
-        logger.LogDebug("PostService > SetupPostEditModel(id: {0})", id);
+        logger.LogDebug("PostService > SetupPostEditModel(id: {id})", id);
         var item = await _unitOfWork.Posts.GetForEditingById(id);
-        logger.LogDebug("Post: {0}", item.ToString());
+        Guard.Against.Null(item, nameof(item), $"Post not found. Vanity id: {id}");
+
+        logger.LogDebug("Post: {item}", item.ToString());
+
         var postEditModel = item.MapToEditModel();
         postEditModel.Categories = (await unitOfWork.Categories.GetAllAsync()).MapToViewModelSimple().PopulateCheckboxList(postEditModel.SelectedCategories);
         postEditModel.Tags = (await unitOfWork.Tags.GetAllAsync()).MapToViewModelSimple().PopulateSelectList(postEditModel.SelectedTags);
@@ -227,7 +242,7 @@ public class PostService : Service, IPostService
         if (postEditModel.SelectedCategories != null)
         {
             var categoryIds = await _unitOfWork.Categories.GetIdsByMultipleGuidsAsync(postEditModel.SelectedCategories.ToList().ConvertAll(Guid.Parse));
-            foreach (int categoryId in categoryIds)
+            foreach (var categoryId in categoryIds)
             {
                 post.PostCategories.Add(new PostCategory
                 {
@@ -241,7 +256,7 @@ public class PostService : Service, IPostService
         if (postEditModel.SelectedTags != null)
         {
             var tagIds = await _unitOfWork.Tags.GetIdsByMultipleGuidsAsync(postEditModel.SelectedTags.ToList().ConvertAll(Guid.Parse));
-            foreach (int tagId in tagIds)
+            foreach (var tagId in tagIds)
             {
                 post.PostTags.Add(new PostTag
                 {
