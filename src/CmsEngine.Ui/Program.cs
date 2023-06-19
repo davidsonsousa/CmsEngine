@@ -176,10 +176,11 @@ app.MapControllerRoute(
     pattern: "archive",
     defaults: new { controller = "Home", action = "Archive" });
 
+// Deprecated route, redirecting to Index
 app.MapControllerRoute(
     name: "contact",
     pattern: "contact",
-    defaults: new { controller = "Home", action = "Contact" });
+    defaults: new { controller = "Home", action = "Index" });
 
 app.MapControllerRoute(
     name: "error",
