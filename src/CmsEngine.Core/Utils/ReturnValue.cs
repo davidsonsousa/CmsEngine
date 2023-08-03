@@ -8,16 +8,16 @@ public class ReturnValue
         IsError = isError;
     }
 
-    [JsonProperty(PropertyName = "message")]
+    [JsonPropertyName("message")]
     public string Message { get; private set; }
 
-    [JsonProperty(PropertyName = "isError")]
+    [JsonPropertyName("isError")]
     public bool IsError { get; private set; }
 
-    [JsonProperty(PropertyName = "exception")]
+    [JsonPropertyName("exception")]
     public string Exception { get; private set; } = string.Empty;
 
-    //[JsonProperty(PropertyName = "value")]
+    //[JsonPropertyName("value")]
     //public object Value { get; set; }
 
     public void SetErrorMessage(string message, string exception = "")

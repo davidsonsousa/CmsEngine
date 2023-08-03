@@ -1,7 +1,7 @@
 var builder = WebApplication.CreateBuilder(args);
 
 // Load json files
-string environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Development";
+var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Development";
 builder.Configuration.SetBasePath(Directory.GetCurrentDirectory())
                                            .AddJsonFile("appsettings.json")
                                            .AddJsonFile($"appsettings.{environment}.json", optional: true, reloadOnChange: true)
@@ -53,7 +53,7 @@ builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.R
                 .AddDefaultTokenProviders();
 
 // Add HttpContextAccessor as .NET Core doesn't have HttpContext.Current anymore
-builder.Services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+builder.Services.AddHttpContextAccessor();
 
 // Add Repositories
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
@@ -76,7 +76,7 @@ builder.Services.AddScoped<IEmailService, EmailService>();
 // Add Unit of Work
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
-builder.Services.AddSingleton<ICmsEngineEmailSender, CmsEngineEmailSender>();
+builder.Services.AddTransient<ICmsEngineEmailSender, CmsEngineEmailSender>();
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();

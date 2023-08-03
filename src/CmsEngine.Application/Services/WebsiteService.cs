@@ -3,13 +3,11 @@ namespace CmsEngine.Application.Services;
 public class WebsiteService : Service, IWebsiteService
 {
     private readonly IUnitOfWork _unitOfWork;
-    private readonly IMemoryCache _memoryCache;
 
     public WebsiteService(IUnitOfWork uow, IHttpContextAccessor hca, ILoggerFactory loggerFactory, IMemoryCache memoryCache)
                          : base(uow, hca, loggerFactory, memoryCache)
     {
         _unitOfWork = uow;
-        _memoryCache = memoryCache;
     }
 
     public async Task<ReturnValue> Delete(Guid id)

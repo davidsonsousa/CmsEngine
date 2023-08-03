@@ -2,9 +2,9 @@ namespace CmsEngine.Application.Models.ViewModels.DataTablesViewModels;
 
 public class Search
 {
-    [JsonProperty(PropertyName = "regex")]
+    [JsonPropertyName("regex")]
     public bool Regex { get; set; }
 
-    [JsonProperty(PropertyName = "value")]
+    [JsonPropertyName("value")]
     public string? Value { get; set; }
 }

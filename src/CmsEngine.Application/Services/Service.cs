@@ -54,7 +54,7 @@ public class Service : IService
 
     protected void SaveInstanceToCache(object instance)
     {
-        var timeSpan = TimeSpan.FromDays(7); //TODO: Perhaps set this in the config file. Or DB
+        var timeSpan = TimeSpan.FromHours(1); //TODO: Perhaps set this in the config file. Or DB
         logger.LogDebug("Adding '{instanceKey}' to cache with expiration date to {dateTimeNow}", instanceKey, DateTime.Now.AddMilliseconds(timeSpan.TotalMilliseconds).ToString());
         var cacheEntryOptions = new MemoryCacheEntryOptions().SetSlidingExpiration(timeSpan);
         memoryCache.Set(instanceKey, instance, cacheEntryOptions);
@@ -65,7 +65,7 @@ public class Service : IService
         logger.LogDebug("GetInstanceAsync()");
 
         Website? website;
-        InstanceViewModel instance;
+        InstanceViewModel? instance;
 
         try
         {
@@ -129,7 +129,7 @@ public class Service : IService
             throw;
         }
 
-        return instance;
+        return instance!;
     }
 
     private async Task<UserViewModel?> GetCurrentUserViewModelAsync()

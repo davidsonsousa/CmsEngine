@@ -18,10 +18,11 @@ public class BaseEntity
 
     public override string ToString()
     {
-        var jsonResult = new JObject(
-                                    new JProperty("Id", Id),
-                                    new JProperty("VanityId", VanityId)
-                                    );
+        var jsonResult = new JsonObject
+        {
+            ["Id"] = Id,
+            ["VanityId"] = VanityId
+        };
         return jsonResult.ToString();
     }
 }
