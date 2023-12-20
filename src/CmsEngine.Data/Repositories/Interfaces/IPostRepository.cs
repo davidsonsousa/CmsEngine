@@ -1,6 +1,6 @@
 namespace CmsEngine.Data.Repositories.Interfaces;
 
-public interface IPostRepository : IReadRepository<Post>, IDataModificationRepository<Post>, IDataModificationRangeRepository<Post>
+public interface IPostRepository : IReadRepository<Post>, IDataModificationRepository<Post>, IDataModificationRangeRepository<Post>, IDisposable
 {
     Task<IEnumerable<Post>> GetPublishedPostsOrderByDescending(Expression<Func<Post, DateTime>> orderBy);
 

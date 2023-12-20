@@ -1,6 +1,6 @@
 namespace CmsEngine.Data.Repositories.Interfaces;
 
-public interface ICategoryRepository : IReadRepository<Category>, IDataModificationRepository<Category>, IDataModificationRangeRepository<Category>
+public interface ICategoryRepository : IReadRepository<Category>, IDataModificationRepository<Category>, IDataModificationRangeRepository<Category>, IDisposable
 {
     Task<Category?> GetCategoryBySlug(string slug);
 

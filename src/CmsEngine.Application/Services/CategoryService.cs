@@ -2,25 +2,22 @@ namespace CmsEngine.Application.Services;
 
 public class CategoryService : Service, ICategoryService
 {
-    private readonly IUnitOfWork _unitOfWork;
-
     public CategoryService(IUnitOfWork uow, IHttpContextAccessor hca, ILoggerFactory loggerFactory, IMemoryCache memoryCache)
                           : base(uow, hca, loggerFactory, memoryCache)
     {
-        _unitOfWork = uow;
     }
 
     public async Task<ReturnValue> Delete(Guid id)
     {
-        var item = await _unitOfWork.Categories.GetByIdAsync(id);
+        var item = await unitOfWork.Categories.GetByIdAsync(id);
         Guard.Against.Null(item);
 
         var returnValue = new ReturnValue($"Category '{item.Name}' deleted at {DateTime.Now:T}.");
 
         try
         {
-            _unitOfWork.Categories.Delete(item);
-            await _unitOfWork.Save();
+            unitOfWork.Categories.Delete(item);
+            await unitOfWork.Save();
         }
         catch (Exception ex)
         {
@@ -33,14 +30,14 @@ public class CategoryService : Service, ICategoryService
 
     public async Task<ReturnValue> DeleteRange(Guid[] ids)
     {
-        var items = await _unitOfWork.Categories.GetByMultipleIdsAsync(ids);
+        var items = await unitOfWork.Categories.GetByMultipleIdsAsync(ids);
 
         var returnValue = new ReturnValue($"Categories deleted at {DateTime.Now:T}.");
 
         try
         {
-            _unitOfWork.Categories.DeleteRange(items);
-            await _unitOfWork.Save();
+            unitOfWork.Categories.DeleteRange(items);
+            await unitOfWork.Save();
         }
         catch (Exception ex)
         {
@@ -68,7 +65,7 @@ public class CategoryService : Service, ICategoryService
     public async Task<IEnumerable<CategoryViewModel>> GetCategoriesWithPost()
     {
         logger.LogDebug("CategoryService > GetCategoriesWithPost()");
-        var items = await _unitOfWork.Categories.GetCategoriesWithPostOrderedByName();
+        var items = await unitOfWork.Categories.GetCategoriesWithPostOrderedByName();
         logger.LogDebug("Categories loaded: {0}", items.Count());
         return items.MapToViewModelWithPost(Instance.DateFormat);
     }
@@ -76,14 +73,14 @@ public class CategoryService : Service, ICategoryService
     public async Task<IEnumerable<CategoryViewModel>> GetCategoriesWithPostCount()
     {
         logger.LogDebug("CategoryService > GetCategoriesWithPostCount()");
-        var items = await _unitOfWork.Categories.GetCategoriesWithPostCountOrderedByName();
+        var items = await unitOfWork.Categories.GetCategoriesWithPostCountOrderedByName();
         logger.LogDebug("Categories loaded: {0}", items.Count());
         return items.MapToViewModelWithPostCount();
     }
 
     public async Task<(IEnumerable<CategoryTableViewModel> Data, int RecordsTotal, int RecordsFiltered)> GetForDataTable(DataParameters parameters)
     {
-        var items = await _unitOfWork.Categories.GetAllAsync();
+        var items = await unitOfWork.Categories.GetAllAsync();
         var recordsTotal = items.Count();
 
         if (!string.IsNullOrWhiteSpace(parameters.Search?.Value))
@@ -150,10 +147,10 @@ public class CategoryService : Service, ICategoryService
                 var categoryToUpdate = categoryEditModel.MapToModel(category);
                 categoryToUpdate.WebsiteId = Instance.Id;
 
-                _unitOfWork.Categories.Update(categoryToUpdate);
+                unitOfWork.Categories.Update(categoryToUpdate);
             }
 
-            await _unitOfWork.Save();
+            await unitOfWork.Save();
             logger.LogDebug("Category saved");
         }
         catch (Exception ex)
@@ -174,7 +171,7 @@ public class CategoryService : Service, ICategoryService
     public async Task<CategoryEditModel> SetupEditModel(Guid id)
     {
         logger.LogDebug("CmsService > SetupCategoryEditModel(id: {0})", id);
-        var item = await _unitOfWork.Categories.GetByIdAsync(id);
+        var item = await unitOfWork.Categories.GetByIdAsync(id);
         Guard.Against.Null(item, nameof(item), $"Category not found. Vanity id: {id}");
 
         logger.LogDebug("Category: {0}", item.ToString());

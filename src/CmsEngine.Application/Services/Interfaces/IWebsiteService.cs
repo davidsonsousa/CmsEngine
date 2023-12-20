@@ -1,6 +1,6 @@
 namespace CmsEngine.Application.Services.Interfaces;
 
-public interface IWebsiteService : IDataTableService<Website>
+public interface IWebsiteService : IDataTableService<Website>, IDisposable
 {
     WebsiteEditModel SetupEditModel();
 

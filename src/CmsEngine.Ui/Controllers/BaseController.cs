@@ -59,7 +59,23 @@ public class BaseController : Controller
         Instance.CategoriesWithPosts = await _categoryService.GetCategoriesWithPost();
         Instance.Tags = await _tagService.GetAllTags();
 
-
         await base.OnActionExecutionAsync(context, next);
+    }
+
+    protected override void Dispose(bool disposing)
+    {
+        Instance.Categories = Array.Empty<CategoryViewModel>();
+        Instance.CategoriesWithPosts = Array.Empty<CategoryViewModel>();
+        Instance.LatestPosts = Array.Empty<PostViewModel>();
+        Instance.Pages = Array.Empty<PageViewModel>();
+        Instance.Tags = Array.Empty<TagViewModel>();
+        Instance.PagedPosts.Clear();
+
+        _categoryService.Dispose();
+        _pageService.Dispose();
+        _postService.Dispose();
+        _tagService.Dispose();
+
+        base.Dispose(disposing);
     }
 }

@@ -6,6 +6,7 @@ public class Service : IService
     private readonly IMemoryCache memoryCache;
     private readonly string instanceHost;
     private readonly string instanceKey;
+    private bool disposedValue;
 
     protected readonly IUnitOfWork unitOfWork;
     protected readonly ILogger logger;
@@ -63,17 +64,16 @@ public class Service : IService
     private InstanceViewModel GetInstance()
     {
         logger.LogDebug("GetInstanceAsync()");
+        logger.LogDebug("Loading '{instanceKey}' from cache", instanceKey);
 
-        Website? website;
         InstanceViewModel? instance;
 
         try
         {
-            logger.LogDebug("Loading '{instanceKey}' from cache", instanceKey);
             if (!memoryCache.TryGetValue(instanceKey, out instance))
             {
                 logger.LogDebug("Empty cache for '{instanceKey}'. Loading instance from DB", instanceKey);
-                website = unitOfWork.Websites.GetWebsiteInstanceByHost(instanceHost);
+                var website = unitOfWork.Websites.GetWebsiteInstanceByHost(instanceHost);
 
                 if (website == null)
                 {
@@ -146,5 +146,25 @@ public class Service : IService
                 Email = user.Email,
                 UserName = user.UserName
             };
+    }
+
+    protected virtual void Dispose(bool disposing)
+    {
+        if (!disposedValue)
+        {
+            if (disposing)
+            {
+                unitOfWork.Dispose();
+            }
+
+            disposedValue = true;
+        }
+    }
+
+    public void Dispose()
+    {
+        // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
+        Dispose(disposing: true);
+        GC.SuppressFinalize(this);
     }
 }

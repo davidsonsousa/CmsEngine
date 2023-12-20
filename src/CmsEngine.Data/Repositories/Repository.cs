@@ -2,14 +2,17 @@ namespace CmsEngine.Data.Repositories;
 
 public class Repository<TEntity> : IReadRepository<TEntity>,
                                    IDataModificationRepository<TEntity>,
-                                   IDataModificationRangeRepository<TEntity>
+                                   IDataModificationRangeRepository<TEntity>,
+                                   IDisposable
                                    where TEntity : BaseEntity
 {
     protected readonly CmsEngineContext dbContext;
+    private bool disposedValue;
 
     public Repository(CmsEngineContext context)
     {
-        dbContext = context ?? throw new ArgumentNullException("Repository - Context");
+        ArgumentNullException.ThrowIfNull(nameof(context));
+        dbContext = context;
     }
 
     public async Task<IEnumerable<TEntity>> GetAllAsync()
@@ -19,19 +22,22 @@ public class Repository<TEntity> : IReadRepository<TEntity>,
 
     public IQueryable<TEntity> Get(Expression<Func<TEntity, bool>>? filter = null, int count = 0)
     {
-        var recods = GetValidRecords();
-
-        if (filter != null)
+        if (filter is not null && count > 0)
         {
-            recods = recods.Where(filter);
+            return GetValidRecords().Where(filter).Take(count);
         }
-
-        if (count > 0)
+        else if (filter is not null)
         {
-            recods = recods.Take(count);
+            return GetValidRecords().Where(filter);
         }
-
-        return recods;
+        else if (count > 0)
+        {
+            return GetValidRecords().Take(count);
+        }
+        else
+        {
+            return GetValidRecords();
+        }
     }
 
     public async Task<IEnumerable<TEntity>> GetReadOnlyAsync(Expression<Func<TEntity, bool>>? filter = null)
@@ -151,5 +157,25 @@ public class Repository<TEntity> : IReadRepository<TEntity>,
     private IQueryable<TEntity> GetValidRecords()
     {
         return dbContext.Set<TEntity>().Where(q => q.IsDeleted == false);
+    }
+
+    protected virtual void Dispose(bool disposing)
+    {
+        if (!disposedValue)
+        {
+            if (disposing)
+            {
+                dbContext.Dispose();
+            }
+
+            disposedValue = true;
+        }
+    }
+
+    public void Dispose()
+    {
+        // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
+        Dispose(disposing: true);
+        GC.SuppressFinalize(this);
     }
 }
