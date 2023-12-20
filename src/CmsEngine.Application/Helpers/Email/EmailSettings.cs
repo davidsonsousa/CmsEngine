@@ -18,15 +18,16 @@ public class EmailSettings
 
     public override string ToString()
     {
-        var jsonResult = new JObject(
-                        new JProperty("Domain", Domain),
-                        new JProperty("Port", Port),
-                        new JProperty("Username", Username),
-                        new JProperty("Password", Password),
-                        new JProperty("FromEmail", FromEmail),
-                        new JProperty("CcEmail", CcEmail),
-                        new JProperty("BccEmail", BccEmail)
-                    );
+        var jsonResult = new JsonObject
+        {
+            [nameof(Domain)] = Domain,
+            [nameof(Port)] = Port,
+            [nameof(Username)] = Username,
+            [nameof(Password)] = Password,
+            [nameof(FromEmail)] = FromEmail,
+            [nameof(CcEmail)] = CcEmail,
+            [nameof(BccEmail)] = BccEmail
+        };
         return jsonResult.ToString();
     }
 }

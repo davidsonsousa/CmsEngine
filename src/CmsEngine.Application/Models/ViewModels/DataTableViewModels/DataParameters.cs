@@ -2,21 +2,21 @@ namespace CmsEngine.Application.Models.ViewModels.DataTablesViewModels;
 
 public class DataParameters
 {
-    [JsonProperty(PropertyName = "draw")]
+    [JsonPropertyName("draw")]
     public int Draw { get; set; }
 
-    [JsonProperty(PropertyName = "columns")]
+    [JsonPropertyName("columns")]
     public List<DataColumn>? Columns { get; set; }
 
-    [JsonProperty(PropertyName = "order")]
+    [JsonPropertyName("order")]
     public List<DataOrder>? Order { get; set; }
 
-    [JsonProperty(PropertyName = "start")]
+    [JsonPropertyName("start")]
     public int Start { get; set; }
 
-    [JsonProperty(PropertyName = "length")]
+    [JsonPropertyName("length")]
     public int Length { get; set; }
 
-    [JsonProperty(PropertyName = "search")]
+    [JsonPropertyName("search")]
     public Search? Search { get; set; }
 }

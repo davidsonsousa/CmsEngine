@@ -12,11 +12,12 @@ public class Email : BaseEntity
 
     public override string ToString()
     {
-        var jsonResult = new JObject(
-                                     new JProperty("From", From),
-                                     new JProperty("Subject", Subject),
-                                     new JProperty("Message", Message)
-                                );
+        var jsonResult = new JsonObject
+        {
+            [nameof(From)] = From,
+            [nameof(Subject)] = Subject,
+            [nameof(Message)] = Message
+        };
         return jsonResult.ToString();
     }
 }

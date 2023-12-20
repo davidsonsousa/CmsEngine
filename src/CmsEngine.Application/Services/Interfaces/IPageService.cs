@@ -1,6 +1,6 @@
 namespace CmsEngine.Application.Services.Interfaces;
 
-public interface IPageService : IDataTableService<Page>
+public interface IPageService : IDataTableService<Page>, IDisposable
 {
     PageEditModel SetupEditModel();
     Task<PageEditModel> SetupEditModel(Guid id);

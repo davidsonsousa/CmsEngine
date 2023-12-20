@@ -117,24 +117,17 @@ public static class WebsiteExtensions
     /// <returns></returns>
     public static IEnumerable<WebsiteTableViewModel> MapToTableViewModel(this IEnumerable<Website> websites)
     {
-        var tableViewModel = new List<WebsiteTableViewModel>();
-
-        foreach (var item in websites)
+        return websites.Select(item => new WebsiteTableViewModel
         {
-            tableViewModel.Add(new WebsiteTableViewModel
-            {
-                //Id = item.Id,
-                VanityId = item.VanityId,
-                Name = item.Name,
-                Tagline = item.Tagline,
-                Culture = item.Culture,
-                UrlFormat = item.UrlFormat,
-                DateFormat = item.DateFormat,
-                SiteUrl = item.SiteUrl,
-                GoogleAnalytics = item.GoogleAnalytics
-            });
-        }
-
-        return tableViewModel;
+            //Id = item.Id,
+            VanityId = item.VanityId,
+            Name = item.Name,
+            Tagline = item.Tagline,
+            Culture = item.Culture,
+            UrlFormat = item.UrlFormat,
+            DateFormat = item.DateFormat,
+            SiteUrl = item.SiteUrl,
+            GoogleAnalytics = item.GoogleAnalytics
+        }).ToList();
     }
 }

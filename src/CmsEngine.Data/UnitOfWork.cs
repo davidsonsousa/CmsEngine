@@ -3,7 +3,7 @@ namespace CmsEngine.Data;
 public class UnitOfWork : IUnitOfWork
 {
     private readonly CmsEngineContext _ctx;
-    private bool _disposed;
+    private bool disposedValue;
 
     public ICategoryRepository Categories { get; private set; }
     public IPageRepository Pages { get; private set; }
@@ -27,7 +27,7 @@ public class UnitOfWork : IUnitOfWork
         Users = userManager;
         Emails = emailRepository;
 
-        _disposed = false;
+        disposedValue = false;
     }
 
     public async Task Save()
@@ -60,14 +60,20 @@ public class UnitOfWork : IUnitOfWork
 
     protected virtual void Dispose(bool disposing)
     {
-        if (!_disposed)
+        if (!disposedValue)
         {
             if (disposing)
             {
+                Categories.Dispose();
+                Pages.Dispose();
+                Posts.Dispose();
+                Tags.Dispose();
+                Users.Dispose();
+
                 _ctx.Dispose();
             }
         }
-        _disposed = true;
+        disposedValue = true;
     }
 
     public void Dispose()

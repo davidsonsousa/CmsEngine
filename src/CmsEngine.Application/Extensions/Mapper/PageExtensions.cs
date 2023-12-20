@@ -30,25 +30,18 @@ public static class PageExtensions
     /// <returns></returns>
     public static IEnumerable<PageEditModel> MapToEditModel(this IEnumerable<Page> pages)
     {
-        var editModels = new List<PageEditModel>();
-
-        foreach (var item in pages)
+        return pages.Select(item => new PageEditModel
         {
-            editModels.Add(new PageEditModel
-            {
-                Id = item.Id,
-                VanityId = item.VanityId,
-                Title = item.Title,
-                Slug = item.Slug,
-                Description = item.Description,
-                DocumentContent = item.DocumentContent,
-                HeaderImage = item.HeaderImage,
-                PublishedOn = item.PublishedOn,
-                Status = item.Status
-            });
-        }
-
-        return editModels;
+            Id = item.Id,
+            VanityId = item.VanityId,
+            Title = item.Title,
+            Slug = item.Slug,
+            Description = item.Description,
+            DocumentContent = item.DocumentContent,
+            HeaderImage = item.HeaderImage,
+            PublishedOn = item.PublishedOn,
+            Status = item.Status
+        }).ToList();
     }
 
     /// <summary>
@@ -100,23 +93,16 @@ public static class PageExtensions
     /// <returns></returns>
     public static IEnumerable<PageTableViewModel> MapToTableViewModel(this IEnumerable<Page> pages)
     {
-        var tableViewModel = new List<PageTableViewModel>();
-
-        foreach (var item in pages)
+        return pages.Select(item => new PageTableViewModel
         {
-            tableViewModel.Add(new PageTableViewModel
-            {
-                VanityId = item.VanityId,
-                Title = item.Title,
-                Description = item.Description,
-                Slug = item.Slug,
-                PublishedOn = item.PublishedOn.ToString("yyyy-MM-dd HH:mm:ss"),
-                Status = item.Status,
-                Author = item.ApplicationUsers.MapToViewModelSimple().Single()
-            });
-        }
-
-        return tableViewModel;
+            VanityId = item.VanityId,
+            Title = item.Title,
+            Description = item.Description,
+            Slug = item.Slug,
+            PublishedOn = item.PublishedOn.ToString("yyyy-MM-dd HH:mm:ss"),
+            Status = item.Status,
+            Author = item.ApplicationUsers.MapToViewModelSimple().Single()
+        }).ToList();
     }
 
     /// <summary>
@@ -146,25 +132,18 @@ public static class PageExtensions
     /// <returns></returns>
     public static IEnumerable<PageViewModel> MapToViewModel(this IEnumerable<Page> pages, string dateFormat)
     {
-        var editModels = new List<PageViewModel>();
-
-        foreach (var item in pages)
+        return pages.Select(item => new PageViewModel
         {
-            editModels.Add(new PageViewModel
-            {
-                Id = item.Id,
-                VanityId = item.VanityId,
-                Title = item.Title,
-                Slug = item.Slug,
-                Description = item.Description,
-                DocumentContent = item.DocumentContent,
-                HeaderImage = item.HeaderImage,
-                PublishedOn = item.PublishedOn.ToString(dateFormat),
-                Status = item.Status
-            });
-        }
-
-        return editModels;
+            Id = item.Id,
+            VanityId = item.VanityId,
+            Title = item.Title,
+            Slug = item.Slug,
+            Description = item.Description,
+            DocumentContent = item.DocumentContent,
+            HeaderImage = item.HeaderImage,
+            PublishedOn = item.PublishedOn.ToString(dateFormat),
+            Status = item.Status
+        }).ToList();
     }
 
 }

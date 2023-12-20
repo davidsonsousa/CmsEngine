@@ -14,10 +14,11 @@ public class BaseEditModel
 
     public override string ToString()
     {
-        var jsonResult = new JObject(
-                                    new JProperty("Id", Id),
-                                    new JProperty("VanityId", VanityId)
-                                );
+        var jsonResult = new JsonObject
+        {
+            [nameof(Id)] = Id,
+            [nameof(VanityId)] = VanityId
+        };
         return jsonResult.ToString();
     }
 

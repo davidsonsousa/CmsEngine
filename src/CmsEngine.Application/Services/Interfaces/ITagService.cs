@@ -1,6 +1,6 @@
 namespace CmsEngine.Application.Services.Interfaces;
 
-public interface ITagService : IDataTableService<Tag>
+public interface ITagService : IDataTableService<Tag>, IDisposable
 {
     TagEditModel SetupEditModel();
     Task<TagEditModel> SetupEditModel(Guid id);

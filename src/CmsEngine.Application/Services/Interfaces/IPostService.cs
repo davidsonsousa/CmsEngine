@@ -1,6 +1,6 @@
 namespace CmsEngine.Application.Services.Interfaces;
 
-public interface IPostService : IDataTableService<Post>
+public interface IPostService : IDataTableService<Post>, IDisposable
 {
     Task<PostEditModel> SetupEditModel();
     Task<PostEditModel> SetupEditModel(Guid id);

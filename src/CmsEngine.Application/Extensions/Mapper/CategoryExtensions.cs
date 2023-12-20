@@ -60,21 +60,14 @@ public static class CategoryExtensions
     /// <returns></returns>
     public static IEnumerable<CategoryTableViewModel> MapToTableViewModel(this IEnumerable<Category> categories)
     {
-        var tableViewModel = new List<CategoryTableViewModel>();
-
-        foreach (var item in categories)
+        return categories.Select(item => new CategoryTableViewModel
         {
-            tableViewModel.Add(new CategoryTableViewModel
-            {
-                Id = item.Id,
-                VanityId = item.VanityId,
-                Name = item.Name,
-                Description = item.Description,
-                Slug = item.Slug
-            });
-        }
-
-        return tableViewModel;
+            Id = item.Id,
+            VanityId = item.VanityId,
+            Name = item.Name,
+            Description = item.Description,
+            Slug = item.Slug
+        }).ToList();
     }
 
     /// <summary>
@@ -84,22 +77,15 @@ public static class CategoryExtensions
     /// <returns></returns>
     public static IEnumerable<CategoryViewModel> MapToViewModel(this IEnumerable<Category> categories, string dateFormat)
     {
-        var viewModel = new List<CategoryViewModel>();
-
-        foreach (var item in categories)
+        return categories.Select(item => new CategoryViewModel
         {
-            viewModel.Add(new CategoryViewModel
-            {
-                Id = item.Id,
-                VanityId = item.VanityId,
-                Name = item.Name,
-                Description = item.Description,
-                Slug = item.Slug,
-                Posts = item.PostCategories?.Select(x => x.Post).MapToViewModel(dateFormat)
-            });
-        }
-
-        return viewModel;
+            Id = item.Id,
+            VanityId = item.VanityId,
+            Name = item.Name,
+            Description = item.Description,
+            Slug = item.Slug,
+            Posts = item.PostCategories?.Select(x => x.Post).MapToViewModel(dateFormat)
+        }).ToList();
     }
 
     /// <summary>
@@ -109,19 +95,12 @@ public static class CategoryExtensions
     /// <returns></returns>
     public static IEnumerable<CategoryViewModel> MapToViewModelSimple(this IEnumerable<Category> categories)
     {
-        var viewModel = new List<CategoryViewModel>();
-
-        foreach (var item in categories)
+        return categories.Select(item => new CategoryViewModel
         {
-            viewModel.Add(new CategoryViewModel
-            {
-                VanityId = item.VanityId,
-                Name = item.Name,
-                Slug = item.Slug
-            });
-        }
-
-        return viewModel;
+            VanityId = item.VanityId,
+            Name = item.Name,
+            Slug = item.Slug
+        }).ToList();
     }
 
     /// <summary>
@@ -131,20 +110,13 @@ public static class CategoryExtensions
     /// <returns></returns>
     public static IEnumerable<CategoryViewModel> MapToViewModelWithPostCount(this IEnumerable<Category> categories)
     {
-        var viewModel = new List<CategoryViewModel>();
-
-        foreach (var item in categories)
+        return categories.Select(item => new CategoryViewModel
         {
-            viewModel.Add(new CategoryViewModel
-            {
-                VanityId = item.VanityId,
-                Name = item.Name,
-                Slug = item.Slug,
-                PostCount = item.PostCount
-            });
-        }
-
-        return viewModel;
+            VanityId = item.VanityId,
+            Name = item.Name,
+            Slug = item.Slug,
+            PostCount = item.PostCount
+        }).ToList();
     }
 
     /// <summary>
@@ -154,26 +126,19 @@ public static class CategoryExtensions
     /// <returns></returns>
     public static IEnumerable<CategoryViewModel> MapToViewModelWithPost(this IEnumerable<Category> categories, string dateFormat)
     {
-        var viewModel = new List<CategoryViewModel>();
-
-        foreach (var item in categories)
+        return categories.Select(item => new CategoryViewModel
         {
-            viewModel.Add(new CategoryViewModel
+            VanityId = item.VanityId,
+            Name = item.Name,
+            Slug = item.Slug,
+            Posts = item.Posts.Select(p => new PostViewModel
             {
-                VanityId = item.VanityId,
-                Name = item.Name,
-                Slug = item.Slug,
-                Posts = item.Posts.Select(p => new PostViewModel
-                {
-                    VanityId = p.VanityId,
-                    Title = p.Title,
-                    Description = p.Description,
-                    Slug = p.Slug,
-                    PublishedOn = p.PublishedOn.ToString(dateFormat)
-                })
-            });
-        }
-
-        return viewModel;
+                VanityId = p.VanityId,
+                Title = p.Title,
+                Description = p.Description,
+                Slug = p.Slug,
+                PublishedOn = p.PublishedOn.ToString(dateFormat)
+            })
+        }).ToList();
     }
 }

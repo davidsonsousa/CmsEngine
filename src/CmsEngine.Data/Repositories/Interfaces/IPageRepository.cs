@@ -1,6 +1,6 @@
 namespace CmsEngine.Data.Repositories.Interfaces;
 
-public interface IPageRepository : IReadRepository<Page>, IDataModificationRepository<Page>, IDataModificationRangeRepository<Page>
+public interface IPageRepository : IReadRepository<Page>, IDataModificationRepository<Page>, IDataModificationRangeRepository<Page>, IDisposable
 {
     Task<IEnumerable<Page>> GetOrderByDescending(Expression<Func<Page, DateTime>> orderBy);
 

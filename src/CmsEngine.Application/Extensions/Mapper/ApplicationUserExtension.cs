@@ -14,8 +14,8 @@ public static class ApplicationUserExtensions
             VanityId = Guid.Parse(item.Id),
             Name = item.Name,
             Surname = item.Surname,
-            Email = item.Email,
-            UserName = item.UserName
+            Email = item.Email ?? string.Empty,
+            UserName = item.UserName ?? string.Empty
         };
     }
 
@@ -43,20 +43,13 @@ public static class ApplicationUserExtensions
     /// <returns></returns>
     public static IEnumerable<UserViewModel> MapToViewModelSimple(this IEnumerable<ApplicationUser> users)
     {
-        var viewModels = new List<UserViewModel>();
-
-        foreach (var item in users)
+        return users.Select(item => new UserViewModel
         {
-            viewModels.Add(new UserViewModel
-            {
-                Name = item.Name,
-                Surname = item.Surname,
-                Email = item.Email,
-                UserName = item.UserName
-            });
-        }
-
-        return viewModels;
+            Name = item.Name,
+            Surname = item.Surname,
+            Email = item.Email,
+            UserName = item.UserName
+        }).ToList();
     }
 
     /// <summary>

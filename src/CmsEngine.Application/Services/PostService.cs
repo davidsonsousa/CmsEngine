@@ -2,25 +2,22 @@ namespace CmsEngine.Application.Services;
 
 public class PostService : Service, IPostService
 {
-    private readonly IUnitOfWork _unitOfWork;
-
     public PostService(IUnitOfWork uow, IHttpContextAccessor hca, ILoggerFactory loggerFactory, IMemoryCache memoryCache)
                       : base(uow, hca, loggerFactory, memoryCache)
     {
-        _unitOfWork = uow;
     }
 
     public async Task<ReturnValue> Delete(Guid id)
     {
-        var item = await _unitOfWork.Posts.GetByIdAsync(id);
+        var item = await unitOfWork.Posts.GetByIdAsync(id);
         Guard.Against.Null(item);
 
         var returnValue = new ReturnValue($"Post '{item.Title}' deleted at {DateTime.Now.ToString("T")}.");
 
         try
         {
-            _unitOfWork.Posts.Delete(item);
-            await _unitOfWork.Save();
+            unitOfWork.Posts.Delete(item);
+            await unitOfWork.Save();
         }
         catch (Exception ex)
         {
@@ -33,14 +30,14 @@ public class PostService : Service, IPostService
 
     public async Task<ReturnValue> DeleteRange(Guid[] ids)
     {
-        var items = await _unitOfWork.Posts.GetByMultipleIdsAsync(ids);
+        var items = await unitOfWork.Posts.GetByMultipleIdsAsync(ids);
 
         var returnValue = new ReturnValue($"Posts deleted at {DateTime.Now.ToString("T")}.");
 
         try
         {
-            _unitOfWork.Posts.DeleteRange(items);
-            await _unitOfWork.Save();
+            unitOfWork.Posts.DeleteRange(items);
+            await unitOfWork.Save();
         }
         catch (Exception ex)
         {
@@ -68,7 +65,7 @@ public class PostService : Service, IPostService
     public async Task<PostViewModel> GetBySlug(string slug)
     {
         logger.LogDebug("PostService > GetBySlug({slug})", slug);
-        var item = await _unitOfWork.Posts.GetBySlug(slug);
+        var item = await unitOfWork.Posts.GetBySlug(slug);
         Guard.Against.Null(item, nameof(item), $"Post not found. Slug: {slug}");
 
         return item.MapToViewModel(Instance.DateFormat);
@@ -77,7 +74,7 @@ public class PostService : Service, IPostService
     public async Task<IEnumerable<PostEditModel>> GetPublishedOrderedByDate(int count = 0)
     {
         logger.LogDebug("PostService > GetByStatus(count: {0})", count);
-        var items = await _unitOfWork.Posts.GetByStatusOrderByDescending(DocumentStatus.Published);
+        var items = await unitOfWork.Posts.GetByStatusOrderByDescending(DocumentStatus.Published);
         logger.LogDebug("Posts loaded: {0}", items.Count());
 
         return items.MapToEditModel();
@@ -85,7 +82,7 @@ public class PostService : Service, IPostService
 
     public async Task<(IEnumerable<PostTableViewModel> Data, int RecordsTotal, int RecordsFiltered)> GetForDataTable(DataParameters parameters)
     {
-        var items = await _unitOfWork.Posts.GetForDataTable();
+        var items = await unitOfWork.Posts.GetForDataTable();
         int recordsTotal = items.Count();
         if (!string.IsNullOrWhiteSpace(parameters.Search?.Value))
         {
@@ -100,35 +97,34 @@ public class PostService : Service, IPostService
     public async Task<PaginatedList<PostViewModel>> GetPublishedByCategoryForPagination(string categorySlug, int page = 1)
     {
         logger.LogDebug("CmsService > GetPublishedByCategoryForPagination(categorySlug: {0}, page: {1})", categorySlug, page);
-        var posts = await _unitOfWork.Posts.GetPublishedByCategoryForPagination(categorySlug, page, Instance.ArticleLimit);
+        var posts = await unitOfWork.Posts.GetPublishedByCategoryForPagination(categorySlug, page, Instance.ArticleLimit);
         return new PaginatedList<PostViewModel>(posts.Items.MapToViewModelForPartialView(Instance.DateFormat), posts.Count, page, Instance.ArticleLimit);
     }
 
     public async Task<PaginatedList<PostViewModel>> GetPublishedByTagForPagination(string tagSlug, int page = 1)
     {
         logger.LogDebug("CmsService > GetPublishedByTagForPagination(tagSlug: {0}, page: {1})", tagSlug, page);
-        var posts = await _unitOfWork.Posts.GetPublishedByTagForPagination(tagSlug, page, Instance.ArticleLimit);
+        var posts = await unitOfWork.Posts.GetPublishedByTagForPagination(tagSlug, page, Instance.ArticleLimit);
         return new PaginatedList<PostViewModel>(posts.Items.MapToViewModelForPartialViewForTags(Instance.DateFormat), posts.Count, page, Instance.ArticleLimit);
     }
 
     public async Task<PaginatedList<PostViewModel>> GetPublishedForPagination(int page = 1)
     {
         logger.LogDebug("CmsService > GetPublishedForPagination(page: {0})", page);
-        var posts = await _unitOfWork.Posts.GetPublishedForPagination(page, Instance.ArticleLimit);
+        var posts = await unitOfWork.Posts.GetPublishedForPagination(page, Instance.ArticleLimit);
         return new PaginatedList<PostViewModel>(posts.Items.MapToViewModelForPartialView(Instance.DateFormat), posts.Count, page, Instance.ArticleLimit);
     }
 
     public async Task<IEnumerable<PostViewModel>> GetPublishedLatestPosts(int count)
     {
         logger.LogDebug("CmsService > GetPublishedLatestPosts(count: {0})", count);
-        var posts = await _unitOfWork.Posts.GetPublishedLatestPosts(count);
-        return posts.MapToViewModelForPartialView(Instance.DateFormat);
+        return (await unitOfWork.Posts.GetPublishedLatestPosts(count)).MapToViewModelForPartialView(Instance.DateFormat);
     }
 
     public async Task<PaginatedList<PostViewModel>> FindPublishedForPaginationOrderByDateDescending(string searchTerm = "", int page = 1)
     {
         logger.LogDebug("CmsService > FindPublishedForPaginationOrderByDateDescending(page: {0}, searchTerm: {1})", page, searchTerm);
-        var posts = await _unitOfWork.Posts.FindPublishedForPaginationOrderByDateDescending(page, searchTerm, Instance.ArticleLimit);
+        var posts = await unitOfWork.Posts.FindPublishedForPaginationOrderByDateDescending(page, searchTerm, Instance.ArticleLimit);
         return new PaginatedList<PostViewModel>(posts.Items.MapToViewModelForPartialView(Instance.DateFormat), posts.Count, page, Instance.ArticleLimit);
     }
 
@@ -194,12 +190,12 @@ public class PostService : Service, IPostService
                 var postToUpdate = postEditModel.MapToModel(post);
                 postToUpdate.WebsiteId = Instance.Id;
 
-                _unitOfWork.Posts.RemoveRelatedItems(postToUpdate);
+                unitOfWork.Posts.RemoveRelatedItems(postToUpdate);
                 await PrepareRelatedPropertiesAsync(postEditModel, postToUpdate);
-                _unitOfWork.Posts.Update(postToUpdate);
+                unitOfWork.Posts.Update(postToUpdate);
             }
 
-            await _unitOfWork.Save();
+            await unitOfWork.Save();
             logger.LogDebug("Post saved");
         }
         catch (Exception ex)
@@ -224,7 +220,7 @@ public class PostService : Service, IPostService
     public async Task<PostEditModel> SetupEditModel(Guid id)
     {
         logger.LogDebug("PostService > SetupPostEditModel(id: {id})", id);
-        var item = await _unitOfWork.Posts.GetForEditingById(id);
+        var item = await unitOfWork.Posts.GetForEditingById(id);
         Guard.Against.Null(item, nameof(item), $"Post not found. Vanity id: {id}");
 
         logger.LogDebug("Post: {item}", item.ToString());
@@ -241,7 +237,7 @@ public class PostService : Service, IPostService
         post.PostCategories.Clear();
         if (postEditModel.SelectedCategories != null)
         {
-            var categoryIds = await _unitOfWork.Categories.GetIdsByMultipleGuidsAsync(postEditModel.SelectedCategories.ToList().ConvertAll(Guid.Parse));
+            var categoryIds = await unitOfWork.Categories.GetIdsByMultipleGuidsAsync(postEditModel.SelectedCategories.ToList().ConvertAll(Guid.Parse));
             foreach (var categoryId in categoryIds)
             {
                 post.PostCategories.Add(new PostCategory
@@ -255,7 +251,7 @@ public class PostService : Service, IPostService
         post.PostTags.Clear();
         if (postEditModel.SelectedTags != null)
         {
-            var tagIds = await _unitOfWork.Tags.GetIdsByMultipleGuidsAsync(postEditModel.SelectedTags.ToList().ConvertAll(Guid.Parse));
+            var tagIds = await unitOfWork.Tags.GetIdsByMultipleGuidsAsync(postEditModel.SelectedTags.ToList().ConvertAll(Guid.Parse));
             foreach (var tagId in tagIds)
             {
                 post.PostTags.Add(new PostTag
