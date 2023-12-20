@@ -49,7 +49,7 @@ public class UnitOfWork : IUnitOfWork
             }
             else
             {
-                throw ex;
+                throw;
             }
         }
         catch
