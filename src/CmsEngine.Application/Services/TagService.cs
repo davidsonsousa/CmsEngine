@@ -2,25 +2,22 @@ namespace CmsEngine.Application.Services;
 
 public class TagService : Service, ITagService
 {
-    private readonly IUnitOfWork _unitOfWork;
-
     public TagService(IUnitOfWork uow, IHttpContextAccessor hca, ILoggerFactory loggerFactory, IMemoryCache memoryCache)
                      : base(uow, hca, loggerFactory, memoryCache)
     {
-        _unitOfWork = uow;
     }
 
     public async Task<ReturnValue> Delete(Guid id)
     {
-        var item = await _unitOfWork.Tags.GetByIdAsync(id);
+        var item = await unitOfWork.Tags.GetByIdAsync(id);
         Guard.Against.Null(item);
 
         var returnValue = new ReturnValue($"Tag '{item.Name}' deleted at {DateTime.Now.ToString("T")}.");
 
         try
         {
-            _unitOfWork.Tags.Delete(item);
-            await _unitOfWork.Save();
+            unitOfWork.Tags.Delete(item);
+            await unitOfWork.Save();
         }
         catch (Exception ex)
         {
@@ -33,14 +30,14 @@ public class TagService : Service, ITagService
 
     public async Task<ReturnValue> DeleteRange(Guid[] ids)
     {
-        var items = await _unitOfWork.Tags.GetByMultipleIdsAsync(ids);
+        var items = await unitOfWork.Tags.GetByMultipleIdsAsync(ids);
 
         var returnValue = new ReturnValue($"Tags deleted at {DateTime.Now.ToString("T")}.");
 
         try
         {
-            _unitOfWork.Tags.DeleteRange(items);
-            await _unitOfWork.Save();
+            unitOfWork.Tags.DeleteRange(items);
+            await unitOfWork.Save();
         }
         catch (Exception ex)
         {
@@ -66,7 +63,7 @@ public class TagService : Service, ITagService
 
     public async Task<(IEnumerable<TagTableViewModel> Data, int RecordsTotal, int RecordsFiltered)> GetForDataTable(DataParameters parameters)
     {
-        var items = await _unitOfWork.Tags.GetAllAsync();
+        var items = await unitOfWork.Tags.GetAllAsync();
         int recordsTotal = items.Count();
         if (!string.IsNullOrWhiteSpace(parameters.Search?.Value))
         {
@@ -81,7 +78,7 @@ public class TagService : Service, ITagService
     public async Task<IEnumerable<TagViewModel>> GetAllTags()
     {
         logger.LogDebug("TagService > GetAllTags()");
-        var items = await _unitOfWork.Tags.GetAllAsync();
+        var items = await unitOfWork.Tags.GetAllAsync();
         logger.LogDebug("Tags loaded: {0}", items.Count());
         return items.MapToViewModel();
     }
@@ -136,10 +133,10 @@ public class TagService : Service, ITagService
                 var tagToUpdate = tagEditModel.MapToModel(tag);
                 tagToUpdate.WebsiteId = Instance.Id;
 
-                _unitOfWork.Tags.Update(tagToUpdate);
+                unitOfWork.Tags.Update(tagToUpdate);
             }
 
-            await _unitOfWork.Save();
+            await unitOfWork.Save();
             logger.LogDebug("Tag saved");
         }
         catch (Exception ex)
@@ -160,7 +157,7 @@ public class TagService : Service, ITagService
     public async Task<TagEditModel> SetupEditModel(Guid id)
     {
         logger.LogDebug("CmsService > SetupTagEditModel(id: {id})", id);
-        var item = await _unitOfWork.Tags.GetByIdAsync(id);
+        var item = await unitOfWork.Tags.GetByIdAsync(id);
         Guard.Against.Null(item, nameof(item), $"Tag not found. Vanity id: {id}");
 
         logger.LogDebug("Tag: {item}", item.ToString());

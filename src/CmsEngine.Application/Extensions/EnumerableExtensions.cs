@@ -4,18 +4,12 @@ public static class EnumerableExtensions
 {
     public static Expression<Func<T, bool>>? GetSearchExpression<T>(this IEnumerable<T> element, string searchValue, IEnumerable<PropertyInfo> properties)
     {
-        var expressionFilter = new List<ExpressionFilter>();
-
-        foreach (var property in properties)
+        var expressionFilter = properties.Select(property => new ExpressionFilter
         {
-            expressionFilter.Add(new ExpressionFilter
-            {
-                PropertyName = property.Name,
-                Operation = Operation.Contains,
-                Value = searchValue
-            });
-        }
-
+            PropertyName = property.Name,
+            Operation = Operation.Contains,
+            Value = searchValue
+        }).ToList();
         return ExpressionBuilder.GetExpression<T>(expressionFilter, LogicalOperator.Or);
     }
 

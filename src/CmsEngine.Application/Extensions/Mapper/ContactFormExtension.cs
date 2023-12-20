@@ -24,14 +24,7 @@ public static class ContactFormExtension
     /// <returns></returns>
     public static IEnumerable<ContactForm> MapToViewModel(this IEnumerable<Email> emails)
     {
-        var viewModel = new List<ContactForm>();
-
-        foreach (var item in emails)
-        {
-            viewModel.Add(new ContactForm(item.From, item.Subject, item.Message));
-        }
-
-        return viewModel;
+        return emails.Select(item => new ContactForm(item.From, item.Subject, item.Message)).ToList();
     }
 
 }

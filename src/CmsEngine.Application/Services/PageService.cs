@@ -2,25 +2,22 @@ namespace CmsEngine.Application.Services;
 
 public class PageService : Service, IPageService
 {
-    private readonly IUnitOfWork _unitOfWork;
-
     public PageService(IUnitOfWork uow, IHttpContextAccessor hca, ILoggerFactory loggerFactory, IMemoryCache memoryCache)
                       : base(uow, hca, loggerFactory, memoryCache)
     {
-        _unitOfWork = uow;
     }
 
     public async Task<ReturnValue> Delete(Guid id)
     {
-        var item = await _unitOfWork.Pages.GetByIdAsync(id);
+        var item = await unitOfWork.Pages.GetByIdAsync(id);
         Guard.Against.Null(item);
 
         var returnValue = new ReturnValue($"Page '{item.Title}' deleted at {DateTime.Now:T}.");
 
         try
         {
-            _unitOfWork.Pages.Delete(item);
-            await _unitOfWork.Save();
+            unitOfWork.Pages.Delete(item);
+            await unitOfWork.Save();
         }
         catch (Exception ex)
         {
@@ -33,14 +30,14 @@ public class PageService : Service, IPageService
 
     public async Task<ReturnValue> DeleteRange(Guid[] ids)
     {
-        var items = await _unitOfWork.Pages.GetByMultipleIdsAsync(ids);
+        var items = await unitOfWork.Pages.GetByMultipleIdsAsync(ids);
 
         var returnValue = new ReturnValue($"Pages deleted at {DateTime.Now:T}.");
 
         try
         {
-            _unitOfWork.Pages.DeleteRange(items);
-            await _unitOfWork.Save();
+            unitOfWork.Pages.DeleteRange(items);
+            await unitOfWork.Save();
         }
         catch (Exception ex)
         {
@@ -68,7 +65,7 @@ public class PageService : Service, IPageService
     public async Task<IEnumerable<PageViewModel>> GetAllPublished()
     {
         logger.LogDebug("PageService > GetPagesByStatusReadOnly()");
-        var items = await _unitOfWork.Pages.GetByStatusOrderByDescending(DocumentStatus.Published);
+        var items = await unitOfWork.Pages.GetByStatusOrderByDescending(DocumentStatus.Published);
         logger.LogDebug("Pages loaded: {0}", items.Count());
         return items.MapToViewModel(Instance.DateFormat);
     }
@@ -76,7 +73,7 @@ public class PageService : Service, IPageService
     public async Task<PageViewModel> GetBySlug(string slug)
     {
         logger.LogDebug($"PageService > GetBySlug({slug})");
-        var item = await _unitOfWork.Pages.GetBySlug(slug);
+        var item = await unitOfWork.Pages.GetBySlug(slug);
         Guard.Against.Null(item);
 
         return item.MapToViewModel(Instance.DateFormat);
@@ -84,7 +81,7 @@ public class PageService : Service, IPageService
 
     public async Task<(IEnumerable<PageTableViewModel> Data, int RecordsTotal, int RecordsFiltered)> GetForDataTable(DataParameters parameters)
     {
-        var items = await _unitOfWork.Pages.GetForDataTable();
+        var items = await unitOfWork.Pages.GetForDataTable();
         var recordsTotal = items.Count();
         if (!string.IsNullOrWhiteSpace(parameters.Search?.Value))
         {
@@ -159,12 +156,12 @@ public class PageService : Service, IPageService
                 var pageToUpdate = pageEditModel.MapToModel(page);
                 pageToUpdate.WebsiteId = Instance.Id;
 
-                _unitOfWork.Pages.RemoveRelatedItems(pageToUpdate);
+                unitOfWork.Pages.RemoveRelatedItems(pageToUpdate);
                 await PrepareRelatedPropertiesAsync(pageToUpdate);
-                _unitOfWork.Pages.Update(pageToUpdate);
+                unitOfWork.Pages.Update(pageToUpdate);
             }
 
-            await _unitOfWork.Save();
+            await unitOfWork.Save();
             logger.LogDebug("Page saved");
         }
         catch (Exception ex)
@@ -185,7 +182,7 @@ public class PageService : Service, IPageService
     public async Task<PageEditModel> SetupEditModel(Guid id)
     {
         logger.LogDebug("PageService > SetupPageEditModel(id: {id})", id);
-        var item = await _unitOfWork.Pages.GetByIdAsync(id);
+        var item = await unitOfWork.Pages.GetByIdAsync(id);
         Guard.Against.Null(item, nameof(item), $"Page not found. Vanity id: {id}");
 
         logger.LogDebug("Page: {item}", item.ToString());

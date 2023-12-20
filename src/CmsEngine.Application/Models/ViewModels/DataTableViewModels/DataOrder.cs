@@ -2,9 +2,9 @@ namespace CmsEngine.Application.Models.ViewModels.DataTablesViewModels;
 
 public class DataOrder
 {
-    [JsonProperty(PropertyName = "column")]
+    [JsonPropertyName("column")]
     public int Column { get; set; }
 
-    [JsonProperty(PropertyName = "dir")]
+    [JsonPropertyName("dir")]
     public string Dir { get; set; } = string.Empty;
 }

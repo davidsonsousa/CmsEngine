@@ -75,7 +75,7 @@ public class BaseController : Controller
             Location = $"{pathUrl}{formFile.FileName}"
         };
 
-        return Content(JsonConvert.SerializeObject(returnImage).ToLowerInvariant(), "application/json");
+        return Content(JsonSerializer.Serialize(returnImage).ToLowerInvariant(), "application/json");
     }
 
     [SupportedOSPlatform("windows")]
@@ -129,7 +129,7 @@ public class BaseController : Controller
                 Size = fileSize
             });
         }
-        return Content(JsonConvert.SerializeObject(fileList).ToLowerInvariant(), "application/json");
+        return Content(JsonSerializer.Serialize(fileList).ToLowerInvariant(), "application/json");
     }
 
     [SupportedOSPlatform("windows")]

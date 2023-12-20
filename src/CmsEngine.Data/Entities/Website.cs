@@ -58,13 +58,14 @@ public class Website : BaseEntity
 
     public override string ToString()
     {
-        var jsonResult = new JObject(
-                                    new JProperty("Id", Id),
-                                    new JProperty("VanityId", VanityId),
-                                    new JProperty("Name", Name),
-                                    new JProperty("SiteUrl", SiteUrl),
-                                    new JProperty("Tagline", Tagline)
-                                );
+        var jsonResult = new JsonObject
+        {
+            [nameof(Id)] = Id,
+            [nameof(VanityId)] = VanityId,
+            [nameof(Name)] = Name,
+            [nameof(SiteUrl)] = SiteUrl,
+            [nameof(Tagline)] = Tagline
+        };
         return jsonResult.ToString();
     }
 }

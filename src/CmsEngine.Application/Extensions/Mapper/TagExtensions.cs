@@ -80,20 +80,13 @@ public static class TagExtensions
     /// <returns></returns>
     public static IEnumerable<TagViewModel> MapToViewModel(this IEnumerable<Tag> tags)
     {
-        var viewModel = new List<TagViewModel>();
-
-        foreach (var item in tags)
+        return tags.Select(item => new TagViewModel
         {
-            viewModel.Add(new TagViewModel
-            {
-                Id = item.Id,
-                VanityId = item.VanityId,
-                Name = item.Name,
-                Slug = item.Slug
-            });
-        }
-
-        return viewModel;
+            Id = item.Id,
+            VanityId = item.VanityId,
+            Name = item.Name,
+            Slug = item.Slug
+        }).ToList();
     }
 
     /// <summary>
@@ -103,18 +96,11 @@ public static class TagExtensions
     /// <returns></returns>
     public static IEnumerable<TagViewModel> MapToViewModelSimple(this IEnumerable<Tag> tags)
     {
-        var viewModel = new List<TagViewModel>();
-
-        foreach (var item in tags)
+        return tags.Select(item => new TagViewModel
         {
-            viewModel.Add(new TagViewModel
-            {
-                VanityId = item.VanityId,
-                Name = item.Name,
-                Slug = item.Slug
-            });
-        }
-
-        return viewModel;
+            VanityId = item.VanityId,
+            Name = item.Name,
+            Slug = item.Slug
+        }).ToList();
     }
 }

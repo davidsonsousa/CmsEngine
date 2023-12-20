@@ -12,13 +12,14 @@ public class CategoryEditModel : BaseEditModel, IEditModel
 
     public override string ToString()
     {
-        var jsonResult = new JObject(
-                                    new JProperty("Id", Id),
-                                    new JProperty("VanityId", VanityId),
-                                    new JProperty("Name", Name),
-                                    new JProperty("Slug", Slug),
-                                    new JProperty("Description", Description)
-                                );
+        var jsonResult = new JsonObject
+        {
+            [nameof(Id)] = Id,
+            [nameof(VanityId)] = VanityId,
+            [nameof(Name)] = Name,
+            [nameof(Slug)] = Slug,
+            [nameof(Description)] = Description
+        };
         return jsonResult.ToString();
     }
 }

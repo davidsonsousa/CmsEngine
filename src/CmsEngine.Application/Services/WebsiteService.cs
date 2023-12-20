@@ -2,27 +2,22 @@ namespace CmsEngine.Application.Services;
 
 public class WebsiteService : Service, IWebsiteService
 {
-    private readonly IUnitOfWork _unitOfWork;
-    private readonly IMemoryCache _memoryCache;
-
     public WebsiteService(IUnitOfWork uow, IHttpContextAccessor hca, ILoggerFactory loggerFactory, IMemoryCache memoryCache)
                          : base(uow, hca, loggerFactory, memoryCache)
     {
-        _unitOfWork = uow;
-        _memoryCache = memoryCache;
     }
 
     public async Task<ReturnValue> Delete(Guid id)
     {
-        var item = await _unitOfWork.Websites.GetByIdAsync(id);
+        var item = await unitOfWork.Websites.GetByIdAsync(id);
         Guard.Against.Null(item);
 
         var returnValue = new ReturnValue($"Website '{item.Name}' deleted at {DateTime.Now:T}.");
 
         try
         {
-            _unitOfWork.Websites.Delete(item);
-            await _unitOfWork.Save();
+            unitOfWork.Websites.Delete(item);
+            await unitOfWork.Save();
         }
         catch (Exception ex)
         {
@@ -35,14 +30,14 @@ public class WebsiteService : Service, IWebsiteService
 
     public async Task<ReturnValue> DeleteRange(Guid[] ids)
     {
-        var items = await _unitOfWork.Websites.GetByMultipleIdsAsync(ids);
+        var items = await unitOfWork.Websites.GetByMultipleIdsAsync(ids);
 
         var returnValue = new ReturnValue($"Websites deleted at {DateTime.Now:T}.");
 
         try
         {
-            _unitOfWork.Websites.DeleteRange(items);
-            await _unitOfWork.Save();
+            unitOfWork.Websites.DeleteRange(items);
+            await unitOfWork.Save();
         }
         catch (Exception ex)
         {
@@ -69,7 +64,7 @@ public class WebsiteService : Service, IWebsiteService
 
     public async Task<(IEnumerable<WebsiteTableViewModel> Data, int RecordsTotal, int RecordsFiltered)> GetForDataTable(DataParameters parameters)
     {
-        var items = await _unitOfWork.Websites.GetForDataTable();
+        var items = await unitOfWork.Websites.GetForDataTable();
         var recordsTotal = items.Count();
         if (!string.IsNullOrWhiteSpace(parameters.Search?.Value))
         {
@@ -132,10 +127,10 @@ public class WebsiteService : Service, IWebsiteService
 
                 var websiteToUpdate = websiteEditModel.MapToModel(website);
 
-                _unitOfWork.Websites.Update(websiteToUpdate);
+                unitOfWork.Websites.Update(websiteToUpdate);
             }
 
-            await _unitOfWork.Save();
+            await unitOfWork.Save();
 
             SaveInstanceToCache(websiteEditModel);
             logger.LogDebug("Website saved");
@@ -158,7 +153,7 @@ public class WebsiteService : Service, IWebsiteService
     public async Task<WebsiteEditModel?> SetupEditModel(Guid id)
     {
         logger.LogDebug("CmsService > SetupEditModel(id: {id})", id);
-        var item = await _unitOfWork.Websites.GetByIdAsync(id);
+        var item = await unitOfWork.Websites.GetByIdAsync(id);
         logger.LogDebug("Website: {item}", item?.ToString());
         return item?.MapToEditModel();
     }

@@ -50,7 +50,7 @@ public class CmsEngineContext : IdentityDbContext<ApplicationUser>
         var timeStamp = DateTime.Now;
         var entries = ChangeTracker.Entries().Where(e => e.Entity is BaseEntity && (e.State == EntityState.Added || e.State == EntityState.Modified));
         // TODO: Find a better way to get the user
-        var currentUsername = httpContextAccessor.HttpContext.User.Identity?.Name;
+        var currentUsername = httpContextAccessor.HttpContext?.User.Identity?.Name ?? "username";
         foreach (var entry in entries)
         {
             if (entry.State == EntityState.Added)

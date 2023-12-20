@@ -1,6 +1,6 @@
 namespace CmsEngine.Application.Services.Interfaces;
 
-public interface ICategoryService : IDataTableService<Category>
+public interface ICategoryService : IDataTableService<Category>, IDisposable
 {
     CategoryEditModel SetupEditModel();
     Task<CategoryEditModel> SetupEditModel(Guid id);
