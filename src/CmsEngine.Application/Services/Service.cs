@@ -33,18 +33,19 @@ public class Service : IService
         logger = loggerFactory.CreateLogger("Service");
         this.memoryCache = memoryCache;
 
-        instanceHost = httpContextAccessor.HttpContext.Request.Host.Host;
+        instanceHost = httpContextAccessor.HttpContext!.Request.Host.Host;
         instanceKey = $"{Main.CacheKey.Instance}_{instanceHost}";
     }
 
     async internal Task<ApplicationUser> GetCurrentUserAsync()
     {
-        var userName = httpContextAccessor.HttpContext.User.Identity?.Name;
+        var userName = httpContextAccessor.HttpContext?.User.Identity?.Name ?? "username";
         logger.LogDebug("GetCurrentUserAsync() for {userName}", userName);
 
         try
         {
-            return await unitOfWork.Users.FindByNameAsync(userName);
+            var user = await unitOfWork.Users.FindByNameAsync(userName);
+            return user ?? throw new Exception($"User '{userName}' not found.");
         }
         catch (Exception ex)
         {
