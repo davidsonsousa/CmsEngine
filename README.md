@@ -1,7 +1,7 @@
 # CmsEngine
 
 ## Build status
-![CmsEngine](https://github.com/github/docs/actions/workflows/dotnet.yml/badge.svg)
+![CmsEngine](https://github.com/davidsonsousa/CmsEngine/actions/workflows/dotnet.yml/badge.svg)
 
 ## What is it?
 This the code-base of the CMS I am using in my website [https://davidsonsousa.net](https://davidsonsousa.net "my website").
