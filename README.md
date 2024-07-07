@@ -1,7 +1,7 @@
 # CmsEngine
 
 ## Build status
-![Build status](https://davidsonsousa.visualstudio.com/CMSEngine/_apis/build/status/CMSEngine%20CI%20master "Build status")
+![CmsEngine](https://github.com/github/docs/actions/workflows/dotnet.yml/badge.svg)
 
 ## What is it?
 This the code-base of the CMS I am using in my website [https://davidsonsousa.net](https://davidsonsousa.net "my website").
