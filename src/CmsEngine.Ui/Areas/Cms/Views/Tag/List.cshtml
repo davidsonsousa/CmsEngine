@@ -3,27 +3,16 @@
 }
 
 @section Breadcrumb {
-  <ol class="breadcrumb">
+  <ol class="breadcrumb my-0">
     <li class="breadcrumb-item"><a href="~/cms">Dashboard</a></li>
     <li class="breadcrumb-item active">@ViewBag.PageTitle</li>
   </ol>
 }
 
 <div class="card">
-    <div class="card-header">
-        <i class="fa fa-align-justify"></i>
-        @ViewBag.PanelTitle
-        <div class="btn-toolbar float-right" role="toolbar" aria-label="Toolbar with button groups">
-            <div class="btn-group" role="group" aria-label="Actions">
-                <a asp-action="create" class="btn btn-success" data-toggle="tooltip" data-placement="top" title="Create a new item">
-                    <span class="fas fa-plus"></span>
-                </a>
-                <a asp-action="bulkdelete" class="btn btn-danger" id="bulk-delete" data-toggle="tooltip" data-placement="top" title="Select the items you want to delete" disabled="disabled">
-                    <span class="far fa-trash-alt"></span>
-                </a>
-            </div>
-        </div>
-    </div>
+    @{
+        await Html.RenderPartialAsync("_DataTableCardHeader");
+    }
     <div class="card-body">
         <table id="table-list" class="table table-striped table-bordered">
             <thead>
