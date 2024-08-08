@@ -11,6 +11,7 @@
 -->
 <html lang="en">
 <head>
+    <base href="./">
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -19,12 +20,9 @@
     <meta name="keyword" content="Bootstrap,Admin,Template,Open,Source,jQuery,CSS,HTML,RWD,Dashboard">
     <title>@ViewData["PageTitle"] - CmsEngine</title>
 
-    <link rel="icon" type="image/png" sizes="32x32" href="media/favicon/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="96x96" href="media/favicon/favicon-96x96.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="media/favicon/favicon-16x16.png">
-    <link rel="manifest" href="media/favicon/manifest.json">
-    <meta name="msapplication-TileColor" content="#ffffff">
-    <meta name="msapplication-TileImage" content="media/favicon/ms-icon-144x144.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="~/media/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="~/media/favicon/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="~/media/favicon/favicon-16x16.png">
     <meta name="theme-color" content="#ffffff">
     <!-- Vendors styles-->
     <link rel="stylesheet" href="~/vendors/simplebar/css/simplebar.css">
@@ -40,6 +38,7 @@
     <script src="~/js/admin/config.js"></script>
     <script src="~/js/admin/color-modes.js"></script>
     <link href="~/vendors/@@coreui/chartjs/css/coreui-chartjs.css" rel="stylesheet">
+    <link href="~/vendors/@@coreui/icons/css/free.min.css" rel="stylesheet">
 
     <!-- Extra header items required by views -->
     @RenderSection("PageHead", required: false)
@@ -49,10 +48,10 @@
         <div class="sidebar-header border-bottom">
             <div class="sidebar-brand">
                 <svg class="sidebar-brand-full" width="88" height="32" alt="CoreUI Logo">
-                    <use xlink:href="media/brand/coreui.svg#full"></use>
+                    <use xlink:href="/media/brand/coreui.svg#full"></use>
                 </svg>
                 <svg class="sidebar-brand-narrow" width="32" height="32" alt="CoreUI Logo">
-                    <use xlink:href="media/brand/coreui.svg#signet"></use>
+                    <use xlink:href="/media/brand/coreui.svg#signet"></use>
                 </svg>
             </div>
             <button class="btn-close d-lg-none" type="button" data-coreui-dismiss="offcanvas" data-coreui-theme="dark" aria-label="Close" onclick="coreui.Sidebar.getInstance(document.querySelector(&quot;#sidebar&quot;)).toggle()"></button>
@@ -61,42 +60,42 @@
             <li class="nav-item">
                 <a class="nav-link" asp-area="Cms" asp-controller="Home" asp-action="Index">
                     <svg class="nav-icon">
-                        <use xlink:href="vendors/@@coreui/icons/svg/free.svg#cil-speedometer"></use>
+                        <use xlink:href="/vendors/@@coreui/icons/svg/free.svg#cil-speedometer"></use>
                     </svg> Dashboard
                 </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" asp-area="Cms" asp-controller="Post" asp-action="Index">
                     <svg class="nav-icon">
-                        <use xlink:href="vendors/@@coreui/icons/svg/free.svg#cil-file"></use>
+                        <use xlink:href="/vendors/@@coreui/icons/svg/free.svg#cil-file"></use>
                     </svg> Posts
                 </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" asp-area="Cms" asp-controller="Page" asp-action="Index">
                     <svg class="nav-icon">
-                        <use xlink:href="vendors/@@coreui/icons/svg/free.svg#cil-description"></use>
+                        <use xlink:href="/vendors/@@coreui/icons/svg/free.svg#cil-description"></use>
                     </svg> Pages
                 </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" asp-area="Cms" asp-controller="Category" asp-action="Index">
                     <svg class="nav-icon">
-                        <use xlink:href="vendors/@@coreui/icons/svg/free.svg#cil-task"></use>
+                        <use xlink:href="/vendors/@@coreui/icons/svg/free.svg#cil-task"></use>
                     </svg> Categories
                 </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" asp-area="Cms" asp-controller="Tag" asp-action="Index">
                     <svg class="nav-icon">
-                        <use xlink:href="vendors/@@coreui/icons/svg/free.svg#cil-tags"></use>
+                        <use xlink:href="/vendors/@@coreui/icons/svg/free.svg#cil-tags"></use>
                     </svg> Tags
                 </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" asp-area="Cms" asp-controller="Website" asp-action="Index">
                     <svg class="nav-icon">
-                        <use xlink:href="vendors/@@coreui/icons/svg/free.svg#cil-settings"></use>
+                        <use xlink:href="/vendors/@@coreui/icons/svg/free.svg#cil-settings"></use>
                     </svg> Websites
                 </a>
             </li>
@@ -111,7 +110,7 @@
             <div class="container-fluid border-bottom px-4">
                 <button class="header-toggler" type="button" onclick="coreui.Sidebar.getInstance(document.querySelector('#sidebar')).toggle()" style="margin-inline-start: -14px;">
                     <svg class="icon icon-lg">
-                        <use xlink:href="vendors/@@coreui/icons/svg/free.svg#cil-menu"></use>
+                        <use xlink:href="/vendors/@@coreui/icons/svg/free.svg#cil-menu"></use>
                     </svg>
                 </button>
                 <ul class="header-nav d-none d-lg-flex">
@@ -123,21 +122,21 @@
                     <li class="nav-item">
                         <a class="nav-link" href="#">
                             <svg class="icon icon-lg">
-                                <use xlink:href="vendors/@@coreui/icons/svg/free.svg#cil-bell"></use>
+                                <use xlink:href="/vendors/@@coreui/icons/svg/free.svg#cil-bell"></use>
                             </svg>
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#">
                             <svg class="icon icon-lg">
-                                <use xlink:href="vendors/@@coreui/icons/svg/free.svg#cil-list-rich"></use>
+                                <use xlink:href="/vendors/@@coreui/icons/svg/free.svg#cil-list-rich"></use>
                             </svg>
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#">
                             <svg class="icon icon-lg">
-                                <use xlink:href="vendors/@@coreui/icons/svg/free.svg#cil-envelope-open"></use>
+                                <use xlink:href="/vendors/@@coreui/icons/svg/free.svg#cil-envelope-open"></use>
                             </svg>
                         </a>
                     </li>
@@ -149,28 +148,28 @@
                     <li class="nav-item dropdown">
                         <button class="btn btn-link nav-link py-2 px-2 d-flex align-items-center" type="button" aria-expanded="false" data-coreui-toggle="dropdown">
                             <svg class="icon icon-lg theme-icon-active">
-                                <use xlink:href="vendors/@@coreui/icons/svg/free.svg#cil-contrast"></use>
+                                <use xlink:href="/vendors/@@coreui/icons/svg/free.svg#cil-contrast"></use>
                             </svg>
                         </button>
                         <ul class="dropdown-menu dropdown-menu-end" style="--cui-dropdown-min-width: 8rem;">
                             <li>
                                 <button class="dropdown-item d-flex align-items-center" type="button" data-coreui-theme-value="light">
                                     <svg class="icon icon-lg me-3">
-                                        <use xlink:href="vendors/@@coreui/icons/svg/free.svg#cil-sun"></use>
+                                        <use xlink:href="/vendors/@@coreui/icons/svg/free.svg#cil-sun"></use>
                                     </svg>Light
                                 </button>
                             </li>
                             <li>
                                 <button class="dropdown-item d-flex align-items-center" type="button" data-coreui-theme-value="dark">
                                     <svg class="icon icon-lg me-3">
-                                        <use xlink:href="vendors/@@coreui/icons/svg/free.svg#cil-moon"></use>
+                                        <use xlink:href="/vendors/@@coreui/icons/svg/free.svg#cil-moon"></use>
                                     </svg>Dark
                                 </button>
                             </li>
                             <li>
                                 <button class="dropdown-item d-flex align-items-center active" type="button" data-coreui-theme-value="auto">
                                     <svg class="icon icon-lg me-3">
-                                        <use xlink:href="vendors/@@coreui/icons/svg/free.svg#cil-contrast"></use>
+                                        <use xlink:href="/vendors/@@coreui/icons/svg/free.svg#cil-contrast"></use>
                                     </svg>Auto
                                 </button>
                             </li>
@@ -188,17 +187,17 @@
                         <div class="dropdown-menu dropdown-menu-end pt-0">
                             <a class="dropdown-item" asp-area="Identity" asp-page="/Account/Manage/Index">
                                 <svg class="icon me-2">
-                                    <use xlink:href="vendors/@@coreui/icons/svg/free.svg#cil-user"></use>
+                                    <use xlink:href="/vendors/@@coreui/icons/svg/free.svg#cil-user"></use>
                                 </svg> Profile
                             </a>
                             <a class="dropdown-item" asp-area="Identity" asp-page="/Account/Manage/ChangePassword">
                                 <svg class="icon me-2">
-                                    <use xlink:href="vendors/@@coreui/icons/svg/free.svg#cil-key"></use>
+                                    <use xlink:href="/vendors/@@coreui/icons/svg/free.svg#cil-asterisk"></use>
                                 </svg> Change password
                             </a>
                             <a class="dropdown-item" asp-area="Identity" asp-page="/Account/Logout">
                                 <svg class="icon me-2">
-                                    <use xlink:href="vendors/@@coreui/icons/svg/free.svg#cil-account-logout"></use>
+                                    <use xlink:href="/vendors/@@coreui/icons/svg/free.svg#cil-account-logout"></use>
                                 </svg> Logout
                             </a>
                         </div>
@@ -229,16 +228,27 @@
 
     @await Html.PartialAsync("Cms/_Dialog")
 
-    <environment include="Development">
-        <script src="~/js/admin.js"></script>
+    @*     <environment include="Development">
+    <script src="~/js/admin.js"></script>
     </environment>
     <environment exclude="Development">
-        <script src="~/js/admin.min.js"></script>
+    <script src="~/js/admin.min.js"></script>
     </environment>
+    *@
+    <!-- CoreUI and necessary plugins-->
+    <script src="vendors/@@coreui/coreui/js/coreui.bundle.min.js"></script>
+    <script src="vendors/simplebar/js/simplebar.min.js"></script>
+    <script>
+        const header = document.querySelector('header.header');
 
-    <!-- Plugins and scripts required by this views -->
+        document.addEventListener('scroll', () => {
+            if (header) {
+                header.classList.toggle('shadow-sm', document.documentElement.scrollTop > 0);
+            }
+        });
+    </script>
+
     <!-- Custom scripts required by this view -->
-    @*<script src="~/js/views/main.js"></script>*@
     @RenderSection("Scripts", required: false)
 </body>
 </html>

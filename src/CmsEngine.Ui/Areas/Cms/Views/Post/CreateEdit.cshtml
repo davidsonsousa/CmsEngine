@@ -46,12 +46,12 @@
                                 <textarea asp-for="DocumentContent" class="form-control"></textarea>
                                 <div class="upload-bar float-right">
                                     <span class="btn btn-success fileinput-button">
-                                        <i class="fas fa-upload"></i>
+                                        <i class="cil-data-transfer-up"></i>
                                         <span>Upload images</span>
                                         <input id="uploadEditorImages" type="file" name="editorImage" multiple>
                                     </span>
                                     <span class="btn btn-success fileinput-button">
-                                        <i class="fas fa-upload"></i>
+                                        <i class="cil-data-transfer-up"></i>
                                         <span>Upload files</span>
                                         <input id="uploadEditorFiles" type="file" name="editorFile" multiple>
                                     </span>
@@ -72,10 +72,10 @@
 
                                 <div class="upload-bar">
                                     <span class="btn btn-success fileinput-button">
-                                        <i class="fas fa-upload"></i> Upload
+                                        <i class="cil-data-transfer-up"></i> Upload
                                         <input id="uploadHeadImage" type="file" name="files">
                                     </span>
-                                    <button class="btn btn-outline-danger" id="removeHeadImage"><i class="fas fa-trash-alt"></i> Remove</button>
+                                    <button class="btn btn-outline-danger" id="removeHeadImage"><i class="cil-trash"></i> Remove</button>
                                     <div id="progress">
                                         <div class="progress-bar" style="width: 0%;"></div>
                                     </div>
@@ -108,7 +108,7 @@
                     <div asp-validation-summary="All" class="text-danger"></div>
                 </div>
                 <div class="card-footer">
-                    <button type="submit" class="btn btn-primary"><i class="far fa-dot-circle"></i> Save</button>
+                    <button type="submit" class="btn btn-primary"><i class="cil-save"></i> Save</button>
                 </div>
             </form>
         </div>
