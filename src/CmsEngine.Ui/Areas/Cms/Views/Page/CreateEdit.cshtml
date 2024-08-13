@@ -7,7 +7,7 @@
 }
 
 @section Breadcrumb {
-    <ol class="breadcrumb">
+    <ol class="breadcrumb my-0">
         <li class="breadcrumb-item"><a href="~/cms">Dashboard</a></li>
         <li class="breadcrumb-item"><a href="~/cms/page">@ViewBag.PageTitle</a></li>
         <li class="breadcrumb-item active">@ViewBag.PageType</li>
@@ -29,28 +29,28 @@
 
                     <div class="row">
                         <div class="col">
-                            <div class="form-group">
+                            <div class="form-group mb-3">
                                 <label asp-for="Title"></label>
                                 <input asp-for="Title" class="form-control slugify" />
                             </div>
-                            <div class="form-group">
+                            <div class="form-group mb-3">
                                 <label asp-for="Slug"></label>
                                 <input asp-for="Slug" class="form-control slug" />
                             </div>
-                            <div class="form-group">
+                            <div class="form-group mb-3">
                                 <label asp-for="Description"></label>
                                 <input asp-for="Description" class="form-control" />
                             </div>
-                            <div class="form-group">
+                            <div class="form-group mb-3">
                                 <textarea asp-for="DocumentContent" class="form-control"></textarea>
                                 <div class="upload-bar float-right">
                                     <span class="btn btn-success fileinput-button">
-                                        <i class="fas fa-upload"></i>
+                                        <i class="cil-data-transfer-up"></i>
                                         <span>Upload images</span>
                                         <input id="uploadEditorImages" type="file" name="editorImage" multiple>
                                     </span>
                                     <span class="btn btn-success fileinput-button">
-                                        <i class="fas fa-upload"></i>
+                                        <i class="cil-data-transfer-up"></i>
                                         <span>Upload files</span>
                                         <input id="uploadEditorFiles" type="file" name="editorFile" multiple>
                                     </span>
@@ -58,7 +58,7 @@
                             </div>
                         </div>
                         <div class="col-xl-2">
-                            <div class="form-group">
+                            <div class="form-group mb-3">
                                 <h5>Header preview</h5>
                                 <div class="header-preview">
                                     @if (!string.IsNullOrWhiteSpace(Model.HeaderImage))
@@ -70,20 +70,20 @@
 
                                 <div class="upload-bar">
                                     <span class="btn btn-success fileinput-button">
-                                        <i class="fas fa-upload"></i> Upload
+                                        <i class="cil-data-transfer-up"></i> Upload
                                         <input id="uploadHeadImage" type="file" name="files">
                                     </span>
-                                    <button class="btn btn-outline-danger" id="removeHeadImage"><i class="fas fa-trash-alt"></i> Remove</button>
+                                    <button class="btn btn-outline-danger" id="removeHeadImage"><i class="cil-trash"></i> Remove</button>
                                     <div id="progress">
                                         <div class="progress-bar" style="width: 0%;"></div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group mb-3">
                                 <label asp-for="Status"></label>
                                 <select asp-for="Status" asp-items="Html.GetEnumSelectList<DocumentStatus>()" class="form-control"></select>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group mb-3">
                                 <label asp-for="PublishedOn"></label>
                                 @Html.EditorFor(m => m.PublishedOn, new { htmlAttributes = new { @class = "form-control", containerId = "published-on" } })
                             </div>
@@ -92,7 +92,7 @@
                     <div asp-validation-summary="All" class="text-danger"></div>
                 </div>
                 <div class="card-footer">
-                    <button type="submit" class="btn btn-primary"><i class="far fa-dot-circle"></i> Save</button>
+                    <button type="submit" class="btn btn-primary"><i class="cil-save"></i> Save</button>
                 </div>
             </form>
         </div>

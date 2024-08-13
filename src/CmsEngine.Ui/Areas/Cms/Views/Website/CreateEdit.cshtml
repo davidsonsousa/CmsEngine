@@ -1,12 +1,12 @@
 @model WebsiteEditModel
 
-@section PageHead{
+@section PageHead {
     <link rel="stylesheet" href="~/css/vendors/jquery.fileupload.min.css" />
     <script src="~/js/vendors/tinymce/tinymce.min.js"></script>
 }
 
 @section Breadcrumb {
-    <ol class="breadcrumb">
+    <ol class="breadcrumb my-0">
         <li class="breadcrumb-item"><a href="~/cms">Dashboard</a></li>
         <li class="breadcrumb-item"><a href="~/cms/website">@ViewBag.PageTitle</a></li>
         <li class="breadcrumb-item active">@ViewBag.PageType</li>
@@ -28,7 +28,7 @@
 
                     <div class="row">
                         <div class="col">
-                            <div class="form-group">
+                            <div class="form-group mb-3">
                                 <div class="col-md-12 offset-md-2">
                                     <div class="header-preview">
                                         @if (!string.IsNullOrWhiteSpace(Model.HeaderImage))
@@ -40,7 +40,7 @@
 
                                     <div class="upload-bar">
                                         <span class="btn btn-success fileinput-button">
-                                            <i class="fas fa-upload"></i>
+                                            <i class="cil-data-transfer-up"></i>
                                             <span>Header image</span>
                                             <input id="uploadHeadImage" type="file" name="files">
                                         </span>
@@ -53,15 +53,15 @@
                                 </div>
                             </div>
 
-                            <div class="form-group">
+                            <div class="form-group mb-3">
                                 <label asp-for="Name"></label>
                                 <input asp-for="Name" class="form-control" />
                             </div>
-                            <div class="form-group">
+                            <div class="form-group mb-3">
                                 <label asp-for="Tagline"></label>
                                 <input asp-for="Tagline" class="form-control" />
                             </div>
-                            <div class="form-group">
+                            <div class="form-group mb-3">
                                 <label asp-for="Description"></label>
                                 <textarea asp-for="Description" class="form-control texteditor"></textarea>
                             </div>
@@ -69,12 +69,12 @@
                                 <div class="col">
                                     <div class="upload-bar float-right">
                                         <span class="btn btn-success fileinput-button">
-                                            <i class="fas fa-upload"></i>
+                                            <i class="cil-data-transfer-up"></i>
                                             <span>Upload images</span>
                                             <input id="uploadEditorImages" type="file" name="editorImage" multiple>
                                         </span>
                                         <span class="btn btn-success fileinput-button">
-                                            <i class="fas fa-upload"></i>
+                                            <i class="cil-data-transfer-up"></i>
                                             <span>Upload files</span>
                                             <input id="uploadEditorFiles" type="file" name="editorFile" multiple>
                                         </span>
@@ -89,23 +89,23 @@
                                             Configuration
                                         </div>
                                         <div class="card-body">
-                                            <div class="form-group">
+                                            <div class="form-group mb-3">
                                                 <label asp-for="Culture"></label>
                                                 <input asp-for="Culture" class="form-control" />
                                             </div>
-                                            <div class="form-group">
+                                            <div class="form-group mb-3">
                                                 <label asp-for="UrlFormat"></label>
                                                 <input asp-for="UrlFormat" class="form-control" />
                                             </div>
-                                            <div class="form-group">
+                                            <div class="form-group mb-3">
                                                 <label asp-for="DateFormat"></label>
                                                 <input asp-for="DateFormat" class="form-control" />
                                             </div>
-                                            <div class="form-group">
+                                            <div class="form-group mb-3">
                                                 <label asp-for="SiteUrl"></label>
                                                 <input asp-for="SiteUrl" class="form-control" />
                                             </div>
-                                            <div class="form-group">
+                                            <div class="form-group mb-3">
                                                 <label asp-for="ArticleLimit"></label>
                                                 <input asp-for="ArticleLimit" class="form-control" />
                                             </div>
@@ -118,35 +118,27 @@
                                             Social media
                                         </div>
                                         <div class="card-body">
-                                            <div class="form-group">
+                                            <div class="form-group mb-3">
                                                 <div class="input-group">
-                                                    <div class="input-group-prepend">
-                                                        <span class="input-group-text"><i class="fab fa-facebook-f"></i></span>
-                                                    </div>
+                                                    <div class="input-group-text"><i class="cib-facebook-f"></i></div>
                                                     <input asp-for="Facebook" class="form-control" />
                                                 </div>
                                             </div>
-                                            <div class="form-group">
+                                            <div class="form-group mb-3">
                                                 <div class="input-group">
-                                                    <div class="input-group-prepend">
-                                                        <span class="input-group-text"><i class="fab fa-twitter"></i></span>
-                                                    </div>
+                                                    <div class="input-group-text"><i class="cib-twitter"></i></div>
                                                     <input asp-for="Twitter" class="form-control" />
                                                 </div>
                                             </div>
-                                            <div class="form-group">
+                                            <div class="form-group mb-3">
                                                 <div class="input-group">
-                                                    <div class="input-group-prepend">
-                                                        <span class="input-group-text"><i class="fab fa-instagram"></i></span>
-                                                    </div>
+                                                    <div class="input-group-text"><i class="cib-instagram"></i></div>
                                                     <input asp-for="Instagram" class="form-control" />
                                                 </div>
                                             </div>
-                                            <div class="form-group">
+                                            <div class="form-group mb-3">
                                                 <div class="input-group">
-                                                    <div class="input-group-prepend">
-                                                        <span class="input-group-text"><i class="fab fa-linkedin-in"></i></span>
-                                                    </div>
+                                                    <div class="input-group-text"><i class="cib-linkedin"></i></div>
                                                     <input asp-for="LinkedIn" class="form-control" />
                                                 </div>
                                             </div>
@@ -159,26 +151,26 @@
                                             APIs
                                         </div>
                                         <div class="card-body">
-                                            <div class="form-group">
+                                            <div class="form-group mb-3">
                                                 <label asp-for="DisqusShortName"></label>
                                                 <input asp-for="DisqusShortName" class="form-control" />
                                             </div>
-                                            <div class="form-group">
+                                            <div class="form-group mb-3">
                                                 <label>Facebook API (Id / Version)</label>
                                                 <div class="input-group">
                                                     <input asp-for="FacebookAppId" class="form-control" />
                                                     <input asp-for="FacebookApiVersion" class="form-control" />
                                                 </div>
                                             </div>
-                                            <div class="form-group">
+                                            <div class="form-group mb-3">
                                                 <label asp-for="GoogleRecaptchaSiteKey"></label>
                                                 <input asp-for="GoogleRecaptchaSiteKey" class="form-control" />
                                             </div>
-                                            <div class="form-group">
+                                            <div class="form-group mb-3">
                                                 <label asp-for="GoogleRecaptchaSecretKey"></label>
                                                 <input asp-for="GoogleRecaptchaSecretKey" class="form-control" />
                                             </div>
-                                            <div class="form-group">
+                                            <div class="form-group mb-3">
                                                 <label asp-for="GoogleAnalytics"></label>
                                                 <textarea asp-for="GoogleAnalytics" class="form-control" rows="10"></textarea>
                                             </div>
@@ -191,15 +183,15 @@
                                             Contact information
                                         </div>
                                         <div class="card-body">
-                                            <div class="form-group">
+                                            <div class="form-group mb-3">
                                                 <label asp-for="Address"></label>
                                                 <input asp-for="Address" class="form-control" />
                                             </div>
-                                            <div class="form-group">
+                                            <div class="form-group mb-3">
                                                 <label asp-for="Phone"></label>
                                                 <input asp-for="Phone" class="form-control" />
                                             </div>
-                                            <div class="form-group">
+                                            <div class="form-group mb-3">
                                                 <label asp-for="Email"></label>
                                                 <input asp-for="Email" class="form-control" />
                                             </div>
@@ -213,15 +205,17 @@
                     <div asp-validation-summary="All" class="text-danger"></div>
                 </div>
                 <div class="card-footer">
-                    <button type="submit" class="btn btn-primary"><i class="far fa-dot-circle"></i> Save</button>
+                    <button type="submit" class="btn btn-primary"><i class="cil-save"></i> Save</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
 
-@section scripts{
-    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+@section scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 
     <script src="~/js/vendors/jquery.ui.widget.min.js"></script>
     <script src="~/js/vendors/jquery.fileupload.min.js"></script>

@@ -16,6 +16,6 @@ public class LogoutModel : PageModel
     {
         await _signInManager.SignOutAsync();
         _logger.LogDebug("User logged out.");
-        return RedirectToAction(nameof(HomeController.IndexAsync), "Home", new { area = "cms" });
+        return RedirectToAction("Index", "Home", new { area = "cms" });
     }
 }
