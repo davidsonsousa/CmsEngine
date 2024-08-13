@@ -1,0 +1,12 @@
+﻿.upload-bar {
+    padding-top: 5px;
+    padding-bottom: 5px
+}
+
+.checkbox-list {
+    max-height: 400px
+}
+
+.header-preview img {
+    max-width: 100%
+}
