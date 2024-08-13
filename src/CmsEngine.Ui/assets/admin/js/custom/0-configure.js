@@ -48,7 +48,7 @@ CmsEngine.Configure.PopOver = function (selector) {
 };
 
 CmsEngine.Configure.DataTable = function (route) {
-    $("#table-list").DataTable({
+    new DataTable("#table-list", {
         "processing": true,
         "serverSide": true,
         "columnDefs": [
@@ -66,10 +66,10 @@ CmsEngine.Configure.DataTable = function (route) {
                 "targets": -1, // Targeting the last column
                 "searchable": false,
                 "orderable": false,
-                "width": "85px",
+                "width": "110px",
                 "data": null,
                 "render": function (data, type, row, meta) {
-                    return '<a href="' + route + '/edit/' + row[row.length - 1] + '" role="button" class="btn btn-secondary" data-toggle="tooltip" data-placement="top" title="Edit"><span class="far fa-edit"></span></a>'
+                    return '<a href="' + route + '/edit/' + row[row.length - 1] + '" role="button" class="btn btn-secondary" data-toggle="tooltip" data-placement="top" title="Edit"><span class="cil-pencil"></span></a> '
                         + '<a href="' + route + '/delete/' + row[row.length - 1] + '" role="button" class="btn btn-danger delete-link" data-toggle="tooltip" data-placement="top" data-message="Do you really want to <span class=&quot;text-danger&quot;>delete</span> <strong>' + row[1] + '</strong>?" title="Delete"><span class="cil-trash"></span></a>';
                 }
             }],
@@ -109,16 +109,18 @@ CmsEngine.Configure.Dialog = function (dialogId, dialogType, title, body, cancel
 
 CmsEngine.Configure.TinyMCE = function (selector, height, sender) {
     tinymce.init({
+        license_key: 'gpl',
         selector: selector,
         height: height,
         content_css: '/css/site.css',
+        skin: 'oxide',
         relative_urls: false,
         remove_script_host: true,
         document_base_url: "/",
         convert_urls: true,
-        plugins: 'print preview fullpage paste importcss searchreplace autolink autosave save directionality code visualblocks visualchars fullscreen image link media template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists wordcount imagetools textpattern noneditable help charmap quickbars emoticons',
-        imagetools_cors_hosts: ['picsum.photos'],
-        toolbar: 'undo redo | bold italic underline | formatselect | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist | removeformat | fullscreen  preview | insertfile link codesample code',
+        plugins: 'preview importcss searchreplace autolink autosave save directionality code visualblocks image link media table charmap pagebreak nonbreaking anchor insertdatetime advlist lists wordcount help charmap quickbars emoticons accordion',
+        editimage_cors_hosts: ['picsum.photos'],
+        toolbar: 'undo redo | bold italic underline | formatselect | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist | removeformat | preview | insertfile link codesample code',
         menubar: 'file edit view insert format tools table',
         extended_valid_elements: 'script[language|type|src]',
         autosave_ask_before_unload: true,
