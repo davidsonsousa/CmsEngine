@@ -30,19 +30,19 @@
 
                     <div class="row">
                         <div class="col">
-                            <div class="form-group">
+                            <div class="form-group mb-3">
                                 <label asp-for="Title"></label>
                                 <input asp-for="Title" class="form-control slugify" />
                             </div>
-                            <div class="form-group">
+                            <div class="form-group mb-3">
                                 <label asp-for="Slug"></label>
                                 <input asp-for="Slug" class="form-control slug" />
                             </div>
-                            <div class="form-group">
+                            <div class="form-group mb-3">
                                 <label asp-for="Description"></label>
                                 <input asp-for="Description" class="form-control" />
                             </div>
-                            <div class="form-group">
+                            <div class="form-group mb-3">
                                 <textarea asp-for="DocumentContent" class="form-control"></textarea>
                                 <div class="upload-bar float-right">
                                     <span class="btn btn-success fileinput-button">
@@ -60,7 +60,7 @@
                         </div>
 
                         <div class="col-xl-2">
-                            <div class="form-group">
+                            <div class="form-group mb-3">
                                 <h5>Header preview</h5>
                                 <div class="header-preview">
                                     @if (!string.IsNullOrWhiteSpace(Model.HeaderImage))
@@ -81,24 +81,24 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group mb-3">
                                 <h5>Categories</h5>
                                 <checkbox-list name="SelectedCategories" items="Model.Categories"
-                                               outer-container-class="checkbox-list"
+                                               outer-container-class="checkbox-list overflow-auto"
                                                inner-container-class="form-check"
                                                label-class="form-check-label"
                                                input-class="form-check-input">
                                 </checkbox-list>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group mb-3">
                                 <h5>Tags</h5>
                                 <select asp-for="SelectedTags" asp-items="Model.Tags" name="SelectedTags" class="select-tags form-control"></select>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group mb-3">
                                 <label asp-for="Status"></label>
                                 <select asp-for="Status" asp-items="Html.GetEnumSelectList<DocumentStatus>()" class="form-control"></select>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group mb-3">
                                 <label asp-for="PublishedOn"></label>
                                 @Html.EditorFor(m => m.PublishedOn, new { htmlAttributes = new { @class = "form-control", containerId = "published-on" } })
                             </div>

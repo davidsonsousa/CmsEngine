@@ -30,6 +30,7 @@
 
     <environment include="Development">
         <link href="~/css/admin/style.css" rel="stylesheet">
+        <link href="~/css/admin/admin.css" rel="stylesheet">
     </environment>
     <environment exclude="Development">
         <link href="~/css/admin/style.min.css" rel="stylesheet">
@@ -39,6 +40,7 @@
     <script src="~/js/admin/color-modes.js"></script>
     <link href="~/vendors/@@coreui/chartjs/css/coreui-chartjs.css" rel="stylesheet">
     <link href="~/vendors/@@coreui/icons/css/free.min.css" rel="stylesheet">
+    <link href="~/vendors/@@coreui/icons/css/brand.min.css" rel="stylesheet">
 
     <!-- Extra header items required by views -->
     @RenderSection("PageHead", required: false)
@@ -228,16 +230,17 @@
 
     @await Html.PartialAsync("Cms/_Dialog")
 
-    @*     <environment include="Development">
-    <script src="~/js/admin.js"></script>
+    <script src="~/js/vendors/jquery.min.js"></script>
+    <environment include="Development">
+        <script src="~/js/admin.js"></script>
     </environment>
     <environment exclude="Development">
-    <script src="~/js/admin.min.js"></script>
+        <script src="~/js/admin.min.js"></script>
     </environment>
-    *@
+
     <!-- CoreUI and necessary plugins-->
-    <script src="vendors/@@coreui/coreui/js/coreui.bundle.min.js"></script>
-    <script src="vendors/simplebar/js/simplebar.min.js"></script>
+    <script src="~/vendors/@@coreui/coreui/js/coreui.bundle.min.js"></script>
+    <script src="~/vendors/simplebar/js/simplebar.min.js"></script>
     <script>
         const header = document.querySelector('header.header');
 
