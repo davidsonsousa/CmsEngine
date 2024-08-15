@@ -15,6 +15,11 @@ public class Repository<TEntity> : IReadRepository<TEntity>,
         dbContext = context;
     }
 
+    public async Task<int> CountAsync()
+    {
+        return await Get().CountAsync();
+    }
+
     public async Task<IEnumerable<TEntity>> GetAllAsync()
     {
         return await GetValidRecords().ToListAsync();
