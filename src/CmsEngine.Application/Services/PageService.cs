@@ -62,6 +62,14 @@ public class PageService : Service, IPageService
         return items;
     }
 
+    public async Task<int> GetPageCount()
+    {
+        logger.LogDebug("PageService > GetPageCount()");
+        var items = await unitOfWork.Pages.CountAsync();
+        logger.LogDebug("Page count: {0}", items);
+        return items;
+    }
+
     public async Task<IEnumerable<PageViewModel>> GetAllPublished()
     {
         logger.LogDebug("PageService > GetPagesByStatusReadOnly()");

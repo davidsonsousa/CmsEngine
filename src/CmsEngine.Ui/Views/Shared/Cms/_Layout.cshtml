@@ -117,26 +117,26 @@
                 </button>
                 <ul class="header-nav d-none d-lg-flex">
                     <li class="nav-item"><a class="nav-link" asp-area="Cms" asp-controller="Home" asp-action="Index">Dashboard</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Users</a></li>
+@*                     <li class="nav-item"><a class="nav-link" href="#">Users</a></li>
                     <li class="nav-item"><a class="nav-link" href="#">Settings</a></li>
-                </ul>
+ *@                </ul>
                 <ul class="header-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="#">
+                        <a class="nav-link" href="javascript:alert('Feature not implemented')">
                             <svg class="icon icon-lg">
                                 <use xlink:href="/vendors/@@coreui/icons/svg/free.svg#cil-bell"></use>
                             </svg>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">
+                        <a class="nav-link" href="javascript:alert('Feature not implemented')">
                             <svg class="icon icon-lg">
                                 <use xlink:href="/vendors/@@coreui/icons/svg/free.svg#cil-list-rich"></use>
                             </svg>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">
+                        <a class="nav-link" href="javascript:alert('Feature not implemented')">
                             <svg class="icon icon-lg">
                                 <use xlink:href="/vendors/@@coreui/icons/svg/free.svg#cil-envelope-open"></use>
                             </svg>
@@ -224,8 +224,7 @@
     </div>
 
     <footer class="footer px-4">
-        <div>© @DateTime.Now.Year <a href="http://davidsonsousa.net">Davidson Sousa</a></div>
-        <div class="ms-auto">Powered by&nbsp;<a href="https://coreui.io/docs/">CoreUI UI Components</a></div>
+        <div class="ms-auto">© @DateTime.Now.Year <a href="http://davidsonsousa.net">Davidson Sousa</a> | Powered by&nbsp;<a href="https://coreui.io/docs/">CoreUI UI Components</a></div>
     </footer>
 
     @await Html.PartialAsync("Cms/_Dialog")

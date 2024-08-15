@@ -130,7 +130,7 @@ gulp.task('vendors:cleanJS', function () {
 /** Fonts **/
 var fonts = [
     'node_modules/simple-line-icons/fonts/**',
-    'assets/fonts/blog.*'
+    'assets/site/media/fonts/blog.*'
 ];
 
 gulp.task('vendors:copyFonts', function () {

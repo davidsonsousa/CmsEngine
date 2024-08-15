@@ -75,6 +75,14 @@ public class TagService : Service, ITagService
         return (items.MapToTableViewModel(), recordsTotal, items.Count());
     }
 
+    public async Task<int> GetTagCount()
+    {
+        logger.LogDebug("TagService > GetTagCount()");
+        var items = await unitOfWork.Tags.CountAsync();
+        logger.LogDebug("Tag count: {0}", items);
+        return items;
+    }
+
     public async Task<IEnumerable<TagViewModel>> GetAllTags()
     {
         logger.LogDebug("TagService > GetAllTags()");

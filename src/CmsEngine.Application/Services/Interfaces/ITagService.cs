@@ -8,5 +8,6 @@ public interface ITagService : IDataTableService<Tag>, IDisposable
     Task<ReturnValue> DeleteRange(Guid[] ids);
     Task<(IEnumerable<TagTableViewModel> Data, int RecordsTotal, int RecordsFiltered)> GetForDataTable(DataParameters parameters);
     Task<ReturnValue> Save(TagEditModel tagEditModel);
+    Task<int> GetTagCount();
     Task<IEnumerable<TagViewModel>> GetAllTags();
 }

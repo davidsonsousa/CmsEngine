@@ -3,7 +3,7 @@
     @{
         string imagePath = !string.IsNullOrWhiteSpace(Model.HeaderImage)
                            ? imagePath = string.Format(Main.ImagePath.Path640, "post", Model.HeaderImage)
-                           : "/img/no-image.png";
+                           : "/media/img/no-image.png";
     }
     <a asp-controller="Blog" asp-action="Post" asp-route-slug="@Model.Slug">
         <img src="@imagePath" alt="@Model.Title" title="@Model.Title" class="img-fluid">

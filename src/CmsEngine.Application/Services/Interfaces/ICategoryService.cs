@@ -8,6 +8,7 @@ public interface ICategoryService : IDataTableService<Category>, IDisposable
     Task<ReturnValue> DeleteRange(Guid[] ids);
     Task<(IEnumerable<CategoryTableViewModel> Data, int RecordsTotal, int RecordsFiltered)> GetForDataTable(DataParameters parameters);
     Task<ReturnValue> Save(CategoryEditModel categoryEditModel);
+    Task<int> GetCategoryCount();
     Task<IEnumerable<CategoryViewModel>> GetCategoriesWithPostCount();
     Task<IEnumerable<CategoryViewModel>> GetCategoriesWithPost();
 }

@@ -6,7 +6,7 @@
     var selectedPost = (PostViewModel)selectedDocument;
     string imagePath = !string.IsNullOrWhiteSpace(selectedPost.HeaderImage)
                        ? string.Format(Main.ImagePath.Default, "post", selectedPost.HeaderImage)
-                       : "/img/no-image.png";
+                       : "/media/img/no-image.png";
 }
 
 @section FacebookMeta {

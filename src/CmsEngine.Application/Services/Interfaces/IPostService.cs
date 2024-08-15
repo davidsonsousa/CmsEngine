@@ -10,6 +10,7 @@ public interface IPostService : IDataTableService<Post>, IDisposable
     Task<ReturnValue> Save(PostEditModel postEditModel);
     Task<IEnumerable<PostEditModel>> GetPublishedOrderedByDate(int count = 0);
     Task<PostViewModel> GetBySlug(string slug);
+    Task<int> GetPostCount();
     Task<PaginatedList<PostViewModel>> GetPublishedByCategoryForPagination(string categorySlug, int page = 1);
     Task<PaginatedList<PostViewModel>> GetPublishedByTagForPagination(string tagSlug, int page = 1);
     Task<PaginatedList<PostViewModel>> GetPublishedForPagination(int page = 1);

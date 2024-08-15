@@ -62,6 +62,14 @@ public class PostService : Service, IPostService
         return items;
     }
 
+    public async Task<int> GetPostCount()
+    {
+        logger.LogDebug("PostService > GetPostCount()");
+        var items = await unitOfWork.Posts.CountAsync();
+        logger.LogDebug("Post count: {0}", items);
+        return items;
+    }
+
     public async Task<PostViewModel> GetBySlug(string slug)
     {
         logger.LogDebug("PostService > GetBySlug({slug})", slug);
