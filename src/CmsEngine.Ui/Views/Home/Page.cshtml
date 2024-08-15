@@ -7,7 +7,7 @@
     var selectedPage = (PageViewModel)selectedDocument;
     string imagePath = !string.IsNullOrWhiteSpace(selectedPage.HeaderImage)
                        ? string.Format(Main.ImagePath.Default, "page", selectedPage.HeaderImage)
-                       : "/img/no-image.png";
+                       : "/media/img/no-image.png";
 }
 
 @section FacebookMeta {

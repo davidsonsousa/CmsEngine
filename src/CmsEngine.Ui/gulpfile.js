@@ -17,7 +17,7 @@ gulp.paths = {
     temp: './wwwroot/temp/',
     css: 'css/',
     js: 'js/',
-    img: 'img/',
+    media: 'media/',
     uploadedFiles: 'UploadedFiles/',
     fonts: 'fonts/',
     vendors: 'vendors/'
@@ -83,14 +83,19 @@ gulp.task('copy:admin-template-vendor-scripts', function () {
 
 gulp.task('copy:admin-media', function () {
     return gulp.src('./assets/admin/media/**/*')
-        .pipe(gulp.dest(gulp.paths.webroot + '/media'));
+        .pipe(gulp.dest(gulp.paths.webroot + gulp.paths.media));
+});
+
+gulp.task('copy:site-media', function () {
+    return gulp.src('./assets/site/media/**/*')
+        .pipe(gulp.dest(gulp.paths.webroot + gulp.paths.media));
 });
 
 gulp.task('clean:dist', function () {
     return del([
         gulp.paths.webroot + gulp.paths.css + '**',
-        gulp.paths.webroot + gulp.paths.img + '**',
         gulp.paths.webroot + gulp.paths.js + '**',
+        gulp.paths.webroot + gulp.paths.media + '**',
         '!' + gulp.paths.webroot + gulp.paths.uploadedFiles
     ]);
 });
@@ -99,7 +104,7 @@ gulp.task('default',
     gulp.series(
         'clean:dist',
         gulp.parallel('build:admin-custom-scripts', 'build:site-scripts', 'build:site-styles',
-            'copy:admin-template-styles', 'copy:admin-template-vendor-styles', 'copy:admin-template-vendor-scripts', 'copy:admin-media'),
+            'copy:admin-template-styles', 'copy:admin-template-vendor-styles', 'copy:admin-template-vendor-scripts', 'copy:admin-media', 'copy:site-media'),
         'build:vendors', 'clean:min-min'
     )
 );
