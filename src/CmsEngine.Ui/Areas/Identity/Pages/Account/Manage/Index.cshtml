@@ -6,7 +6,7 @@
 }
 
 @section Breadcrumb {
-    <ol class="breadcrumb">
+    <ol class="breadcrumb my-0">
         <li class="breadcrumb-item"><a href="~/cms">Dashboard</a></li>
         <li class="breadcrumb-item active">@ViewBag.PageTitle</li>
     </ol>
@@ -23,7 +23,7 @@
             <form method="post">
                 <div class="card-body">
                     <div asp-validation-summary="All" class="text-danger"></div>
-                    <div class="form-group row">
+                    <div class="form-group row mb-3">
                         <div class="col">
                             <figure class="figure">
                                 <gravatar email-address="@Model.Input.Email" image-size="100" additional-css-classes="figure-img img-fluid rounded"></gravatar>
@@ -31,34 +31,32 @@
                             </figure>
                         </div>
                     </div>
-                    <div class="form-group row">
+                    <div class="form-group row mb-3">
                         <label asp-for="Input.Username" class="col-md-2 form-control-label"></label>
                         <div class="col-md-10">
                             <input asp-for="Input.Username" class="form-control" disabled />
                         </div>
                     </div>
-                    <div class="form-group row">
+                    <div class="form-group row mb-3">
                         <label asp-for="Input.Name" class="col-md-2 form-control-label"></label>
                         <div class="col-md-10">
                             <input asp-for="Input.Name" class="form-control" />
                         </div>
                     </div>
-                    <div class="form-group row">
+                    <div class="form-group row mb-3">
                         <label asp-for="Input.Surname" class="col-md-2 form-control-label"></label>
                         <div class="col-md-10">
                             <input asp-for="Input.Surname" class="form-control" />
                         </div>
                     </div>
-                    <div class="form-group row">
+                    <div class="form-group row mb-3">
                         <label asp-for="Input.Email" class="col-md-2 form-control-label"></label>
                         @if (Model.IsEmailConfirmed)
                         {
                             <div class="col-md-10">
                                 <div class="input-group">
                                     <input asp-for="Input.Email" class="form-control" />
-                                    <div class="input-group-append" aria-hidden="true">
-                                        <span class="input-group-text"><i class="fas fa-check-circle text-success"></i></span>
-                                    </div>
+                                    <span class="input-group-text"><i class="cil-check-circle text-success"></i></span>
                                 </div>
                             </div>
                         }
@@ -71,7 +69,7 @@
                         }
                         <span asp-validation-for="Input.Email" class="text-danger"></span>
                     </div>
-                    <div class="form-group row">
+                    <div class="form-group row mb-3">
                         <label asp-for="Input.PhoneNumber" class="col-md-2 form-control-label"></label>
                         <div class="col-md-10">
                             <input asp-for="Input.PhoneNumber" class="form-control" />
@@ -80,7 +78,7 @@
                     </div>
                 </div>
                 <div class="card-footer">
-                    <button type="submit" class="btn btn-primary"><i class="far fa-dot-circle"></i> Save</button>
+                    <button type="submit" class="btn btn-primary"><i class="cil-save"></i> Save</button>
                 </div>
             </form>
 

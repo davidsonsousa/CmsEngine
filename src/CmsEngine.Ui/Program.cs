@@ -18,7 +18,7 @@ Log.Logger = new LoggerConfiguration().ReadFrom.Configuration(builder.Configurat
 // https://dotnetplaybook.com/custom-local-domain-using-https-kestrel-asp-net-core/
 if (builder.Environment.IsDevelopment())
 {
-    var certificatePassword = builder.Configuration.GetSection("Kestrel:Certificates:Password").Value;
+    var certificatePassword = builder.Configuration["CertPassword"];
 
     Log.Debug("Dev environment: Using Kestrel with port 5001");
     builder.WebHost.ConfigureKestrel(options =>

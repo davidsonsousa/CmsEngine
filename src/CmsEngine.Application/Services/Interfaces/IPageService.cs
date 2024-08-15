@@ -9,5 +9,6 @@ public interface IPageService : IDataTableService<Page>, IDisposable
     Task<(IEnumerable<PageTableViewModel> Data, int RecordsTotal, int RecordsFiltered)> GetForDataTable(DataParameters parameters);
     Task<ReturnValue> Save(PageEditModel pageEditModel);
     Task<PageViewModel> GetBySlug(string slug);
+    Task<int> GetPageCount();
     Task<IEnumerable<PageViewModel>> GetAllPublished();
 }

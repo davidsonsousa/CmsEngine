@@ -62,6 +62,14 @@ public class CategoryService : Service, ICategoryService
         return items;
     }
 
+    public async Task<int> GetCategoryCount()
+    {
+        logger.LogDebug("CategoryService > GetCategoryCount()");
+        var items = await unitOfWork.Categories.CountAsync();
+        logger.LogDebug("Category count: {0}", items);
+        return items;
+    }
+
     public async Task<IEnumerable<CategoryViewModel>> GetCategoriesWithPost()
     {
         logger.LogDebug("CategoryService > GetCategoriesWithPost()");

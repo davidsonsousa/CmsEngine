@@ -3,6 +3,12 @@ namespace CmsEngine.Data.Repositories.Interfaces;
 public interface IReadRepository<TEntity> where TEntity : class
 {
     /// <summary>
+    /// Count valid items
+    /// </summary>
+    /// <returns></returns>
+    public Task<int> CountAsync();
+
+    /// <summary>
     /// Get all records which were not marked as deleted (IsDeleted == false)
     /// </summary>
     /// <returns></returns>

@@ -19,8 +19,8 @@ gulp.task('clean:min-min', function () {
 /** CSS **/
 var vendorsCSS = [
     //'node_modules/codemirror/lib/codemirror.css',
-    'node_modules/datatables.net-bs4/css/dataTables.bootstrap4.css',
-    'node_modules/datatables.net-buttons-bs4/css/buttons.bootstrap4.css',
+    'node_modules/datatables.net-bs5/css/dataTables.bootstrap5.css',
+    'node_modules/datatables.net-buttons-bs5/css/buttons.bootstrap5.css',
     'node_modules/@fortawesome/fontawesome-free/css/all.css',
     //'node_modules/ladda/dist/ladda-themeless.min.css',
     //'node_modules/quill/dist/quill.snow.css',
@@ -71,9 +71,9 @@ var vendorsJS = [
     //'node_modules/codemirror/lib/codemirror.js',
     //'node_modules/codemirror/mode/markdown/markdown.js',
     //'node_modules/codemirror/mode/xml/xml.js',
-    'node_modules/datatables.net/js/jquery.dataTables.js',
-    'node_modules/datatables.net-bs4/js/dataTables.bootstrap4.js',
-    'node_modules/datatables.net-buttons-bs4/js/buttons.bootstrap4.js',
+    'node_modules/datatables.net/js/dataTables.js',
+    'node_modules/datatables.net-bs5/js/dataTables.bootstrap5.js',
+    'node_modules/datatables.net-buttons-bs5/js/buttons.bootstrap5.js',
     //'node_modules/fullcalendar/dist/fullcalendar.min.js',
     //'node_modules/fullcalendar/dist/gcal.min.js',
     //'node_modules/gaugeJS/dist/gauge.min.js',
@@ -130,7 +130,7 @@ gulp.task('vendors:cleanJS', function () {
 /** Fonts **/
 var fonts = [
     'node_modules/simple-line-icons/fonts/**',
-    'assets/fonts/blog.*'
+    'assets/site/media/fonts/blog.*'
 ];
 
 gulp.task('vendors:copyFonts', function () {
@@ -154,11 +154,11 @@ gulp.task('vendors:copyFontAwesome', function () {
 gulp.task('node-vendors:copyTinyMCE', done => {
     gulp.src([
         'node_modules/tinymce/tinymce.min.js',
+        'node_modules/tinymce/icons/**',
+        'node_modules/tinymce/models/**',
         'node_modules/tinymce/plugins/**',
-        'node_modules/tinymce/themes/silver/theme.min.js',
-        'node_modules/tinymce/skins/ui/oxide/skin.min.css',
-        'node_modules/tinymce/skins/ui/oxide/content.min.css',
-        'node_modules/tinymce/skins/ui/oxide/fonts/tinymce-mobile.woff'
+        'node_modules/tinymce/skins/**',
+        'node_modules/tinymce/themes/**'
     ], { base: './node_modules' })
         .pipe(gulp.dest(gulp.paths.webroot + gulp.paths.js + gulp.paths.vendors));
     done();

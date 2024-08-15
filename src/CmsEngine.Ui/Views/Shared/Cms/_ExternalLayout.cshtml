@@ -3,14 +3,14 @@
 @using System.Linq
 @using Microsoft.AspNetCore.Http
 @inject Microsoft.AspNetCore.Identity.SignInManager<ApplicationUser> SignInManager
-<!--
- * CoreUI - Open Source Bootstrap Admin Template
- * version v1.0.2
- * link http://coreui.io
- * Copyright (c) 2017 creativeLabs Łukasz Holeczek
- * license MIT
- -->
 <!DOCTYPE html>
+<!--
+* CoreUI - Free Bootstrap Admin Template
+* @@version v5.0.0
+* @@link https://coreui.io/product/free-bootstrap-admin-template/
+* Copyright (c) 2024 creativeLabs Łukasz Holeczek
+* Licensed under MIT (https://github.com/coreui/coreui-free-bootstrap-admin-template/blob/main/LICENSE)
+-->
 <html lang="en">
 <head>
     <meta charset="utf-8">
@@ -18,36 +18,37 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="CoreUI - Open Source Bootstrap Admin Template">
     <meta name="author" content="Łukasz Holeczek">
-    <meta name="keyword" content="Bootstrap,Admin,Template,Open,Source,AngularJS,Angular,Angular2,Angular 2,Angular4,Angular 4,jQuery,CSS,HTML,RWD,Dashboard,React,React.js,Vue,Vue.js">
-    <link rel="shortcut icon" href="~/img/favicon.png">
+    <meta name="keyword" content="Bootstrap,Admin,Template,Open,Source,jQuery,CSS,HTML,RWD,Dashboard">
     <title>@ViewData["PageTitle"] - CmsEngine</title>
-
-    <link href="~/css/vendors/all.min.css" rel="stylesheet">
-    <link href="~/css/vendors/simple-line-icons.min.css" rel="stylesheet">
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="assets/favicon/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/favicon-16x16.png">
+    <meta name="theme-color" content="#ffffff">
+    <!-- Vendors styles-->
+    <link rel="stylesheet" href="~/vendors/simplebar/css/simplebar.css">
+    <link rel="stylesheet" href="~/css/admin/vendors/simplebar.css">
 
     <environment include="Development">
-        <link href="~/css/admin.css" rel="stylesheet">
+        <link href="~/css/admin/style.css" rel="stylesheet">
     </environment>
     <environment exclude="Development">
-        <link href="~/css/admin.min.css" rel="stylesheet">
+        <link href="~/css/admin/style.min.css" rel="stylesheet">
     </environment>
 
+    <script src="~/js/admin/config.js"></script>
+    <script src="~/js/admin/color-modes.js"></script>
+
 </head>
-<body class="app flex-row align-items-center">
+<body class="bg-body-tertiary min-vh-100 d-flex flex-row align-items-center">
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-5">
-                <div class="card-group mb-0">
+                <div class="card-group d-block d-md-flex row">
                     @RenderBody()
                 </div>
             </div>
         </div>
     </div>
-
-    <script src="~/js/vendors/jquery.min.js"></script>
-    <script src="~/js/vendors/popper.min.js"></script>
-    <script src="~/js/vendors/bootstrap.min.js"></script>
-    <script src="~/js/vendors/pace.min.js"></script>
 
     <environment include="Development">
         <script src="~/js/admin.js"></script>

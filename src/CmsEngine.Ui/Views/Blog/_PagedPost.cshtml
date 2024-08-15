@@ -5,7 +5,7 @@
             @{
                 string imagePath = !string.IsNullOrWhiteSpace(Model.HeaderImage)
                                    ? imagePath = string.Format(Main.ImagePath.Path640, "post", Model.HeaderImage)
-                                   : "/img/no-image.png";
+                                   : "/media/img/no-image.png";
             }
             <img src="@imagePath" alt="@Model.Title" title="@Model.Title" class="img-fluid" />
         </a>

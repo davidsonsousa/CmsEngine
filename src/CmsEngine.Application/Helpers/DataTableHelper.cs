@@ -65,13 +65,13 @@ public static class DataTableHelper
                         break;
                 }
 
-                return $"<span class=\"badge badge-{generalStatus.ToString().ToLowerInvariant()}\">{documentStatus.ToEnum<DocumentStatus>().GetName()}</status-label>";
+                return $"<span class=\"badge text-bg-{generalStatus.ToString().ToLowerInvariant()}\">{documentStatus.ToEnum<DocumentStatus>().GetName()}</status-label>";
             case "UserViewModel":
                 var author = (UserViewModel)value;
                 return HtmlEncoder.Default.Encode(author?.FullName ?? string.Empty);
             case "Boolean":
                 generalStatus = (bool)value ? GeneralStatus.Success : GeneralStatus.Danger;
-                return $"<span class=\"badge badge-{generalStatus.ToString().ToLowerInvariant()}\">{((bool)value).ToYesNo().ToUpper()}</status-label>";
+                return $"<span class=\"badge text-bg-{generalStatus.ToString().ToLowerInvariant()}\">{((bool)value).ToYesNo().ToUpper()}</status-label>";
             default:
                 return HtmlEncoder.Default.Encode(value?.ToString() ?? string.Empty);
         }
