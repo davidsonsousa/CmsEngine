@@ -1,4 +1,4 @@
-@model IEnumerable<CmsEngine.Application.Helpers.Email.ContactForm>
+@model HomeViewModel
 @section Breadcrumb {
     <ol class="breadcrumb my-0">
         <li class="breadcrumb-item active">@ViewBag.PageTitle</li>
@@ -12,28 +12,23 @@
                 <i class="cil-info"></i> Information
             </div>
             <div class="card-body">
-                <ul>
-                    <li>
-                        .NET version: @Environment.Version.ToString()
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">
+                        <strong>.NET version: </strong>@Environment.Version.ToString()
+                    </li>
+                    <li class="list-group-item">
+                        <strong>Posts: </strong> @Model.PostCount
+                    </li>
+                    <li class="list-group-item">
+                        <strong>Pages: </strong> @Model.PageCount
+                    </li>
+                    <li class="list-group-item">
+                        <strong>Categories: </strong> @Model.CategoryCount
+                    </li>
+                    <li class="list-group-item">
+                        <strong>Tags: </strong> @Model.TagCount
                     </li>
                 </ul>
-            </div>
-        </div>
-    </div>
-    <div class="col-sm-8 col-md-9">
-        <div class="card">
-            <div class="card-header">
-                <i class="icon-envelope-letter"></i> E-mails
-            </div>
-            <div class="card-body">
-                @foreach (var item in Model)
-                {
-                <ul>
-                    <li>From: @item.From</li>
-                    <li>Subject: @item.Subject</li>
-                    <li>Message: @item.Message</li>
-                </ul>
-                }
             </div>
         </div>
     </div>
