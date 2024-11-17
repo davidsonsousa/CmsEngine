@@ -30,7 +30,7 @@ jobs:
         run: dotnet build --no-restore
 
       - name: Set build version
-        if: github.ref_name != ''
+        if: "${{ github.ref_name != '' }}"
         id: bump
         uses: vers-one/dotnet-project-version-updater@v1.7
         with:
