@@ -38,6 +38,7 @@ jobs:
           version: ${{ github.event.inputs.version }}
 
       - run: |
+          if: "${{ github.event.inputs.version != '' }}"
           git config user.name "Davidson Sousa"
           git config user.email "davidsonsousa@users.noreply.github.com"
           git add .
