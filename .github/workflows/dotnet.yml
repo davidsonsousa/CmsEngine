@@ -30,6 +30,7 @@ jobs:
         run: dotnet build --no-restore
 
       - name: Set build version
+        if: github.ref_name != ''
         id: bump
         uses: vers-one/dotnet-project-version-updater@v1.7
         with:
@@ -42,6 +43,6 @@ jobs:
           git add .
           git commit -m "Bump project version to ${{  github.ref_name }}"
           git push
-
+  
       # - name: Test
       #   run: dotnet test --no-build --verbosity normal
