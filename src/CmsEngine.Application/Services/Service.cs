@@ -149,6 +149,11 @@ public class Service : IService
             };
     }
 
+    protected int ValidatePage(int page)
+    {
+        return Math.Max(page, 1);
+    }
+
     protected virtual void Dispose(bool disposing)
     {
         if (!disposedValue)

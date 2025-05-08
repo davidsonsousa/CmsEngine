@@ -26,6 +26,8 @@ public class BlogController : BaseController
             Instance.PageTitle = $"Results for '{q}' - {Instance.Name}";
         }
 
+        Instance.CanonicalType = CanonicalType.Blog;
+
         return View(Instance);
     }
 
@@ -39,6 +41,8 @@ public class BlogController : BaseController
         }
 
         Instance.PageTitle = $"{Instance.SelectedDocument.Title} - {Instance.Name}";
+        Instance.CanonicalType = CanonicalType.Post;
+
         return View(Instance);
     }
 
@@ -53,6 +57,9 @@ public class BlogController : BaseController
         }
 
         Instance.PageTitle = $"{selectedCategory} - {Instance.Name}";
+        Instance.CanonicalType = CanonicalType.Category;
+        Instance.Slug = slug;
+
         return View("Index", Instance);
     }
 
@@ -67,6 +74,9 @@ public class BlogController : BaseController
         }
 
         Instance.PageTitle = $"#{selectedTag} - {Instance.Name}";
+        Instance.CanonicalType = CanonicalType.Tag;
+        Instance.Slug = slug;
+
         return View("Index", Instance);
     }
 

@@ -20,6 +20,57 @@ public class InstanceViewModel
 
     public string SiteUrl { get; set; } = string.Empty;
 
+    public string Slug { get; set; } = string.Empty;
+
+    public string CurrentUrl {
+        get {
+            switch (CanonicalType)
+            {
+                case CanonicalType.Archive:
+                    return UrlFormat.Replace("[site_url]", SiteUrl)
+                                    .Replace("[culture]", Culture)
+                                    .Replace("[short_culture]", Culture.Substring(0, 2))
+                                    .Replace("[type]/", string.Empty)
+                                    .Replace("[slug]", "archive");
+                case CanonicalType.Blog:
+                    return UrlFormat.Replace("[site_url]", SiteUrl)
+                                    .Replace("[culture]", Culture)
+                                    .Replace("[short_culture]", Culture.Substring(0, 2))
+                                    .Replace("[type]/", string.Empty)
+                                    .Replace("[slug]", "blog");
+                case CanonicalType.Category:
+                    return UrlFormat.Replace("[site_url]", SiteUrl)
+                                    .Replace("[culture]", Culture)
+                                    .Replace("[short_culture]", Culture.Substring(0, 2))
+                                    .Replace("[type]", "blog/category")
+                                    .Replace("[slug]", Slug);
+                case CanonicalType.Page:
+                    return UrlFormat.Replace("[site_url]", SiteUrl)
+                                    .Replace("[culture]", Culture)
+                                    .Replace("[short_culture]", Culture.Substring(0, 2))
+                                    .Replace("[type]/", string.Empty)
+                                    .Replace("[slug]", SelectedDocument?.Slug);
+                case CanonicalType.Post:
+                    return UrlFormat.Replace("[site_url]", SiteUrl)
+                                    .Replace("[culture]", Culture)
+                                    .Replace("[short_culture]", Culture.Substring(0, 2))
+                                    .Replace("[type]", "blog/post")
+                                    .Replace("[slug]", SelectedDocument?.Slug);
+                case CanonicalType.Tag:
+                    return UrlFormat.Replace("[site_url]", SiteUrl)
+                                    .Replace("[culture]", Culture)
+                                    .Replace("[short_culture]", Culture.Substring(0, 2))
+                                    .Replace("[type]", "blog/tag")
+                                    .Replace("[slug]", Slug);
+                case CanonicalType.Index:
+                default:
+                    return SiteUrl;
+            }
+        }
+    }
+
+    public CanonicalType CanonicalType { get; set; }
+
     public int ArticleLimit { get; set; }
 
     public ContactDetailsViewModel? ContactDetails { get; set; }

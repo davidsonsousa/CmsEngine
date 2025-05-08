@@ -104,22 +104,22 @@ public class PostService : Service, IPostService
 
     public async Task<PaginatedList<PostViewModel>> GetPublishedByCategoryForPagination(string categorySlug, int page = 1)
     {
-        logger.LogDebug("CmsService > GetPublishedByCategoryForPagination(categorySlug: {0}, page: {1})", categorySlug, page);
-        var posts = await unitOfWork.Posts.GetPublishedByCategoryForPagination(categorySlug, page, Instance.ArticleLimit);
+        logger.LogDebug("CmsService > GetPublishedByCategoryForPagination(categorySlug: {0}, page: {1})", categorySlug, ValidatePage(page));
+        var posts = await unitOfWork.Posts.GetPublishedByCategoryForPagination(categorySlug, ValidatePage(page), Instance.ArticleLimit);
         return new PaginatedList<PostViewModel>(posts.Items.MapToViewModelForPartialView(Instance.DateFormat), posts.Count, page, Instance.ArticleLimit);
     }
 
     public async Task<PaginatedList<PostViewModel>> GetPublishedByTagForPagination(string tagSlug, int page = 1)
     {
-        logger.LogDebug("CmsService > GetPublishedByTagForPagination(tagSlug: {0}, page: {1})", tagSlug, page);
-        var posts = await unitOfWork.Posts.GetPublishedByTagForPagination(tagSlug, page, Instance.ArticleLimit);
+        logger.LogDebug("CmsService > GetPublishedByTagForPagination(tagSlug: {0}, page: {1})", tagSlug, ValidatePage(page));
+        var posts = await unitOfWork.Posts.GetPublishedByTagForPagination(tagSlug, ValidatePage(page), Instance.ArticleLimit);
         return new PaginatedList<PostViewModel>(posts.Items.MapToViewModelForPartialViewForTags(Instance.DateFormat), posts.Count, page, Instance.ArticleLimit);
     }
 
     public async Task<PaginatedList<PostViewModel>> GetPublishedForPagination(int page = 1)
     {
-        logger.LogDebug("CmsService > GetPublishedForPagination(page: {0})", page);
-        var posts = await unitOfWork.Posts.GetPublishedForPagination(page, Instance.ArticleLimit);
+        logger.LogDebug("CmsService > GetPublishedForPagination(page: {0})", ValidatePage(page));
+        var posts = await unitOfWork.Posts.GetPublishedForPagination(ValidatePage(page), Instance.ArticleLimit);
         return new PaginatedList<PostViewModel>(posts.Items.MapToViewModelForPartialView(Instance.DateFormat), posts.Count, page, Instance.ArticleLimit);
     }
 
@@ -131,8 +131,8 @@ public class PostService : Service, IPostService
 
     public async Task<PaginatedList<PostViewModel>> FindPublishedForPaginationOrderByDateDescending(string searchTerm = "", int page = 1)
     {
-        logger.LogDebug("CmsService > FindPublishedForPaginationOrderByDateDescending(page: {0}, searchTerm: {1})", page, searchTerm);
-        var posts = await unitOfWork.Posts.FindPublishedForPaginationOrderByDateDescending(page, searchTerm, Instance.ArticleLimit);
+        logger.LogDebug("CmsService > FindPublishedForPaginationOrderByDateDescending(page: {0}, searchTerm: {1})", ValidatePage(page), searchTerm);
+        var posts = await unitOfWork.Posts.FindPublishedForPaginationOrderByDateDescending(ValidatePage(page), searchTerm, Instance.ArticleLimit);
         return new PaginatedList<PostViewModel>(posts.Items.MapToViewModelForPartialView(Instance.DateFormat), posts.Count, page, Instance.ArticleLimit);
     }
 

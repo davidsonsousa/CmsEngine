@@ -11,7 +11,6 @@ public class Repository<TEntity> : IReadRepository<TEntity>,
 
     public Repository(CmsEngineContext context)
     {
-        ArgumentNullException.ThrowIfNull(nameof(context));
         dbContext = context;
     }
 
@@ -84,50 +83,35 @@ public class Repository<TEntity> : IReadRepository<TEntity>,
 
     public async Task Insert(TEntity entity)
     {
-        if (entity is null)
-        {
-            throw new ArgumentNullException(nameof(entity));
-        }
+        ArgumentNullException.ThrowIfNull(entity);
 
         await dbContext.AddAsync(entity);
     }
 
     public async Task InsertRange(IEnumerable<TEntity> entities)
     {
-        if (entities is null)
-        {
-            throw new ArgumentNullException(nameof(entities));
-        }
+        ArgumentNullException.ThrowIfNull(entities);
 
         await dbContext.AddRangeAsync(entities);
     }
 
     public void Update(TEntity entity)
     {
-        if (entity is null)
-        {
-            throw new ArgumentNullException(nameof(entity));
-        }
+        ArgumentNullException.ThrowIfNull(entity);
 
         dbContext.Update(entity);
     }
 
     public void UpdateRange(IEnumerable<TEntity> entities)
     {
-        if (entities is null)
-        {
-            throw new ArgumentNullException(nameof(entities));
-        }
+        ArgumentNullException.ThrowIfNull(entities);
 
         dbContext.UpdateRange(entities);
     }
 
     public void Delete(TEntity entity)
     {
-        if (entity is null)
-        {
-            throw new ArgumentNullException(nameof(entity));
-        }
+        ArgumentNullException.ThrowIfNull(entity);
 
         // We never delete anything, only update the IsDelete flag
         entity.IsDeleted = true;
@@ -136,10 +120,7 @@ public class Repository<TEntity> : IReadRepository<TEntity>,
 
     public void DeleteRange(IEnumerable<TEntity> entities)
     {
-        if (entities is null)
-        {
-            throw new ArgumentNullException(nameof(entities));
-        }
+        ArgumentNullException.ThrowIfNull(entities);
 
         for (var i = 0; i < entities.Count(); i++)
         {

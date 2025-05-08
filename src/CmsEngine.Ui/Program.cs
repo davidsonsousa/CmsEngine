@@ -21,14 +21,22 @@ if (builder.Environment.IsDevelopment())
     var certificatePassword = builder.Configuration["CertPassword"];
 
     Log.Debug("Dev environment: Using Kestrel with port 5001");
+
     builder.WebHost.ConfigureKestrel(options =>
     {
         options.AddServerHeader = false;
         options.Listen(IPAddress.Loopback, 5001, listenOptions =>
         {
-            listenOptions.UseHttps(new X509Certificate2("cmsengine.test.pfx", certificatePassword));
+            listenOptions.UseHttps(X509CertificateLoader.LoadPkcs12FromFile("cmsengine.test.pfx", certificatePassword));
+            //listenOptions.UseHttps();
         });
-    });
+    })
+        .ConfigureLogging(logging =>
+        {
+            logging.ClearProviders();
+            logging.AddConsole();
+            logging.AddDebug();
+        });
 }
 
 // Add services to the container.
