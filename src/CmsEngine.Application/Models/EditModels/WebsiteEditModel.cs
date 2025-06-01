@@ -38,7 +38,6 @@ public class WebsiteEditModel : BaseEditModel, IEditModel
     [MaxLength(20)]
     public string? Phone { get; set; }
 
-    [Required]
     [MaxLength(250)]
     public string? Email { get; set; }
 
