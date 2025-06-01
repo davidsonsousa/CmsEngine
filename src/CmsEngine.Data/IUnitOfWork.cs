@@ -13,5 +13,5 @@ public interface IUnitOfWork : IDisposable
     /// <summary>
     /// Saves all pending changes into the database
     /// </summary>
-    Task Save();
+    Task<int> Save(CancellationToken cancellationToken = default);
 }
