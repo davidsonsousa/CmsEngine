@@ -47,20 +47,21 @@ public class CmsEngineContext : IdentityDbContext<ApplicationUser>
     {
         ChangeTracker.DetectChanges();
 
-        var timeStamp = DateTime.Now;
+        // TODO: Make it testable
+        var currentUsername = httpContextAccessor.HttpContext?.User.Identity?.Name ?? "anonymous";
+
+        var timeStamp = DateTime.UtcNow;
         var entries = ChangeTracker.Entries().Where(e => e.Entity is BaseEntity && (e.State == EntityState.Added || e.State == EntityState.Modified));
-        // TODO: Find a better way to get the user
-        var currentUsername = httpContextAccessor.HttpContext?.User.Identity?.Name ?? "username";
         foreach (var entry in entries)
         {
             if (entry.State == EntityState.Added)
             {
-                entry.Property("DateCreated").CurrentValue = timeStamp;
-                entry.Property("UserCreated").CurrentValue = currentUsername;
+                entry.Property(Auditing.DateCreated).CurrentValue = timeStamp;
+                entry.Property(Auditing.UserCreated).CurrentValue = currentUsername;
             }
 
-            entry.Property("DateModified").CurrentValue = timeStamp;
-            entry.Property("UserModified").CurrentValue = currentUsername;
+            entry.Property(Auditing.DateModified).CurrentValue = timeStamp;
+            entry.Property(Auditing.UserModified).CurrentValue = currentUsername;
         }
 
         return base.SaveChangesAsync(cancellationToken);
