@@ -21,10 +21,10 @@ public class PostController : BaseController
         return View("List");
     }
 
-    public async Task<IActionResult> CreateAsync()
+    public IActionResult Create()
     {
         SetupMessages("Post", PageType.Create, panelTitle: "Create a new post");
-        var postEditModel = await _postService.SetupEditModel();
+        var postEditModel = _postService.SetupEditModel();
 
         return View("CreateEdit", postEditModel);
     }
@@ -86,11 +86,11 @@ public class PostController : BaseController
     }
 
     [HttpPost]
-    public async Task<IActionResult> GetDataAsync([FromForm] DataParameters parameters)
+    public IActionResult GetData([FromForm] DataParameters parameters)
     {
         Guard.Against.Equals(parameters);
 
-        var items = await _postService.GetForDataTable(parameters);
+        var items = _postService.GetForDataTable(parameters);
         var dataTable = DataTableHelper.BuildDataTable(items.Data, items.RecordsTotal, items.RecordsFiltered, parameters.Draw, parameters.Start, parameters.Length);
 
         return Ok(dataTable);

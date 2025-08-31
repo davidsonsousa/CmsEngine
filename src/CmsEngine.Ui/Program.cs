@@ -1,12 +1,15 @@
+using Microsoft.AspNetCore.ResponseCompression;
+
 var builder = WebApplication.CreateBuilder(args);
+var isDevelopment = builder.Environment.IsDevelopment();
 
 // Load json files
 var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Development";
 builder.Configuration.SetBasePath(Directory.GetCurrentDirectory())
                                            .AddJsonFile("appsettings.json")
-                                           .AddJsonFile($"appsettings.{environment}.json", optional: true, reloadOnChange: true)
-                                           .AddJsonFile("emailsettings.json", optional: false, reloadOnChange: true)
-                                           .AddJsonFile($"emailsettings.{environment}.json", optional: true, reloadOnChange: true)
+                                           .AddJsonFile($"appsettings.{environment}.json", optional: true, reloadOnChange: isDevelopment)
+                                           .AddJsonFile("emailsettings.json", optional: false, reloadOnChange: isDevelopment)
+                                           .AddJsonFile($"emailsettings.{environment}.json", optional: true, reloadOnChange: isDevelopment)
                                            .AddEnvironmentVariables()
                                            .Build();
 
@@ -16,7 +19,7 @@ Log.Logger = new LoggerConfiguration().ReadFrom.Configuration(builder.Configurat
 
 // Add certificate for development
 // https://dotnetplaybook.com/custom-local-domain-using-https-kestrel-asp-net-core/
-if (builder.Environment.IsDevelopment())
+if (isDevelopment)
 {
     var certificatePassword = builder.Configuration["CertPassword"];
 
@@ -41,7 +44,7 @@ if (builder.Environment.IsDevelopment())
 
 // Add services to the container.
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-builder.Services.AddDbContext<CmsEngineContext>(options => options.EnableSensitiveDataLogging(builder.Environment.IsDevelopment())
+builder.Services.AddDbContext<CmsEngineContext>(options => options.EnableSensitiveDataLogging(isDevelopment)
                                                                   .UseSqlServer(connectionString,
                                                                                 o => o.MigrationsAssembly("CmsEngine.Data")
                                                                                       .UseQuerySplittingBehavior(QuerySplittingBehavior.SingleQuery)));
@@ -51,7 +54,7 @@ builder.Services.Configure<CookiePolicyOptions>(options =>
 {
     // This lambda determines whether user consent for non-essential cookies is needed for a given request.
     options.CheckConsentNeeded = context => true;
-    options.MinimumSameSitePolicy = SameSiteMode.None;
+    options.MinimumSameSitePolicy = SameSiteMode.Lax;
 });
 
 builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
@@ -60,34 +63,46 @@ builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.R
                 .AddEntityFrameworkStores<CmsEngineContext>()
                 .AddDefaultTokenProviders();
 
-// Add HttpContextAccessor as .NET Core doesn't have HttpContext.Current anymore
-builder.Services.AddHttpContextAccessor();
+builder.Services.AddMemoryCache(options =>
+{
+    options.SizeLimit = 1024;
+    options.CompactionPercentage = 0.2;
+});
+
+builder.Services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
 // Add Repositories
-builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
-builder.Services.AddScoped<IPageRepository, PageRepository>();
-builder.Services.AddScoped<IPostRepository, PostRepository>();
-builder.Services.AddScoped<ITagRepository, TagRepository>();
-builder.Services.AddScoped<IWebsiteRepository, WebsiteRepository>();
-builder.Services.AddScoped<IEmailRepository, EmailRepository>();
+builder.Services.TryAddScoped<ICategoryRepository, CategoryRepository>();
+builder.Services.TryAddScoped<IPageRepository, PageRepository>();
+builder.Services.TryAddScoped<IPostRepository, PostRepository>();
+builder.Services.TryAddScoped<ITagRepository, TagRepository>();
+builder.Services.TryAddScoped<IWebsiteRepository, WebsiteRepository>();
+builder.Services.TryAddScoped<IEmailRepository, EmailRepository>();
 
 // Add services
-builder.Services.AddScoped<IService, Service>();
-builder.Services.AddScoped<ICategoryService, CategoryService>();
-builder.Services.AddScoped<IPageService, PageService>();
-builder.Services.AddScoped<IPostService, PostService>();
-builder.Services.AddScoped<ITagService, TagService>();
-builder.Services.AddScoped<IWebsiteService, WebsiteService>();
-builder.Services.AddScoped<IXmlService, XmlService>();
-builder.Services.AddScoped<IEmailService, EmailService>();
+builder.Services.TryAddScoped<IService, Service>();
+builder.Services.TryAddScoped<ICategoryService, CategoryService>();
+builder.Services.TryAddScoped<IPageService, PageService>();
+builder.Services.TryAddScoped<IPostService, PostService>();
+builder.Services.TryAddScoped<ITagService, TagService>();
+builder.Services.TryAddScoped<IWebsiteService, WebsiteService>();
+builder.Services.TryAddScoped<IXmlService, XmlService>();
+builder.Services.TryAddScoped<IEmailService, EmailService>();
 
 // Add Unit of Work
-builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.TryAddScoped<IUnitOfWork, UnitOfWork>();
 
 builder.Services.AddTransient<ICmsEngineEmailSender, CmsEngineEmailSender>();
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
+
+builder.Services.AddResponseCompression(options =>
+{
+    options.EnableForHttps = true;
+    options.Providers.Add<GzipCompressionProvider>();
+    options.Providers.Add<BrotliCompressionProvider>();
+});
 
 builder.Services.ConfigureApplicationCookie(options =>
 {
@@ -96,7 +111,7 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.AccessDeniedPath = $"/Identity/Account/AccessDenied";
 });
 
-if (!builder.Environment.IsDevelopment())
+if (!isDevelopment)
 {
     builder.Services.AddHttpsRedirection(options =>
     {
@@ -157,6 +172,8 @@ app.UseCookiePolicy();
 
 app.UseRouting();
 
+app.UseResponseCompression();
+
 app.UseAuthentication();
 app.UseAuthorization();
 
@@ -207,3 +224,5 @@ app.MapControllerRoute(
 app.MapRazorPages();
 
 app.Run();
+
+Log.CloseAndFlush();
