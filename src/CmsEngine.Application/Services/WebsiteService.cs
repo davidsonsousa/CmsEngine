@@ -48,7 +48,7 @@ public class WebsiteService : Service, IWebsiteService
         return returnValue;
     }
 
-    public IEnumerable<Website> FilterForDataTable(string searchValue, IEnumerable<Website> items)
+    public IQueryable<Website> FilterForDataTable(string searchValue, IQueryable<Website> items)
     {
         if (!string.IsNullOrWhiteSpace(searchValue))
         {
@@ -56,15 +56,15 @@ public class WebsiteService : Service, IWebsiteService
             var searchExpression = items.GetSearchExpression(searchValue, searchableProperties);
             Guard.Against.Null(searchExpression);
 
-            items = items.Where(searchExpression.Compile());
+            items = items.Where(searchExpression);
         }
 
         return items;
     }
 
-    public async Task<(IEnumerable<WebsiteTableViewModel> Data, int RecordsTotal, int RecordsFiltered)> GetForDataTable(DataParameters parameters)
+    public (IEnumerable<WebsiteTableViewModel> Data, int RecordsTotal, int RecordsFiltered) GetForDataTable(DataParameters parameters)
     {
-        var items = await unitOfWork.Websites.GetForDataTable();
+        var items = unitOfWork.Websites.GetForDataTable();
         var recordsTotal = items.Count();
         if (!string.IsNullOrWhiteSpace(parameters.Search?.Value))
         {
@@ -76,29 +76,22 @@ public class WebsiteService : Service, IWebsiteService
         return (items.MapToTableViewModel(), recordsTotal, items.Count());
     }
 
-    public IEnumerable<Website> OrderForDataTable(int column, string direction, IEnumerable<Website> items)
+    public IQueryable<Website> OrderForDataTable(int column, string direction, IQueryable<Website> items)
     {
-        try
+        switch (column)
         {
-            switch (column)
-            {
-                case 1:
-                    items = direction == "asc" ? items.OrderBy(o => o.Name) : items.OrderByDescending(o => o.Name);
-                    break;
-                case 2:
-                    items = direction == "asc" ? items.OrderBy(o => o.Tagline) : items.OrderByDescending(o => o.Tagline);
-                    break;
-                case 3:
-                    items = direction == "asc" ? items.OrderBy(o => o.Culture) : items.OrderByDescending(o => o.Culture);
-                    break;
-                default:
-                    items = items.OrderBy(o => o.Name);
-                    break;
-            }
-        }
-        catch
-        {
-            throw;
+            case 1:
+                items = direction == "asc" ? items.OrderBy(o => o.Name) : items.OrderByDescending(o => o.Name);
+                break;
+            case 2:
+                items = direction == "asc" ? items.OrderBy(o => o.Tagline) : items.OrderByDescending(o => o.Tagline);
+                break;
+            case 3:
+                items = direction == "asc" ? items.OrderBy(o => o.Culture) : items.OrderByDescending(o => o.Culture);
+                break;
+            default:
+                items = items.OrderBy(o => o.Name);
+                break;
         }
 
         return items;

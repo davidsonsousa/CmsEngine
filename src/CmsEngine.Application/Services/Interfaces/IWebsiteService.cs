@@ -10,7 +10,7 @@ public interface IWebsiteService : IDataTableService<Website>, IDisposable
 
     Task<ReturnValue> DeleteRange(Guid[] ids);
 
-    Task<(IEnumerable<WebsiteTableViewModel> Data, int RecordsTotal, int RecordsFiltered)> GetForDataTable(DataParameters parameters);
+    (IEnumerable<WebsiteTableViewModel> Data, int RecordsTotal, int RecordsFiltered) GetForDataTable(DataParameters parameters);
 
     Task<ReturnValue> Save(WebsiteEditModel categoryEditModel);
 }
