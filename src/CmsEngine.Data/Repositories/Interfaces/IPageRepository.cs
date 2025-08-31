@@ -6,7 +6,7 @@ public interface IPageRepository : IReadRepository<Page>, IDataModificationRepos
 
     Task<IEnumerable<Page>> GetByStatusOrderByDescending(DocumentStatus documentStatus);
 
-    Task<IEnumerable<Page>> GetForDataTable();
+    IQueryable<Page> GetForDataTable();
 
     Task<Page?> GetBySlug(string slug);
 

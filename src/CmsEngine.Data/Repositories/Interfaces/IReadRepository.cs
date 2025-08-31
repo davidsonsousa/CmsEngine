@@ -12,7 +12,7 @@ public interface IReadRepository<TEntity> where TEntity : class
     /// Get all records which were not marked as deleted (IsDeleted == false)
     /// </summary>
     /// <returns></returns>
-    Task<IEnumerable<TEntity>> GetAllAsync();
+    IQueryable<TEntity> GetAll();
 
     /// <summary>
     /// Gets item based on condition and includes extra table
