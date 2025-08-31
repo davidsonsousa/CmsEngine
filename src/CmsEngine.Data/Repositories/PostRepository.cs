@@ -229,9 +229,9 @@ public class PostRepository : Repository<Post>, IPostRepository
                         .OrderByDescending(o => o.PublishedOn).Take(count).ToListAsync();
     }
 
-    public async Task<IEnumerable<Post>> GetForDataTable()
+    public IQueryable<Post> GetForDataTable()
     {
-        return await Get().Select(p => new Post
+        return Get().Select(p => new Post
         {
             VanityId = p.VanityId,
             Title = p.Title,
@@ -246,7 +246,7 @@ public class PostRepository : Repository<Post>, IPostRepository
                 Surname = au.Surname,
                 Email = au.Email
             })
-        }).ToListAsync();
+        });
     }
 
     public async Task<Post?> GetForSavingById(Guid id)

@@ -40,9 +40,9 @@ public class PageRepository : Repository<Page>, IPageRepository
                         .SingleOrDefaultAsync();
     }
 
-    public async Task<IEnumerable<Page>> GetForDataTable()
+    public IQueryable<Page> GetForDataTable()
     {
-        return await Get().Select(p => new Page
+        return Get().Select(p => new Page
         {
             VanityId = p.VanityId,
             Title = p.Title,
@@ -57,7 +57,7 @@ public class PageRepository : Repository<Page>, IPageRepository
                 Surname = au.Surname,
                 Email = au.Email
             })
-        }).ToListAsync();
+        });
     }
 
     public async Task<Page?> GetForSavingById(Guid id)

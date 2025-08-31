@@ -4,5 +4,5 @@ public interface IWebsiteRepository : IReadRepository<Website>, IDataModificatio
 {
     Website? GetWebsiteInstanceByHost(string host);
 
-    Task<IEnumerable<Website>> GetForDataTable();
+    IQueryable<Website> GetForDataTable();
 }

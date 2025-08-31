@@ -19,9 +19,9 @@ public class Repository<TEntity> : IReadRepository<TEntity>,
         return await Get().CountAsync();
     }
 
-    public async Task<IEnumerable<TEntity>> GetAllAsync()
+    public IQueryable<TEntity> GetAll()
     {
-        return await GetValidRecords().ToListAsync();
+        return GetValidRecords();
     }
 
     public IQueryable<TEntity> Get(Expression<Func<TEntity, bool>>? filter = null, int count = 0)

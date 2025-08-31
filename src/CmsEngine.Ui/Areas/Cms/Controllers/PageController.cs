@@ -85,11 +85,11 @@ public class PageController : BaseController
     }
 
     [HttpPost]
-    public async Task<IActionResult> GetDataAsync([FromForm] DataParameters parameters)
+    public IActionResult GetData([FromForm] DataParameters parameters)
     {
         Guard.Against.Equals(parameters);
 
-        var items = await _pageService.GetForDataTable(parameters);
+        var items = _pageService.GetForDataTable(parameters);
         var dataTable = DataTableHelper.BuildDataTable(items.Data, items.RecordsTotal, items.RecordsFiltered, parameters.Draw, parameters.Start, parameters.Length);
 
         return Ok(dataTable);
