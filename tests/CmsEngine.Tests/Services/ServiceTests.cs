@@ -2,7 +2,6 @@
 
 public class ServiceTests : BaseServiceTests
 {
-
     public ServiceTests() : base()
     {
     }
