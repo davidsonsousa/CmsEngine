@@ -1,4 +1,5 @@
-using Microsoft.AspNetCore.ResponseCompression;
+using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 var isDevelopment = builder.Environment.IsDevelopment();
@@ -10,8 +11,7 @@ builder.Configuration.SetBasePath(Directory.GetCurrentDirectory())
                                            .AddJsonFile($"appsettings.{environment}.json", optional: true, reloadOnChange: isDevelopment)
                                            .AddJsonFile("emailsettings.json", optional: false, reloadOnChange: isDevelopment)
                                            .AddJsonFile($"emailsettings.{environment}.json", optional: true, reloadOnChange: isDevelopment)
-                                           .AddEnvironmentVariables()
-                                           .Build();
+                                           .AddEnvironmentVariables();
 
 // Initializing Logger
 Log.Logger = new LoggerConfiguration().ReadFrom.Configuration(builder.Configuration)
@@ -68,6 +68,8 @@ builder.Services.AddMemoryCache(options =>
     options.SizeLimit = 1024;
     options.CompactionPercentage = 0.2;
 });
+builder.Services.Configure<MemoryCacheOptions>(builder.Configuration.GetSection("MemoryCache"));
+builder.Services.TryAddSingleton(resolver => resolver.GetRequiredService<IOptions<MemoryCacheOptions>>().Value);
 
 builder.Services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
@@ -80,6 +82,7 @@ builder.Services.TryAddScoped<IWebsiteRepository, WebsiteRepository>();
 builder.Services.TryAddScoped<IEmailRepository, EmailRepository>();
 
 // Add services
+builder.Services.TryAddScoped<ICacheService, MemoryCacheService>();
 builder.Services.TryAddScoped<IService, Service>();
 builder.Services.TryAddScoped<ICategoryService, CategoryService>();
 builder.Services.TryAddScoped<IPageService, PageService>();

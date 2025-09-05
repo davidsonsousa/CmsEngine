@@ -3,7 +3,7 @@ namespace CmsEngine.Application.Services;
 public class Service : IService
 {
     private readonly IHttpContextAccessor httpContextAccessor;
-    private readonly IMemoryCache memoryCache;
+    private readonly ICacheService cacheService;
     private readonly string instanceHost;
     private readonly string instanceKey;
     private bool disposedValue;
@@ -26,12 +26,12 @@ public class Service : IService
         }
     }
 
-    public Service(IUnitOfWork uow, IHttpContextAccessor hca, ILoggerFactory loggerFactory, IMemoryCache memoryCache)
+    public Service(IUnitOfWork uow, IHttpContextAccessor hca, ILoggerFactory loggerFactory, ICacheService cacheService)
     {
         unitOfWork = uow ?? throw new ArgumentNullException(nameof(uow));
         httpContextAccessor = hca;
         logger = loggerFactory.CreateLogger("Service");
-        this.memoryCache = memoryCache;
+        this.cacheService = cacheService;
 
         instanceHost = httpContextAccessor.HttpContext!.Request.Host.Host;
         instanceKey = $"{Main.CacheKey.Instance}_{instanceHost}";
@@ -66,8 +66,7 @@ public class Service : IService
     {
         var timeSpan = TimeSpan.FromHours(1); //TODO: Perhaps set this in the config file. Or DB
         logger.LogDebug("Adding '{instanceKey}' to cache with expiration date to {dateTimeNow}", instanceKey, DateTime.Now.AddMilliseconds(timeSpan.TotalMilliseconds).ToString());
-        var cacheEntryOptions = new MemoryCacheEntryOptions().SetSlidingExpiration(timeSpan).SetSize(1);
-        memoryCache.Set(instanceKey, instance, cacheEntryOptions);
+        cacheService.Set(instanceKey, instance, timeSpan);
     }
 
     protected async Task<ApplicationUser> GetCurrentUserAsync()
@@ -92,7 +91,7 @@ public class Service : IService
         logger.LogDebug("GetInstanceAsync()");
         logger.LogDebug("Loading '{instanceKey}' from cache", instanceKey);
 
-        if (memoryCache.TryGetValue(instanceKey, out InstanceViewModel? instance))
+        if (cacheService.TryGet(instanceKey, out InstanceViewModel? instance))
         {
             return instance!;
         }

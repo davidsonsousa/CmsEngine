@@ -34,6 +34,7 @@ global using Microsoft.AspNetCore.Mvc.Filters;
 global using Microsoft.AspNetCore.Mvc.RazorPages;
 global using Microsoft.AspNetCore.Mvc.Rendering;
 global using Microsoft.AspNetCore.Razor.TagHelpers;
+global using Microsoft.AspNetCore.ResponseCompression;
 global using Microsoft.AspNetCore.Rewrite;
 global using Microsoft.EntityFrameworkCore;
 global using Microsoft.Extensions.DependencyInjection.Extensions;

@@ -3,8 +3,8 @@ namespace CmsEngine.Application.Services;
 public class EmailService : Service, IEmailService
 {
     private readonly IUnitOfWork _unitOfWork;
-    public EmailService(IUnitOfWork uow, IHttpContextAccessor hca, ILoggerFactory loggerFactory, IMemoryCache memoryCache)
-                          : base(uow, hca, loggerFactory, memoryCache)
+    public EmailService(IUnitOfWork uow, IHttpContextAccessor hca, ILoggerFactory loggerFactory, ICacheService cacheService)
+                          : base(uow, hca, loggerFactory, cacheService)
     {
         _unitOfWork = uow;
     }

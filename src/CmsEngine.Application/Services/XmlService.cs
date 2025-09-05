@@ -4,8 +4,8 @@ public class XmlService : Service, IXmlService
 {
     private readonly IUnitOfWork _unitOfWork;
 
-    public XmlService(IUnitOfWork uow, IHttpContextAccessor hca, ILoggerFactory loggerFactory, IMemoryCache memoryCache)
-                     : base(uow, hca, loggerFactory, memoryCache)
+    public XmlService(IUnitOfWork uow, IHttpContextAccessor hca, ILoggerFactory loggerFactory, ICacheService cacheService)
+                     : base(uow, hca, loggerFactory, cacheService)
     {
         _unitOfWork = uow;
     }
