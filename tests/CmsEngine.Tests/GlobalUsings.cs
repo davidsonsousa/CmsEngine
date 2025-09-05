@@ -1,0 +1,12 @@
+﻿global using CmsEngine.Application.Services;
+global using CmsEngine.Data;
+global using CmsEngine.Data.Repositories.Interfaces;
+global using Microsoft.AspNetCore.Http;
+global using Microsoft.Extensions.Caching.Memory;
+global using Moq;
+global using CmsEngine.Application.Helpers.Email;
+global using CmsEngine.Data.Entities;
+global using Microsoft.Extensions.Logging;
+global using Microsoft.AspNetCore.Identity;
+global using CmsEngine.Application.Models.EditModels;
+global using System.Security.Claims;
