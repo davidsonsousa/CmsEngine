@@ -79,11 +79,12 @@ public class BaseServiceTests
         _loggerMock = new Mock<ILogger>();
         _loggerFactoryMock.Setup(l => l.CreateLogger(It.IsAny<string>())).Returns(_loggerMock.Object);
 
-        // Services
+        // Cache Service
         _cacheServiceMock = new Mock<ICacheService>();
         _cacheServiceMock.Setup(c => c.Set(It.IsAny<string>(), It.IsAny<object>(), It.IsAny<TimeSpan>()));
         _cacheServiceMock.Setup(c => c.TryGet(It.IsAny<string>(), out It.Ref<string>.IsAny)).Returns(false);
 
+        // Services
         _emailService = new Mock<EmailService>(_uowMock.Object, _httpContextAccessorMock.Object, _loggerFactoryMock.Object, _cacheServiceMock.Object).Object;
         _websiteService = new Mock<WebsiteService>(_uowMock.Object, _httpContextAccessorMock.Object, _loggerFactoryMock.Object, _cacheServiceMock.Object).Object;
         _categoryService = new Mock<CategoryService>(_uowMock.Object, _httpContextAccessorMock.Object, _loggerFactoryMock.Object, _cacheServiceMock.Object).Object;

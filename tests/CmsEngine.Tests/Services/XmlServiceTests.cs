@@ -65,9 +65,8 @@ public class XmlServiceTests : BaseServiceTests
     public void FormatUrl_ShouldFormatCorrectly(string type, string slug, string expected)
     {
         // Act
-        var url = typeof(XmlService)
-            .GetMethod("FormatUrl", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)
-            .Invoke(_xmlService, new object[] { type, slug }) as string;
+        var url = typeof(XmlService).GetMethod("FormatUrl", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)
+                                    .Invoke(_xmlService, new object[] { type, slug }) as string;
 
         // Assert
         Assert.Equal(expected, url);

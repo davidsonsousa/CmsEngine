@@ -54,7 +54,7 @@ public class CategoryServiceTests : BaseServiceTests
     [Fact]
     public async Task Save_ShouldInsertNewCategory()
     {
-        var editModel = new CategoryEditModel { /*IsNew = true,*/ Name = "NewCat" };
+        var editModel = new CategoryEditModel { VanityId = Guid.Empty, Name = "NewCat" };
         _categoryRepoMock.Setup(r => r.Insert(It.IsAny<Category>())).Returns(Task.CompletedTask);
 
         var result = await _categoryService.Save(editModel);
@@ -69,7 +69,7 @@ public class CategoryServiceTests : BaseServiceTests
     public async Task Save_ShouldUpdateExistingCategory()
     {
         var id = Guid.NewGuid();
-        var editModel = new CategoryEditModel { /*IsNew = false,*/ VanityId = id, Name = "ExistingCat" };
+        var editModel = new CategoryEditModel { VanityId = id, Name = "ExistingCat" };
         var category = new Category { Name = "ExistingCat", VanityId = id };
         _categoryRepoMock.Setup(r => r.GetByIdAsync(id)).ReturnsAsync(category);
 

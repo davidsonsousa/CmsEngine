@@ -53,7 +53,6 @@ public class EmailServiceTests : BaseServiceTests
 
         // Simulate MapToViewModel extension
         IEnumerable<ContactForm> mapped = new List<ContactForm> { new ContactForm("to", "subj", "msg") };
-        // You may need to mock the MapToViewModel extension if it's not static
 
         // Act
         var result = await _emailService.GetOrderedByDate();
@@ -61,6 +60,5 @@ public class EmailServiceTests : BaseServiceTests
         // Assert
         _emailRepoMock.Verify(r => r.GetOrderedByDate(), Times.Once);
         Assert.NotNull(result);
-        // Optionally check the count if you can control the mapping
     }
 }

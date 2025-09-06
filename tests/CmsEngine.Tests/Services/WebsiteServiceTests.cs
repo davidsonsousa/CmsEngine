@@ -64,7 +64,7 @@ public class WebsiteServiceTests : BaseServiceTests
     public async Task Save_ShouldInsertNewWebsite()
     {
         // Arrange
-        var editModel = new WebsiteEditModel { /*IsNew = true,*/ Name = "NewSite" };
+        var editModel = new WebsiteEditModel {VanityId = Guid.Empty, Name = "NewSite" };
         _websiteRepoMock.Setup(r => r.Insert(It.IsAny<Website>())).Returns(Task.CompletedTask);
 
         // Act
@@ -82,7 +82,7 @@ public class WebsiteServiceTests : BaseServiceTests
     {
         // Arrange
         var id = Guid.NewGuid();
-        var editModel = new WebsiteEditModel { /*IsNew = false,*/ VanityId = id, Name = "ExistingSite" };
+        var editModel = new WebsiteEditModel { VanityId = id, Name = "ExistingSite" };
         var website = new Website { Name = "ExistingSite", VanityId = id };
         _websiteRepoMock.Setup(r => r.GetByIdAsync(id)).ReturnsAsync(website);
 

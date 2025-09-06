@@ -54,7 +54,7 @@ public class PageServiceTests : BaseServiceTests
     [Fact]
     public async Task Save_ShouldInsertNewPage()
     {
-        var editModel = new PageEditModel { /*IsNew = true,*/ Title = "NewPage" };
+        var editModel = new PageEditModel { VanityId = Guid.Empty, Title = "NewPage" };
         _pageRepoMock.Setup(r => r.Insert(It.IsAny<Page>())).Returns(Task.CompletedTask);
 
         var result = await _pageService.Save(editModel);
@@ -69,7 +69,7 @@ public class PageServiceTests : BaseServiceTests
     public async Task Save_ShouldUpdateExistingPage()
     {
         var id = Guid.NewGuid();
-        var editModel = new PageEditModel { /*IsNew = false,*/ VanityId = id, Title = "ExistingPage" };
+        var editModel = new PageEditModel { VanityId = id, Title = "ExistingPage" };
         var page = new Page { Title = "ExistingPage", VanityId = id };
         _pageRepoMock.Setup(r => r.GetForSavingById(id)).ReturnsAsync(page);
 

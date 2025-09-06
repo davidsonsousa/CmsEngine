@@ -55,7 +55,7 @@ public class PostServiceTests : BaseServiceTests
     [Fact]
     public async Task Save_ShouldInsertNewPost()
     {
-        var editModel = new PostEditModel { /*IsNew = true,*/ Title = "NewPost" };
+        var editModel = new PostEditModel { VanityId = Guid.Empty, Title = "NewPost" };
         _postRepoMock.Setup(r => r.Insert(It.IsAny<Post>())).Returns(Task.CompletedTask);
 
         var result = await _postService.Save(editModel);
@@ -70,7 +70,7 @@ public class PostServiceTests : BaseServiceTests
     public async Task Save_ShouldUpdateExistingPost()
     {
         var id = Guid.NewGuid();
-        var editModel = new PostEditModel { /*IsNew = false,*/ VanityId = id, Title = "ExistingPost" };
+        var editModel = new PostEditModel { VanityId = id, Title = "ExistingPost" };
         var post = new Post { Title = "ExistingPost", VanityId = id };
         _postRepoMock.Setup(r => r.GetForSavingById(id)).ReturnsAsync(post);
 

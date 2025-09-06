@@ -53,7 +53,7 @@ public class TagServiceTests : BaseServiceTests
     [Fact]
     public async Task Save_ShouldInsertNewTag()
     {
-        var editModel = new TagEditModel { /*IsNew = true,*/ Name = "NewTag" };
+        var editModel = new TagEditModel { VanityId = Guid.Empty, Name = "NewTag" };
         _tagRepoMock.Setup(r => r.Insert(It.IsAny<Tag>())).Returns(Task.CompletedTask);
 
         var result = await _tagService.Save(editModel);
@@ -68,7 +68,7 @@ public class TagServiceTests : BaseServiceTests
     public async Task Save_ShouldUpdateExistingTag()
     {
         var id = Guid.NewGuid();
-        var editModel = new TagEditModel { /*IsNew = false,*/ VanityId = id, Name = "ExistingTag" };
+        var editModel = new TagEditModel { VanityId = id, Name = "ExistingTag" };
         var tag = new Tag { Name = "ExistingTag", VanityId = id };
         _tagRepoMock.Setup(r => r.GetByIdAsync(id)).ReturnsAsync(tag);
 
