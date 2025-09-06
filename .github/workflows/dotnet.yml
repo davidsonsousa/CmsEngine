@@ -29,6 +29,9 @@ jobs:
       - name: Build
         run: dotnet build --no-restore
 
+      - name: Test with the dotnet CLI
+        run: dotnet test --no-build
+
       - name: Set build version
         if: "${{ github.event.inputs.version != '' }}"
         id: bump
