@@ -1,4 +1,4 @@
-namespace CmsEngine.Tests.Services;
+namespace CmsEngine.Tests.Application.Services;
 
 public class XmlServiceTests : BaseServiceTests
 {
