@@ -1,5 +1,7 @@
 ﻿global using System.Linq.Expressions;
 global using System.Security.Claims;
+global using CmsEngine.Application.Extensions;
+global using CmsEngine.Application.Extensions.Mapper;
 global using CmsEngine.Application.Helpers.Email;
 global using CmsEngine.Application.Models.EditModels;
 global using CmsEngine.Application.Models.ViewModels;
@@ -8,6 +10,7 @@ global using CmsEngine.Application.Services.Interfaces;
 global using CmsEngine.Data;
 global using CmsEngine.Data.Entities;
 global using CmsEngine.Data.Repositories.Interfaces;
+global using CmsEngine.Tests.Models.ViewModels;
 global using Microsoft.AspNetCore.Http;
 global using Microsoft.AspNetCore.Identity;
 global using Microsoft.Extensions.Caching.Memory;
