@@ -55,7 +55,7 @@ jobs:
 
       - name: Publish MVC App
         run: >
-          dotnet publish CmsEngine.Ui/CmsEngine.Ui.csproj
+          dotnet publish src/CmsEngine.Ui/CmsEngine.Ui.csproj
           --configuration Release
           --no-build
           --output ./publish
