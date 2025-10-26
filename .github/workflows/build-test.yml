@@ -1,14 +1,16 @@
-name: Feature - Build and test
+name: Build and Test
 
 on:
   push:
-    branches: [ "feature/**" ]
+    branches: [ "feature/**", "develop" ]
     paths-ignore:
       - '**.md'
       - 'docs/**'
       - '.gitignore'
       - 'LICENSE'
       - '.editorconfig'
+  pull_request:
+    branches: [ "develop", "main" ]
 
 jobs:
   build-test:
@@ -18,7 +20,7 @@ jobs:
     steps:
       - uses: actions/checkout@v5
         with:
-          fetch-depth: 0  # Fetch all history for better versioning
+          fetch-depth: 0
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v5
