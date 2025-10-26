@@ -1,0 +1,98 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Release version (without v prefix)'
+        required: true
+        type: string
+
+jobs:
+  release:
+    name: Create release
+    runs-on: ubuntu-latest
+    environment: Production
+
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: 9.0.x
+
+      - name: Cache NuGet packages
+        uses: actions/cache@v3
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json', '**/packages.props') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
+
+      - name: Set version
+        id: version
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            VERSION=${{ github.event.inputs.version }}
+          else
+            VERSION=${GITHUB_REF#refs/tags/v}
+          fi
+          echo "Version: $VERSION"
+          echo "package_version=$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: Build
+        run: >
+          dotnet build --configuration Release --no-restore
+          /p:ContinuousIntegrationBuild=true
+          /p:Version=${{ steps.version.outputs.package_version }}
+
+      - name: Test
+        run: dotnet test --configuration Release --no-build --verbosity normal
+
+      - name: Publish MVC App
+        run: >
+          dotnet publish src/CmsEngine.Ui/CmsEngine.Ui.csproj
+          --configuration Release
+          --no-build
+          --output ./publish
+          /p:Version=${{ steps.version.outputs.package_version }}
+
+      - name: Create ZIP file
+        run: |
+          cd publish
+          zip -r ../CmsEngine-${{ steps.version.outputs.package_version }}.zip .
+          cd ..
+
+      - name: Generate changelog
+        id: changelog
+        uses: metcalfc/changelog-generator@v4.1.0
+        with:
+          myToken: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: CmsEngine-${{ steps.version.outputs.package_version }}.zip
+          name: Release ${{ steps.version.outputs.package_version }}
+          body: ${{ steps.changelog.outputs.changelog }}
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload artifact for debugging
+        uses: actions/upload-artifact@v4
+        with:
+          name: mvc-app
+          path: publish/
+          retention-days: 7
