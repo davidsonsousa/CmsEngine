@@ -24,7 +24,6 @@ jobs:
         uses: actions/setup-dotnet@v5
         with:
           dotnet-version: 9.0.x
-          include-prerelease: true  # Useful for .NET 9 preview releases
 
       - name: Cache NuGet packages
         uses: actions/cache@v3
@@ -41,11 +40,11 @@ jobs:
         run: dotnet build --configuration Release --no-restore /p:ContinuousIntegrationBuild=true
 
       - name: Test with coverage
-        run: |
-          dotnet test --configuration Release --no-build --verbosity normal `
-            /p:CollectCoverage=true `
-            /p:CoverletOutputFormat=cobertura `
-            --logger "trx;LogFileName=test-results.trx"
+        run: >
+          dotnet test --configuration Release --no-build --verbosity normal
+          /p:CollectCoverage=true
+          /p:CoverletOutputFormat=cobertura
+          --logger "trx;LogFileName=test-results.trx"
 
       - name: Generate coverage report
         uses: danielpalme/ReportGenerator-GitHub-Action@5.2.0
