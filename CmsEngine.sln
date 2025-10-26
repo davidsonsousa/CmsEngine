@@ -24,7 +24,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{02EA
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{417CF032-20B7-4521-984B-11D57C462BEA}"
 	ProjectSection(SolutionItems) = preProject
-		.github\workflows\dotnet.yml = .github\workflows\dotnet.yml
+		.github\workflows\build-test.yml = .github\workflows\build-test.yml
+		preview.yml = preview.yml
+		release.yml = release.yml
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CmsEngine.Tests", "tests\CmsEngine.Tests\CmsEngine.Tests.csproj", "{6F257EAE-CC97-4ADB-A892-452C0404BFAC}"
