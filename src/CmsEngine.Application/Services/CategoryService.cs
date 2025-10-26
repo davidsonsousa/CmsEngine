@@ -2,8 +2,8 @@ namespace CmsEngine.Application.Services;
 
 public class CategoryService : Service, ICategoryService
 {
-    public CategoryService(IUnitOfWork uow, IHttpContextAccessor hca, ILoggerFactory loggerFactory, IMemoryCache memoryCache)
-                          : base(uow, hca, loggerFactory, memoryCache)
+    public CategoryService(IUnitOfWork uow, IHttpContextAccessor hca, ILoggerFactory loggerFactory, ICacheService cacheService)
+                          : base(uow, hca, loggerFactory, cacheService)
     {
     }
 
@@ -48,7 +48,7 @@ public class CategoryService : Service, ICategoryService
         return returnValue;
     }
 
-    public IEnumerable<Category> FilterForDataTable(string searchValue, IEnumerable<Category> items)
+    public IQueryable<Category> FilterForDataTable(string searchValue, IQueryable<Category> items)
     {
         if (!string.IsNullOrWhiteSpace(searchValue))
         {
@@ -56,7 +56,7 @@ public class CategoryService : Service, ICategoryService
             var searchExpression = items.GetSearchExpression(searchValue, searchableProperties);
             Guard.Against.Null(searchExpression);
 
-            items = items.Where(searchExpression.Compile());
+            items = items.Where(searchExpression);
         }
 
         return items;
@@ -86,9 +86,9 @@ public class CategoryService : Service, ICategoryService
         return items.MapToViewModelWithPostCount();
     }
 
-    public async Task<(IEnumerable<CategoryTableViewModel> Data, int RecordsTotal, int RecordsFiltered)> GetForDataTable(DataParameters parameters)
+    public (IEnumerable<CategoryTableViewModel> Data, int RecordsTotal, int RecordsFiltered) GetForDataTable(DataParameters parameters)
     {
-        var items = await unitOfWork.Categories.GetAllAsync();
+        var items = unitOfWork.Categories.GetAll();
         var recordsTotal = items.Count();
 
         if (!string.IsNullOrWhiteSpace(parameters.Search?.Value))
@@ -102,29 +102,22 @@ public class CategoryService : Service, ICategoryService
         return (items.MapToTableViewModel(), recordsTotal, items.Count());
     }
 
-    public IEnumerable<Category> OrderForDataTable(int column, string direction, IEnumerable<Category> items)
+    public IQueryable<Category> OrderForDataTable(int column, string direction, IQueryable<Category> items)
     {
-        try
+        switch (column)
         {
-            switch (column)
-            {
-                case 1:
-                    items = direction == "asc" ? items.OrderBy(o => o.Name) : items.OrderByDescending(o => o.Name);
-                    break;
-                case 2:
-                    items = direction == "asc" ? items.OrderBy(o => o.Slug) : items.OrderByDescending(o => o.Slug);
-                    break;
-                case 3:
-                    items = direction == "asc" ? items.OrderBy(o => o.Description) : items.OrderByDescending(o => o.Description);
-                    break;
-                default:
-                    items = items.OrderBy(o => o.Name);
-                    break;
-            }
-        }
-        catch
-        {
-            throw;
+            case 1:
+                items = direction == "asc" ? items.OrderBy(o => o.Name) : items.OrderByDescending(o => o.Name);
+                break;
+            case 2:
+                items = direction == "asc" ? items.OrderBy(o => o.Slug) : items.OrderByDescending(o => o.Slug);
+                break;
+            case 3:
+                items = direction == "asc" ? items.OrderBy(o => o.Description) : items.OrderByDescending(o => o.Description);
+                break;
+            default:
+                items = items.OrderBy(o => o.Name);
+                break;
         }
 
         return items;

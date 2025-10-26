@@ -2,8 +2,8 @@ namespace CmsEngine.Application.Services;
 
 public class PageService : Service, IPageService
 {
-    public PageService(IUnitOfWork uow, IHttpContextAccessor hca, ILoggerFactory loggerFactory, IMemoryCache memoryCache)
-                      : base(uow, hca, loggerFactory, memoryCache)
+    public PageService(IUnitOfWork uow, IHttpContextAccessor hca, ILoggerFactory loggerFactory, ICacheService cacheService)
+                      : base(uow, hca, loggerFactory, cacheService)
     {
     }
 
@@ -48,7 +48,7 @@ public class PageService : Service, IPageService
         return returnValue;
     }
 
-    public IEnumerable<Page> FilterForDataTable(string searchValue, IEnumerable<Page> items)
+    public IQueryable<Page> FilterForDataTable(string searchValue, IQueryable<Page> items)
     {
         if (!string.IsNullOrWhiteSpace(searchValue))
         {
@@ -56,7 +56,7 @@ public class PageService : Service, IPageService
             var searchExpression = items.GetSearchExpression(searchValue, searchableProperties);
             Guard.Against.Null(searchExpression);
 
-            items = items.Where(searchExpression.Compile());
+            items = items.Where(searchExpression);
         }
 
         return items;
@@ -87,9 +87,9 @@ public class PageService : Service, IPageService
         return item.MapToViewModel(Instance.DateFormat);
     }
 
-    public async Task<(IEnumerable<PageTableViewModel> Data, int RecordsTotal, int RecordsFiltered)> GetForDataTable(DataParameters parameters)
+    public (IEnumerable<PageTableViewModel> Data, int RecordsTotal, int RecordsFiltered) GetForDataTable(DataParameters parameters)
     {
-        var items = await unitOfWork.Pages.GetForDataTable();
+        var items = unitOfWork.Pages.GetForDataTable();
         var recordsTotal = items.Count();
         if (!string.IsNullOrWhiteSpace(parameters.Search?.Value))
         {
@@ -101,38 +101,31 @@ public class PageService : Service, IPageService
         return (items.MapToTableViewModel(), recordsTotal, items.Count());
     }
 
-    public IEnumerable<Page> OrderForDataTable(int column, string direction, IEnumerable<Page> items)
+    public IQueryable<Page> OrderForDataTable(int column, string direction, IQueryable<Page> items)
     {
-        try
+        switch (column)
         {
-            switch (column)
-            {
-                case 1:
-                    items = direction == "asc" ? items.OrderBy(o => o.Title) : items.OrderByDescending(o => o.Title);
-                    break;
-                case 2:
-                    items = direction == "asc" ? items.OrderBy(o => o.Description) : items.OrderByDescending(o => o.Description);
-                    break;
-                case 3:
-                    items = direction == "asc" ? items.OrderBy(o => o.Slug) : items.OrderByDescending(o => o.Slug);
-                    break;
-                //case 4:
-                //    items = direction == "asc" ? items.OrderBy(o => o.Author.FullName) : items.OrderByDescending(o => o.Author.FullName);
-                //    break;
-                case 5:
-                    items = direction == "asc" ? items.OrderBy(o => o.PublishedOn) : items.OrderByDescending(o => o.PublishedOn);
-                    break;
-                case 6:
-                    items = direction == "asc" ? items.OrderBy(o => o.Status) : items.OrderByDescending(o => o.Status);
-                    break;
-                default:
-                    items = items.OrderByDescending(o => o.PublishedOn);
-                    break;
-            }
-        }
-        catch
-        {
-            throw;
+            case 1:
+                items = direction == "asc" ? items.OrderBy(o => o.Title) : items.OrderByDescending(o => o.Title);
+                break;
+            case 2:
+                items = direction == "asc" ? items.OrderBy(o => o.Description) : items.OrderByDescending(o => o.Description);
+                break;
+            case 3:
+                items = direction == "asc" ? items.OrderBy(o => o.Slug) : items.OrderByDescending(o => o.Slug);
+                break;
+            //case 4:
+            //    items = direction == "asc" ? items.OrderBy(o => o.Author.FullName) : items.OrderByDescending(o => o.Author.FullName);
+            //    break;
+            case 5:
+                items = direction == "asc" ? items.OrderBy(o => o.PublishedOn) : items.OrderByDescending(o => o.PublishedOn);
+                break;
+            case 6:
+                items = direction == "asc" ? items.OrderBy(o => o.Status) : items.OrderByDescending(o => o.Status);
+                break;
+            default:
+                items = items.OrderByDescending(o => o.PublishedOn);
+                break;
         }
 
         return items;

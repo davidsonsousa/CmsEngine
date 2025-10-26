@@ -1,5 +1,16 @@
 namespace CmsEngine.Core.Utils;
 
+public enum CanonicalType
+{
+    Index,
+    Archive,
+    Blog,
+    Category,
+    Page,
+    Post,
+    Tag
+}
+
 public enum Gender
 {
     Male,

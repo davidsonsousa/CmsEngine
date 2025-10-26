@@ -4,8 +4,8 @@ public class XmlService : Service, IXmlService
 {
     private readonly IUnitOfWork _unitOfWork;
 
-    public XmlService(IUnitOfWork uow, IHttpContextAccessor hca, ILoggerFactory loggerFactory, IMemoryCache memoryCache)
-                     : base(uow, hca, loggerFactory, memoryCache)
+    public XmlService(IUnitOfWork uow, IHttpContextAccessor hca, ILoggerFactory loggerFactory, ICacheService cacheService)
+                     : base(uow, hca, loggerFactory, cacheService)
     {
         _unitOfWork = uow;
     }
@@ -16,7 +16,7 @@ public class XmlService : Service, IXmlService
 
         foreach (var item in await _unitOfWork.Posts.GetPublishedPostsOrderByDescending(o => o.PublishedOn))
         {
-            var url = FormatUrl("blog/post", item.Slug);
+            var url = FormatUrl("blog/post/", item.Slug);
             articleList.Add(new XElement("item",
                                       new XElement("title", item.Title),
                                       new XElement("link", url),
@@ -44,14 +44,14 @@ public class XmlService : Service, IXmlService
         var orderedPosts = await _unitOfWork.Posts.GetPublishedPostsOrderByDescending(o => o.PublishedOn);
         items.AddRange(orderedPosts.Select(x => new SitemapViewModel
         {
-            Url = FormatUrl("blog/post", x.Slug),
+            Url = FormatUrl("blog/post/", x.Slug),
             PublishedOn = x.PublishedOn.ToString("yyyy-MM-dd")
         }));
 
         var orderedPages = await _unitOfWork.Pages.GetOrderByDescending(o => o.PublishedOn);
         items.AddRange(orderedPages.Select(x => new SitemapViewModel
         {
-            Url = FormatUrl("page", x.Slug),
+            Url = FormatUrl(string.Empty, x.Slug),
             PublishedOn = x.PublishedOn.ToString("yyyy-MM-dd")
         }));
 
@@ -76,7 +76,7 @@ public class XmlService : Service, IXmlService
             url = Instance.UrlFormat.Replace("[site_url]", Instance.SiteUrl)
                                               .Replace("[culture]", Instance.Culture)
                                               .Replace("[short_culture]", Instance.Culture.Substring(0, 2))
-                                              .Replace("[type]", type)
+                                              .Replace("[type]/", type)
                                               .Replace("[slug]", slug);
         }
 

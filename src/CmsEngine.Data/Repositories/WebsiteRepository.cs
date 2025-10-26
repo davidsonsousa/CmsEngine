@@ -7,9 +7,9 @@ public class WebsiteRepository : Repository<Website>, IWebsiteRepository
 
     }
 
-    public async Task<IEnumerable<Website>> GetForDataTable()
+    public IQueryable<Website> GetForDataTable()
     {
-        return await Get().Select(w => new Website
+        return Get().Select(w => new Website
         {
             VanityId = w.VanityId,
             Name = w.Name,
@@ -19,7 +19,7 @@ public class WebsiteRepository : Repository<Website>, IWebsiteRepository
             DateFormat = w.DateFormat,
             SiteUrl = w.SiteUrl,
             GoogleAnalytics = w.GoogleAnalytics
-        }).ToListAsync();
+        });
     }
 
     public Website? GetWebsiteInstanceByHost(string host)

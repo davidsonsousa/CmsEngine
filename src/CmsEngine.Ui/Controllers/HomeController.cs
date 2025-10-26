@@ -16,6 +16,8 @@ public class HomeController : BaseController
     public IActionResult Index()
     {
         Instance.PageTitle = $"{Instance.Name}";
+        Instance.CanonicalType = CanonicalType.Index;
+
         return View(Instance);
     }
 
@@ -29,12 +31,16 @@ public class HomeController : BaseController
         }
 
         Instance.PageTitle = $"{Instance.SelectedDocument.Title} - {Instance.Name}";
+        Instance.CanonicalType = CanonicalType.Page;
+
         return View(Instance);
     }
 
     public IActionResult Archive()
     {
         Instance.PageTitle = $"Archive - {Instance.Name}";
+        Instance.CanonicalType = CanonicalType.Archive;
+
         return View(Instance);
     }
 

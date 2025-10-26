@@ -81,11 +81,11 @@ public class CategoryController : BaseController
     }
 
     [HttpPost]
-    public async Task<IActionResult> GetDataAsync([FromForm] DataParameters parameters)
+    public IActionResult GetData([FromForm] DataParameters parameters)
     {
         Guard.Against.Null(parameters);
 
-        var items = await _categoryService.GetForDataTable(parameters);
+        var items = _categoryService.GetForDataTable(parameters);
         var dataTable = DataTableHelper.BuildDataTable(items.Data, items.RecordsTotal, items.RecordsFiltered, parameters.Draw, parameters.Start, parameters.Length);
 
         return Ok(dataTable);

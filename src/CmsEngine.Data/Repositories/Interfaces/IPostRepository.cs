@@ -16,7 +16,7 @@ public interface IPostRepository : IReadRepository<Post>, IDataModificationRepos
 
     Task<IEnumerable<Post>> GetPublishedLatestPosts(int count);
 
-    Task<IEnumerable<Post>> GetForDataTable();
+    IQueryable<Post> GetForDataTable();
 
     Task<Post?> GetForSavingById(Guid id);
 

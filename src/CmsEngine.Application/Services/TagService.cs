@@ -2,8 +2,8 @@ namespace CmsEngine.Application.Services;
 
 public class TagService : Service, ITagService
 {
-    public TagService(IUnitOfWork uow, IHttpContextAccessor hca, ILoggerFactory loggerFactory, IMemoryCache memoryCache)
-                     : base(uow, hca, loggerFactory, memoryCache)
+    public TagService(IUnitOfWork uow, IHttpContextAccessor hca, ILoggerFactory loggerFactory, ICacheService cacheService)
+                     : base(uow, hca, loggerFactory, cacheService)
     {
     }
 
@@ -12,7 +12,7 @@ public class TagService : Service, ITagService
         var item = await unitOfWork.Tags.GetByIdAsync(id);
         Guard.Against.Null(item);
 
-        var returnValue = new ReturnValue($"Tag '{item.Name}' deleted at {DateTime.Now.ToString("T")}.");
+        var returnValue = new ReturnValue($"Tag '{item.Name}' deleted at {DateTime.Now:T}.");
 
         try
         {
@@ -32,7 +32,7 @@ public class TagService : Service, ITagService
     {
         var items = await unitOfWork.Tags.GetByMultipleIdsAsync(ids);
 
-        var returnValue = new ReturnValue($"Tags deleted at {DateTime.Now.ToString("T")}.");
+        var returnValue = new ReturnValue($"Tags deleted at {DateTime.Now:T}.");
 
         try
         {
@@ -48,7 +48,7 @@ public class TagService : Service, ITagService
         return returnValue;
     }
 
-    public IEnumerable<Tag> FilterForDataTable(string searchValue, IEnumerable<Tag> items)
+    public IQueryable<Tag> FilterForDataTable(string searchValue, IQueryable<Tag> items)
     {
         if (!string.IsNullOrWhiteSpace(searchValue))
         {
@@ -56,15 +56,15 @@ public class TagService : Service, ITagService
             var searchExpression = items.GetSearchExpression(searchValue, searchableProperties);
             Guard.Against.Null(searchExpression);
 
-            items = items.Where(searchExpression.Compile());
+            items = items.Where(searchExpression);
         }
         return items;
     }
 
-    public async Task<(IEnumerable<TagTableViewModel> Data, int RecordsTotal, int RecordsFiltered)> GetForDataTable(DataParameters parameters)
+    public (IEnumerable<TagTableViewModel> Data, int RecordsTotal, int RecordsFiltered) GetForDataTable(DataParameters parameters)
     {
-        var items = await unitOfWork.Tags.GetAllAsync();
-        int recordsTotal = items.Count();
+        var items = unitOfWork.Tags.GetAll();
+        var recordsTotal = items.Count();
         if (!string.IsNullOrWhiteSpace(parameters.Search?.Value))
         {
             items = FilterForDataTable(parameters.Search.Value, items);
@@ -79,38 +79,31 @@ public class TagService : Service, ITagService
     {
         logger.LogDebug("TagService > GetTagCount()");
         var items = await unitOfWork.Tags.CountAsync();
-        logger.LogDebug("Tag count: {0}", items);
+        logger.LogDebug("Tag count: {items}", items);
         return items;
     }
 
-    public async Task<IEnumerable<TagViewModel>> GetAllTags()
+    public IEnumerable<TagViewModel> GetAllTags()
     {
         logger.LogDebug("TagService > GetAllTags()");
-        var items = await unitOfWork.Tags.GetAllAsync();
-        logger.LogDebug("Tags loaded: {0}", items.Count());
+        var items = unitOfWork.Tags.GetAll();
+        logger.LogDebug("Tags loaded: {items}", items.Count());
         return items.MapToViewModel();
     }
 
-    public IEnumerable<Tag> OrderForDataTable(int column, string direction, IEnumerable<Tag> items)
+    public IQueryable<Tag> OrderForDataTable(int column, string direction, IQueryable<Tag> items)
     {
-        try
+        switch (column)
         {
-            switch (column)
-            {
-                case 1:
-                    items = direction == "asc" ? items.OrderBy(o => o.Name) : items.OrderByDescending(o => o.Name);
-                    break;
-                case 2:
-                    items = direction == "asc" ? items.OrderBy(o => o.Slug) : items.OrderByDescending(o => o.Slug);
-                    break;
-                default:
-                    items = items.OrderBy(o => o.Name);
-                    break;
-            }
-        }
-        catch
-        {
-            throw;
+            case 1:
+                items = direction == "asc" ? items.OrderBy(o => o.Name) : items.OrderByDescending(o => o.Name);
+                break;
+            case 2:
+                items = direction == "asc" ? items.OrderBy(o => o.Slug) : items.OrderByDescending(o => o.Slug);
+                break;
+            default:
+                items = items.OrderBy(o => o.Name);
+                break;
         }
 
         return items;
@@ -118,7 +111,7 @@ public class TagService : Service, ITagService
 
     public async Task<ReturnValue> Save(TagEditModel tagEditModel)
     {
-        logger.LogDebug("CmsService > Save(TagEditModel: {0})", tagEditModel.ToString());
+        logger.LogDebug("CmsService > Save(TagEditModel: {tagEditModel})", tagEditModel.ToString());
 
         var returnValue = new ReturnValue($"Tag '{tagEditModel.Name}' saved.");
 
