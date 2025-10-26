@@ -1,49 +1,62 @@
-# This workflow will build a .NET project
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-net
-# Setting build version with https://github.com/marketplace/actions/net-project-version-updater
-
-name: CmsEngine
+name: Feature - Build and test
 
 on:
   push:
     branches: [ "feature/**" ]
-  pull_request:
-    branches: [ "main", "develop" ]
+    paths-ignore:
+      - '**.md'
+      - 'docs/**'
+      - '.gitignore'
+      - 'LICENSE'
+      - '.editorconfig'
 
 jobs:
-  build:
-
+  build-test:
+    name: Build and test
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Fetch all history for better versioning
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 9.0.x
+          include-prerelease: true  # Useful for .NET 9 preview releases
+
+      - name: Cache NuGet packages
+        uses: actions/cache@v3
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json', '**/packages.props') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
 
       - name: Restore dependencies
         run: dotnet restore
 
       - name: Build
-        run: dotnet build --no-restore
+        run: dotnet build --configuration Release --no-restore /p:ContinuousIntegrationBuild=true
 
-      - name: Test with the dotnet CLI
-        run: dotnet test --no-build
+      - name: Test with coverage
+        run: |
+          dotnet test --configuration Release --no-build --verbosity normal `
+            /p:CollectCoverage=true `
+            /p:CoverletOutputFormat=cobertura `
+            --logger "trx;LogFileName=test-results.trx"
 
-      - name: Set build version
-        if: "${{ github.event.inputs.version != '' }}"
-        id: bump
-        uses: vers-one/dotnet-project-version-updater@v1.7
+      - name: Generate coverage report
+        uses: danielpalme/ReportGenerator-GitHub-Action@5.2.0
+        if: always()
         with:
-          file: "**/*.csproj"
-          version: ${{ github.event.inputs.version }}
+          reports: '**/coverage.cobertura.xml'
+          targetdir: 'coveragereport'
 
-      - run: |
-          git config user.name "Davidson Sousa"
-          git config user.email "davidsonsousa@users.noreply.github.com"
-          git add .
-          git commit -m "Bump project version to ${{  github.event.inputs.version }}"
-          git push
-        if: "${{ github.event.inputs.version != '' }}"
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: coverage-report
+          path: coveragereport
