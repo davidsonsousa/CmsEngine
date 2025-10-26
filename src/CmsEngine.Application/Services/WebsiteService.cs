@@ -2,8 +2,8 @@ namespace CmsEngine.Application.Services;
 
 public class WebsiteService : Service, IWebsiteService
 {
-    public WebsiteService(IUnitOfWork uow, IHttpContextAccessor hca, ILoggerFactory loggerFactory, IMemoryCache memoryCache)
-                         : base(uow, hca, loggerFactory, memoryCache)
+    public WebsiteService(IUnitOfWork uow, IHttpContextAccessor hca, ILoggerFactory loggerFactory, ICacheService cacheService)
+                         : base(uow, hca, loggerFactory, cacheService)
     {
     }
 

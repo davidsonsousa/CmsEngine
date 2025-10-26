@@ -2,8 +2,8 @@ namespace CmsEngine.Application.Services;
 
 public class CategoryService : Service, ICategoryService
 {
-    public CategoryService(IUnitOfWork uow, IHttpContextAccessor hca, ILoggerFactory loggerFactory, IMemoryCache memoryCache)
-                          : base(uow, hca, loggerFactory, memoryCache)
+    public CategoryService(IUnitOfWork uow, IHttpContextAccessor hca, ILoggerFactory loggerFactory, ICacheService cacheService)
+                          : base(uow, hca, loggerFactory, cacheService)
     {
     }
 

@@ -2,8 +2,8 @@ namespace CmsEngine.Application.Services;
 
 public class TagService : Service, ITagService
 {
-    public TagService(IUnitOfWork uow, IHttpContextAccessor hca, ILoggerFactory loggerFactory, IMemoryCache memoryCache)
-                     : base(uow, hca, loggerFactory, memoryCache)
+    public TagService(IUnitOfWork uow, IHttpContextAccessor hca, ILoggerFactory loggerFactory, ICacheService cacheService)
+                     : base(uow, hca, loggerFactory, cacheService)
     {
     }
 

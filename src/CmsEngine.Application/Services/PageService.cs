@@ -2,8 +2,8 @@ namespace CmsEngine.Application.Services;
 
 public class PageService : Service, IPageService
 {
-    public PageService(IUnitOfWork uow, IHttpContextAccessor hca, ILoggerFactory loggerFactory, IMemoryCache memoryCache)
-                      : base(uow, hca, loggerFactory, memoryCache)
+    public PageService(IUnitOfWork uow, IHttpContextAccessor hca, ILoggerFactory loggerFactory, ICacheService cacheService)
+                      : base(uow, hca, loggerFactory, cacheService)
     {
     }
 
