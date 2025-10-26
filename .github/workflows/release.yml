@@ -80,13 +80,14 @@ jobs:
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
-        if: startsWith(github.ref, 'refs/tags/')
+        if: startsWith(github.ref, 'refs/tags/') || github.event_name == 'workflow_dispatch'
         with:
           files: CmsEngine-${{ steps.version.outputs.package_version }}.zip
           name: Release ${{ steps.version.outputs.package_version }}
           body: ${{ steps.changelog.outputs.changelog }}
           draft: false
           prerelease: false
+          tag_name: v${{ steps.version.outputs.package_version }}  # Add this line for manual triggers
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
