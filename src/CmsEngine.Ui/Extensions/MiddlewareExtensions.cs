@@ -2,33 +2,24 @@ namespace CmsEngine.Ui.Extensions;
 
 public static class MiddlewareExtensions
 {
-    public static IApplicationBuilder ConfigureFileUpload(this IApplicationBuilder builder, FileUploadOptions options)
+    extension(IApplicationBuilder builder)
     {
-        if (builder == null)
+        public IApplicationBuilder ConfigureFileUpload(FileUploadOptions options)
         {
-            throw new ArgumentNullException(nameof(builder));
+            ArgumentNullException.ThrowIfNull(builder);
+
+            ArgumentNullException.ThrowIfNull(options);
+
+            return builder.UseMiddleware<ConfigureFileUploadMiddleware>(options);
         }
 
-        if (options is null)
+        public IApplicationBuilder UseSecurityHeaders(SecurityHeadersBuilder securityHeadersBuilder)
         {
-            throw new ArgumentNullException(nameof(options));
+            ArgumentNullException.ThrowIfNull(builder);
+
+            ArgumentNullException.ThrowIfNull(securityHeadersBuilder);
+
+            return builder.UseMiddleware<SecurityHeadersMiddleware>(securityHeadersBuilder.Build());
         }
-
-        return builder.UseMiddleware<ConfigureFileUploadMiddleware>(options);
-    }
-
-    public static IApplicationBuilder UseSecurityHeaders(this IApplicationBuilder builder, SecurityHeadersBuilder securityHeadersBuilder)
-    {
-        if (builder is null)
-        {
-            throw new ArgumentNullException(nameof(builder));
-        }
-
-        if (securityHeadersBuilder is null)
-        {
-            throw new ArgumentNullException(nameof(securityHeadersBuilder));
-        }
-
-        return builder.UseMiddleware<SecurityHeadersMiddleware>(securityHeadersBuilder.Build());
     }
 }

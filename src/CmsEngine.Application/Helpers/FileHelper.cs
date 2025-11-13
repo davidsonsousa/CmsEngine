@@ -54,7 +54,7 @@ public static class FileHelper
         fullsizeImage.Dispose();
 
         var encoderParameters = new EncoderParameters(1);
-        encoderParameters.Param[0] = new EncoderParameter(Encoder.Quality, 75L);
+        encoderParameters.Param[0] = new EncoderParameter(System.Drawing.Imaging.Encoder.Quality, 75L);
 
         // Save resized picture
         newImage.Save(newFile, GetEncoderInfo("image/jpeg")!, encoderParameters);

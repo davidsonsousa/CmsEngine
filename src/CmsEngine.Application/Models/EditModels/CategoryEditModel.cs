@@ -12,14 +12,6 @@ public class CategoryEditModel : BaseEditModel, IEditModel
 
     public override string ToString()
     {
-        var jsonResult = new JsonObject
-        {
-            [nameof(Id)] = Id,
-            [nameof(VanityId)] = VanityId,
-            [nameof(Name)] = Name,
-            [nameof(Slug)] = Slug,
-            [nameof(Description)] = Description
-        };
-        return jsonResult.ToString();
+        return $"PageEditModel(Id={Id},VanityId={VanityId},Name={Name},Slug={Slug},Description={Description})";
     }
 }

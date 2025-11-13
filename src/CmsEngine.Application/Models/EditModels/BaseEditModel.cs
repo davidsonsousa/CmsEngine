@@ -10,16 +10,30 @@ public class BaseEditModel
 
     public int Id { get; set; }
 
-    public Guid VanityId { get; set; }
+    private Guid _vanityId;
+    private string? _vanityIdString;
+
+    public Guid VanityId {
+        get => _vanityId;
+        set {
+            _vanityId = value;
+            _vanityIdString = null;
+        }
+    }
+
+    /// <summary>
+    /// Cached string representation of <see cref="VanityId"/> to avoid repeated Guid.ToString() allocations.
+    /// </summary>
+    public string VanityIdString 
+    {
+        get
+        {
+            return _vanityIdString ??= _vanityId.ToString();
+        }
+    }
 
     public override string ToString()
     {
-        var jsonResult = new JsonObject
-        {
-            [nameof(Id)] = Id,
-            [nameof(VanityId)] = VanityId
-        };
-        return jsonResult.ToString();
+        return $"BaseEditModel(Id={Id},VanityId={VanityIdString})";
     }
-
 }

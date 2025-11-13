@@ -13,7 +13,7 @@ public class MemoryCacheService : ICacheService
 
     public T? Get<T>(string key)
     {
-        return _memoryCache.TryGetValue(key, out T value) ? value : default;
+        return _memoryCache.TryGetValue(key, out T? value) ? value : default;
     }
 
     public void Set<T>(string key, T value, TimeSpan? expiration = null)

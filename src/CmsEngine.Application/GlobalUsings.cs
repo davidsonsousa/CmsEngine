@@ -1,3 +1,4 @@
+global using System.Collections.Concurrent;
 global using System.ComponentModel;
 global using System.ComponentModel.DataAnnotations;
 global using System.Drawing;
@@ -35,3 +36,4 @@ global using Microsoft.Extensions.Caching.Memory;
 global using Microsoft.Extensions.Logging;
 global using Microsoft.Extensions.Options;
 global using MimeKit;
+global using System.Text;

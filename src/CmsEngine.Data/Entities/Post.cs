@@ -6,20 +6,35 @@ public class Post : Document
 
     public virtual Website Website { get; set; } = null!;
 
-    public virtual ICollection<PostCategory> PostCategories { get; set; } = new List<PostCategory>();
+    private ICollection<PostCategory>? _postCategories;
+    public virtual ICollection<PostCategory> PostCategories
+    {
+        get => _postCategories ??= new List<PostCategory>();
+        set => _postCategories = value;
+    }
 
-    public virtual ICollection<PostTag> PostTags { get; set; } = new List<PostTag>();
+    private ICollection<PostTag>? _postTags;
+    public virtual ICollection<PostTag> PostTags
+    {
+        get => _postTags ??= new List<PostTag>();
+        set => _postTags = value;
+    }
 
-    public virtual ICollection<PostApplicationUser> PostApplicationUsers { get; set; } = new List<PostApplicationUser>();
+    private ICollection<PostApplicationUser>? _postApplicationUsers;
+    public virtual ICollection<PostApplicationUser> PostApplicationUsers
+    {
+        get => _postApplicationUsers ??= new List<PostApplicationUser>();
+        set => _postApplicationUsers = value;
+    }
 
 
     // Properties used for data projection only
     [NotMapped]
-    public IEnumerable<Category> Categories { get; set; } = new List<Category>();
+    public IEnumerable<Category> Categories { get; set; } = Enumerable.Empty<Category>();
 
     [NotMapped]
-    public IEnumerable<Tag> Tags { get; set; } = new List<Tag>();
+    public IEnumerable<Tag> Tags { get; set; } = Enumerable.Empty<Tag>();
 
     [NotMapped]
-    public IEnumerable<ApplicationUser> ApplicationUsers { get; set; } = new List<ApplicationUser>();
+    public IEnumerable<ApplicationUser> ApplicationUsers { get; set; } = Enumerable.Empty<ApplicationUser>();
 }

@@ -18,16 +18,7 @@ public class EmailSettings
 
     public override string ToString()
     {
-        var jsonResult = new JsonObject
-        {
-            [nameof(Domain)] = Domain,
-            [nameof(Port)] = Port,
-            [nameof(Username)] = Username,
-            [nameof(Password)] = Password,
-            [nameof(FromEmail)] = FromEmail,
-            [nameof(CcEmail)] = CcEmail,
-            [nameof(BccEmail)] = BccEmail
-        };
-        return jsonResult.ToString();
+        // Lightweight representation for diagnostics; avoid including secret values (Password)
+        return $"EmailSettings(Domain={Domain},Port={Port},Username={Username},From={FromEmail})";
     }
 }

@@ -18,17 +18,7 @@ public abstract class Document : BaseEntity
 
     public override string ToString()
     {
-        var jsonResult = new JsonObject
-        {
-            [nameof(Id)] = Id,
-            [nameof(VanityId)] = VanityId,
-            [nameof(Title)] = Title,
-            [nameof(Slug)] = Slug,
-            [nameof(HeaderImage)] = HeaderImage,
-            [nameof(Description)] = Description,
-            [nameof(Status)] = Status.ToString(),
-            [nameof(PublishedOn)] = PublishedOn
-        };
-        return jsonResult.ToString();
+        // Provide a concise, low-allocation representation used for logs/debug only
+        return $"{GetType().Name}(Id={Id},VanityId={VanityId},Title={Title})";
     }
 }

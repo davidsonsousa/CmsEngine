@@ -58,14 +58,7 @@ public class Website : BaseEntity
 
     public override string ToString()
     {
-        var jsonResult = new JsonObject
-        {
-            [nameof(Id)] = Id,
-            [nameof(VanityId)] = VanityId,
-            [nameof(Name)] = Name,
-            [nameof(SiteUrl)] = SiteUrl,
-            [nameof(Tagline)] = Tagline
-        };
-        return jsonResult.ToString();
+        // Lightweight, low-allocation representation for diagnostics
+        return $"Website(Id={Id},VanityId={VanityId},Name={Name})";
     }
 }

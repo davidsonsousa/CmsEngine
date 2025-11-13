@@ -14,7 +14,6 @@ public class EmailServiceTests : BaseServiceTests
         var contactForm = new ContactForm("to@example.com", "Subject", "Message");
         var emailModel = new Email(); // Assuming Email is the mapped model
         // Simulate MapToModel
-        var mapToModelCalled = false;
         contactForm.GetType().GetMethod("MapToModel")?.Invoke(contactForm, null);
         _emailRepoMock.Setup(r => r.Insert(It.IsAny<Email>())).Returns(Task.CompletedTask);
         _uowMock.Setup(u => u.Save(default)).ReturnsAsync(1);

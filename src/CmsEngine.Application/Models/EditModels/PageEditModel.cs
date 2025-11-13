@@ -30,17 +30,6 @@ public class PageEditModel : BaseEditModel, IEditModel
 
     public override string ToString()
     {
-        var jsonResult = new JsonObject
-        {
-            [nameof(Id)] = Id,
-            [nameof(VanityId)] = VanityId,
-            [nameof(Title)] = Title,
-            [nameof(Slug)] = Slug,
-            [nameof(HeaderImage)] = HeaderImage,
-            [nameof(Description)] = Description,
-            [nameof(Status)] = Status.ToString(),
-            [nameof(PublishedOn)] = PublishedOn
-        };
-        return jsonResult.ToString();
+        return $"PageEditModel(Id={Id},VanityId={VanityId},Title={Title})";
     }
 }
