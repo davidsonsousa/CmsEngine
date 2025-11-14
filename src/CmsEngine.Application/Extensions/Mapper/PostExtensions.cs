@@ -303,7 +303,7 @@ public static class PostExtensions
 
                 var authorUser = item.ApplicationUsers?.FirstOrDefault();
                 var author = new UserViewModel();
-                if (authorUser != null)
+                if (authorUser is not null)
                 {
                     if (!userCache.TryGetValue(authorUser.Id, out author))
                     {
@@ -352,7 +352,7 @@ public static class PostExtensions
 
                 var authorUser = item.ApplicationUsers?.FirstOrDefault();
                 var author = new UserViewModel();
-                if (authorUser != null)
+                if (authorUser is not null)
                 {
                     if (!userCache.TryGetValue(authorUser.Id, out author))
                     {
@@ -422,7 +422,7 @@ public static class PostExtensions
 
                 var authorUser = item.ApplicationUsers?.FirstOrDefault();
                 var author = new UserViewModel();
-                if (authorUser != null)
+                if (authorUser is not null)
                 {
                     if (!userCache.TryGetValue(authorUser.Id, out author))
                     {

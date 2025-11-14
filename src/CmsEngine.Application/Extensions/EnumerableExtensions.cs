@@ -30,7 +30,7 @@ public static class EnumerableExtensions
         var result = new List<SelectListItem>(itemList.Count);
 
         Func<object, object?>? getter = null;
-        if (prop != null)
+        if (prop is not null)
         {
             // Try to get or create a compiled getter to avoid reflection costs
             getter = GetterCache.GetOrAdd(prop, p =>
@@ -54,7 +54,7 @@ public static class EnumerableExtensions
             }
             else
             {
-                var val = getter != null ? getter(x)! : prop.GetValue(x);
+                var val = getter is not null ? getter(x)! : prop.GetValue(x);
                 text = val?.ToString() ?? string.Empty;
             }
 
@@ -83,7 +83,7 @@ public static class EnumerableExtensions
         var result = new List<CheckboxEditModel>(itemList.Count);
 
         Func<object, object?>? getter = null;
-        if (prop != null)
+        if (prop is not null)
         {
             getter = GetterCache.GetOrAdd(prop, p =>
             {
@@ -105,7 +105,7 @@ public static class EnumerableExtensions
             }
             else
             {
-                var val = getter != null ? getter(x)! : prop.GetValue(x);
+                var val = getter is not null ? getter(x)! : prop.GetValue(x);
                 label = val?.ToString() ?? string.Empty;
             }
 

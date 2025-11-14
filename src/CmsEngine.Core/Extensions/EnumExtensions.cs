@@ -42,11 +42,11 @@ public static class EnumExtensions
         var type = value.GetType();
         var memberInfo = type.GetMember(value.ToString());
 
-        if (memberInfo != null && memberInfo.Length > 0)
+        if (memberInfo is not null && memberInfo.Length > 0)
         {
             var attrs = memberInfo[0].GetCustomAttributes(typeof(DescriptionAttribute), false).ToArray();
 
-            if (attrs != null && attrs.Length > 0)
+            if (attrs is not null && attrs.Length > 0)
             {
                 return ((DescriptionAttribute)attrs[0]).Description;
             }

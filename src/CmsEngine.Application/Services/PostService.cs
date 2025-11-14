@@ -236,7 +236,7 @@ public class PostService : Service, IPostService
     private async Task PrepareRelatedPropertiesAsync(PostEditModel postEditModel, Post post)
     {
         post.PostCategories.Clear();
-        if (postEditModel.SelectedCategories != null)
+        if (postEditModel.SelectedCategories is not null)
         {
             var categoryIds = await unitOfWork.Categories.GetIdsByMultipleGuidsAsync(postEditModel.SelectedCategories.ToList().ConvertAll(Guid.Parse));
             foreach (var categoryId in categoryIds)
@@ -250,7 +250,7 @@ public class PostService : Service, IPostService
         }
 
         post.PostTags.Clear();
-        if (postEditModel.SelectedTags != null)
+        if (postEditModel.SelectedTags is not null)
         {
             var tagIds = await unitOfWork.Tags.GetIdsByMultipleGuidsAsync(postEditModel.SelectedTags.ToList().ConvertAll(Guid.Parse));
             foreach (var tagId in tagIds)

@@ -48,7 +48,7 @@ public class Repository<TEntity> : IReadRepository<TEntity>,
     {
         var records = GetValidRecords();
 
-        if (filter != null)
+        if (filter is not null)
         {
             records = records.Where(filter);
         }

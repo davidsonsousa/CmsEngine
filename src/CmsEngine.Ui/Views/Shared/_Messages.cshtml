@@ -1,4 +1,4 @@
-@if (TempData[MessageConstants.InfoMessage] != null)
+@if (TempData[MessageConstants.InfoMessage] is not null)
 {
     <div class="alert alert-info alert-dismissible fade show" role="alert">
         <small>@DateTime.Now</small><br />
@@ -9,7 +9,7 @@
     </div>
 }
 
-@if (TempData[MessageConstants.SuccessMessage] != null)
+@if (TempData[MessageConstants.SuccessMessage] is not null)
 {
     <div class="alert alert-success alert-dismissible fade show" role="alert">
         <small>@DateTime.Now</small><br />
@@ -20,7 +20,7 @@
     </div>
 }
 
-@if (TempData[MessageConstants.WarningMessage] != null)
+@if (TempData[MessageConstants.WarningMessage] is not null)
 {
     <div class="alert alert-warning alert-dismissible fade show" role="alert">
         <small>@DateTime.Now</small><br />
@@ -31,7 +31,7 @@
     </div>
 }
 
-@if (TempData[MessageConstants.DangerMessage] != null)
+@if (TempData[MessageConstants.DangerMessage] is not null)
 {
     <div class="alert alert-danger alert-dismissible fade show" role="alert">
         <small>@DateTime.Now</small><br />

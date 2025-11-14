@@ -45,7 +45,7 @@ namespace CmsEngine.Ui.Areas.Identity.Pages.Account.Manage
                 return NotFound($"Unable to load user with ID '{userManager.GetUserId(User)}'.");
             }
 
-            HasAuthenticator = await userManager.GetAuthenticatorKeyAsync(user) != null;
+            HasAuthenticator = await userManager.GetAuthenticatorKeyAsync(user) is not null;
             Is2faEnabled = await userManager.GetTwoFactorEnabledAsync(user);
             IsMachineRemembered = await signInManager.IsTwoFactorClientRememberedAsync(user);
             RecoveryCodesLeft = await userManager.CountRecoveryCodesAsync(user);

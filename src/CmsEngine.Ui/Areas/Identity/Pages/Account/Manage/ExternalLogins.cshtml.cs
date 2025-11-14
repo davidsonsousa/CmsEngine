@@ -44,7 +44,7 @@ namespace CmsEngine.Ui.Areas.Identity.Pages.Account.Manage
             OtherLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync())
                 .Where(auth => CurrentLogins.All(ul => auth.Name != ul.LoginProvider))
                 .ToList();
-            ShowRemoveButton = user.PasswordHash != null || CurrentLogins.Count > 1;
+            ShowRemoveButton = user.PasswordHash is not null || CurrentLogins.Count > 1;
             return Page();
         }
 
